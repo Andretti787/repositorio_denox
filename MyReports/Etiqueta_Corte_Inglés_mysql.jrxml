@@ -1,0 +1,552 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Etiqueta_Corte_Inglés" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="265" columnSpacing="25" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="15" uuid="1afc1c07-30c7-4085-844e-93666177de1d">
+	<property name="com.jaspersoft.studio.data.sql.tables">
+		<![CDATA[YEFSVElfQ09MT1JfMmAgLDE1LDE1LGI2NGM0ZjU2LTdhYjUtNDZhYS1iOTYxLWRiNDJkYzNhNTQ3
+Mzs=
+]]>
+	</property>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL ReportServer"/>
+	<property name="ireport.jasperserver.url" value="http://192.168.35.25:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="mmarco"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/Almacén/Etiquetas/Etiqueta_Corte_Inglés"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/Almacén/Etiquetas/Etiqueta_Corte_Inglés_files/main_jrxml"/>
+	<parameter name="CLIENTE" class="java.lang.String">
+		<parameterDescription><![CDATA[CODIGO DE CLIENTE]]></parameterDescription>
+		<defaultValueExpression><![CDATA["280058"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10280.050"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS]]></parameterDescription>
+		<defaultValueExpression><![CDATA["1/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA]]></parameterDescription>
+		<defaultValueExpression><![CDATA["1"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART2" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10020.050"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL2" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART2" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO2" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN2" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS2" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["2/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS2" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA2]]></parameterDescription>
+		<defaultValueExpression><![CDATA["2"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART3" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10030.050"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL3" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 3"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART3" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP3"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO3" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED3"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN3" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 3"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS3" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["3/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS3" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA3]]></parameterDescription>
+		<defaultValueExpression><![CDATA["3"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART4" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10150.006"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL4" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 4"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART4" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP4"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO4" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED4"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN4" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 4"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS4" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["4/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS4" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA4]]></parameterDescription>
+		<defaultValueExpression><![CDATA["4"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART5" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10220.839"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL5" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 5"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART5" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP5"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO5" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED5"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN5" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 5"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS5" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["5/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS5" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA5]]></parameterDescription>
+		<defaultValueExpression><![CDATA["5"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART6" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10240.415"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL6" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 6"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART6" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP6"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO6" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED6"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN6" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 6"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS6" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["6/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS6" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 6]]></parameterDescription>
+		<defaultValueExpression><![CDATA["6"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART7" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10240.030"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL7" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 7"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART7" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP7"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO7" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED7"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN7" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 7"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS7" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["7/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS7" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 7]]></parameterDescription>
+		<defaultValueExpression><![CDATA["7"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ART8" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["10270.415"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL8" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["SUC 8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_DEPART8" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["DEP8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NPEDIDO8" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["PED8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NALBARAN8" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["ALB 8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_NUMBULTOS8" class="java.lang.String">
+		<parameterDescription><![CDATA[NUMERO DE BULTOS8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["8/8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_UNIDCAJAS8" class="java.lang.String">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+		<defaultValueExpression><![CDATA["8"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="JSON_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="JSON_LOCALE" class="java.util.Locale" isForPrompting="false"/>
+	<parameter name="JSON_TIME_ZONE" class="java.util.TimeZone" isForPrompting="false"/>
+	<queryString language="SQL">
+		<![CDATA[SELECT `ARTI_COLOR_2`.`COD_CTE`,
+	`ARTI_COLOR_2`.`COD_ART`,
+	`ARTI_COLOR_2`.`COD_ART_FULL`,
+	`ARTI_COLOR_2`.`ART_DESCRIP`,
+	`ARTI_COLOR_2`.`REF_TERCERO`,
+	`ARTI_COLOR_2`.`DESC_COLOR`,
+	`ARTI_COLOR_2`.`DESCRIP_NO_COLOR`
+FROM `ARTI_COLOR_2`
+WHERE 
+	  ( 
+	 `ARTI_COLOR_2`.`COD_CTE` = $P{CLIENTE}) 
+	 AND ( 
+	 `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART2} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART3} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART4} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART5} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART6} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART7} 
+	 OR `ARTI_COLOR_2`.`COD_ART_FULL` = $P{P_ART8})]]>
+	</queryString>
+	<field name="COD_CTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COD_CTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="COD_ART" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COD_ART"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="COD_ART_FULL" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COD_ART_FULL"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="ART_DESCRIP" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="ART_DESCRIP"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="REF_TERCERO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REF_TERCERO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="DESC_COLOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESC_COLOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="DESCRIP_NO_COLOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIP_NO_COLOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="9"/>
+	</columnHeader>
+	<detail>
+		<band height="197" splitType="Stretch">
+			<textField>
+				<reportElement x="-10" y="46" width="199" height="30" uuid="727001e0-60d1-476e-8921-442a717ca0cf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf5b882c-c8e0-482e-a540-ecaf0c87ccdd"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+					<topPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{DESCRIP_NO_COLOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-10" y="82" width="85" height="45" uuid="6c44faa7-7f0c-44aa-9d0b-c7edf96065dd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="899519cb-9669-4501-b7d1-ab22c6f2258f"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{REF_TERCERO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-10" y="11" width="60" height="30" uuid="c3278aed-6121-4d60-8dcb-5efc58cc8f88"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_SUCURSAL} : $P{P_SUCURSAL2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_SUCURSAL3} : $P{P_SUCURSAL4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_SUCURSAL5} : $P{P_SUCURSAL6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_SUCURSAL7} : $P{P_SUCURSAL8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="62" y="11" width="60" height="30" uuid="2d03f4bb-f9ea-4264-a8a2-d729be2faa3d"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_DEPART} : $P{P_DEPART2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_DEPART3} : $P{P_DEPART4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_DEPART5} :$P{P_DEPART6})
+							:  (($V{COLUMN_COUNT}.intValue()==4) ?
+								(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_DEPART7} :$P{P_DEPART8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="11" width="60" height="30" uuid="e943d83a-1894-427a-a727-e8549209a458"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_NPEDIDO} :$P{P_NPEDIDO2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_NPEDIDO3} : $P{P_NPEDIDO4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_NPEDIDO5} : $P{P_NPEDIDO6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_NPEDIDO7} : $P{P_NPEDIDO8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="11" width="60" height="30" uuid="4546fb51-873a-434e-af6c-28127fcefcc4"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_NALBARAN} :$P{P_NALBARAN2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_NALBARAN3} : $P{P_NALBARAN4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_NALBARAN5} : $P{P_NALBARAN6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_NALBARAN7} : $P{P_NALBARAN8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="64" y="132" width="196" height="20" uuid="616903ff-1e52-4342-a916-5bee023e83bb">
+					<property name="com.jaspersoft.studio.element.name" value="FABRICANTES DE MENAJE S.A"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FABRICANTES DE MENAJE S.A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="137" width="70" height="26" uuid="8b129596-cae7-4fc6-a145-4f0ae7806c54"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PROVEEDOR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="45" width="60" height="30" uuid="fb2e2623-8194-42de-b3e5-115e1ceb727c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="67f2c263-5cf3-46e1-b00b-7ef3b59e00c9"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{DESC_COLOR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-10" y="11" width="60" height="15" uuid="c741a1cd-ca8e-41d7-ba8c-7f117c9a7d60"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[SUCURSAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="11" width="60" height="15" uuid="09761287-d0cc-402a-9547-0fcf39413669"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DEPART.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="11" width="60" height="15" uuid="8e6cc503-78f9-4d9b-91fd-992a99d0633f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[N. PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="11" width="60" height="15" uuid="008cec3e-dab2-4aa4-a73a-46a3687cb5ca"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[N. ALBARÁN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="45" width="60" height="15" uuid="61e008ff-0bab-4db1-80da-6f835629c6e1"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[COLOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-11" y="46" width="201" height="15" uuid="de1c3522-9cb8-4504-b802-b425fdf41f4b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ARTÍCULO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="82" width="85" height="25" uuid="556e9966-160b-49ff-9974-c73255556102"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[REFERENCIA CORTE INGLÉS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="83" y="82" width="85" height="45" uuid="a21c38f9-641e-48ec-aa7b-29fb7e4754af">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="899519cb-9669-4501-b7d1-ab22c6f2258f"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_NUMBULTOS}:$P{P_NUMBULTOS2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_NUMBULTOS3} : $P{P_NUMBULTOS4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_NUMBULTOS5}: $P{P_NUMBULTOS6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_NUMBULTOS7}: $P{P_NUMBULTOS8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="175" y="82" width="85" height="45" uuid="cd2245bc-c89e-4d74-ae1c-9386379c884a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="899519cb-9669-4501-b7d1-ab22c6f2258f"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_UNIDCAJAS} :$P{P_UNIDCAJAS2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_UNIDCAJAS3} : $P{P_UNIDCAJAS4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS5} :$P{P_UNIDCAJAS6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS7} :$P{P_UNIDCAJAS8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="83" y="82" width="85" height="25" uuid="c9bf92b5-757d-43f7-b308-c6272035df44"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[NÚMERO DE BULTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="82" width="85" height="25" uuid="ab3f5414-7c73-4bfe-97dc-3c65a9a53e5f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[UNIDADES POR CAJA]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

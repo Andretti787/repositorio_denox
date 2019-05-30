@@ -1,0 +1,543 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Etiqueta_Corte_Inglés" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="265" columnSpacing="25" leftMargin="20" rightMargin="20" topMargin="30" bottomMargin="15" uuid="1afc1c07-30c7-4085-844e-93666177de1d">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL ReportServer"/>
+	<property name="ireport.jasperserver.url" value="http://192.168.35.25:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="mmarco"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/Almacén/Etiquetas/Etiqueta_Corte_Inglés"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/Almacén/Etiquetas/Etiqueta_Corte_Inglés_files/main_jrxml"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="405"/>
+	<property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="588"/>
+	<parameter name="CANTIDAD" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CLIENTE" class="java.lang.String">
+		<parameterDescription><![CDATA[CODIGO DE CLIENTE]]></parameterDescription>
+		<defaultValueExpression><![CDATA["280058"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_SUCURSAL" class="java.lang.String">
+		<parameterDescription><![CDATA[SUCURSAL]]></parameterDescription>
+	</parameter>
+	<parameter name="P_DEPART" class="java.lang.String">
+		<parameterDescription><![CDATA[DEPART]]></parameterDescription>
+	</parameter>
+	<parameter name="P_NPEDIDO" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM PEDIDO]]></parameterDescription>
+	</parameter>
+	<parameter name="P_NALBARAN" class="java.lang.String">
+		<parameterDescription><![CDATA[NUM ALBARAN]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART2" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO2]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS2" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA2]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART3" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO3]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS3" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA3]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART4" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO4]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS4" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA4]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART5" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO5]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS5" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA5]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART6" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO6]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS6" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 6]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART7" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO7]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS7" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 7]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART8" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS8" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="JSON_INPUT_STREAM" class="java.io.InputStream" isForPrompting="false"/>
+	<parameter name="JSON_LOCALE" class="java.util.Locale" isForPrompting="false"/>
+	<parameter name="JSON_TIME_ZONE" class="java.util.TimeZone" isForPrompting="false"/>
+	<parameter name="P_ART9" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS9" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART10" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS10" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART11" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS11" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART12" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS12" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART13" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS13" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART14" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS14" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART15" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS15" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_ART16" class="java.lang.String">
+		<parameterDescription><![CDATA[ARTICULO8]]></parameterDescription>
+	</parameter>
+	<parameter name="P_UNIDCAJAS16" class="java.lang.Integer">
+		<parameterDescription><![CDATA[UNIDADES POR CAJA 8]]></parameterDescription>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT DATOS.CLIENTE, DATOS.REFERENCIA, B.COD_ART, DATOS.DESCRIP_NO_COLOR,  DATOS.REF_CTE, B.DESC_COLOR, B.REF_TERCERO, DATOS.CAPACIDAD_DUN fROM 
+(
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 1 AS ORDEN
+From V_ARTI_DUN14
+WHERE REFERENCIA =  $P{P_ART} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 2 AS ORDEN
+From V_ARTI_DUN14 B
+WHERE REFERENCIA =  $P{P_ART2} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 3 AS ORDEN
+From V_ARTI_DUN14 C
+WHERE REFERENCIA =  $P{P_ART3} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN,4 AS ORDEN
+From V_ARTI_DUN14 D
+WHERE REFERENCIA = $P{P_ART4} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 5 AS ORDEN
+From V_ARTI_DUN14 E
+WHERE REFERENCIA =  $P{P_ART5} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 6 AS ORDEN
+From V_ARTI_DUN14 E
+WHERE REFERENCIA =  $P{P_ART6} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 7 AS ORDEN
+From V_ARTI_DUN14 F
+WHERE REFERENCIA =  $P{P_ART7} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 8 AS ORDEN
+From V_ARTI_DUN14 G
+WHERE REFERENCIA =  $P{P_ART8} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 9 AS ORDEN
+From V_ARTI_DUN14 H
+WHERE REFERENCIA = $P{P_ART9} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 10 AS ORDEN
+From V_ARTI_DUN14 I
+WHERE REFERENCIA =  $P{P_ART10} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 11 AS ORDEN
+From V_ARTI_DUN14 J
+WHERE REFERENCIA =  $P{P_ART11} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 12 AS ORDEN
+From V_ARTI_DUN14 K
+WHERE REFERENCIA =  $P{P_ART12} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 13 AS ORDEN
+From V_ARTI_DUN14 L
+WHERE REFERENCIA =  $P{P_ART13} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 14 AS ORDEN
+From V_ARTI_DUN14 M
+WHERE REFERENCIA =  $P{P_ART14} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 15 AS ORDEN
+From V_ARTI_DUN14 N
+WHERE REFERENCIA =  $P{P_ART15} 
+UNION ALL 
+select CLIENTE, REFERENCIA, DESCRIP_NO_COLOR,  REF_CTE, CAPACIDAD_DUN, 16 AS ORDEN
+From V_ARTI_DUN14 O
+WHERE REFERENCIA = $P{P_ART16} 
+) AS DATOS
+INNER JOIN ARTI_COLOR_2 B ON DATOS.CLIENTE = B.COD_CTE AND DATOS.REFERENCIA = B.COD_ART_FULL
+WHERE DATOS.CLIENTE =  $P{CLIENTE} 
+ORDER BY DATOS.ORDEN
+]]>
+	</queryString>
+	<field name="CLIENTE" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14"/>
+	</field>
+	<field name="REFERENCIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REFERENCIA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14"/>
+	</field>
+	<field name="COD_ART" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="COD_ART"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTI_COLOR_2"/>
+	</field>
+	<field name="DESCRIP_NO_COLOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESCRIP_NO_COLOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14"/>
+	</field>
+	<field name="REF_CTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REF_CTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14"/>
+	</field>
+	<field name="DESC_COLOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="DESC_COLOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="COLORES"/>
+	</field>
+	<field name="REF_TERCERO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REF_TERCERO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="ARTICULOS"/>
+	</field>
+	<field name="CAPACIDAD_DUN" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="CAPACIDAD_DUN"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<columnHeader>
+		<band height="9"/>
+	</columnHeader>
+	<detail>
+		<band height="197" splitType="Stretch">
+			<textField>
+				<reportElement x="-10" y="46" width="199" height="30" uuid="727001e0-60d1-476e-8921-442a717ca0cf">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="bf5b882c-c8e0-482e-a540-ecaf0c87ccdd"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+					<topPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="1.25" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{DESCRIP_NO_COLOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-10" y="82" width="85" height="45" uuid="6c44faa7-7f0c-44aa-9d0b-c7edf96065dd">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="899519cb-9669-4501-b7d1-ab22c6f2258f"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{REF_TERCERO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="-10" y="11" width="60" height="30" uuid="c3278aed-6121-4d60-8dcb-5efc58cc8f88"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_SUCURSAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="62" y="11" width="60" height="30" uuid="2d03f4bb-f9ea-4264-a8a2-d729be2faa3d"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_DEPART}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="130" y="11" width="60" height="30" uuid="e943d83a-1894-427a-a727-e8549209a458"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_NPEDIDO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="200" y="11" width="60" height="30" uuid="4546fb51-873a-434e-af6c-28127fcefcc4"/>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$P{P_NALBARAN}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="64" y="132" width="196" height="20" uuid="616903ff-1e52-4342-a916-5bee023e83bb">
+					<property name="com.jaspersoft.studio.element.name" value="FABRICANTES DE MENAJE S.A"/>
+				</reportElement>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[FABRICANTES DE MENAJE S.A]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="137" width="70" height="26" uuid="8b129596-cae7-4fc6-a145-4f0ae7806c54"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[PROVEEDOR:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="200" y="45" width="60" height="30" uuid="fb2e2623-8194-42de-b3e5-115e1ceb727c">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="67f2c263-5cf3-46e1-b00b-7ef3b59e00c9"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[$F{DESC_COLOR}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="-10" y="11" width="60" height="15" uuid="c741a1cd-ca8e-41d7-ba8c-7f117c9a7d60"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[SUCURSAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="62" y="11" width="60" height="15" uuid="09761287-d0cc-402a-9547-0fcf39413669"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[DEPART.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="130" y="11" width="60" height="15" uuid="8e6cc503-78f9-4d9b-91fd-992a99d0633f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[N. PEDIDO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="11" width="60" height="15" uuid="008cec3e-dab2-4aa4-a73a-46a3687cb5ca"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[N. ALBARÁN]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="200" y="45" width="60" height="15" uuid="61e008ff-0bab-4db1-80da-6f835629c6e1"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[COLOR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-11" y="46" width="201" height="15" uuid="de1c3522-9cb8-4504-b802-b425fdf41f4b"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[ARTÍCULO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="-10" y="82" width="85" height="25" uuid="556e9966-160b-49ff-9974-c73255556102"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[REFERENCIA CORTE INGLÉS]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="83" y="82" width="85" height="45" uuid="a21c38f9-641e-48ec-aa7b-29fb7e4754af">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="899519cb-9669-4501-b7d1-ab22c6f2258f"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue()==1) ? "1/"+$P{CANTIDAD}
+	:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==2) ? "2/"+$P{CANTIDAD}
+		:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==3) ? "3/"+$P{CANTIDAD}
+			:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==4) ? "4/"+$P{CANTIDAD}
+				:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==5) ? "5/"+$P{CANTIDAD}
+					:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==6) ? "6/"+$P{CANTIDAD}
+						:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==7) ? "7/"+$P{CANTIDAD}
+							:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue()==8) ? "8/"+$P{CANTIDAD}
+								:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==1) ? "9/"+$P{CANTIDAD}
+									:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==2) ? "10/"+$P{CANTIDAD}
+										:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==3) ? "11/"+$P{CANTIDAD}
+											:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==4) ? "12/"+$P{CANTIDAD}
+												:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==5) ? "13/"+$P{CANTIDAD}
+													:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==6) ? "14/"+$P{CANTIDAD}
+														:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==7) ? "15/"+$P{CANTIDAD}
+															:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==8) ? "16/"+$P{CANTIDAD}
+															:null]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="175" y="82" width="85" height="45" uuid="cd2245bc-c89e-4d74-ae1c-9386379c884a">
+					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="899519cb-9669-4501-b7d1-ab22c6f2258f"/>
+				</reportElement>
+				<box>
+					<pen lineWidth="1.25"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Bottom"/>
+				<textFieldExpression><![CDATA[($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS}
+	:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==2) ? $P{P_UNIDCAJAS2}
+		:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==3) ? $P{P_UNIDCAJAS3}
+			:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==4) ? $P{P_UNIDCAJAS4}
+				:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==5) ?$P{P_UNIDCAJAS5}
+					:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==6) ?$P{P_UNIDCAJAS6}
+						:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue() ==7) ? $P{P_UNIDCAJAS7}
+							:($V{PAGE_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue()==8) ? $P{P_UNIDCAJAS8}
+								:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==1) ?$P{P_UNIDCAJAS9}
+									:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==2) ?$P{P_UNIDCAJAS10}
+										:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==3) ? $P{P_UNIDCAJAS11}
+											:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==4) ? $P{P_UNIDCAJAS12}
+												:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==5) ? $P{P_UNIDCAJAS13}
+													:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==6) ? $P{P_UNIDCAJAS14}
+														:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==7) ?$P{P_UNIDCAJAS15}
+															:($V{PAGE_NUMBER}.intValue()==2 && $V{PAGE_COUNT}.intValue() ==8) ?$P{P_UNIDCAJAS16}
+															:null
+
+
+
+
+
+/*$F{CAPACIDAD_DUN}.equals(0) ?
+(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{P_UNIDCAJAS} :$P{P_UNIDCAJAS2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{P_UNIDCAJAS3} : $P{P_UNIDCAJAS4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS5} :$P{P_UNIDCAJAS6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS7} :$P{P_UNIDCAJAS8})
+													:  (($V{COLUMN_COUNT}.intValue()==1) && ($V{PAGE_COUNT}.intValue()==2) ?
+														(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS9} :$P{P_UNIDCAJAS10})
+														:  (($V{COLUMN_COUNT}.intValue()==2) && ($V{PAGE_COUNT}.intValue()==2) ?
+															(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS11} :$P{P_UNIDCAJAS12})
+															:  (($V{COLUMN_COUNT}.intValue()==3) && ($V{PAGE_COUNT}.intValue()==2) ?
+																(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS13} :$P{P_UNIDCAJAS14})
+																:  (($V{COLUMN_COUNT}.intValue()==4) && ($V{PAGE_COUNT}.intValue()==2) ?
+																	(($V{COLUMN_NUMBER}.intValue()==1) ?$P{P_UNIDCAJAS15} :$P{P_UNIDCAJAS15})
+																															
+							
+:$F{CAPACIDAD_DUN}					
+					))))))))
+					:					$F{CAPACIDAD_DUN}
+
+
+*/
+
+
+/*($P{P_UNIDCAJAS}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1 && $V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS} : $F{CAPACIDAD_DUN}
+	
+	
+) : ($P{P_UNIDCAJAS2}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==2) ? $P{P_UNIDCAJAS2}: $F{CAPACIDAD_DUN}
+) : ($P{P_UNIDCAJAS3}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==3) ? $P{P_UNIDCAJAS3}: $F{CAPACIDAD_DUN}
+) : ($P{P_UNIDCAJAS4}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==4) ? $P{P_UNIDCAJAS4}: $F{CAPACIDAD_DUN}
+) : ($P{P_UNIDCAJAS5}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==5) ? $P{P_UNIDCAJAS5}: $F{CAPACIDAD_DUN}
+) : ($P{P_UNIDCAJAS6}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==6) ? $P{P_UNIDCAJAS6}: $F{CAPACIDAD_DUN}					
+) : ($P{P_UNIDCAJAS7}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==7) ? $P{P_UNIDCAJAS7}: $F{CAPACIDAD_DUN}												 
+) : ($P{P_UNIDCAJAS8}.intValue()>=0) ? (($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==8) ? $P{P_UNIDCAJAS8}: $F{CAPACIDAD_DUN}
+) : $F{CAPACIDAD_DUN}    */
+
+/*$P{P_UNIDCAJAS}.intValue()>=0 ? 
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==1)) ? $P{P_UNIDCAJAS} : $F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS2}.intValue()>=0 ?  
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==2) ? $P{P_UNIDCAJAS2}: $F{CAPACIDAD_DUN})	
+: $P{P_UNIDCAJAS3}.intValue()>=0 ?  
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==3) ? $P{P_UNIDCAJAS3}: $F{CAPACIDAD_DUN})
+: $P{P_UNIDCAJAS4}.intValue()>=0 ?  
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==4) ? $P{P_UNIDCAJAS4}: $F{CAPACIDAD_DUN})
+: $P{P_UNIDCAJAS5}.intValue()>=0 ?  
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==5) ? $P{P_UNIDCAJAS5}: $F{CAPACIDAD_DUN})
+: $P{P_UNIDCAJAS6}.intValue()>=0 ?  
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==6) ? $P{P_UNIDCAJAS6}: $F{CAPACIDAD_DUN})
+: $P{P_UNIDCAJAS7}.intValue()>=0 ?  
+		(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==7) ? $P{P_UNIDCAJAS7}: $F{CAPACIDAD_DUN})
+: $P{P_UNIDCAJAS8}.intValue()>=0 ?  
+    	(($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==8) ? $P{P_UNIDCAJAS8}: $F{CAPACIDAD_DUN}) 
+:$F{CAPACIDAD_DUN}*/
+		
+
+
+
+
+/* $P{P_UNIDCAJAS}.intValue()>=0 &&($V{COLUMN_COUNT}.intValue()==1) &&  ($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS2}.intValue()>=0 &&($V{COLUMN_COUNT}.intValue()==2) &&  ($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS2}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS3}.intValue()>=0 &&	($V{COLUMN_COUNT}.intValue()==3) &&  ($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS3}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS4}.intValue()>=0 &&	($V{COLUMN_COUNT}.intValue()==4) &&  ($V{COLUMN_NUMBER}.intValue()==1)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS4}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS5}.intValue()>=0 &&	($V{COLUMN_COUNT}.intValue()==1) &&  ($V{COLUMN_NUMBER}.intValue()==2)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS5}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS6}.intValue()>=0 &&	($V{COLUMN_COUNT}.intValue()==2) &&  ($V{COLUMN_NUMBER}.intValue()==2)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS6}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS7}.intValue()>=0 &&	($V{COLUMN_COUNT}.intValue()==3) &&  ($V{COLUMN_NUMBER}.intValue()==2)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS7}:$F{CAPACIDAD_DUN}
+: $P{P_UNIDCAJAS8}.intValue()>=0 &&	($V{COLUMN_COUNT}.intValue()==4) &&  ($V{COLUMN_NUMBER}.intValue()==2)&& ($V{PAGE_COUNT}.intValue()==1) ? $P{P_UNIDCAJAS8}:$F{CAPACIDAD_DUN}*/]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="83" y="82" width="85" height="25" uuid="c9bf92b5-757d-43f7-b308-c6272035df44"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[NÚMERO DE BULTO]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="175" y="82" width="85" height="25" uuid="ab3f5414-7c73-4bfe-97dc-3c65a9a53e5f"/>
+				<box>
+					<bottomPen lineWidth="1.0"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[UNIDADES POR CAJA]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>

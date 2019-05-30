@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="codebar" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="9761f1df-0b1f-4383-bde6-327d244a9c49">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL ReportServer"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+	<parameter name="Cliente" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[550095]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Referencia" class="java.lang.String">
+		<defaultValueExpression><![CDATA["10240.030"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Cantidad" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[4]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Idioma" class="java.lang.String">
+		<defaultValueExpression><![CDATA["ENG"]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT B.REFERENCIA, B.REF_SIN_COLOR, B.COD_DUN14, B.CAPACIDAD_DUN, B.TEXTO 
+from
+(select 'ENG' x union select 'ENG2' union select 'ENG3' union select 'ENG4'
+union select 'GER' union select 'GER2' union select 'GER3' union select 'GER4'
+union select 'SPA' union select 'SPA2' union select 'SPA3' union select 'SPA4'
+) A
+inner JOIN V_ARTI_DUN14_TRAD B ON B.LENGUAJE = substr(A.X,1,3)
+WHERE B.REFERENCIA =  $P{Referencia} 
+AND B.CLIENTE =  $P{Cliente} 
+AND B.LENGUAJE =  $P{Idioma} 
+LIMIT  $P{Cantidad} ]]>
+	</queryString>
+	<field name="REFERENCIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REFERENCIA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14_TRAD"/>
+	</field>
+	<field name="REF_SIN_COLOR" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REF_SIN_COLOR"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14_TRAD"/>
+	</field>
+	<field name="COD_DUN14" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="COD_DUN14"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14_TRAD"/>
+	</field>
+	<field name="CAPACIDAD_DUN" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.label" value="CAPACIDAD_DUN"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14_TRAD"/>
+	</field>
+	<field name="TEXTO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="TEXTO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="V_ARTI_DUN14_TRAD"/>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="196" splitType="Stretch">
+			<textField>
+				<reportElement x="161" y="33" width="50" height="20" uuid="4a440d47-3d64-4e9f-a688-19607e1584eb"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REF_SIN_COLOR}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="389" y="33" width="29" height="20" uuid="17631954-cae0-49f2-929c-83c3babe70f4"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CAPACIDAD_DUN}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="158" y="57" width="325" height="90" uuid="19c4b480-4cac-4b6c-bf9f-ae5350d0b83e"/>
+				<textElement>
+					<font fontName="EanBwrP36Tt" size="90"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COD_DUN14}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="211" y="33" width="177" height="20" uuid="d8324aba-2fd7-4e83-a35e-3dbf8125e2a4"/>
+				<textElement>
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TEXTO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

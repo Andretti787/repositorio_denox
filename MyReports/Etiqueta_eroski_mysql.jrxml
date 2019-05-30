@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Etiqueta_eroski" columnCount="2" pageWidth="595" pageHeight="842" columnWidth="262" columnSpacing="42" leftMargin="14" rightMargin="15" topMargin="7" bottomMargin="0" uuid="825b6840-db77-46fe-b5d1-548b749efab8">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="MySQL ReportServer"/>
+	<property name="ireport.jasperserver.url" value="http://192.168.35.25:8080/jasperserver/"/>
+	<property name="ireport.jasperserver.user" value="mmarco"/>
+	<property name="ireport.jasperserver.report.resource" value="/reports/Almacén/Etiquetas/Etiqueta_Eroski_files/main_jrxml"/>
+	<property name="ireport.jasperserver.reportUnit" value="/reports/Almacén/Etiquetas/Etiqueta_Eroski"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+	<property name="com.jaspersoft.studio.unit.columnSpacing" value="cm"/>
+	<parameter name="Pedido" class="java.lang.String">
+		<parameterDescription><![CDATA[Número de pedido del cliente]]></parameterDescription>
+		<defaultValueExpression><![CDATA["67190327"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Cliente" class="java.lang.String">
+		<defaultValueExpression><![CDATA["480040"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[103]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_1" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[157]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_2" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[2]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[164]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_3" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[3]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5007]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_4" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[4]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_5" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5744]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_5" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_6" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5009]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_6" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[6]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_7" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[5029]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_7" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[7]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Tienda_8" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[358]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Bultos_8" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[8]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE =  $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_1}
+  UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE = $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_2}
+ UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE =  $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_3}
+  UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE = $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_4}
+  UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE =  $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_5}
+  UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE = $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_6}
+  UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE =  $P{Cliente} 
+  AND COD_CENTRO  = $P{Tienda_7}
+  UNION ALL
+  SELECT `PEDIDOS`.`FEC_SOLICITUD`,
+	`PEDIDOS`.`N_PEDIDO`,
+	`PEDIDOS`.`REFERENCIA`,
+	`PEDIDOS`.`CLIENTE`,
+	`PEDIDOS`.`CLIENTE_NOMBRE`,
+	`PEDIDOS`.`BULTOS_PACK`,
+	`PEDIDOS`.`CLIENTE_FAC`,
+	`PEDIDOS`.`CIUDAD_ENTREGA`,
+	`PEDIDOS`.`BULTOS_PALLET`,
+	`PEDIDOS`.`FEC_EXPEDICION`,
+	`TIENDAS_EROSKI`.`COD_CENTRO`,
+	`TIENDAS_EROSKI`.`NOMBRE_CENTRO`,
+	`TIENDAS_EROSKI`.`PUNTO_OPERACIONAL`
+FROM `PEDIDOS`
+	INNER JOIN `TIENDAS_EROSKI` ON `PEDIDOS`.`CLIENTE` = `TIENDAS_EROSKI`.`COD_CLIENTE` 
+  WHERE PEDIDOS.REFERENCIA = $P{Pedido} 
+  AND PEDIDOS.CLIENTE =  $P{Cliente} 
+  AND COD_CENTRO  =  $P{Tienda_8}]]>
+	</queryString>
+	<field name="FEC_SOLICITUD" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="FEC_SOLICITUD"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="N_PEDIDO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="N_PEDIDO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="REFERENCIA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="REFERENCIA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="CLIENTE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENTE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="CLIENTE_NOMBRE" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENTE_NOMBRE"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="BULTOS_PACK" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="BULTOS_PACK"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="CLIENTE_FAC" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CLIENTE_FAC"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="CIUDAD_ENTREGA" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="CIUDAD_ENTREGA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="BULTOS_PALLET" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="BULTOS_PALLET"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="FEC_EXPEDICION" class="java.sql.Timestamp">
+		<property name="com.jaspersoft.studio.field.label" value="FEC_EXPEDICION"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="PEDIDOS"/>
+	</field>
+	<field name="COD_CENTRO" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="COD_CENTRO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="TIENDAS_EROSKI"/>
+	</field>
+	<field name="NOMBRE_CENTRO" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.label" value="NOMBRE_CENTRO"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="TIENDAS_EROSKI"/>
+	</field>
+	<field name="PUNTO_OPERACIONAL" class="java.lang.Long">
+		<property name="com.jaspersoft.studio.field.label" value="PUNTO_OPERACIONAL"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="TIENDAS_EROSKI"/>
+	</field>
+	<group name="CIUDAD_ENTREGA">
+		<groupExpression><![CDATA[$F{CIUDAD_ENTREGA}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="208" splitType="Stretch">
+			<rectangle radius="0">
+				<reportElement mode="Transparent" x="3" y="21" width="253" height="151" uuid="ef8400b0-9f1b-4b1c-a812-01c4a1142ef2">
+					<printWhenExpression><![CDATA[!$F{NOMBRE_CENTRO}.isEmpty()]]></printWhenExpression>
+				</reportElement>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<textField>
+				<reportElement x="126" y="119" width="130" height="12" uuid="38a75189-9205-431f-a2a7-72a0b2272716"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Albertus MT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CIUDAD_ENTREGA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="119" width="122" height="12" uuid="ed41ed53-386d-4692-bc46-d513ab017a9d"/>
+				<box>
+					<topPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Albertus MT" size="8"/>
+				</textElement>
+				<text><![CDATA[        Datos para plataforma: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="3" y="21" width="254" height="17" uuid="e7372855-dd0a-49e5-bb57-f6589e16a5fa"/>
+				<box>
+					<bottomPen lineWidth="0.5"/>
+				</box>
+				<textElement textAlignment="Center">
+					<font fontName="Albertus MT Lt" size="14"/>
+				</textElement>
+				<text><![CDATA[FABRICANTES DE MENAJE S.A.]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="126" y="143" width="130" height="12" uuid="4a6273b2-a499-4a0d-832e-a1a599dc66b6"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Albertus MT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{BULTOS_PACK}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="143" width="122" height="12" uuid="d06bc472-2f4a-4057-9e32-961cf9b42a2b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Albertus MT"/>
+				</textElement>
+				<text><![CDATA[      Bultos totales: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="126" y="131" width="130" height="12" uuid="4f612e7b-0a9b-4b45-a5bc-186ff14e6961"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Albertus MT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{REFERENCIA}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="3" y="131" width="122" height="12" uuid="5e3c6fe5-7639-4c98-878b-f9337bd08bed"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Albertus MT" size="10"/>
+				</textElement>
+				<text><![CDATA[      Número de pedido: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="3" y="49" width="64" height="55" uuid="4c610ee1-3c08-4224-9f70-27d1519ad8aa"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Albertus MT" size="22" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{COD_CENTRO}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="67" y="49" width="190" height="55" uuid="8cf0878f-02ff-4f53-8781-119283eea28b"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="Albertus MT" size="22" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $F{NOMBRE_CENTRO}:$F{NOMBRE_CENTRO})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ?$F{NOMBRE_CENTRO} : $F{NOMBRE_CENTRO})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ? $F{NOMBRE_CENTRO}: $F{NOMBRE_CENTRO})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$F{NOMBRE_CENTRO}: $F{NOMBRE_CENTRO})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="96" y="38" width="60" height="11" uuid="e44cc687-fea2-441b-8320-0368d8b479b4"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="Albertus MT Lt" size="7"/>
+				</textElement>
+				<text><![CDATA[Tienda:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="164" y="104" width="70" height="14" uuid="0b84bff7-6a0b-47fa-bf7c-4303a9e71bd1"/>
+				<textElement>
+					<font fontName="Albertus MT"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($V{COLUMN_COUNT}.intValue() == 1) ?
+	(($V{COLUMN_NUMBER}.intValue() ==1) ? $P{Bultos_1} : $P{Bultos_2})
+	: (($V{COLUMN_COUNT}.intValue()==2) ?
+			(($V{COLUMN_NUMBER}.intValue()==1) ? $P{Bultos_3} : $P{Bultos_4})
+				:  (($V{COLUMN_COUNT}.intValue()==3) ?
+					(($V{COLUMN_NUMBER}.intValue()==1) ? $P{Bultos_5} : $P{Bultos_6})
+						:  (($V{COLUMN_COUNT}.intValue()==4) ?
+							(($V{COLUMN_NUMBER}.intValue()==1) ?$P{Bultos_7} : $P{Bultos_8})
+:"NULO"					
+					))))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="44" y="104" width="120" height="14" uuid="43c39d97-3022-4f50-b549-f515a4738f5f"/>
+				<textElement textAlignment="Right">
+					<font fontName="Albertus MT"/>
+				</textElement>
+				<text><![CDATA[Bultos por tienda:    ]]></text>
+			</staticText>
+		</band>
+	</detail>
+</jasperReport>
