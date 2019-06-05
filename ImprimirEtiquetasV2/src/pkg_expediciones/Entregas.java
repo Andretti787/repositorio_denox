@@ -249,11 +249,15 @@ public class Entregas extends javax.swing.JFrame {
         jTextArea3 = new javax.swing.JTextArea();
         jLabel_logo3 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
+        buttonGroup_idioma_alb = new javax.swing.ButtonGroup();
         jPanel7 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jText_albaran = new javax.swing.JTextField();
         jLabel_albaran = new javax.swing.JLabel();
         jButton_consultar = new javax.swing.JButton();
+        jRadioButton4 = new javax.swing.JRadioButton();
+        jRadioButton5 = new javax.swing.JRadioButton();
+        jRadioButton6 = new javax.swing.JRadioButton();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
@@ -848,6 +852,19 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
 
+        buttonGroup_idioma_alb.add(jRadioButton4);
+        jRadioButton4.setSelected(true);
+        jRadioButton4.setText("SPA");
+        jRadioButton4.setName("SPA"); // NOI18N
+
+        buttonGroup_idioma_alb.add(jRadioButton5);
+        jRadioButton5.setText("ENG");
+        jRadioButton5.setName("ENG"); // NOI18N
+
+        buttonGroup_idioma_alb.add(jRadioButton6);
+        jRadioButton6.setText("FRA");
+        jRadioButton6.setName("FRA"); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -857,9 +874,15 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jLabel_albaran, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
                 .addComponent(jText_albaran, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(126, 126, 126)
+                .addGap(18, 18, 18)
+                .addComponent(jRadioButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButton6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 91, Short.MAX_VALUE)
                 .addComponent(jButton_consultar, javax.swing.GroupLayout.PREFERRED_SIZE, 114, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(308, Short.MAX_VALUE))
+                .addGap(180, 180, 180))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -868,7 +891,10 @@ public class Entregas extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jText_albaran, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel_albaran)
-                    .addComponent(jButton_consultar))
+                    .addComponent(jButton_consultar)
+                    .addComponent(jRadioButton4)
+                    .addComponent(jRadioButton5)
+                    .addComponent(jRadioButton6))
                 .addContainerGap(37, Short.MAX_VALUE))
         );
 
@@ -1021,26 +1047,38 @@ public class Entregas extends javax.swing.JFrame {
 
     private void jButton_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_consultarActionPerformed
         jTextArea1.setText(null);//limpio para no tener datos anteriores
+        
+        String idioma;
+            if (jRadioButton4.isSelected()){
+                idioma = jRadioButton4.getName();
+                     
+            }
+            else if (jRadioButton5.isSelected()){
+                idioma = jRadioButton5.getName();
+            }
+            else
+                idioma = jRadioButton6.getName();
 
         try {
-            String query = "SELECT ALBARAN, NUM_BULTO, ARTICULO, PEDIDO_FAM, NOM_CTE, COD_EAN  fROM V_BULTOS_ENTREGAS WHERE ALBARAN like '" + jText_albaran.getText() + "'";
+            //String query = "SELECT ALBARAN, NUM_BULTO, ARTICULO, PEDIDO_FAM, NOM_CTE, COD_EAN  fROM V_BULTOS_ENTREGAS WHERE ALBARAN like '" + jText_albaran.getText() + "'";
+            String query = "SELECT REF_SIN_COLOR, TEXTO, COD_DUN14, EAN, CAPACIDAD_DUN, CANTIDAD, FLOOR((CANTIDAD/CAPACIDAD_DUN)*2) AS ETIQUETA_POR_BULTO, NOM_CTE FROM V_EXPEDICIONES_IDIOMA\n" +
+                           "WHERE ALBARAN = '" + jText_albaran.getText() + "'\n" +
+                           "AND LENGUAJE = '" + idioma + "'\n" +
+                           "ORDER BY REFERENCIA" ;
+           // JOptionPane.showMessageDialog(this, query);
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
-            zpl(1,1,0);
-            /*while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en los campos
-                String albaran = rs.getString("ALBARAN");
-                String num_bulto = rs.getString("NUM_BULTO");
-                String articulo = rs.getString("ARTICULO");
-                String nom_cte = rs.getString("NOM_CTE");
-                String cod_ean = rs.getString("COD_EAN");
-                
-
-                //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
-                zpl();
-           
-                
-            }*/
+            
+            
+            
+            //JOptionPane.showMessageDialog(this, "bultos a generar: " + bultos + " en " + idioma);
+            //zpl(1,bultos,0);
+            while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en los campos
+                int bultos = rs.getInt("ETIQUETA_POR_BULTO");
+                zpl(1,bultos,0);
+                       
+            }
         } catch (SQLException err) {
-            JOptionPane.showMessageDialog(this, err.getMessage());
+            JOptionPane.showMessageDialog(this, "ups...  " + err.getMessage());
         }
     }//GEN-LAST:event_jButton_consultarActionPerformed
 
@@ -1481,19 +1519,33 @@ public class Entregas extends javax.swing.JFrame {
 
         try {
             if (p_modo == 1) {//rellenar etiquetas para albarán
-                while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en los campos
-                    String cod_ean = rs.getString("COD_EAN");
+               // while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en los campos
+                    int contador;
+                    for (contador = 0; contador < p_num; contador++) {
+                        String dun14 = rs.getString("COD_DUN14");
+                        String ref = rs.getString("REF_SIN_COLOR");
+                        String texto = rs.getString("TEXTO");
+                        int cap_dun = rs.getInt("CAPACIDAD_DUN");
+                        String sCap_dun = Integer.toString(cap_dun);
 
-                    jTextArea1.append("^XA\n");
-                    jTextArea1.append("^PON\n");
-                    jTextArea1.append("^LH0,0\n");
-                    jTextArea1.append("^BY3,2.5,200\n");
-                    jTextArea1.append("^FO150,225\n");
-                    jTextArea1.append("^BCB,200,Y,N,N,D\n");
-                    jTextArea1.append("^FD(01)" + cod_ean + "^FS\n");
-                    jTextArea1.append("^XZ\n");
-
-                }
+                        jTextArea1.append("^XA\n");
+                        jTextArea1.append("^PON\n");
+                        jTextArea1.append("^LH0,0\n");
+                        jTextArea1.append("^A0N,40,34\n");
+                        jTextArea1.append("^FO640,150\n");
+                        jTextArea1.append("^FD " + sCap_dun + "PCS^FS\n");
+                        jTextArea1.append("^FO100,150\n");
+                        jTextArea1.append("^FB500,2,,L,\n");
+                        jTextArea1.append("^A0N,40,34\n");
+                        jTextArea1.append("^FD " + ref + " " + texto + "^FS\n");
+                        jTextArea1.append("^BY5,2.5,200\n");
+                        jTextArea1.append("^FO100,225\n");
+                        jTextArea1.append("^FB750,1,,C,\n");
+                        jTextArea1.append("^BCN,200,Y,N,N,D\n");
+                        jTextArea1.append("^FD" + dun14 + "^FS\n");
+                        jTextArea1.append("^XZ\n");
+                    }
+                //}
             } else if (p_modo == 2) { //rellenar etiquetas sueltas
                 int contador;
                 for (contador = 0; contador < p_num; contador++) {
@@ -1548,8 +1600,8 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea3.append("^FO400,450\n");
                     jTextArea3.append("^A0N,50,50\n");
                     //jTextArea3.append("^FD " + "REF: " + model.getValueAt(jTb.getSelectedRow(), 0) + "^FS\n");
-                    String ref_sin_color = (String) model.getValueAt(jTb.getSelectedRow(),0);
-                    jTextArea3.append("^FD " + "REF: " + ref_sin_color.substring(0,pos_punto(ref_sin_color)) + "^FS\n"); //elimino la parte del color de la referencia
+                    String ref_sin_color = (String) model.getValueAt(jTb.getSelectedRow(), 0);
+                    jTextArea3.append("^FD " + "REF: " + ref_sin_color.substring(0, pos_punto(ref_sin_color)) + "^FS\n"); //elimino la parte del color de la referencia
                     jTextArea3.append("^BY3,2.5,100\n");
                     jTextArea3.append("^FO225,530\n");
                     jTextArea3.append("^B2N,,Y,N\n");
@@ -1560,40 +1612,40 @@ public class Entregas extends javax.swing.JFrame {
 
                 }
                 //imprimo las etiquetas DUN14 (para la caja). Etiquetas para caja = p_unidades / capacidad dun
-                if (p_unidades > 1){
-                System.out.println ("Num etiquetas caja: (" +p_unidades+"/"+p_num + ") "+ Math.floor(p_num/p_unidades));
-                for (contador = 0; contador < Math.floor(p_num/p_unidades); contador++) {
-                    jTextArea3.append("^XA\n");
-                    jTextArea3.append("^PON\n");
-                    jTextArea3.append("^LH0,0\n");
-                    jTextArea3.append("^FO80,50\n");
-                    jTextArea3.append("^FB700,3,,C,\n");
-                    jTextArea3.append("^A0N,50,50\n");
-                    jTextArea3.append("^FD " + jText_empresa.getText()+ "\n");
-                    jTextArea3.append("^FO80,200\n");
-                    jTextArea3.append("^FB700,3,,C,\n");
-                    jTextArea3.append("^A0N,68,68\n");
-                    jTextArea3.append("^FD " + model.getValueAt(jTb.getSelectedRow(), 6) + "^FS\n");
-                    jTextArea3.append("^FO80,450\n");
-                    jTextArea3.append("^A0N,50,50\n");
-                    jTextArea3.append("^FD " + model.getValueAt(jTb.getSelectedRow(), 3) + "^FS\n");
-                    jTextArea3.append("^FO130,450\n");
-                    jTextArea3.append("^A0N,50,50\n");
-                    jTextArea3.append("^FD UNIDADES^FS\n");
-                    jTextArea3.append("^FO400,450\n");
-                    jTextArea3.append("^A0N,50,50\n");
-                    //jTextArea3.append("^FD " + "REF: " + model.getValueAt(jTb.getSelectedRow(), 0) + "^FS\n");
-                    String ref_sin_color = (String) model.getValueAt(jTb.getSelectedRow(),0);
-                    jTextArea3.append("^FD " + "REF: " + ref_sin_color.substring(0, pos_punto(ref_sin_color)) + "^FS\n"); //elimino la parte del color de la referencia
-                    jTextArea3.append("^BY3,2.5,100\n");
-                    jTextArea3.append("^FO225,530\n");
-                    jTextArea3.append("^B2N,,Y,N\n");
-                    jTextArea3.append("^FD " + model.getValueAt(jTb.getSelectedRow(), 2) + "^FS\n");
-                    jTextArea3.append("^FB450,1,,C,\n");
-                    jTextArea3.append("^FO30,200^A0B,40,40^FD " + model.getValueAt(jTb.getSelectedRow(), 5) + "^FS\n");
-                    jTextArea3.append("^XZ\n");
+                if (p_unidades > 1) {
+                    System.out.println("Num etiquetas caja: (" + p_unidades + "/" + p_num + ") " + Math.floor(p_num / p_unidades));
+                    for (contador = 0; contador < Math.floor(p_num / p_unidades); contador++) {
+                        jTextArea3.append("^XA\n");
+                        jTextArea3.append("^PON\n");
+                        jTextArea3.append("^LH0,0\n");
+                        jTextArea3.append("^FO80,50\n");
+                        jTextArea3.append("^FB700,3,,C,\n");
+                        jTextArea3.append("^A0N,50,50\n");
+                        jTextArea3.append("^FD " + jText_empresa.getText() + "\n");
+                        jTextArea3.append("^FO80,200\n");
+                        jTextArea3.append("^FB700,3,,C,\n");
+                        jTextArea3.append("^A0N,68,68\n");
+                        jTextArea3.append("^FD " + model.getValueAt(jTb.getSelectedRow(), 6) + "^FS\n");
+                        jTextArea3.append("^FO80,450\n");
+                        jTextArea3.append("^A0N,50,50\n");
+                        jTextArea3.append("^FD " + model.getValueAt(jTb.getSelectedRow(), 3) + "^FS\n");
+                        jTextArea3.append("^FO130,450\n");
+                        jTextArea3.append("^A0N,50,50\n");
+                        jTextArea3.append("^FD UNIDADES^FS\n");
+                        jTextArea3.append("^FO400,450\n");
+                        jTextArea3.append("^A0N,50,50\n");
+                        //jTextArea3.append("^FD " + "REF: " + model.getValueAt(jTb.getSelectedRow(), 0) + "^FS\n");
+                        String ref_sin_color = (String) model.getValueAt(jTb.getSelectedRow(), 0);
+                        jTextArea3.append("^FD " + "REF: " + ref_sin_color.substring(0, pos_punto(ref_sin_color)) + "^FS\n"); //elimino la parte del color de la referencia
+                        jTextArea3.append("^BY3,2.5,100\n");
+                        jTextArea3.append("^FO225,530\n");
+                        jTextArea3.append("^B2N,,Y,N\n");
+                        jTextArea3.append("^FD " + model.getValueAt(jTb.getSelectedRow(), 2) + "^FS\n");
+                        jTextArea3.append("^FB450,1,,C,\n");
+                        jTextArea3.append("^FO30,200^A0B,40,40^FD " + model.getValueAt(jTb.getSelectedRow(), 5) + "^FS\n");
+                        jTextArea3.append("^XZ\n");
 
-                }
+                    }
                 }
             }
         } catch (SQLException err) {
@@ -1700,6 +1752,7 @@ super.paintComponent(grafico);
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup_idioma;
+    private javax.swing.ButtonGroup buttonGroup_idioma_alb;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -1749,6 +1802,9 @@ super.paintComponent(grafico);
     private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JRadioButton jRadioButton3;
+    private javax.swing.JRadioButton jRadioButton4;
+    private javax.swing.JRadioButton jRadioButton5;
+    private javax.swing.JRadioButton jRadioButton6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
