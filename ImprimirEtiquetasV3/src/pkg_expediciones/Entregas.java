@@ -255,6 +255,8 @@ public class Entregas extends javax.swing.JFrame {
         jButton2 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jTextArea_log = new javax.swing.JTextArea();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu_ir = new javax.swing.JMenu();
         jMenuItem_albaranes = new javax.swing.JMenuItem();
@@ -923,14 +925,26 @@ public class Entregas extends javax.swing.JFrame {
                 .addContainerGap(22, Short.MAX_VALUE))
         );
 
+        jTextArea_log.setBackground(new java.awt.Color(255, 153, 51));
+        jTextArea_log.setColumns(20);
+        jTextArea_log.setForeground(new java.awt.Color(255, 0, 51));
+        jTextArea_log.setLineWrap(true);
+        jTextArea_log.setRows(5);
+        jTextArea_log.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Avisos", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 12))); // NOI18N
+        jTextArea_log.setEnabled(false);
+        jScrollPane5.setViewportView(jTextArea_log);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 404, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 583, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -943,9 +957,14 @@ public class Entregas extends javax.swing.JFrame {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
-                .addGap(20, 20, 20)
-                .addComponent(jButton2)
-                .addGap(0, 78, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jButton2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
@@ -1025,6 +1044,7 @@ public class Entregas extends javax.swing.JFrame {
 
     private void jButton_consultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_consultarActionPerformed
         jTextArea1.setText(null);//limpio para no tener datos anteriores
+        jTextArea_log.setText(null);
 
         String idioma;
         if (jRadioButton4.isSelected()) {
@@ -1053,9 +1073,14 @@ public class Entregas extends javax.swing.JFrame {
             } else {
                 rs.previous();
                 while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en los campos
+                    if (rs.getString("COD_DUN14")==null){ //genero log cuando la referencia no tenga dun14 asignado
+                        rellenaTextArea(3, "La referencia: ", rs.getString("REF_SIN_COLOR"), "No tiene DUN14", "No se imprimirá", "");
+                        System.out.println("Referencia sin DUN14");
+                    }
                     int bultos = rs.getInt("ETIQUETA_POR_BULTO");
                     System.out.println("bultos: " + bultos);
                     zpl(1, bultos, 0);
+                    
                 }
             }
         } catch (SQLException err) {
@@ -1066,9 +1091,11 @@ public class Entregas extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         //genero el fichero en c:\tmp
         generar_fichero (1)   ;
+        rellenaTextArea(3, "Fichero de impresión generado", "", "", "", "");
          // manda orden de impresión al lpt1. La impresora ha de estar mapeada al LPT1
          //System.getProperty("user.dir");
         ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        rellenaTextArea(3, "Orden de impresión para el albarán: ", jText_albaran.getText(), "enviada", "", "");
          
         
         //a continuacion diversas pruebas que he hecho para mandar el comando 
@@ -1191,10 +1218,8 @@ public class Entregas extends javax.swing.JFrame {
             
                         
             inicio_tabla();//Método de inicio de jtable
-             
-            
-            
-                    
+                   
+                               
             while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en el textArea
                 if (rs.getRow() != 0) {//comprueba que haya registro en rs para evitar el error de que coja el campo descriptivo en posición 1
 
@@ -1452,13 +1477,16 @@ public class Entregas extends javax.swing.JFrame {
          if (p_modo == 1) {          //relleno el textArea del albarán
              jTextArea1.append(p_Texto1 + " " + p_Texto2 + " " + p_Texto3 + " " + p_Texto4 + " " + p_Texto5);
              jTextArea1.append(System.getProperty("line.separator"));
-         } else {  //relleno el textArea de pedidos a proveedor
+         } else if (p_modo == 2) {  //relleno el textArea de pedidos a proveedor
 
              
              jTextArea3.append(padRight(p_Texto1,20) +  padRight(p_Texto2,18) + padRight(p_Texto3,36)+ padRight(p_Texto4,20)+ p_Texto5);
              jTextArea3.append(System.getProperty("line.separator"));
 
-         }
+         }else //relleno el textarea del log del albarán
+             
+             jTextArea_log.append(p_Texto1 + " " + p_Texto2 + " " + p_Texto3 + " " + p_Texto4 + " " + p_Texto5);
+             jTextArea_log.append(System.getProperty("line.separator"));
 
     }
     public void generar_fichero(int p_TextArea){
@@ -1774,11 +1802,13 @@ super.paintComponent(grafico);
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTable jTb;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
+    private javax.swing.JTextArea jTextArea_log;
     private javax.swing.JTextField jText_albaran;
     private javax.swing.JTextField jText_empresa;
     private javax.swing.JTextField jText_pedproNumped;
