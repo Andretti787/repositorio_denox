@@ -71,6 +71,7 @@ public class Entregas extends javax.swing.JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
+                    
                     String a;
                     a = jCombo_ref.getSelectedItem().toString();
                     //System.out.print(a);
@@ -115,6 +116,41 @@ public class Entregas extends javax.swing.JFrame {
                 }
             }
         });
+        
+         jComboBox_AlbNormal.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                //SI NO HAY UN VALOR EN LA PROPIEDAD "MODEL" DEL COMBO ENTRA AQUÍ EN CUANTO SE RELLENA EL PRIMER REGISTRO Y PRODUCE UN EFECTO QUE NO QUIERO
+                if (e.getStateChange() == ItemEvent.SELECTED ){
+                    
+                    String a;
+                    a = jComboBox_AlbNormal.getSelectedItem().toString();
+                   
+                    //determino la posición del espacio para añadir el nº pedido y el cod proveedor a los campos de consulta                     
+                    int pos = pos_espacio(a);
+                    int pos2 = a.indexOf(' ', pos + 1);
+                                      
+                    jTextField_AlbNumAlb.setText(a.substring(0, pos));
+                    
+                    
+                    if (pos2 > 0)
+                        
+                        jTextField_AlbCte.setText(a.substring(pos + 1, a.length()));
+                    
+                    //pinto los datos en los campos correspondientes que he seleccionado con el combobox
+                    //JOptionPane.showMessageDialog(null, "uahahahahah");
+                    
+                     consultar_albaran_normal();
+                     
+                     
+                    
+
+                }
+            }
+        });
+         
+//      
          //manejo del foco para la ventana jdialog1
          jDialog1.addWindowListener(new WindowAdapter() {
                         @Override
@@ -130,7 +166,19 @@ public class Entregas extends javax.swing.JFrame {
 			}
 		});
          
-         
+         jDialog3.addWindowListener(new WindowAdapter() {
+                        @Override
+			public void windowClosing(WindowEvent e) {
+				//JFrame.setVisible(true);
+                                jDialog3.setVisible(false);
+			}
+		
+                        @Override
+			public void windowClosed(WindowEvent e) {
+				//ventanaPrincipal.setVisible(true);
+				jDialog3.setVisible(false);
+			}
+		});
         
     }
     
@@ -157,7 +205,9 @@ public class Entregas extends javax.swing.JFrame {
 			}
 		}); */
         //centro el jdialog al jframe 
-        jDialog1.setLocationRelativeTo(this);
+        jDialog1.setLocationRelativeTo(this);//hago que el dialog se abra centrado relativo al jframe activo
+        jDialog2.setLocationRelativeTo(this);
+        jDialog3.setLocationRelativeTo(this);
         //pongo un título 
         jDialog1.setTitle("Impresión de referencias");
         //pinto pero no va
@@ -167,6 +217,7 @@ public class Entregas extends javax.swing.JFrame {
     public void DoConnect() {
         /*es necesario meter en try catch las operaciones con conexión a db*/
         try {
+            System.out.println("Conectando MySQL...");
             String host = "jdbc:mysql://192.168.35.25:3306/mariodb?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
             String uName = "famesa";
             String uPass = "@Famesa123";
@@ -180,7 +231,48 @@ public class Entregas extends javax.swing.JFrame {
         }
 
     }
+    
+    public void DoConnect_MSSQL() {
+        /*es necesario meter en try catch las operaciones con conexión a db*/
+        try {
+            //String host = "jdbc:mysql://192.168.35.25:3306/mariodb?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
+            System.out.println("Conectando MSSQL...");
+            String host = "jdbc:sqlserver://217.116.8.58:49412;databaseName=x3famesa;schema=FAMESAOF";
+            String uName = "it";
+            String uPass = "@Famesa123";
+            con = DriverManager.getConnection(host, uName, uPass);
 
+            //Statement stmt = con.createStatement();//esta conexión sólo permite navegar con los registros hacia adelante
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+           
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+    }
+    
+    public void DoDesconnect(){
+           //Desconcectar de la BBDD si existiese
+            if (con != null) {
+
+            try {
+                System.out.println("desconectando db...");
+                con.close();
+                if (stmt != null) {
+                
+                    stmt.close();
+                }
+                if (rs != null) {
+                    rs.close();
+                }
+
+            } catch (SQLException ex) {
+
+                JOptionPane.showMessageDialog(null, ex);
+
+            }
+
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -241,6 +333,35 @@ public class Entregas extends javax.swing.JFrame {
         jLabel_logo3 = new javax.swing.JLabel();
         jPanel9 = new javax.swing.JPanel();
         buttonGroup_idioma_alb = new javax.swing.ButtonGroup();
+        jDialog3 = new javax.swing.JDialog();
+        jPanel11 = new javax.swing.JPanel();
+        jPanel12 = new javax.swing.JPanel();
+        jTextField_AlbCte = new javax.swing.JTextField();
+        jComboBox_AlbNormal = new javax.swing.JComboBox();
+        jTextField_AlbPedidoCte = new javax.swing.JTextField();
+        jTextField_AlbTrans = new javax.swing.JTextField();
+        jTextField_AlbDirEnv = new javax.swing.JTextField();
+        jTextField_AlbBultos = new javax.swing.JTextField();
+        jTextField_AlbNumAlb = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        jButton_ConsultaAlbNormal = new javax.swing.JButton();
+        jTextField_AlbNomCte = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
+        jTextField_AlbDir2 = new javax.swing.JTextField();
+        jTextField_AlbDirPostal = new javax.swing.JTextField();
+        jButton_RefrescarAlb = new javax.swing.JButton();
+        jTextField_AlbPrep = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLayeredPane3 = new javax.swing.JLayeredPane();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTextArea4 = new javax.swing.JTextArea();
+        jLabel14 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jText_albaran = new javax.swing.JTextField();
@@ -260,6 +381,7 @@ public class Entregas extends javax.swing.JFrame {
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu_ir = new javax.swing.JMenu();
         jMenuItem_albaranes = new javax.swing.JMenuItem();
+        jMenuItem_albaranNormal = new javax.swing.JMenuItem();
         jMenuItem_referencias = new javax.swing.JMenuItem();
         jMenuItem1 = new javax.swing.JMenuItem();
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
@@ -361,6 +483,11 @@ public class Entregas extends javax.swing.JFrame {
         jFormattedTextField_cantidad.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 jFormattedTextField_cantidadFocusLost(evt);
+            }
+        });
+        jFormattedTextField_cantidad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField_cantidadActionPerformed(evt);
             }
         });
 
@@ -824,6 +951,278 @@ public class Entregas extends javax.swing.JFrame {
                 .addGap(0, 11, Short.MAX_VALUE))
         );
 
+        jDialog3.setTitle("Impresión de etiquetas de pedidos");
+        jDialog3.setBackground(new java.awt.Color(255, 153, 51));
+        jDialog3.setBounds(new java.awt.Rectangle(550, 600, 815, 600));
+        jDialog3.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDialog3.setLocation(new java.awt.Point(0, 0));
+        jDialog3.setPreferredSize(new java.awt.Dimension(761, 575));
+
+        jPanel11.setBackground(new java.awt.Color(240, 232, 150));
+        jPanel11.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jPanel11.setEnabled(false);
+
+        jPanel12.setBackground(new java.awt.Color(141, 191, 72));
+
+        jTextField_AlbCte.setEditable(false);
+        jTextField_AlbCte.setEnabled(false);
+
+        jComboBox_AlbNormal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PEDIDO DENOX" }));
+        jComboBox_AlbNormal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jComboBox_AlbNormalActionPerformed(evt);
+            }
+        });
+
+        jTextField_AlbPedidoCte.setEditable(false);
+        jTextField_AlbPedidoCte.setEnabled(false);
+
+        jTextField_AlbTrans.setEditable(false);
+        jTextField_AlbTrans.setEnabled(false);
+
+        jTextField_AlbDirEnv.setEditable(false);
+        jTextField_AlbDirEnv.setEnabled(false);
+
+        jTextField_AlbBultos.setEditable(false);
+        jTextField_AlbBultos.setEnabled(false);
+        jTextField_AlbBultos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_AlbBultosActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Núm. Pedido:");
+
+        jLabel16.setText("Cód. Cliente:");
+
+        jLabel17.setText("Pedido Cliente:");
+
+        jLabel18.setText("Transportista:");
+
+        jLabel19.setText("Dir. Envío:");
+
+        jLabel20.setText("Núm. Bultos:");
+
+        jButton_ConsultaAlbNormal.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton_ConsultaAlbNormal.setText("Consulta");
+        jButton_ConsultaAlbNormal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_ConsultaAlbNormalActionPerformed(evt);
+            }
+        });
+
+        jTextField_AlbNomCte.setEditable(false);
+        jTextField_AlbNomCte.setEnabled(false);
+
+        jLabel21.setText("Nombre Cliente:");
+
+        jButton1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton1.setText("IMPRIMIR");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jTextField_AlbDir2.setEnabled(false);
+
+        jTextField_AlbDirPostal.setEnabled(false);
+
+        jButton_RefrescarAlb.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton_RefrescarAlb.setText("REFRESCAR");
+        jButton_RefrescarAlb.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_RefrescarAlbActionPerformed(evt);
+            }
+        });
+
+        jTextField_AlbPrep.setEnabled(false);
+        jTextField_AlbPrep.setPreferredSize(new java.awt.Dimension(50, 20));
+
+        jLabel22.setText("Preparador:");
+
+        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
+        jPanel12.setLayout(jPanel12Layout);
+        jPanel12Layout.setHorizontalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(7, 7, 7))
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel18, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE))
+                                    .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)))
+                                .addGap(18, 18, Short.MAX_VALUE)))
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField_AlbBultos, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField_AlbPedidoCte, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jTextField_AlbCte, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel12Layout.createSequentialGroup()
+                                .addComponent(jTextField_AlbNumAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
+                                .addComponent(jButton_ConsultaAlbNormal))
+                            .addComponent(jTextField_AlbTrans, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jButton_RefrescarAlb, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(150, 150, 150))
+                            .addComponent(jTextField_AlbDir2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextField_AlbDirEnv, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel12Layout.createSequentialGroup()
+                                .addComponent(jLabel22)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextField_AlbPrep, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextField_AlbDirPostal, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel12Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jComboBox_AlbNormal, javax.swing.GroupLayout.PREFERRED_SIZE, 356, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel21)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField_AlbNomCte, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(20, Short.MAX_VALUE))
+        );
+        jPanel12Layout.setVerticalGroup(
+            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel12Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addComponent(jComboBox_AlbNormal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbNumAlb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel15)
+                            .addComponent(jButton_ConsultaAlbNormal))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel16))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbPedidoCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel17))
+                        .addGap(9, 9, 9)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbTrans, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel18)))
+                    .addGroup(jPanel12Layout.createSequentialGroup()
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbNomCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbDirEnv, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel19))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField_AlbDir2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField_AlbDirPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jTextField_AlbPrep, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel22))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel20)
+                    .addComponent(jTextField_AlbBultos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton_RefrescarAlb))
+                .addGap(0, 9, Short.MAX_VALUE))
+        );
+
+        jTextArea4.setColumns(20);
+        jTextArea4.setRows(5);
+        jTextArea4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ZPL", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
+        jTextArea4.setEnabled(false);
+        jTextArea4.setName(""); // NOI18N
+        jScrollPane6.setViewportView(jTextArea4);
+        jTextArea4.getAccessibleContext().setAccessibleName("ZPL");
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
+
+        javax.swing.GroupLayout jLayeredPane3Layout = new javax.swing.GroupLayout(jLayeredPane3);
+        jLayeredPane3.setLayout(jLayeredPane3Layout);
+        jLayeredPane3Layout.setHorizontalGroup(
+            jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel14, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jLayeredPane3Layout.setVerticalGroup(
+            jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                .addGroup(jLayeredPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addGap(48, 48, 48)
+                        .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jLayeredPane3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 312, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+        jLayeredPane3.setLayer(jScrollPane6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel14, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
+        jPanel11.setLayout(jPanel11Layout);
+        jPanel11Layout.setHorizontalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLayeredPane3))
+                .addContainerGap(84, Short.MAX_VALUE))
+        );
+        jPanel11Layout.setVerticalGroup(
+            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel11Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLayeredPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34))
+        );
+
+        javax.swing.GroupLayout jDialog3Layout = new javax.swing.GroupLayout(jDialog3.getContentPane());
+        jDialog3.getContentPane().setLayout(jDialog3Layout);
+        jDialog3Layout.setHorizontalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jDialog3Layout.setVerticalGroup(
+            jDialog3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDialog3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jPanel11.getAccessibleContext().setAccessibleName("ZPL");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Generación de etiquetas");
         setBackground(new java.awt.Color(141, 191, 72));
@@ -995,8 +1394,16 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
 
-        jMenuItem_albaranes.setText("Albaranes");
+        jMenuItem_albaranes.setText("Albaranes (Cód. Barras)");
         jMenu_ir.add(jMenuItem_albaranes);
+
+        jMenuItem_albaranNormal.setText("Imp. Etiquetas Pedidos");
+        jMenuItem_albaranNormal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem_albaranNormalActionPerformed(evt);
+            }
+        });
+        jMenu_ir.add(jMenuItem_albaranNormal);
 
         jMenuItem_referencias.setText("Referencias");
         jMenuItem_referencias.addActionListener(new java.awt.event.ActionListener() {
@@ -1095,6 +1502,7 @@ public class Entregas extends javax.swing.JFrame {
          // manda orden de impresión al lpt1. La impresora ha de estar mapeada al LPT1
          //System.getProperty("user.dir");
         ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        
         rellenaTextArea(3, "Orden de impresión para el albarán: ", jText_albaran.getText(), "enviada", "", "");
          
         
@@ -1137,18 +1545,21 @@ public class Entregas extends javax.swing.JFrame {
     private void jMenuItem_referenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_referenciasActionPerformed
         //mostramos la ventana jdialog1
         
+        DoDesconnect();
+        DoConnect();
         jDialog1.setVisible(true);
         
         //LLenamos nuestro ComboBox
            
         try {
-           
+            
             String query = "select REFERENCIA, CLIENTE, NOM_CTE, DESCRIP, EAN FROM V_ARTI_DUN14_NEW";
 
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
             //zpl();
             
             while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                
                 jCombo_ref.addItem(rs.getString("REFERENCIA") + " " + rs.getString("CLIENTE") + " " + rs.getString("NOM_CTE"));
 
                 //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
@@ -1245,6 +1656,75 @@ public class Entregas extends javax.swing.JFrame {
             }
         } catch (SQLException err) {
             JOptionPane.showMessageDialog(this, err.getMessage());
+        }
+    }
+    
+    private void consultar_albaran_normal() {
+        //LLenamos el ComboBox de albaranes
+        
+        jTextArea4.setText(null);
+        try {
+
+            /*String query = "SELECT DEL.SOHNUM_0 AS NUMPED, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0 AS TRANSPORTISTA, DEL.BPCORD_0,\n"
+                    + " DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0 as DESTINO, ORD.CUSORDREF_0 AS NUMPED, DEL.YPACK_0 AS BULTOS,\n"
+                    + "ADR.BPAADDLIG_0 AS DIR1, ADR.BPAADDLIG_1 AS DIR2, ADR.POSCOD_0 AS CP, \n"
+                    + "ADR.CTY_0 AS CITY, ADR.SAT_0 AS PROVINCIA, ADR.CRYNAM_0 AS PAIS\n"
+                    + "fROM FAMESAOF.SDELIVERY DEL\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
+                    + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
+                    + "WHERE DEL.SOHNUM_0='" + jTextField_AlbNumAlb.getText() + "'";*/
+             String query = "SELECT DEL.SOHNUM_0 AS PEDIDO_DENOX, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0 AS TRANSPORTISTA, DEL.BPCORD_0,\n"
+                    + " DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0 as DESTINO, ORD.CUSORDREF_0 AS NUMPED, DEL.YPACK_0 AS BULTOS,\n"
+                    + "ADR.BPAADDLIG_0 AS DIR1, ADR.BPAADDLIG_1 AS DIR2, ADR.POSCOD_0 AS CP, \n"
+                    + "ADR.CTY_0 AS CITY, ADR.SAT_0 AS PROVINCIA, ADR.CRYNAM_0 AS PAIS, VAL2.PREUSR_0 AS PREPARADOR\n"
+                    + "fROM FAMESAOF.SDELIVERY DEL\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
+                    + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
+                    + "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
+                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.PRHNUM_0 = VAL1.PRHNUM_0\n"
+                    + "WHERE DEL.SOHNUM_0='" + jTextField_AlbNumAlb.getText() + "'";
+                 
+            //String query = "select SOHNUM_0 as NUMALB, BPCORD_0 AS CTE FROM FAMESAOF.SDELIVERY ORDER BY SOHNUM_0 DESC";
+                                     
+             rs = stmt.executeQuery(query);//rs contendrá todos los registros
+             
+            //zpl();
+            rs.next();
+
+            //while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+            //jComboBox_AlbNormal.addItem(rs.getString("NUMALB") + " " + rs.getString("CTE"));
+            if (rs.getRow() != 0) {
+                System.out.println("entrando..." + "registro: "+rs.getRow() + " " );
+                jTextField_AlbCte.setText(rs.getString("CTE"));
+                jTextField_AlbNomCte.setText(rs.getString("DESTINO"));
+                jTextField_AlbNumAlb.setText(rs.getString("PEDIDO_DENOX"));
+                jTextField_AlbPedidoCte.setText(rs.getString("NUMPED"));
+                jTextField_AlbTrans.setText(rs.getString("TRANSPORTISTA"));
+                jTextField_AlbDirEnv.setText(rs.getString("DIR1"));
+                jTextField_AlbBultos.setText(rs.getString("BULTOS"));
+                jTextField_AlbDir2.setText(rs.getString("DIR2"));
+                jTextField_AlbDirPostal.setText(rs.getString("CP") + " " + rs.getString("CITY") + " " + rs.getString("PROVINCIA"));
+                jTextField_AlbPrep.setText(rs.getString("PREPARADOR"));
+                zpl(4,Integer.parseInt(jTextField_AlbBultos.getText()),0);
+                System.out.println("salgo...");
+            }
+            else{
+                
+                JOptionPane.showMessageDialog(this, "no existe registro para ese albarán");
+            }
+
+                //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
+            //zpl();
+            //}
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
         }
     }
     private void jButton_consultar_registroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_consultar_registroActionPerformed
@@ -1366,6 +1846,8 @@ public class Entregas extends javax.swing.JFrame {
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
              //mostramos la ventana jdialog2
         
+        DoDesconnect();
+        DoConnect();
         jDialog2.setVisible(true);
         
         //LLenamos nuestro ComboBox con los pedidos a proveedor
@@ -1454,6 +1936,121 @@ public class Entregas extends javax.swing.JFrame {
     private void jText_pedproNumpedActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jText_pedproNumpedActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jText_pedproNumpedActionPerformed
+
+    private void jMenuItem_albaranNormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem_albaranNormalActionPerformed
+        // Muestro el jDialog3 para los albaranes normales y relleno el combobox con los albaranes
+        DoDesconnect();
+        DoConnect_MSSQL();
+        jDialog3.setVisible(true);
+                
+         try {
+
+            /*String query = "SELECT TOP 100 DEL.SOHNUM_0 AS NUMPED, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0, DEL.BPCORD_0, DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0, ORD.CUSORDREF_0, DEL.YPACK_0, ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.POSCOD_0, \n"
+                    + "ADR.CTY_0, ADR.SAT_0, ADR.CRYNAM_0 \n"
+                    + "fROM FAMESAOF.SDELIVERY DEL\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
+                    + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
+                    + "ORDER BY DEL.SOHNUM_0 DESC";*/
+             String query = "SELECT TOP 100 DEL.SOHNUM_0 AS PEDIDO_DENOX, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0, DEL.BPCORD_0, DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0, ORD.CUSORDREF_0, DEL.YPACK_0, ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.POSCOD_0, \n"
+                    + "ADR.CTY_0, ADR.SAT_0, ADR.CRYNAM_0, VAL2.PREUSR_0 AS PREPARADOR \n"
+                    + "fROM FAMESAOF.SDELIVERY DEL\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
+                    + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
+                    + "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
+                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.PRHNUM_0 = VAL1.PRHNUM_0\n"
+                    + "ORDER BY DEL.SOHNUM_0 DESC";
+            
+
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            //zpl();
+
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                 jComboBox_AlbNormal.addItem(rs.getString("PEDIDO_DENOX") + " " + rs.getString("CTE"));
+                //jTextField_AlbCte.setText(rs.getString("CTE"));
+                //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
+                //zpl();
+            }
+
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        }
+       
+  
+        
+    }//GEN-LAST:event_jMenuItem_albaranNormalActionPerformed
+
+    private void jComboBox_AlbNormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox_AlbNormalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox_AlbNormalActionPerformed
+
+    private void jButton_ConsultaAlbNormalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ConsultaAlbNormalActionPerformed
+        // consulta mediante el botón el albarán del campo jTextField_AlbNumAlb
+        consultar_albaran_normal();
+    }//GEN-LAST:event_jButton_ConsultaAlbNormalActionPerformed
+
+    private void jFormattedTextField_cantidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField_cantidadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_cantidadActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // Proceso de impresión de las etiquetas para albaranes normales (sin códigos de barras)
+        generar_fichero (4);
+        ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jTextField_AlbBultosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_AlbBultosActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField_AlbBultosActionPerformed
+
+    private void jButton_RefrescarAlbActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_RefrescarAlbActionPerformed
+        // Refresco los datos del dataset de albaranes normales
+     try {
+
+            /*String query = "SELECT TOP 100 DEL.SOHNUM_0 AS NUMPED, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0, DEL.BPCORD_0, DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0, ORD.CUSORDREF_0, DEL.YPACK_0, ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.POSCOD_0, \n"
+                    + "ADR.CTY_0, ADR.SAT_0, ADR.CRYNAM_0 \n"
+                    + "fROM FAMESAOF.SDELIVERY DEL\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
+                    + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
+                    + "ORDER BY DEL.SOHNUM_0 DESC";*/
+           String query = "SELECT TOP 100 DEL.SOHNUM_0 AS PEDIDO_DENOX, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0, DEL.BPCORD_0, DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0, ORD.CUSORDREF_0, DEL.YPACK_0, ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.POSCOD_0, \n"
+                    + "ADR.CTY_0, ADR.SAT_0, ADR.CRYNAM_0, VAL2.PREUSR_0 AS PREPARADOR \n"
+                    + "fROM FAMESAOF.SDELIVERY DEL\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
+                    + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
+                    + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
+                    + "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
+                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.PRHNUM_0 = VAL1.PRHNUM_0\n"
+                    + "ORDER BY DEL.SOHNUM_0 DESC";
+            
+
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            //zpl();
+
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                 jComboBox_AlbNormal.addItem(rs.getString("PEDIDO_DENOX") + " " + rs.getString("CTE"));
+                //jTextField_AlbCte.setText(rs.getString("CTE"));
+                //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
+                //zpl();
+            }
+
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        }
+    }//GEN-LAST:event_jButton_RefrescarAlbActionPerformed
     
     private void inicio_tabla(){ 
         //Método para configurar el DefaultTableModel de la tabla.
@@ -1500,6 +2097,8 @@ public class Entregas extends javax.swing.JFrame {
                 data.writeToFile(jTextArea1.getText());
             } else if (p_TextArea == 2){
                 data.writeToFile(jTextArea2.getText());
+            }else if (p_TextArea == 4){
+                data.writeToFile(jTextArea4.getText());
             }else{
                 data.writeToFile(jTextArea3.getText());
             }
@@ -1510,7 +2109,7 @@ public class Entregas extends javax.swing.JFrame {
     }
          
     public void zpl(int p_modo, int p_num, int p_unidades){
-
+        //procedimiento ZPL para impresoras compatibles ZPL
         try {
             if (p_modo == 1) {//rellenar etiquetas para albarán
                // while (rs.next()) { //muevo el cursor al primer registro y muestro los datos en los campos
@@ -1569,7 +2168,7 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea2.append("^XZ\n");
                 }
                 //para capacidad dun14 < 2 el codebar es EAN y se imprime una etiqueta, en caso contrario es DUN14 y se imprimen N entiquetas (al valor de cap dun14)
-            } else {  //rellenar etiquetas para proveedor
+            } else if (p_modo == 3){  //rellenar etiquetas para proveedor
                 int contador;
                 //imprimo las etiquetas EAN (para el artículo)
                 for (contador = 0; contador < p_num; contador++) {
@@ -1640,6 +2239,61 @@ public class Entregas extends javax.swing.JFrame {
                         jTextArea3.append("^XZ\n");
 
                     }
+                }
+            }
+            
+            else if (p_modo == 4){
+                //aquí etiquetas para albarán normal
+                 int contador;
+                 int bultos = 0;
+                 
+                for (contador = 0; contador < p_num; contador++) {
+                    //String cod_ean = rs.getString("EAN");
+                    //String cod_ean = jText_ref_ean.getText();
+                    bultos = bultos + 1;
+                    jTextArea4.append("^XA\n");
+                    jTextArea4.append("^CI28\n"); //juego de caracterse UTF8
+                    jTextArea4.append("^FO20,20^XGE:LOGO_DENOX.PNG,1,1^FS\n");
+                    jTextArea4.append("^PON\n");
+                    jTextArea4.append("^LH0,0\n");
+                    jTextArea4.append("^FO20,150\n");
+                    jTextArea4.append("^GB780,600,4^FS\n"); //RECUADRO
+                    jTextArea4.append("^FO400,20\n");
+                    jTextArea4.append("^FB700,5,,L,\n");//ZONA DE IMPRESIÓN CONN 5 LÍNEAS
+                    jTextArea4.append("^A0N,26,\n");
+                    jTextArea4.append("^FD FABRICANTES DE MENAJE, S.A \\& Ctra. Nacional 330km. 486 \\& Pol. Ind. Agrinasa, Naves 30-35 \\& 50420 CADRETE (Zaragoza) \\& Tel. 976 126 210 * Fax 976 126 195^FS\n");
+                    jTextArea4.append("^FO30,170\n");
+                    jTextArea4.append("^A0N,42,32\n");
+                    jTextArea4.append("^FDEnvío a / Sent to: " + jTextField_AlbNomCte.getText() +"^FS\n");
+                    jTextArea4.append("^FO30,220\n");
+                    jTextArea4.append("^A0N,42,32\n");
+                    jTextArea4.append("^FD Su pedido / Your order: " +  jTextField_AlbPedidoCte.getText() + "^FS\n");
+                    jTextArea4.append("^FO30,270\n");
+                    jTextArea4.append("^A0N,42,32\n");
+                    jTextArea4.append("^FD Dirección / Address: ^FS\n");
+                    jTextArea4.append("^FO150,320\n");
+                    jTextArea4.append("^A0N,30,20\n");
+                    jTextArea4.append("^FD " + jTextField_AlbDirEnv.getText() + "^FS\n");
+                    jTextArea4.append("^FO150,355\n");
+                    jTextArea4.append("^A0N,30,20\n");
+                    jTextArea4.append("^FD "+ jTextField_AlbDir2.getText() +"^FS\n");
+                    jTextArea4.append("^FO150,390\n");
+                    jTextArea4.append("^A0N,30,20\n");
+                    jTextArea4.append("^FD "+ jTextField_AlbDirPostal.getText() +"^FS\n");
+                    jTextArea4.append("^FO30,430\n");
+                    jTextArea4.append("^FB700,3,,L,\n");
+                    jTextArea4.append("^A0N,42,32\n");
+                    jTextArea4.append("^FD Agencia / Shipping company: " + jTextField_AlbTrans.getText() + "^FS\n");
+                    jTextArea4.append("^FO30,550\n");
+                    jTextArea4.append("^A0N,42,32\n");
+                    jTextArea4.append("^FD Bulto / Package: "+ bultos + "/" + jTextField_AlbBultos.getText() + "^FS\n");
+                    jTextArea4.append("^FO780,780\n");
+                    jTextArea4.append("^A0N,42,32\n");
+                    jTextArea4.append("^FD" + jTextField_AlbPrep.getText() + "^FS\n");
+                    jTextArea4.append("^XZ\n");
+                  
+                                                 
+                    
                 }
             }
         } catch (SQLException err) {
@@ -1747,23 +2401,37 @@ super.paintComponent(grafico);
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup_idioma;
     private javax.swing.ButtonGroup buttonGroup_idioma_alb;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton_ConsultaAlbNormal;
+    private javax.swing.JButton jButton_RefrescarAlb;
     private javax.swing.JButton jButton_consultar;
     private javax.swing.JButton jButton_consultar_registro;
+    private javax.swing.JComboBox jComboBox_AlbNormal;
     private javax.swing.JComboBox jCombo_pedpro;
     private javax.swing.JComboBox jCombo_ref;
     private javax.swing.JDialog jDialog1;
     private javax.swing.JDialog jDialog2;
+    private javax.swing.JDialog jDialog3;
     private javax.swing.JFormattedTextField jFormattedTextField_cantidad;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1776,14 +2444,18 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel_logo3;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
+    private javax.swing.JLayeredPane jLayeredPane3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem_albaranNormal;
     private javax.swing.JMenuItem jMenuItem_albaranes;
     private javax.swing.JMenuItem jMenuItem_referencias;
     private javax.swing.JMenuItem jMenuItem_salir;
     private javax.swing.JMenu jMenu_ir;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel10;
+    private javax.swing.JPanel jPanel11;
+    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
@@ -1803,12 +2475,24 @@ super.paintComponent(grafico);
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JTable jTb;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
+    private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea_log;
+    private javax.swing.JTextField jTextField_AlbBultos;
+    private javax.swing.JTextField jTextField_AlbCte;
+    private javax.swing.JTextField jTextField_AlbDir2;
+    private javax.swing.JTextField jTextField_AlbDirEnv;
+    private javax.swing.JTextField jTextField_AlbDirPostal;
+    private javax.swing.JTextField jTextField_AlbNomCte;
+    private javax.swing.JTextField jTextField_AlbNumAlb;
+    private javax.swing.JTextField jTextField_AlbPedidoCte;
+    private javax.swing.JTextField jTextField_AlbPrep;
+    private javax.swing.JTextField jTextField_AlbTrans;
     private javax.swing.JTextField jText_albaran;
     private javax.swing.JTextField jText_empresa;
     private javax.swing.JTextField jText_pedproNumped;
