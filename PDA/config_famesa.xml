@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<conf>  
+  <connectionstring>Data Source=217.116.8.58\X3FAMESA;Initial Catalog=X3FAMESA;User ID=RFFAMTRI;Password=RadioFreqFamtri100$</connectionstring>
+  <esquema>FAMESAOF</esquema>
+  <planta>FAM</planta>
+  <terminal>0001</terminal>
+  <formatofechasqlserver>dd/MM/yyyy</formatofechasqlserver>
+</conf> 
