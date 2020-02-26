@@ -237,7 +237,7 @@ public class Entregas extends javax.swing.JFrame {
         try {
             //String host = "jdbc:mysql://192.168.35.25:3306/mariodb?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
             System.out.println("Conectando MSSQL...");
-            String host = "jdbc:sqlserver://217.116.8.58:49412;databaseName=x3famesa;schema=FAMESAOF";
+            String host = "jdbc:sqlserver://213.149.235.131:49412;databaseName=x3famesa;schema=FAMESAOF";
             String uName = "it";
             String uPass = "@Famesa123";
             con = DriverManager.getConnection(host, uName, uPass);
@@ -967,7 +967,7 @@ public class Entregas extends javax.swing.JFrame {
         jTextField_AlbCte.setEditable(false);
         jTextField_AlbCte.setEnabled(false);
 
-        jComboBox_AlbNormal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "PEDIDO DENOX" }));
+        jComboBox_AlbNormal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ALB DENOX" }));
         jComboBox_AlbNormal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox_AlbNormalActionPerformed(evt);
@@ -991,7 +991,7 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
 
-        jLabel15.setText("Núm. Pedido:");
+        jLabel15.setText("Núm. Albarán:");
 
         jLabel16.setText("Cód. Cliente:");
 
@@ -1153,7 +1153,6 @@ public class Entregas extends javax.swing.JFrame {
         jTextArea4.setEnabled(false);
         jTextArea4.setName(""); // NOI18N
         jScrollPane6.setViewportView(jTextArea4);
-        jTextArea4.getAccessibleContext().setAccessibleName("ZPL");
 
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
 
@@ -1222,6 +1221,8 @@ public class Entregas extends javax.swing.JFrame {
         );
 
         jPanel11.getAccessibleContext().setAccessibleName("ZPL");
+
+        jDialog3.getAccessibleContext().setAccessibleName("Impresión de etiquetas de albarán");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Generación de etiquetas");
@@ -1397,7 +1398,7 @@ public class Entregas extends javax.swing.JFrame {
         jMenuItem_albaranes.setText("Albaranes (Cód. Barras)");
         jMenu_ir.add(jMenuItem_albaranes);
 
-        jMenuItem_albaranNormal.setText("Imp. Etiquetas Pedidos");
+        jMenuItem_albaranNormal.setText("Imp. Etiquetas Albarán (simple)");
         jMenuItem_albaranNormal.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem_albaranNormalActionPerformed(evt);
@@ -1686,9 +1687,9 @@ public class Entregas extends javax.swing.JFrame {
                     + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
                     + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
                     + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
-                    + "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
-                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.PRHNUM_0 = VAL1.PRHNUM_0\n"
-                    + "WHERE DEL.SOHNUM_0='" + jTextField_AlbNumAlb.getText() + "'";
+                    //+ "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
+                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
+                    + "WHERE DEL.SDHNUM_0='" + jTextField_AlbNumAlb.getText() + "'";
                  
             //String query = "select SOHNUM_0 as NUMALB, BPCORD_0 AS CTE FROM FAMESAOF.SDELIVERY ORDER BY SOHNUM_0 DESC";
                                      
@@ -1703,7 +1704,7 @@ public class Entregas extends javax.swing.JFrame {
                 System.out.println("entrando..." + "registro: "+rs.getRow() + " " );
                 jTextField_AlbCte.setText(rs.getString("CTE"));
                 jTextField_AlbNomCte.setText(rs.getString("DESTINO"));
-                jTextField_AlbNumAlb.setText(rs.getString("PEDIDO_DENOX"));
+                jTextField_AlbNumAlb.setText(rs.getString("NUMALB"));
                 jTextField_AlbPedidoCte.setText(rs.getString("NUMPED"));
                 jTextField_AlbTrans.setText(rs.getString("TRANSPORTISTA"));
                 jTextField_AlbDirEnv.setText(rs.getString("DIR1"));
@@ -1962,16 +1963,16 @@ public class Entregas extends javax.swing.JFrame {
                     + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
                     + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
                     + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
-                    + "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
-                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.PRHNUM_0 = VAL1.PRHNUM_0\n"
-                    + "ORDER BY DEL.SOHNUM_0 DESC";
+                    //+ "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
+                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
+                    + "ORDER BY DEL.SDHNUM_0 DESC";
             
 
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
             //zpl();
 
             while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
-                 jComboBox_AlbNormal.addItem(rs.getString("PEDIDO_DENOX") + " " + rs.getString("CTE"));
+                 jComboBox_AlbNormal.addItem(rs.getString("NUMALB") + " " + rs.getString("CTE"));
                 //jTextField_AlbCte.setText(rs.getString("CTE"));
                 //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
                 //zpl();
@@ -2001,8 +2002,22 @@ public class Entregas extends javax.swing.JFrame {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // Proceso de impresión de las etiquetas para albaranes normales (sin códigos de barras)
-        generar_fichero (4);
-        ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        String tipo_doc = "ALBARAN"; 
+        String codigo_doc = jTextField_AlbNumAlb.getText();
+        int opcion = 0;      
+              
+        System.out.println ("reimprimir:" + reimprimir(tipo_doc, codigo_doc));
+        if (reimprimir(tipo_doc, codigo_doc) == 1) {
+          opcion = JOptionPane.showConfirmDialog(this, "Albarán ya impreso, ¿reimprimir?");
+            //0=yes, 1=no, 2=cancel
+           System.out.println(opcion);
+        }
+        
+                
+        if (opcion == 0) { 
+            generar_fichero (4);
+            ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        }
         
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -2031,16 +2046,16 @@ public class Entregas extends javax.swing.JFrame {
                     + "INNER JOIN FAMESAOF.BPDLVCUST DIR ON DIR.BPAADD_0 = DEL.BPAADD_0 AND DEL.BPCORD_0 = DIR.BPCNUM_0\n"
                     + "INNER JOIN FAMESAOF.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
                     + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
-                    + "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
-                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.PRHNUM_0 = VAL1.PRHNUM_0\n"
-                    + "ORDER BY DEL.SOHNUM_0 DESC";
+                    //+ "INNER JOIN FAMESAOF.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
+                    + "INNER JOIN FAMESAOF.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
+                    + "ORDER BY DEL.SDHNUM_0 DESC";
             
 
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
             //zpl();
 
             while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
-                 jComboBox_AlbNormal.addItem(rs.getString("PEDIDO_DENOX") + " " + rs.getString("CTE"));
+                 jComboBox_AlbNormal.addItem(rs.getString("NUMALB") + " " + rs.getString("CTE"));
                 //jTextField_AlbCte.setText(rs.getString("CTE"));
                 //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
                 //zpl();
@@ -2089,25 +2104,87 @@ public class Entregas extends javax.swing.JFrame {
     public void generar_fichero(int p_TextArea){
            // Guardo la info en un fichero  
         String file_name = "C:/tmp/etiqueta.txt";
-
+        String tipo_doc ="";
+        String codigo_doc = "";
+       
         try {
             WriteFile data = new WriteFile(file_name, false);
             //data.writeToFile("this is another line of text ñ");
             if (p_TextArea == 1) {
                 data.writeToFile(jTextArea1.getText());
+                tipo_doc = "TIPO1";
             } else if (p_TextArea == 2){
                 data.writeToFile(jTextArea2.getText());
+                tipo_doc = "TIPO2";
             }else if (p_TextArea == 4){
                 data.writeToFile(jTextArea4.getText());
+                tipo_doc = "ALBARAN";
+                codigo_doc = jTextField_AlbNumAlb.getText();
             }else{
                 data.writeToFile(jTextArea3.getText());
+                tipo_doc = "TIPO3";
             }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
+        //aquí el log-control del albarán
+       
+             
+        log_impresion (tipo_doc, codigo_doc);
+        
         JOptionPane.showMessageDialog(this, "fichero: " + file_name + " generado");
     }
+    
+    public void log_impresion (String p_tipo, String p_codigo){
+        //genero un log de impresión de documentos para controlar si las etiquetas han sido impresas o no       
+        
+        try {
+           
+            String query = "BEGIN TRANSACTION "
+                    + "INSERT INTO FAMESAOF.ZSDELIVERY_PRINT_LOG (CODIGO, TIPO) VALUES ('" + p_codigo + "','" + p_tipo + "')"
+                    + "COMMIT";
+                                   
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+                        
+            
+
+        } catch (SQLException err) {
+            if (err.getErrorCode()!= 0) { //La instrucción Insert no devuelve registros, de modo que elimino la alerta por tener el recordset vacío
+                JOptionPane.showMessageDialog(this, err.getMessage()+ ' ' + err.getErrorCode());
+            }
+
+        }
+    }
+    
+    public int reimprimir (String p_tipo, String p_codigo){
+        int valor = 0;
+        
+        try {
+           
+            String query = "SELECT CODIGO FROM  FAMESAOF.ZSDELIVERY_PRINT_LOG WHERE CODIGO = '" + p_codigo + "' AND TIPO = '" + p_tipo + "'";
+                    
+                                   
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            rs.next();//muevo el cursor al primer registro y relleno el combobox
          
+                       
+            if (rs.getRow() != 0) {  //el recordset contiene registro
+                valor = 1;
+            }
+            else
+                valor =  0;
+                                   
+            
+
+        } catch (SQLException err) {
+                          
+                JOptionPane.showMessageDialog(this, err.getMessage()+ ' ' + err.getErrorCode());
+
+
+        }
+
+        return valor;
+    }
     public void zpl(int p_modo, int p_num, int p_unidades){
         //procedimiento ZPL para impresoras compatibles ZPL
         try {
@@ -2257,7 +2334,7 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea4.append("^PON\n");
                     jTextArea4.append("^LH0,0\n");
                     jTextArea4.append("^FO20,150\n");
-                    jTextArea4.append("^GB780,600,4^FS\n"); //RECUADRO
+                    jTextArea4.append("^GB760,600,4^FS\n"); //RECUADRO
                     jTextArea4.append("^FO400,20\n");
                     jTextArea4.append("^FB700,5,,L,\n");//ZONA DE IMPRESIÓN CONN 5 LÍNEAS
                     jTextArea4.append("^A0N,26,\n");
@@ -2287,7 +2364,7 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea4.append("^FO30,550\n");
                     jTextArea4.append("^A0N,42,32\n");
                     jTextArea4.append("^FD Bulto / Package: "+ bultos + "/" + jTextField_AlbBultos.getText() + "^FS\n");
-                    jTextArea4.append("^FO780,780\n");
+                    jTextArea4.append("^FO760,780\n");
                     jTextArea4.append("^A0N,42,32\n");
                     jTextArea4.append("^FD" + jTextField_AlbPrep.getText() + "^FS\n");
                     jTextArea4.append("^XZ\n");
