@@ -2846,19 +2846,24 @@ public class Entregas extends javax.swing.JFrame {
                     //jTextArea4.append("^FO20,150\n");
                     //jTextArea4.append("^GB760,600,4^FS\n"); //RECUADRO
                     jTextArea5.append("^FO50,50\n");
+                    jTextArea5.append("^FB720,1,,C\n");//CREO UNA BOX PARA CADA LÍNEA PARA PONER EL TEXTO CENTRADO
                     jTextArea5.append("^A0N," + p_unidades + ",\n");
                     //jTextArea5.append("^FB700,5,,C,\n");//ZONA DE IMPRESIÓN CONN 5 LÍNEAS
                     jTextArea5.append("^FD" + jTonta_texto.getText() + "^FS\n");
                     jTextArea5.append("^FO50,200\n");
+                    jTextArea5.append("^FB720,1,,C\n");
                     jTextArea5.append("^A0N," + p_unidades + ",\n");
                     jTextArea5.append("^FD" + jTonta_texto1.getText() + "^FS\n");
                     jTextArea5.append("^FO50,350\n");
+                    jTextArea5.append("^FB720,1,,C\n");
                     jTextArea5.append("^A0N," + p_unidades + ",\n");
                     jTextArea5.append("^FD" + jTonta_texto2.getText() + "^FS\n");
                     jTextArea5.append("^FO50,500\n");
+                    jTextArea5.append("^FB720,1,,C\n");
                     jTextArea5.append("^A0N," + p_unidades + ",\n");
                     jTextArea5.append("^FD" + jTonta_texto3.getText() + "^FS\n");
                     jTextArea5.append("^FO50,650\n");
+                    jTextArea5.append("^FB720,1,,C\n");
                     jTextArea5.append("^A0N," + p_unidades + ",\n");
                     jTextArea5.append("^FD" + jTonta_texto4.getText() + "^FS\n");
                     jTextArea5.append("^XZ\n");
