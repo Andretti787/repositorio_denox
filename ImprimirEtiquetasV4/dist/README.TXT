@@ -30,9 +30,3 @@ the projects runtime path.
 in the Projects window and choose Properties. Then click Run and enter the
 class name in the Main Class field. Alternatively, you can manually type the
 class name in the manifest Main-Class element.
-
-/********************************/
-1- El fichero generado para la impresión de las etiquetas reside en c:\tmp (si no existe se ha de crear).
-2- La impresión se lanza a una impresora mapeada al puerto LPT1, si no existe se ha de mapear
-/*******************************/
-
