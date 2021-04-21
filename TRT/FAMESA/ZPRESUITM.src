@@ -1,0 +1,107 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char TIPOITM
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZPC]) : Local File SQUOTE [ZPC]      : Endif  ##FACT. DE PRESUPUESTOS CABECERA
+  If !clalev([F:ZPD]) : Local File SQUOTED [ZPD]      : Endif  ##FACT. DE PRESUPUESTOS DETALLE
+  If !clalev([F:ZIT]) : Local File ITMMASTER [ZIT]      : Endif  ##Articulos
+  If !clalev([F:ZBD1]) : Local File BOMD [ZBD1]      : Endif  ##Estructura detalle Nivel 1
+  If !clalev([F:ZBD2]) : Local File BOMD [ZBD2]      : Endif  ##Estructura detalle Subnivel
+  If !clalev([F:ZBC]) : Local File BOM [ZBC]      : Endif  ##Estructura Cabecera
+  If !clalev([F:ZPI]) : Local File ZTMPPREITM [ZPI]     : Endif  ##Tabla temporal de Articulos de PRESUPUESTOS
+
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(33),9,5)
+  FECHADEB=mid$(PARAMETRE(34),9,8)
+  FECHAFIN=mid$(PARAMETRE(35),9,8)
+  TIPOITM=mid$(PARAMETRE(37),9,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [ZPI]
+      Delete [ZPI] Where CREUSR= GUSER
+  Commit
+
+  #########################################
+  ## CARGA DE Presupuestos               ##
+  ## Mensual y ACUMULADO del año         ##
+  #########################################
+  Filter [ZPC] Where CPY = COMPANY and (QUODAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and QUODAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By QUODAT
+  Trbegin [ZPI]
+      For [ZPC]
+          Filter [ZPD] Where SQHNUM = [F:ZPC]SQHNUM
+          For [ZPD]
+            ##Se busca el canal del Artículo
+            Filter [ZIT] Where ITMREF=[F:ZPD]ITMREF
+            Read [ZIT] First
+            If [F:ZIT]TSICOD(0) = TIPOITM Then
+              [F:ZPI]CANALA = [F:ZIT]TSICOD(1)
+              [F:ZPI]CPY=[F:ZPC]CPY
+              [F:ZPI]FCY=[F:ZPC]SALFCY
+              [F:ZPI]QUODAT=[F:ZPC]QUODAT
+              [F:ZPI]SQHNUM=[F:ZPC]SQHNUM
+              [F:ZPI]SQDLIN=[F:ZPD]SQDLIN
+              [F:ZPI]ITMREF=[F:ZPD]ITMREF
+              [F:ZPI]QTY=[F:ZPD]QTY
+              [F:ZPI]SAU=[F:ZPD]SAU
+              Write [ZPI]
+            Else ##Si no es materia prima, tendremos que buscar en su estructura las materias primas
+              Filter [ZBD1] Where ITMREF = [F:ZPD]ITMREF
+              For [ZBD1]
+                Filter [ZIT] Where ITMREF=[F:ZBD1]CPNITMREF
+                Read [ZIT] First
+                If [F:ZIT]TSICOD(0) = TIPOITM Then ##Al encontrar miramos si es del tipo que buscamos
+                  [F:ZPI]CANALA = [F:ZIT]TSICOD(1)
+                  [F:ZPI]CPY=[F:ZPC]CPY
+                  [F:ZPI]FCY=[F:ZPC]SALFCY
+                  [F:ZPI]QUODAT=[F:ZPC]QUODAT
+                  [F:ZPI]SQHNUM=[F:ZPC]SQHNUM
+                  [F:ZPI]SQDLIN=[F:ZPD]SQDLIN
+                  [F:ZPI]ITMREF=[F:ZBD1]CPNITMREF
+                  Filter [ZBC] Where ITMREF = [F:ZBD1]ITMREF
+                  Read [ZBC] First
+                  [F:ZPI]QTY=([F:ZPD]QTY*[F:ZBD1]BOMQTY)/[F:ZBC]BASQTY
+                  [F:ZPI]SAU=[F:ZBD1]BOMUOM
+                  Write [ZPI]
+                Else ## Si no lo es y es producto terminado, buscamos su estructura en subnivel
+                  Filter [ZBD2] Where ITMREF = [F:ZBD1]CPNITMREF
+                  For [ZBD2]
+                    Filter [ZIT] Where ITMREF=[F:ZBD2]CPNITMREF
+                    Read [ZIT] First
+                    If [F:ZIT]TSICOD(0) = TIPOITM Then ##Al encontrar miramos si es del tipo que buscamos
+                      [F:ZPI]CANALA = [F:ZIT]TSICOD(1)
+                      [F:ZPI]CPY=[F:ZPC]CPY
+                      [F:ZPI]FCY=[F:ZPC]SALFCY
+                      [F:ZPI]QUODAT=[F:ZPC]QUODAT
+                      [F:ZPI]SQHNUM=[F:ZPC]SQHNUM
+                      [F:ZPI]SQDLIN=[F:ZPD]SQDLIN
+                      [F:ZPI]ITMREF=[F:ZBD2]CPNITMREF
+                      Filter [ZBC] Where ITMREF = [F:ZBD2]ITMREF
+                      Read [ZBC] First
+                      [F:ZPI]QTY=([F:ZPD]QTY*[F:ZBD2]BOMQTY)/[F:ZBC]BASQTY
+                      [F:ZPI]SAU=[F:ZBD2]BOMUOM
+                      Write [ZPI]
+                    Endif
+                  Next
+                Endif
+              Next
+            Endif
+          Next
+      Next
+  Commit
+
+
+  ##Cierre de ficheros
+  Close File [ZPI]
+  Close File [ZPC]:Close File [ZPD]
+  Close File [ZBD1]: Close File [ZBD2]: Close File [ZIT]
+End
+

@@ -1,0 +1,20 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+Local File AUTILIS[AUS]
+
+Read [F:AUS]CODUSR = "ADMIN"
+If !fstat
+  Infbox [F:AUS]NEWPAS
+  Local Char PASSE(250) : PASSE = "5E403E8303D61BC16341C5E5"
+  Call VARPSE(PASSE) From GESUSER
+  infbox PASSE
+Endif
+
+End
+
+
+
+
+
+
+
+

@@ -1,0 +1,223 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+#####################################
+## Realizado por Oscar J. Martínez ##
+## 16/11/2016 Ultima Modif.        ##
+################################################################################
+## <ALIVE>                                                                    ##
+## N.A.C. <20/12/2017>: Importación seguimiento de materiales                 ##
+##                                                                            ##
+################################################################################
+
+$ACTION
+  Case ACTION
+    When "EXEC"    : Gosub IMPORTAR_SEG_FAB # Importar Seg. de Fab.
+    When "TERMINE" : Gosub TERMINE
+  Endcase
+Return
+
+#------------------------------------------------------------------------------#
+
+$IMPORTAR_SEG_FAB
+  If !GSERVEUR
+    Call OUVRE_TRACE("Importación seguimientos de fabricación") From LECFIC
+  Endif
+
+  Call ECR_TRACE("Importación seguimientos de fabricación",0) From GESECRAN
+  Call ECR_TRACE(string$(80,"-"),0) From GESECRAN
+
+  Local Char WFICMKI(250), WFICMKM(250), AUXCHAR(250)
+
+  AUXCHAR = format$("D:YYYYMMDD", date$) + ctrans(time$,":","")
+  WFICMKI = "SEGFAB" + AUXCHAR
+  WFICMKM = "SEGMAT" + AUXCHAR
+
+  ##Generación del Fichero
+  Call GEN_FICH(WFICMKI, WFICMKM)
+  ##Importación silenciosa.
+  If filinfo(filpath('TMP\IMPSEGFAB', WFICMKI, 'txt'),0) >= 0
+    Call ECR_TRACE("Importación declaración de la producción",0) From GESECRAN
+    WFICMKI = filpath('TMP\IMPSEGFAB', WFICMKI, 'txt')
+    Call IMPORT("ZMESMKI", WFICMKI)
+    Call ECR_TRACE(string$(80,"-"),0) From GESECRAN
+  Endif
+
+  ##If filinfo(filpath('TMP\IMPSEGFAB', WFICMKM, 'txt'),0) >= 0
+  ##  Call ECR_TRACE("Importación seguimiento de material",0) From GESECRAN
+  ##  WFICMKM = filpath('TMP\IMPSEGFAB', WFICMKM, 'txt')
+  ##  Call IMPORT("ZMESMKM", WFICMKM)
+  ##  Call ECR_TRACE(string$(80,"-"),0) From GESECRAN
+  ##Endif
+
+  If !GSERVEUR
+    Call FERME_TRACE From LECFIC
+  Endif
+#  If GSERVEUR Then
+#    Sleep 5
+#    Goto IMPORTAR_SEG_FAB
+#  Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$TERMINE
+  If !GSERVEUR : TRA = 1 : Else : TRA = 0 : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+Subprog GEN_FICH(WFICMKI, WFICMKM)
+Value Char WFICMKI
+Value Char WFICMKM
+
+  Local Char    AUXCHAR(250)
+  Local Decimal WCOEF, WQTY
+  Local Integer LSW
+  ##Apertura de ficheros
+  If !clalev([F:ZET])  : Local File ZETPROTER [ZET] : Endif  ## Hco. Etiquetas
+  If !clalev([F:ZMFM]) : Local File MFGMAT   [ZMFM] : Endif  ## Órdenes fabricación-materiales
+  If !clalev([F:ZMFI]) : Local File MFGITM   [ZMFI] : Endif  ## Órdenes fabricación-artículos
+  If !clalev([F:ZMKI]) : Local File MFGITMTRK   [ZMKI] : Endif  ## Seguim.fabricación-artículos
+
+  Filter [F:ZET] Where LEIDA<>2 and TERMINAL<>''
+  Read [F:ZET]First
+  If fstat=0 Then
+    Openo filpath('TMP\IMPSEGFAB', WFICMKI, 'txt'), -1 Using [ZMKI]
+    Iomode adxirs chr$(13) + chr$(10) Using [ZMKI]
+    Iomode adxifs ","                 Using [ZMKI]
+    Iomode adxium [V]GASCII           Using [ZMKI]
+
+    Openo filpath('TMP\IMPSEGFAB', WFICMKM, 'txt'), -1 Using [ZMKM]
+    Iomode adxirs chr$(13) + chr$(10) Using [ZMKM]
+    Iomode adxifs ","                 Using [ZMKM]
+    Iomode adxium [V]GASCII           Using [ZMKM]
+
+    For [F:ZET]ZEP2
+      ##Compruebo que no esté realizado el seguimiento de fabricacion
+      LSW=0
+      If [F:ZET]NUMERO<>0
+        For [F:ZMKI] Where MFGNUM=[F:ZET]MFGNUM and ITMREF=[F:ZET]ITMREF and YNUMETIQ = [F:ZET]NUMERO
+          LSW=1
+        Next
+      Endif
+      If LSW=1
+          #Si está el seguimiento, la actualizo como leida
+          [F:ZET]LEIDA=2
+          Rewrite  [F:ZET]
+      Else
+        ## Actualizo tambien la tabla de lecturas realizadas para no volver a coger el seguimiento
+        Gosub WR_WFICMKI
+      Endif
+      ###Gosub WR_WFICMKM
+      #[F:ZET]LEIDA = 2
+      #Rewrite[F:ZET]
+      # N.A.C. <04/01/2018>:
+      #   · La actualización se hace en el punto de entrada CUSTRTSUP (MTKAUTLIB)
+    Next
+    Openo Using [ZMKI]
+    Openo Using [ZMKM]
+  Endif
+
+  ##Cierre de ficheros
+  Close File [ZET]
+End
+
+#------------------------------------------------------------------------------#
+
+$WR_WFICMKI
+  AUXCHAR  = "M"
+  AUXCHAR += "," + [F:ZET]FCY
+  AUXCHAR += "," + [F:ZET]MFGNUM
+  AUXCHAR += "," + [F:ZET]ITMREF
+  AUXCHAR += "," + num$([F:ZET]CANTEMBALAJE)
+  AUXCHAR += "," + [F:ZET]FLEIDA
+  AUXCHAR += "," + num$([F:ZET]NUMERO)
+  Wrseq AUXCHAR Using [ZMKI]
+
+  AUXCHAR = "S,GENERAL"
+  Wrseq AUXCHAR Using [ZMKI]
+Return
+
+$WR_WFICMKM
+  For [F:ZMFM]MFM0 Where MFGNUM=[F:ZET]MFGNUM
+    Read [F:ZMFI]MFI0 = [F:ZMFM]MFGNUM;[F:ZMFM]MFGLIN
+    If fstat : Raz [F:ZMFI] : Endif
+
+
+    WCOEF = [F:ZMFM]RETQTY/[F:ZMFI]EXTQTY
+    WQTY = [F:ZET]CANTEMBALAJE * WCOEF
+    Call QTEARR2(WQTY, [F:ZMFM]STU, 3) From TRTDIV
+
+    AUXCHAR = [F:ZMFM]MFGNUM                     # MFGNUM: N. orden
+    AUXCHAR += "," + [F:ZMFM]MFGFCY              # MFGFCY: Planta prod.
+    AUXCHAR += "," + num$([F:ZMFM]MFGLIN)        # MFGLIN: Nº Línea
+    AUXCHAR += "," + num$([F:ZMFM]BOMSEQ)        # BOMSEQ: Secuencia estruc.
+    AUXCHAR += "," + [F:ZMFM]ITMREF              # ITMREF: Artículo
+    AUXCHAR += "," + [F:ZMFI]ITMREF              # BOMNUM: Estructura
+    AUXCHAR += "," + num$([F:ZMFI]BOMALT)        # BOMALT: Alternativa estruct.
+    AUXCHAR += "," + num$(WQTY)                  # USEQTY: Cantidad consumida
+    AUXCHAR += "," + format$("D:YYYYMMDD",date$) # *1: Fecha imputación
+    AUXCHAR += "," + ""                          # MFGTRKNUM: Número seguim.
+    Wrseq AUXCHAR Using [ZMKM]
+  Next
+Return
+
+#------------------------------------------------------------------------------#
+
+Subprog IMPORT(MODELE, NOMFIC)
+Value Char    MODELE
+Value Char    NOMFIC
+#--
+Local Integer IMPSTA
+Local Char    MESSAGE(255)
+
+  Gosub OUVRE From GIMPOBJ
+  Raz [M:IMP2]
+  Raz [M:AOE0], [M:AOE1], [M:AOE2]
+  Call CHARGE_MODELE(MODELE,IMPSTA) From GIMPOBJ
+  If IMPSTA
+    MESSAGE = GMESSAGE
+    Gosub ERR_EXEC
+    End
+  Endif
+  If [F:AOE]OBJ<>""
+    Read [AOB_]ABREV = [F:AOE]OBJ
+    If fstat
+      MESSAGE = MODELE : IMPSTA = 18
+      Gosub ERR_EXEC
+      End
+    Endif
+  Endif
+  [M:IMP2]MODIMP = MODELE
+  [M:IMP2]NOMIMP = NOMFIC
+  [M:IMP2]TYPEXP = 2
+  Call IMPORTSIL([M:IMP2]MODIMP,[M:IMP2]NOMIMP) From GIMPOBJ
+  IMPSTA = [M:IMP2]STAT
+  If IMPSTA : Gosub ERR_EXEC : Endif
+  If GOK<1  : IMPSTA = 11 : Gosub ERR_EXEC : Endif
+  Call EFFACE(NOMFIC, IMPSTA) From ORDSYS
+  Raz mkstat
+  Raz IMPSTA
+  GOK = 1
+  Raz GERR
+  Raz GMESSAGE
+End
+
+$ERR_EXEC
+  Call ERR_IMPORT(IMPSTA,MESSAGE) From GIMPOBJ
+  Call ECR_TRACE(mess(6,123,1)- ":" - MESSAGE, 1) From GESECRAN
+Return
+
+
+#Subprog IMPORTACION(ARCHIVO)
+#
+#Local Char FICHIER(200) : FICHIER = filpath('TMP\IMPSEGFAB',ARCHIVO,'txt')
+#  If !GSERVEUR
+#      Call OUVRE_TRACE("Importación Archivo " + ARCHIVO) From LECFIC
+#  Endif
+#  ##Call ECR_TRACE("Procesando fichero:"-FICHIER,0) From GESECRAN
+#  Call IMPORTSIL("ZMESMKI",FICHIER)From GIMPOBJ
+#  If !GSERVEUR
+#      Call FERME_TRACE From LECFIC
+#  Endif
+#End
+

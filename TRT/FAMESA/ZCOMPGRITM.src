@@ -1,0 +1,135 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char BPRVENTA
+  Local Char ITMREFDEB
+  Local Char ITMREFFIN
+  Local Char CANALDEB
+  Local Char CANALFIN
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char ART ## Para saber cuando cambia y crear la linea de meses
+  Local Decimal CANTIDAD ##Para guardar la suma de las cantidades
+  Local Decimal IMPORTE ## Para guardar los importes
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZDT]) : Local File PINVOICED [ZDT]     : Endif  ##FACT. DE COMPRAS
+  If !clalev([F:ZVC]) : Local File SINVOICE [ZVC]      : Endif  ##FACT. DE VENTAS CABECERA
+  If !clalev([F:ZVD]) : Local File SINVOICED [ZVD]     : Endif  ##FACT. DE VENTAS DETALLE
+  If !clalev([F:ZPA]) : Local File ZPINVOICEAN      : Endif  ##TABLA TEMPORAL DE COMPRAS ANUALES Y VENTAS CONTRARIAS
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  #### Para saber que compañia de ventas coger lo hacemos a pelo
+  If COMPANY='TI300' Then
+    BPRVENTA='809165' ## FABRICANTES DE MENAJE, S.A.
+  Else
+    BPRVENTA='280923' ##TRILLA INDUPLAST IBERICA, S.L.U.
+  Endif
+  ITMREFDEB=mid$(PARAMETRE(35),8,11)
+  ITMREFFIN=mid$(PARAMETRE(36),8,11)
+  CANALDEB=mid$(PARAMETRE(37),10,5)
+  CANALFIN=mid$(PARAMETRE(38),10,5)
+  FECHADEB=right$(PARAMETRE(39),8)
+  FECHAFIN=right$(PARAMETRE(40),8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+      Delete [ZPA] Where CREUSR= GUSER
+
+  ######################################
+  ## CARGA DE LAS FACTURAS DE COMPRAS ##
+  ######################################
+  ##Filter [ZDT] Where (([F:ZDT]INVTYP<>5) and CPY = COMPANY and ITMREF>=ITMREFDEB and ITMREF<=ITMREFFIN) and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and
+# ACCDAT<=gdat$(day(FECHAFIN)
+##& ,month(FECHAFIN),year(FECHAFIN))) Order By ITMREF;ACCDAT
+  ##ART="": LINMEDIA=0
+  ##For [ZDT]
+      ##If ART<>[F:ZDT]ITMREF Then
+      ##  ##Grabamos el registro de la media ponderada
+      ##  CANTIDAD=0
+      ##  IMPORTE=0
+      ##  LINMEDIA=LINMEDIA+1
+      ##  [F:ZPA]NUM="MEDIAP"
+      ##  [F:ZPA]LINEA=LINMEDIA
+      ##  [F:ZPA]TIPO = 'C'
+      ##  [F:ZPA]CPY=COMPANY
+      ##  [F:ZPA]FCY=[F:ZDT]FCY
+      ##  [F:ZPA]ACCDAT=gdat$(31,12,year([F:ZDT]ACCDAT))
+      ##  [F:ZPA]BPR=[F:ZDT]BPR
+      ##  [F:ZPA]ITMREF=[F:ZDT]ITMREF
+      ##  [F:ZPA]QTY=CANTIDAD
+      ##  [F:ZPA]UOM=[F:ZDT]UOM
+      ##  [F:ZPA]NETPRI=IMPORTE
+      ##  Write [ZPA]
+        ##Grabamos un registro para cada mes
+      ##  For I=1 To 12
+      ##    [F:ZPA]NUM=[F:ZDT]ITMREF
+      ##    [F:ZPA]LINEA=I
+      ##    [F:ZPA]TIPO = 'C'
+      ##    [F:ZPA]CPY=[F:ZDT]CPY
+      ##    [F:ZPA]FCY=[F:ZDT]FCY
+      ##    [F:ZPA]ACCDAT=gdat$(01,I,year([F:ZDT]ACCDAT))
+      ##    [F:ZPA]BPR=[F:ZDT]BPR
+      ##    [F:ZPA]ITMREF=[F:ZDT]ITMREF
+      ##    [F:ZPA]QTY=0
+      ##    [F:ZPA]UOM=[F:ZDT]UOM
+      ##    [F:ZPA]NETPRI=0
+      ##    Write [ZPA]
+      ##  Next
+      ##Endif
+      ##ART=[F:ZDT]ITMREF
+  ##    [F:ZPA]NUM=[F:ZDT]NUM
+  ##    [F:ZPA]LINEA=[F:ZDT]PIDLIN
+  ##    [F:ZPA]TIPO = 'C'
+  ##    [F:ZPA]CPY=[F:ZDT]CPY
+  ##    [F:ZPA]FCY=[F:ZDT]FCY
+  ##    [F:ZPA]ACCDAT=[F:ZDT]ACCDAT
+  ##    [F:ZPA]BPR=[F:ZDT]BPR
+  ##    [F:ZPA]ITMREF=[F:ZDT]ITMREF
+  ##    [F:ZPA]QTY=[F:ZDT]QTYUOM
+  ##    [F:ZPA]UOM=[F:ZDT]UOM
+  ##    [F:ZPA]NETPRI=[F:ZDT]NETPRI
+  ##    Write [ZPA]
+      ##CANTIDAD=CANTIDAD+[F:ZDT]QTYUOM
+      ##If CANTIDAD<>0 Then
+      ##  IMPORTE = (IMPORTE + ([F:ZDT]QTYUOM*[F:ZDT]NETPRI))/CANTIDAD
+      ##Else
+      ##  IMPORTE=0
+      ##Endif
+      ###Ahora Actualizamos la media ponderada
+      ##Update [ZPA] Where ITMREF=[F:ZDT]ITMREF and NUM='MEDIAP' With QTY=CANTIDAD, NETPRI=IMPORTE
+  ##Next
+
+  ######################################
+  ## CARGA DE LAS FACTURAS DE COMPRAS ##
+  ## DE LOS 3 AÑOS ANTERIORES         ##
+  ######################################
+  For ANNO=0 To 3
+    Filter [ZDT] Where (([F:ZDT]INVTYP<>5) and CPY = COMPANY and ITMREF>=ITMREFDEB and ITMREF<=ITMREFFIN) and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)-ANNO) and ACCDAT<=gdat$(day(
+& FECHAFIN),month(FECHAFIN),year(FECHAFIN)-ANNO)) Order By ITMREF;ACCDAT
+    For [ZDT]
+        ART=[F:ZDT]ITMREF
+        [F:ZPA]NUM=[F:ZDT]NUM
+        [F:ZPA]LINEA=[F:ZDT]PIDLIN
+        [F:ZPA]TIPO = 'C'
+        [F:ZPA]CPY=[F:ZDT]CPY
+        [F:ZPA]FCY=[F:ZDT]FCY
+        [F:ZPA]ACCDAT=[F:ZDT]ACCDAT
+        [F:ZPA]BPR=[F:ZDT]BPR
+        [F:ZPA]ITMREF=[F:ZDT]ITMREF
+        [F:ZPA]QTY=[F:ZDT]QTYUOM
+        [F:ZPA]UOM=[F:ZDT]UOM
+        [F:ZPA]NETPRI=[F:ZDT]NETPRI
+        Write [ZPA]
+    Next
+  Next
+End
+

@@ -1,0 +1,1390 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+#<AdxTL>@(#)3.0.0.0 $Revision$
+
+$ACTION
+    Case ACTION
+        When "INIT" : Gosub INIT
+        When "EXEC" : Gosub EXEC
+    Endcase
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIT
+    If GSERVEUR : Onerrgo ERRBATCH : Endif
+
+    # Apertura de tablas
+    If clalev([F:YFS])=0  : Local File YEDIFMTSOH [YFS] : Endif
+    If clalev([F:YEF])=0  : Local File YEDISOHFIC [YEF] : Endif
+    If clalev([F:ACV])=0  : Local File ACTIV      [ACV] : Endif
+    If clalev([F:AOE])=0  : Local File AOBJEXT    [AOE] : Endif
+    If clalev([F:ATZ])=0  : Local File ATABZON    [ATZ] : Endif
+    If clalev([F:TSO])=0  : Local File TABSOHTYP  [TSO] : Endif
+    If clalev([F:ITM])=0  : Local File ITMMASTER  [ITM] : Endif
+    If clalev([F:ITS])=0  : Local File ITMSALES   [ITS] : Endif
+    If clalev([F:BPR])=0  : Local File BPARTNER   [BPR] : Endif
+    If clalev([F:BPC])=0  : Local File BPCUSTOMER [BPC] : Endif
+    If clalev([F:BPA])=0  : Local File BPADDRESS  [BPA] : Endif
+    If clalev([F:YSH])=0  : Local File YIMPSOH    [YSH] : Endif
+    If clalev([F:YSD])=0  : Local File YIMPSOD    [YSD] : Endif
+    If clalev([F:FCY])=0  : Local File FACILITY   [FCY] : Endif
+    If clalev([F:SOH])=0  : Local File SORDER     [SOH] : Endif
+    If clalev([F:YSE])=0  : Local File YSORDEREDI [YSE] : Endif
+    If clalev([F:YBP])=0  : Local File YBPCEANCOD [YBP] : Endif
+
+    Local Char    YEDISOHDIR(200), YEDISOHFRM(10), MODELO(10), TIPOPED(GLONTSO)
+    Local Char    AUXCHAR(255), AUXCHAR2(255)
+    Local Integer OKK
+
+    # Formato ficheros pedidos EDI
+    Call PARAM("","YEDISOHFRM",YEDISOHFRM) From ADOVAL
+    If YEDISOHFRM=""
+        GMESSAGE ="No se ha definido formato de ficheros de pedidos EDI"
+        GERR=1 : FIN=1
+        Return
+    Else
+        Read [F:YFS]YFS0=YEDISOHFRM
+        If fstat
+            GMESSAGE ='Formato de fichero "' + YEDISOHFRM + '":'
+            GMESSAGE-="registro inexistente"
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+
+    # Modelo importación pedidos EDI
+    Call PARAM("","YEDISOHMOD",MODELO) From ADOVAL
+    If MODELO=""
+        GMESSAGE ="No se ha definido modelo de importación de pedidos EDI"
+        GERR=1 : FIN=1
+        Return
+    Else
+        Read [F:AOE]AOE0=MODELO
+        If fstat
+            GMESSAGE ='Modelo de importación "' + MODELO + '":'
+            GMESSAGE-="registro inexistente"
+            GERR=1 : FIN=1
+            Return
+        Endif
+        If [F:AOE]OBJ <> "SOH"
+            GMESSAGE ='El objeto del modelo de importación "' + MODELO + '" no es "SOH"'
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+
+    # Tipo de pedido EDI
+    Call PARAM("","YEDISOHTYP",TIPOPED) From ADOVAL
+    If TIPOPED=""
+        GMESSAGE ="No se ha definido tipo de pedido EDI"
+        GERR=1 : FIN=1
+        Return
+    Else
+        Read [F:TSO]TSO0=TIPOPED
+        If fstat
+            GMESSAGE ='Tipo de pedido "' + TIPOPED + '":'
+            GMESSAGE-="registro inexistente"
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+
+    TMP=1
+Return
+
+#------------------------------------------------------------------------------#
+
+$EXEC
+  ###################################################################
+  ## COMPROBACION DE LICENCIA
+  ###################################################################
+  Local Integer OKDEV
+  Local Integer MODULO
+  Raz OKDEV
+  MODULO=6
+# JMME
+#  Call COMPROB_LIC(MODULO,OKDEV) From YIMPSOH
+#  If OKDEV<>0
+#       Infbox("Módulo EDI no autorizado ("-num$(OKDEV)-")")
+#     Return
+#
+#  Endif
+    If [F:YFS]FMTTYP<>YEDISOHFRM
+        Read [F:YFS]YFS0=YEDISOHFRM
+        If fstat
+            GMESSAGE ='Formato de fichero "' + YEDISOHFRM + '":'
+            GMESSAGE-="registro inexistente"
+            GERR=1 : FIN=1 : Return
+        Endif
+    Endif
+
+    Gosub DEF_VAR
+
+    SYMBOLE = "YIMPSOH"
+    Lock =SYMBOLE
+    If fstat
+        GMESSAGE="Hay otro usuario ejecutando este proceso"
+        GERR=2 : FIN=1 : Return
+    Endif
+
+    If !GSERVEUR : Call OUVRE_TRACE("Recepción de pedidos EDI") From LECFIC : Endif
+
+    # 1ª Fase: Guardar pedidos de fichero en base de datos X3
+    Call ECR_TRACE("1ª FASE: Lectura de ficheros:",0) From GESECRAN
+
+    Gosub GET_FICS
+    If OKK<>0 and NBRFIC>0
+        SAVIFS = adxifs
+        SAVIRS = adxirs
+
+        Call ECR_TRACE("Directorio de entrada:|" + YEDISOHDIR + "|",0) From GESECRAN
+        Gosub PRINCIPAL
+
+        adxifs = ""
+        adxirs = chr$(13)+chr$(10)
+    Elsif OKK=0
+        GMESSAGE=MENSAJE
+        GERR=2 : Return
+    Endif
+
+    # 2ª Fase: Importar pedidos pendientes
+    Raz NBRPED
+    adxifs = ""
+    adxirs = chr$(13)+chr$(10)
+
+    For [F:YSH]YSH0
+        OKK=1
+        Gosub VERIF_PED
+        If OKK
+            NBRPED+=1
+            Gosub WR_FICHERO_IMP
+        Endif
+    Next
+
+    If NBRPED>0
+        Openo Using [EDP]
+        Global Integer GYIMPSOH : GYIMPSOH=1
+        Call IMPORTACION(MODELO,NOMFICIMP)
+        Kill GYIMPSOH
+    Else
+        Call ECR_TRACE("Ningún pedido importado",0) From GESECRAN
+        If nbrecord([F:YSH])>0
+            Call ECR_TRACE("Actualice los datos de los pedidos no importados",0) From GESECRAN
+        Endif
+    Endif
+
+    adxifs = SAVIFS
+    adxirs = SAVIRS
+
+    Unlock =SYMBOLE
+
+    If !GSERVEUR : Call FERME_TRACE From LECFIC : Endif
+    TRA=1
+Return
+
+#------------------------------------------------------------------------------#
+
+$DEF_VAR
+    Local Integer NBRLIN
+    Read [F:ACV]CODACT="SOH"
+    If fstat : Raz [F:ACV] : Endif
+    NBRLIN=[F:ACV]DIME
+    If NBRLIN=0
+        GMESSAGE="Error en código de actividad SOH"
+        GERR=1 : FIN=1 : Return
+    Endif
+
+    Local Char    ORDSYS(255), SEPDIR(1), OS(20), SAVIFS(10), SAVIRS(10)
+    Local Char    NOMFIC(100)(1..200), AUXNOMFIC(100)(1..200), SUFIX(100)(1..200), WSUFIX(20)
+    Local Char    CLAVE_CAB(50), CLAVE_LIN(50), LNKCABLIN(50), MENSAJE(255)
+    Local Char    CLIENTE(GLONBPR), DIRECCION(10), REG_IMP(255), WSOHNUM(GLONVCR)
+    Local Char    CLAVE_OBC(20), CLAVE_OBC_OLD(20), AUXOBSER(255)(1..100)
+    Local Integer I, J, NUMCAB, NUMLIN, NUMOBC, NBRFIC, NBRPED, EOF, POS, OK_REG
+    Local Integer CABEXIST, LINEXIST, OBCEXIST, OBLEXIST, LOCEXIST, WCLAVE, IDENTCAB, IDENTLIN
+
+    Case GOS(1)
+        When "dos"   : SEPDIR="\"
+        When Default : SEPDIR="/"
+    Endcase
+
+    # Campos cabecera
+    Filter [F:YEF] Where TIPOFIC=1 and FMTTYP=[F:YFS]FMTTYP
+    NUMCAB=rowcount([F:YEF])
+
+    Local Integer CABTYP(1..NUMCAB), CABINI(1..NUMCAB), CABFIN(1..NUMCAB)
+    Local Decimal CABLONG(1..NUMCAB)
+    Local Char    WCUSORDREF(20), WYEANPIDE(20), WYEANRECEPT(20), WYEANFACTUR(20)
+    Local Char    WYEANFCY(20), WYEANPAGA(20), WYSECCION(20), WYCENTRO(20), WCUR(GLONCUR)
+    Local Char    WYEMISOR(20) # JMME
+    Local Char    CABFLD(10)(1..NUMCAB)
+    Local Date    WORDDAT, WDEMDLVDAT
+    Local Decimal WYDTO01 # JMME
+    # N.A.C. <24/09/2009>
+    Local Date    WYDLVDEBDAT, WYDLVFINDAT
+
+
+    I=1
+    For [F:YEF]YEF0
+        CABTYP(I)  = [F:YEF]TIPO
+        CABLONG(I) = [F:YEF]LONGITUD
+        CABINI(I)  = [F:YEF]INI
+        CABFIN(I)  = [F:YEF]FIN
+        CABFLD(I)  = [F:YEF]CAMPOSOH
+        I+=1
+    Next
+
+    Filter [F:YEF]
+
+    If [F:YFS]TYPFIL=3
+        Local Char REGCAB(250)(1..max(NUMCAB,200))
+    Else
+         Local Schar REGCAB(1)(1..max(CABFIN(NUMCAB),1446))  ######tamaño EDICOMV14
+#        Local Schar REGCAB(1)(1..max(CABFIN(NUMCAB),1100))
+    Endif
+
+    # Campos lí­nea
+    Filter [F:YEF] Where TIPOFIC=2 and FMTTYP=[F:YFS]FMTTYP
+    NUMLIN=rowcount([F:YEF])
+
+    Local Integer LINTYP(1..NUMLIN), LININI(1..NUMLIN), LINFIN(1..NUMLIN)
+    Local Decimal WGROPRI, WQTY, WDISCRGVAL1
+    Local Decimal WDISCRGVAL2, WDISCRGVAL3
+    Local Decimal WDISCRGVAL4, WDISCRGVAL5, WNETPRI
+    Local Decimal LINLONG(1..NUMLIN)
+    Local Decimal WCANTGRAT    # N.A.C. <16/06/2009>
+    Local Char    WEANCOD(20), WITMDES(GLONDES)
+    Local Char    LINFLD(10)(1..NUMLIN), WITMREF(GLONITM)
+
+    I=1
+    For [F:YEF]YEF0
+        LINTYP(I)  = [F:YEF]TIPO
+        LINLONG(I) = [F:YEF]LONGITUD
+        LININI(I)  = [F:YEF]INI
+        LINFIN(I)  = [F:YEF]FIN
+        LINFLD(I)  = [F:YEF]CAMPOSOH
+        I+=1
+    Next
+
+    Filter [F:YEF]
+
+    If [F:YFS]TYPFIL=3
+        Local Char REGLIN(250)(1..max(NUMLIN,200))
+    Else
+        Local Schar REGLIN(1)(1..max(LINFIN(NUMLIN),1052)) #######tamaño EDICOMV14
+#        Local Schar REGLIN(1)(1..max(LINFIN(NUMLIN),900))
+    Endif
+
+    # Campos observaciones cabecera
+    Filter [F:YEF] Where TIPOFIC=3 and FMTTYP=[F:YFS]FMTTYP
+    NUMOBC=rowcount([F:YEF])
+
+    Local Integer OBCTYP(1..NUMOBC), OBCINI(1..NUMOBC), OBCFIN(1..NUMOBC)
+    Local Decimal OBCLONG(1..NUMOBC)
+    Local Char    OBCFLD(10)(1..NUMOBC)
+
+    I=1
+    For [F:YEF]YEF0
+        OBCTYP(I)  = [F:YEF]TIPO
+        OBCLONG(I) = [F:YEF]LONGITUD
+        OBCINI(I)  = [F:YEF]INI
+        OBCFIN(I)  = [F:YEF]FIN
+        OBCFLD(I)  = [F:YEF]CAMPOSOH
+        I+=1
+    Next
+
+    If [F:YFS]TYPFIL=3
+        Local Char REGOBC(250)(1..max(NUMOBC,20))
+    Else
+        Local Schar REGOBC(1)(1..max(OBCFIN(NUMOBC),400))
+    Endif
+
+    Filter [F:YEF]
+Return
+
+#------------------------------------------------------------------------------#
+
+$GET_FICS
+    OKK=0
+    # Directorio de importación pedidos de venta EDI
+    Call PARAM("","YEDISOHDI1",AUXCHAR) From ADOVAL
+    YEDISOHDIR=AUXCHAR
+    Call PARAM("","YEDISOHDI2",AUXCHAR) From ADOVAL
+    YEDISOHDIR+=AUXCHAR
+
+    If YEDISOHDIR = ""
+        MENSAJE="Parámetros YEDISOHDI1, YEDISOHDI2:\"
+        MENSAJE+="Directorio de importación de pedidos de venta no asignado"
+        Return
+    Endif
+
+    Call EXISTE(YEDISOHDIR,OKK) From ORDSYS
+    If OKK<>2
+        MENSAJE="|"+YEDISOHDIR+"|\"
+        MENSAJE+="Directorio de importación de pedidos no encontrado"
+        OKK=0 : Return
+    Endif
+
+    Raz NBRFIC, NOMFIC
+    #ORDSYS = "lsadx -a" - nomap(0) - YEDISOHDIR
+    ORDSYS = "DIR " - YEDISOHDIR + "\" + [F:YFS]NOMFICCAB + "* /a-d /b"
+
+    Call SYSTEME2(adxmac(0),ORDSYS,"",I,AUXNOMFIC) From ORDSYS
+    If I>0
+        For J=1 To I
+            If pat(toupper(AUXNOMFIC(J)),toupper([F:YFS]NOMFICCAB) + "*")
+                NBRFIC+=1
+                NOMFIC(NBRFIC)=AUXNOMFIC(J)
+            Endif
+        Next
+    Endif
+
+    I=len([F:YFS]NOMFICCAB)
+    For J=1 To NBRFIC
+        SUFIX(J)=mid$(NOMFIC(J),I+1,len(NOMFIC(J))-I)
+    Next
+
+    OKK=1
+Return
+
+#------------------------------------------------------------------------------#
+
+$PRINCIPAL
+    adxirs = chr$(13)+chr$(10)
+    If [F:YFS]TYPFIL=3
+        adxifs = [F:YFS]SEPFLD
+    Else
+        adxifs = ""
+    Endif
+
+    For YFIC=1 To NBRFIC
+        Raz NBRPED
+        Gosub ABRIR_FIC
+        If FIC_OK
+            Gosub DATOS_CAB
+            Gosub DATOS_LIN
+            Gosub DATOS_OBC
+            #Gosub DATOS_OBL
+            #Gosub DATOS_LOC
+
+            MENSAJE=NOMFIC(YFIC)
+            If NBRPED>0
+                MENSAJE += ":" - num$(NBRPED) - "pedidos procesados"
+            Else
+                MENSAJE += ": Ningún pedido procesado"
+            Endif
+            Call ECR_TRACE(MENSAJE,0) From GESECRAN
+        Else
+            Call ECR_TRACE(MENSAJE,1) From GESECRAN
+        Endif
+
+        Gosub CERRAR_FIC
+        Gosub MOVER_FICH
+    Next
+Return
+
+#------------------------------------------------------------------------------#
+
+$ABRIR_FIC
+    FIC_OK=1
+    Raz MENSAJE, CABEXIST, LINEXIST, OBCEXIST, OBLEXIST, LOCEXIST
+
+    # Fichero Cabecera
+    AUXCHAR = YEDISOHDIR + SEPDIR + NOMFIC(YFIC)
+    If filinfo(AUXCHAR,0) <= 0
+        MENSAJE='Fichero cabecera"' + NOMFIC(YFIC) + '" no existe'
+        FIC_OK=0 : Return
+    Endif
+
+    Onerrgo ERROR_FICH
+    Openi AUXCHAR,0 Using [CAB]
+    Onerrgo
+    CABEXIST=1
+
+    # Fichero Detalle
+    AUXCHAR = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICLIN + SUFIX(YFIC)
+    If filinfo(AUXCHAR,0) <= 0
+        MENSAJE='Fichero lí­nea"' + [F:YFS]NOMFICLIN + SUFIX(YFIC) + '" no existe'
+        FIC_OK=0 : Return
+    Endif
+
+    Onerrgo ERROR_FICH
+    Openi AUXCHAR,0 Using [LIN]
+    Onerrgo
+    LINEXIST=1
+
+    # Fichero Observaciones cabecera
+    If [F:YFS]NOMFICOBC<>""
+        AUXCHAR = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICOBC + SUFIX(YFIC)
+        If filinfo(AUXCHAR,0) > 0
+            Onerrgo ERROR_FICH
+            Openi AUXCHAR,0 Using [OBC]
+            Onerrgo
+            OBCEXIST=1
+        Endif
+    Endif
+
+    # Fichero Observaciones detalle
+    If [F:YFS]NOMFICOBL<>""
+        AUXCHAR = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICOBL + SUFIX(YFIC)
+        If filinfo(AUXCHAR,0) > 0
+            Onerrgo ERROR_FICH
+            Openi AUXCHAR,0 Using [OBL]
+            Onerrgo
+            OBLEXIST=1
+        Endif
+    Endif
+
+    # Fichero Observaciones detalle
+    If [F:YFS]NOMFICLOC<>""
+        AUXCHAR = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICLOC + SUFIX(YFIC)
+        If filinfo(AUXCHAR,0) > 0
+            Onerrgo ERROR_FICH
+            Openi AUXCHAR,0 Using [LOC]
+            Onerrgo
+            LOCEXIST=1
+        Endif
+    Endif
+Return
+
+$ERROR_FICH
+    MENSAJE='Error en la apertura del fichero:\|' + AUXCHAR + '|'
+    FIC_OK=0
+    Onerrgo
+Return
+
+#------------------------------------------------------------------------------#
+
+$CERRAR_FIC
+    If CABEXIST : Openi Using [CAB] : Endif
+    If LINEXIST : Openi Using [LIN] : Endif
+    If OBCEXIST : Openi Using [OBC] : Endif
+    If OBLEXIST : Openi Using [OBL] : Endif
+    If LOCEXIST : Openi Using [LOC] : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$DATOS_CAB
+    Gosub INIC_VAR_CAB
+    Gosub LEER_CAB
+    Repeat
+        If OK_REG and !EOF
+            Gosub CABPED
+            Gosub INIC_VAR_CAB
+        Endif
+        If !EOF : Gosub LEER_CAB : Endif
+    Until EOF
+Return
+
+#------------------------------------------------------------------------------#
+
+$DATOS_LIN
+    Gosub INIC_VAR_LIN
+    Gosub LEER_LIN
+    Repeat
+        If OK_REG and !EOF
+            Gosub LINPED
+            Gosub INIC_VAR_LIN
+        Endif
+        If !EOF : Gosub LEER_LIN : Endif
+    Until EOF
+Return
+
+#------------------------------------------------------------------------------#
+
+$DATOS_OBC
+    If OBCEXIST
+        Raz CLAVE_OBC, CLAVE_OBC_OLD, NUMOBC
+        Gosub LEER_OBC
+        Repeat
+            If OK_REG and !EOF
+                If CLAVE_OBC<>CLAVE_OBC_OLD
+                    Gosub OBCPED
+                    CLAVE_OBC_OLD=CLAVE_OBC
+                    Raz NUMOBC, AUXOBSER
+                Endif
+                For I=1 To 5
+                    If [F:YFS]TYPFIL=3
+                        AUXCHAR=vireblc(REGOBC(I+3),2)
+                    Else
+                        AUXCHAR=vireblc(sum(REGOBC(OBCINI(I+3)..OBCFIN(I+3))),2)
+                    Endif
+                    If AUXCHAR<>""
+                        NUMOBC+=1
+                        AUXOBSER(NUMOBC)=AUXCHAR + chr$(13)+chr$(10)
+                    Endif
+                Next
+            Endif
+            If !EOF : Gosub LEER_OBC : Endif
+        Until EOF
+        If CLAVE_OBC_OLD<>"" : Gosub OBCPED : Endif
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIC_VAR_CAB
+    # Inicializar variables cabecera
+    Raz WCUSORDREF, WYEANPIDE, WYEANRECEPT, WYEANFACTUR, WYEANPAGA, WYEANFCY,
+&       WYSECCION, WYCENTRO, WCUR, WORDDAT, WDEMDLVDAT
+
+    Raz WYEMISOR, WYDTO01 #JMME
+
+    # N.A.C. <24/09/2009>
+    Raz WYDLVDEBDAT, WYDLVFINDAT
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIC_VAR_LIN
+    # Inicializar variables lí­nea
+    Raz WGROPRI, WQTY, WDISCRGVAL1, WDISCRGVAL2, WDISCRGVAL3,
+&       WDISCRGVAL4, WDISCRGVAL5, WNETPRI, WEANCOD, WITMDES,
+&       WCANTGRAT    # N.A.C. <16/06/2009>
+
+Return
+
+#------------------------------------------------------------------------------#
+
+$LEER_CAB
+    Raz REGCAB, EOF
+    If [F:YFS]TYPFIL=3
+        OK_REG=1
+        Rdseq REGCAB Using [CAB]
+        If fstat : OK_REG=0 : EOF=1 : Endif
+    Else
+        OK_REG=0 : POS=1
+        Gosub LEER_CAB_REG
+        If !EOF and ascii(REGCAB(POS))>=32
+            Repeat
+                POS +=1 : OK_REG=1
+                Gosub LEER_CAB_REG
+            Until ascii(REGCAB(POS))<32 or EOF
+        Endif
+    Endif
+
+    If OK_REG
+        CLAVE_CAB = func GET_CLAVE(REGCAB,[F:YFS]CABKEY,[F:YFS]TYPFIL,CABINI,CABFIN)
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$LEER_CAB_REG
+    Getseq 1, REGCAB(POS) Using [CAB]
+    If fstat : EOF=1 : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$CABPED
+#If GUSER = 'JMME' Then Dbgaff Endif
+    NBRPED+=1
+
+    WCUSORDREF=func GET_VALOR(REGCAB,"CUSORDREF",CABFLD,1,[F:YFS]TYPFIL,
+&                             CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYEANFCY=func GET_VALOR(REGCAB,"YEANFCY",CABFLD,1,[F:YFS]TYPFIL,
+&                           CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+## JMME ANDA QUE PONER UNA X EN LUGAR DE UNA Y
+#    WYEANPIDE=func GET_VALOR(REGCAB,"XEANPIDE",CABFLD,1,[F:YFS]TYPFIL,
+#&                            CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYEANPIDE=func GET_VALOR(REGCAB,"YEANPIDE",CABFLD,1,[F:YFS]TYPFIL,
+&                            CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+
+    WYEMISOR=func GET_VALOR(REGCAB,"YEMISOR",CABFLD,1,[F:YFS]TYPFIL,
+&                            CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+
+    WYDTO01=func GET_VALOR(REGCAB,"YDTO01",CABFLD,2,[F:YFS]TYPFIL,
+&                            CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+
+## JMME FIN
+
+    WYEANRECEPT=func GET_VALOR(REGCAB,"YEANRECEPT",CABFLD,1,[F:YFS]TYPFIL,
+&                              CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYEANFACTUR=func GET_VALOR(REGCAB,"YEANFACTUR",CABFLD,1,[F:YFS]TYPFIL,
+&                              CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYEANPAGA=func GET_VALOR(REGCAB,"YEANPAGA",CABFLD,1,[F:YFS]TYPFIL,
+&                            CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYSECCION=func GET_VALOR(REGCAB,"YSECCION",CABFLD,1,[F:YFS]TYPFIL,
+&                            CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYCENTRO=func GET_VALOR(REGCAB,"YCENTRO",CABFLD,1,[F:YFS]TYPFIL,
+&                           CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WCUR=func GET_VALOR(REGCAB,"CUR",CABFLD,1,[F:YFS]TYPFIL,
+&                       CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WORDDAT=func GET_VALOR(REGCAB,"ORDDAT",CABFLD,3,[F:YFS]TYPFIL,
+&                          CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WDEMDLVDAT=func GET_VALOR(REGCAB,"DEMDLVDAT",CABFLD,3,[F:YFS]TYPFIL,
+&                             CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+
+    # N.A.C. <24/09/2009>
+    WYDLVDEBDAT=func GET_VALOR(REGCAB,"YDLVDEBDAT",CABFLD,3,[F:YFS]TYPFIL,
+&                             CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+    WYDLVFINDAT=func GET_VALOR(REGCAB,"YDLVFINDAT",CABFLD,3,[F:YFS]TYPFIL,
+&                             CABLONG,CABINI,CABFIN,[F:YFS]SEPDEC)
+
+    # Prioridad de búsqueda de Cliente/Dirección:
+    #    1º. RECEPTOR : Código EAN del receptor de la mercancí­a. El código
+    #                   EAN de recepción es único.
+    #    2º. QPIDE    : Código EAN de quién hace el pedido (comprador). Código
+    #                   EAN obligatorio en el fichero de pedidos EDICOM.
+
+    If WYEANRECEPT = ""     : WYEANRECEPT = WYEANFACTUR : Endif
+    If WYEANRECEPT = ""     : WYEANRECEPT = WYEANPIDE   : Endif
+    If WORDDAT = [0/0/0]    : WORDDAT = WDEMDLVDAT      : Endif
+    If WORDDAT = [0/0/0]    : WORDDAT = date$           : Endif
+    If WDEMDLVDAT = [0/0/0] : WDEMDLVDAT  = WORDDAT     : Endif
+
+    If WYEANRECEPT <> "" : Call GET_BPC(WYEMISOR, WYEANPIDE, WYEANRECEPT,2,CLIENTE,DIRECCION, WYEANFACTUR, WYEANPAGA ) : Endif # JMME
+    If WYEANPIDE <> "" and CLIENTE = ""
+        Call GET_BPC(WYEMISOR, WYEANPIDE, WYEANPIDE,1,CLIENTE,DIRECCION, WYEANFACTUR, WYEANPAGA) # JMME
+    Endif
+
+    If WYEANFCY<>""
+        If [F:FCY]YEANCOD<>WYEANFCY
+            Filter [F:FCY] Where YEANCOD=WYEANFCY
+            Read [F:FCY]FCY0 First
+            If fstat : Raz [F:FCY] : Endif
+            Filter [F:FCY]
+        Endif
+    Endif
+
+    Trbegin [YSH]
+    GOK=1
+
+    Read [YSH]YSH0=vireblc(CLAVE_CAB,2)
+    If !fstat
+        Delete [YSH] Where CLAVE=vireblc(CLAVE_CAB,2)
+        Delete [YSD] Where CLAVE=vireblc(CLAVE_CAB,2)
+    Endif
+
+    Raz [F:YSH]
+    [F:YSH]CLAVE=vireblc(CLAVE_CAB,2)
+    [F:YSH]BPCORD=CLIENTE
+    [F:YSH]BPAADD=DIRECCION
+    [F:YSH]CUSORDREF=WCUSORDREF
+    [F:YSH]ORDDAT=WORDDAT
+    [F:YSH]DEMDLVDAT=WDEMDLVDAT
+    [F:YSH]YEANFCY=WYEANFCY
+    [F:YSH]FCY=[F:FCY]FCY
+    [F:YSH]YEANPIDE=WYEANPIDE
+    [F:YSH]YEANRECEPT=WYEANRECEPT
+    [F:YSH]YEANFACTUR=WYEANFACTUR
+    [F:YSH]YEANPAGA=WYEANPAGA
+    [F:YSH]YSECCION=WYSECCION
+    [F:YSH]YCENTRO=WYCENTRO
+    [F:YSH]YEMISOR=WYEMISOR # JMME
+    [F:YSH]YDTO01 =WYDTO01  # JMME
+
+    If WCUR="" : WCUR=GSYSCUR : Endif
+    [F:YSH]CUR=WCUR
+    [F:YSH]YNOMFIC=NOMFIC(YFIC)
+
+    # N.A.C. <24/09/2009>
+    [F:YSH]YDLVDEBDAT = WYDLVDEBDAT
+    [F:YSH]YDLVFINDAT = WYDLVFINDAT
+
+    [F:YSH]CREUSR = GUSER
+    [F:YSH]CREDAT = date$
+    [F:YSH]CRETIM = time
+
+    Write [F:YSH]
+    If fstat
+        Rollback :GOK = 0
+        Call FSTA("YSH") From GLOCK
+        Return
+    Endif
+
+    Commit
+Return
+
+#------------------------------------------------------------------------------#
+
+$LEER_LIN
+    Raz REGLIN, EOF
+    If [F:YFS]TYPFIL=3
+        OK_REG=1
+        Rdseq REGLIN Using [LIN]
+        If fstat : OK_REG=0 : EOF=1 : Endif
+    Else
+        OK_REG=0 : POS=1
+        Gosub LEER_LIN_REG
+        If !EOF and ascii(REGLIN(POS))>=32
+            Repeat
+                POS +=1 : OK_REG=1
+                Gosub LEER_LIN_REG
+            Until ascii(REGLIN(POS))<32 or EOF
+        Endif
+    Endif
+
+    If OK_REG
+        LNKCABLIN = func GET_CLAVE(REGLIN,[F:YFS]LNKCABLIN,[F:YFS]TYPFIL,LININI,LINFIN)
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$LEER_LIN_REG
+    Getseq 1, REGLIN(POS) Using [LIN]
+    If fstat : EOF=1 : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$LINPED
+
+    WEANCOD=func GET_VALOR(REGLIN,"EANCOD",LINFLD,1,[F:YFS]TYPFIL,
+&                          LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WITMDES=func GET_VALOR(REGLIN,"ITMDES",LINFLD,1,[F:YFS]TYPFIL,
+&                          LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WQTY=func GET_VALOR(REGLIN,"QTY",LINFLD,2,[F:YFS]TYPFIL,
+&                       LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WGROPRI=func GET_VALOR(REGLIN,"GROPRI",LINFLD,2,[F:YFS]TYPFIL,
+&                          LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WDISCRGVAL1=func GET_VALOR(REGLIN,"DISCRGVAL1",LINFLD,2,[F:YFS]TYPFIL,
+&                              LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WDISCRGVAL2=func GET_VALOR(REGLIN,"DISCRGVAL2",LINFLD,2,[F:YFS]TYPFIL,
+&                              LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+
+
+
+
+    WDISCRGVAL4=func GET_VALOR(REGLIN,"DISCRGVAL4",LINFLD,2,[F:YFS]TYPFIL,
+&                              LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WDISCRGVAL5=func GET_VALOR(REGLIN,"DISCRGVAL5",LINFLD,2,[F:YFS]TYPFIL,
+&                              LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    WNETPRI=func GET_VALOR(REGLIN,"NETPRI",LINFLD,2,[F:YFS]TYPFIL,
+&                          LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    # N.A.C. <16/06/2009>
+    WCANTGRAT=func GET_VALOR(REGLIN,"CANTGRAT",LINFLD,2,[F:YFS]TYPFIL,
+&                            LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    CLAVE_LIN= func GET_CLAVE(REGLIN,[F:YFS]LINKEY,[F:YFS]TYPFIL,LININI,LINFIN)
+
+    # Si no existe cabecera, no se graba el registro
+    Read [F:YSH]YSH0=vireblc(LNKCABLIN,2)
+    If fstat : Return : Endif
+    ## JMME Resulta que el hipercor y compañia aunque poenen el descuento en la cabecera se aplica a nivel de línea en el descuento 2
+    ## lo posiciono aqui despues de posicionar la cabecera.
+
+        WDISCRGVAL3= [F:YSH]YDTO01
+
+    #    WDISCRGVAL3=func GET_VALOR(REGLIN,"DISCRGVAL3",LINFLD,2,[F:YFS]TYPFIL,
+    #&                              LINLONG,LININI,LINFIN,[F:YFS]SEPDEC)
+    # JMME FIN
+    Trbegin [YSD]
+    GOK=1
+
+    If vireblc(WEANCOD,2)<>""
+        Raz WITMREF
+        For [F:ITM]YTM0 Where EANCOD=WEANCOD
+            If [F:ITM]ITMSTA=1
+                Look [F:ITS]ITS0 = [F:ITM]ITMREF
+                If !fstat : WITMREF=[F:ITM]ITMREF : Break : Endif
+            Endif
+        Next
+
+        Raz [F:YSD]
+        [F:YSD]CLAVE=vireblc(LNKCABLIN,2)
+        [F:YSD]LIN=val(mid$(CLAVE_LIN,len(LNKCABLIN),len(CLAVE_LIN)))
+        [F:YSD]ITMREF=WITMREF
+        [F:YSD]ITMDES=WITMDES
+        [F:YSD]EANCOD=WEANCOD
+        [F:YSD]GROPRI=WGROPRI
+        If [F:YSD]GROPRI=0
+            [F:YSD]GROPRI=WNETPRI
+        Endif
+        [F:YSD]NETPRI=WNETPRI
+        If [F:YSD]NETPRI=0
+            [F:YSD]NETPRI=WGROPRI
+        Endif
+        [F:YSD]NETPRI=[F:YSD]NETPRI
+        [F:YSD]QTY=WQTY
+        [F:YSD]DISCRGVAL1=WDISCRGVAL1
+        [F:YSD]DISCRGVAL2=WDISCRGVAL2
+        [F:YSD]DISCRGVAL3=WDISCRGVAL3
+        [F:YSD]DISCRGVAL4=WDISCRGVAL4
+        [F:YSD]DISCRGVAL5=WDISCRGVAL5
+        [F:YSD]YCLAVE=CLAVE_LIN
+        # N.A.C. <16/06/2009>
+        [F:YSD]CANTGRAT=WCANTGRAT
+        Write [F:YSD]
+        If fstat
+            Call FSTA("YSD") From GLOCK
+            GOK=0
+        Endif
+    Endif
+
+    If GOK=0
+        Rollback
+        Return
+    Endif
+
+    Commit
+Return
+
+#------------------------------------------------------------------------------#
+
+$LEER_OBC
+    Raz REGOBC, EOF
+    If [F:YFS]TYPFIL=3
+        OK_REG=1
+        Rdseq REGOBC Using [OBC]
+        If fstat : OK_REG=0 : EOF=1 : Endif
+    Else
+        OK_REG=0 : POS=1
+        Gosub LEER_OBC_REG
+        If !EOF and ascii(REGOBC(POS))>=32
+            Repeat
+                POS +=1 : OK_REG=1
+                Gosub LEER_OBC_REG
+            Until ascii(REGOBC(POS))<32 or EOF
+        Endif
+    Endif
+
+    If OK_REG
+        CLAVE_OBC = func GET_CLAVE(REGOBC,[F:YFS]LNKCABOBC,[F:YFS]TYPFIL,OBCINI,OBCFIN)
+        If CLAVE_OBC_OLD=""
+            CLAVE_OBC_OLD=CLAVE_OBC
+        Endif
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$LEER_OBC_REG
+    Getseq 1, REGOBC(POS) Using [OBC]
+    If fstat : EOF=1 : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$OBCPED
+    # Si no existe cabecera, no se graba el registro
+    Read [F:YSH]YSH0=vireblc(CLAVE_OBC_OLD,2)
+    If fstat : Return : Endif
+
+    Trbegin [YSH]
+    GOK=1
+    Setlob [F:YSH]TEXTO With AUXOBSER(1..NUMOBC)
+    Rewrite [F:YSH]
+    If fstat
+        Rollback :GOK = 0
+        Call FSTA("YSH") From GLOCK
+        Return
+    Endif
+
+    Commit
+Return
+
+#------------------------------------------------------------------------------#
+
+Funprog GET_CLAVE(REG,KEYFORM,TIPOREG,INI,FIN)
+Value Char    REG()(1..)
+Value Char    KEYFORM()
+Value Integer TIPOREG
+Value Integer INI(1..)
+Value Integer FIN(1..)
+
+Local Char    CLAVE(50)
+Local Integer I, J, STA, AUX
+
+    Raz CLAVE
+
+    If KEYFORM = "" : End CLAVE : Endif
+
+    STA = 1
+    For I=1 To len(KEYFORM)
+        If instr(1,"0123456789+",mid$(KEYFORM,I,1))=0
+            STA=0 : Break
+        Endif
+    Next
+    If STA = 0 : End CLAVE : Endif
+
+    I=1
+    Repeat
+        J=instr(I,KEYFORM,"+")
+        If J>0
+            AUX=val(mid$(KEYFORM,I,J-I))
+            Case TIPOREG
+                When 3    # Delimitado
+                    If AUX>0 and AUX<=dim(CLAVE)
+                        CLAVE+=REG(AUX)
+                    Endif
+                When 4    # Longitud fija
+                    If AUX>0 and AUX<=dim(INI)
+                        CLAVE+=sum(REG(INI(AUX)..FIN(AUX)))
+                    Endif
+            Endcase
+            I=J+1
+        Endif
+    Until J=0
+
+    AUX=val(mid$(KEYFORM,I,len(KEYFORM)))
+    Case TIPOREG
+        When 3    # Delimitado
+            If AUX>0 and AUX<=dim(CLAVE)
+                CLAVE+=REG(AUX)
+            Endif
+        When 4    # Longitud fija
+            If AUX>0 and AUX<=dim(INI)
+                CLAVE+=sum(REG(INI(AUX)..FIN(AUX)))
+            Endif
+    Endcase
+
+End CLAVE
+
+#------------------------------------------------------------------------------#
+
+Funprog GET_VALOR(REG,NOMCAMPO,ARRAYFLD,TYPCAMPO,TIPOREG,LONG,INI,FIN,SEPDEC)
+Value Char    REG()(1..)
+Value Char    NOMCAMPO()
+Value Char    ARRAYFLD()(1..)
+Value Integer TYPCAMPO
+Value Integer TIPOREG
+Value Decimal LONG(1..)
+Value Integer INI(1..)
+Value Integer FIN(1..)
+Value Char    SEPDEC()
+
+Local Integer I, DD, MM, AAAA
+Local Char    VALOR(50)
+Local Decimal VALORDCB, ENT, DEC
+
+    Raz VALOR, VALORDCB, DD, MM, AAAA
+
+    I=find(NOMCAMPO,ARRAYFLD)
+    If I>0
+        Case TIPOREG
+            When 3
+                VALOR=REG(I)
+            When 4
+                VALOR=vireblc(sum(REG(INI(I)..FIN(I))),2)
+        Endcase
+    Endif
+
+    Case TYPCAMPO
+        When 1 : # Alfanumérico, Numérico
+            End vireblc(VALOR,2)
+        When 2 : # Numérico
+            If I>0
+                If SEPDEC<>""
+                    VALORDCB=val(ctrans(VALOR,SEPDEC,"."))
+                Else
+                    ENT = int(LONG(I))
+                    DEC = LONG(I)-ENT
+                    While DEC<>int(DEC)
+                        DEC *= 10
+                    Wend
+                    VALORDCB=val(mid$(VALOR,1,ENT) + mid$(VALOR,ENT+1,LONG(I)-DEC))  #######jcc
+
+#                   VALORDCB=val(mid$(VALOR,1,ENT) + "." + mid$(VALOR,ENT+1,LONG(I)-DEC))
+                Endif
+            Endif
+            End VALORDCB
+        When 3,4 : # Fecha (AAAAMMDD), (AAAAMMDDhhmm)
+
+            DD=val(mid$(VALOR,7,2))
+            MM=val(mid$(VALOR,5,2))
+            AAAA=val(mid$(VALOR,1,4))
+            End gdat$(DD,MM,AAAA)
+        When 5 : # Identific. de registro
+            End vireblc(VALOR,2)
+        When Default
+            End vireblc(VALOR,2)
+    Endcase
+End
+
+#------------------------------------------------------------------------------#
+
+$MOVER_FICH
+    YDIRHISTOR = YEDISOHDIR
+    #Dbgaff
+    YDIRHISTOR+= SEPDIR + "Procesados"
+    Call EXISTE(YDIRHISTOR,OKK) From ORDSYS
+    If OKK<>2
+        Gosub CREAR_DIR
+        If OKK<>2 : Return : Endif
+    Endif
+
+    YDIRHISTOR+= SEPDIR + num$(year(date$))
+    Call EXISTE(YDIRHISTOR,OKK) From ORDSYS
+    If OKK<>2
+        Gosub CREAR_DIR
+        If OKK<>2 : Return : Endif
+    Endif
+
+    YDIRHISTOR+= SEPDIR + format$("N0:2#",month(date$)) + "-" + month$(date$)
+    Call EXISTE(YDIRHISTOR,OKK) From ORDSYS
+    If OKK<>2
+        Gosub CREAR_DIR
+        If OKK<>2 : Return : Endif
+    Endif
+
+    YDIRHISTOR+= SEPDIR + format$("N0:2#",day(date$))
+    Call EXISTE(YDIRHISTOR,OKK) From ORDSYS
+    If OKK<>2
+        Gosub CREAR_DIR
+        If OKK<>2 : Return : Endif
+    Endif
+    Gosub CREAR_DIR
+
+    WSUFIX = ctrans(time$,":","") + "_"
+    If CABEXIST
+        AUXCHAR  = YEDISOHDIR + SEPDIR + NOMFIC(YFIC)
+        AUXCHAR2 = YDIRHISTOR + SEPDIR + WSUFIX + NOMFIC(YFIC)
+
+        Call COPIE(AUXCHAR,AUXCHAR2,OKK) From ORDSYS
+        Call EFFACE(AUXCHAR,OKK) From ORDSYS
+    Endif
+
+    If LINEXIST
+        AUXCHAR  = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICLIN + SUFIX(YFIC)
+        AUXCHAR2 = YDIRHISTOR + SEPDIR + WSUFIX + [F:YFS]NOMFICLIN + SUFIX(YFIC)
+
+        Call COPIE(AUXCHAR,AUXCHAR2,OKK) From ORDSYS
+        Call EFFACE(AUXCHAR,OKK) From ORDSYS
+    Endif
+
+    If OBCEXIST
+        AUXCHAR  = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICOBC + SUFIX(YFIC)
+        AUXCHAR2 = YDIRHISTOR + SEPDIR + WSUFIX + [F:YFS]NOMFICOBC + SUFIX(YFIC)
+
+        Call COPIE(AUXCHAR,AUXCHAR2,OKK) From ORDSYS
+        Call EFFACE(AUXCHAR,OKK) From ORDSYS
+    Endif
+
+    If OBLEXIST
+        AUXCHAR  = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICOBL + SUFIX(YFIC)
+        AUXCHAR2 = YDIRHISTOR + SEPDIR + WSUFIX + [F:YFS]NOMFICOBL + SUFIX(YFIC)
+
+        Call COPIE(AUXCHAR,AUXCHAR2,OKK) From ORDSYS
+        Call EFFACE(AUXCHAR,OKK) From ORDSYS
+    Endif
+
+    If LOCEXIST
+        AUXCHAR  = YEDISOHDIR + SEPDIR + [F:YFS]NOMFICLOC + SUFIX(YFIC)
+        AUXCHAR2 = YDIRHISTOR + SEPDIR + WSUFIX + [F:YFS]NOMFICLOC + SUFIX(YFIC)
+
+        Call COPIE(AUXCHAR,AUXCHAR2,OKK) From ORDSYS
+        Call EFFACE(AUXCHAR,OKK) From ORDSYS
+    Endif
+Return
+
+#--------------------------------------------------------------------#
+
+$CREAR_DIR
+    ORDSYS = 'ae_mkdir' - '"' + YDIRHISTOR + '"'
+    Call SYSTEME(adxmac(0),ORDSYS,"",OKK) From ORDSYS
+    Call EXISTE(YDIRHISTOR,OKK) From ORDSYS
+Return
+
+#--------------------------------------------------------------------#
+
+$VERIF_PED
+    If [F:YSH]BPCORD = "" : OKK=0 : Return : Endif
+    If [F:YSH]FCY    = "" : OKK=0 : Return : Endif
+
+    Filter [F:YSD] Where CLAVE=[F:YSH]CLAVE and ITMREF=""
+    If rowcount([F:YSD])>0 : OKK=0 : Filter [F:YSD] : Return : Endif
+
+    Filter [F:YSD]
+
+    Raz WSOHNUM
+    Read [F:SOH]SOH1=[F:YSH]BPCORD;[F:YSH]CUSORDREF
+    If !fstat
+        If [F:SOH]BPAADD=[F:YSH]BPAADD
+            Read [F:YSE]YSE0=[F:SOH]SOHNUM
+            If !fstat : WSOHNUM=[F:SOH]SOHNUM : Endif
+        Endif
+    Endif
+Return
+
+#--------------------------------------------------------------------#
+
+$WR_FICHERO_IMP
+    If NBRPED=1
+        NOMFICIMP =filpath("","tmp","") + SEPDIR + "EDIPED"
+        NOMFICIMP+=num$(year(date$))
+&                + format$("N0:2#",month(date$))
+&                + format$("N0:2#",day(date$))
+&                + left$(time$,2)
+&                + mid$(time$,4,2)
+&                + ".txt"
+        Openo NOMFICIMP,0  Using [EDP]
+    Endif
+
+    Raz REG_IMP
+
+    REG_IMP = "E"                                      # CABECERA
+    REG_IMP += ";"
+    REG_IMP += TIPOPED                                 # Tipo de pedido: SOHTYP
+    REG_IMP += ";"
+    REG_IMP += WSOHNUM                                 # Número de pedido: SOHNUM
+    REG_IMP += ";"
+    REG_IMP += [F:YSH]BPCORD                           # Cliente pedido: BPCORD
+    REG_IMP += ";"
+    REG_IMP += [F:YSH]BPAADD                           # Dirección entrega: BPAADD
+    REG_IMP += ";"
+    REG_IMP += [F:YSH]FCY                              # Planta de venta: SALFCY
+    REG_IMP += ";"
+    REG_IMP += [F:YSH]FCY                              # Planta de stock: STOFCY
+    REG_IMP += ";"
+    REG_IMP += format$("D:YYYYMMDD",[F:YSH]ORDDAT)     # Fecha pedido: ORDDAT
+    REG_IMP += ";"
+    REG_IMP += format$("D:YYYYMMDD",[F:YSH]DEMDLVDAT)  # Fecha entrega: DEMDLVDAT
+    REG_IMP += ";"
+    REG_IMP += [F:YSH]CUSORDREF                        # Código pedido cliente: CUSORDREF
+    REG_IMP += ";"
+    REG_IMP += [F:YSH]CUR                              # Divisa: CUR
+    REG_IMP += ";"
+
+    Wrseq REG_IMP Using [EDP]
+
+    For [F:YSD]YSD0 Where CLAVE=[F:YSH]CLAVE
+        Raz REG_IMP
+
+        REG_IMP = "L"                                  # Lí­nea
+        REG_IMP += ";"
+        REG_IMP += [F:YSD]ITMREF                       # Código de artí­culo: ITMREF
+        REG_IMP += ";"
+        REG_IMP += num$([F:YSD]QTY)                    # Cantidad: QTY
+        REG_IMP += ";"
+####jcc
+        If [F:YSD]GROPRI<>0
+            REG_IMP += num$([F:YSD]GROPRI)                 # precio bruto: GROPRI
+            REG_IMP += ";"
+        Endif
+#        If [F:YSD]NETPRI<>0
+### JMME PERO COMO EL GROPRI ES NETPRI           REG_IMP += num$(ar2([F:YSD]GROPRI))                 # precio neto: NETPRI jcc redondeamos a 2 el neto
+#            REG_IMP += num$(ar2([F:YSD]NETPRI))                 # precio neto: NETPRI jcc redondeamos a 2 el neto
+#            REG_IMP += ";"
+#        Endif
+        If [F:YSD]DISCRGVAL1<>0
+            REG_IMP += num$([F:YSD]DISCRGVAL1)             # descuento 1: DISCRGVAL1
+            REG_IMP += ";"
+        Else
+            REG_IMP += ";"
+        Endif
+        If [F:YSD]DISCRGVAL2<>0
+            REG_IMP += num$([F:YSD]DISCRGVAL2)             # descuento 2: DISCRGVAL2
+            REG_IMP += ";"
+        Else
+            REG_IMP += ";"
+        Endif
+        If [F:YSD]DISCRGVAL3<>0
+            REG_IMP += num$([F:YSD]DISCRGVAL3)             # descuento 2: DISCRGVAL3
+            REG_IMP += ";"
+        Else
+            REG_IMP += ";"
+        Endif
+
+ ###jcc
+        Wrseq REG_IMP Using [EDP]
+
+    Next
+Return
+
+#------------------------------------------------------------------------------#
+
+# Subprog GET_BPC(EANCOD,TYPCOD,CLIENTE,DIRECCION) #JMME
+Subprog GET_BPC(EANEMI, EANPIDE, EANREC,TYPCOD,CLIENTE,DIRECCION, EANFAC, EANPAG)
+Value    Char   EANEMI() #JMME
+Value    Char   EANPIDE() #JMME
+Value    Char    EANREC() #JMME
+Value    Integer TYPCOD
+Variable Char    CLIENTE()
+Variable Char    DIRECCION()
+Variable Char    EANFAC() # JMME
+Variable Char    EANPAG() # JMME
+
+    # TYPCOD: Tipo de Código EAN cliente
+    #
+    #    1 --> YEANPIDE (Quién pide)
+    #    2 --> YEANRECEPT (Quién recibe)
+    #    3 --> YEANCLIENT (A quién se factura)
+    #    4 --> YEANPAGA   (Quién paga)
+    #    5 --> YEANRAIZ(0..1) Busca por la raí­z (7 dí­gitos: 2 --> paí­s, 5 --> código empresa)
+
+    If clalev([F:YBP])=0 : Local File YBPCEANCOD [YBP] : Endif
+    If clalev([F:BPR])=0 : Local File BPARTNER   [BPR] : Endif
+
+    Raz CLIENTE,DIRECCION
+    Filter [F:YBP]
+    If vireblc(EANREC,2)="" : End : Endif
+# JMME INI
+#    Case TYPCOD
+#        When 1 : Filter [F:YBP] Where YEANPIDE = EANCOD and YEANPIDE <> ""
+#        When 2 : Filter [F:YBP] Where YEANRECEPT = EANCOD and YEANRECEPT <> ""
+#        When 3 : Filter [F:YBP] Where YEANCLIENT = EANCOD and YEANCLIENT <> ""
+#        When 4 : Filter [F:YBP] Where YEANPAGA   = EANCOD and YEANPAGA   <> ""
+#        When 5 : Filter [F:YBP] Where find(mid$(EANCOD,1,7),YEANRAIZ(0..1))
+#    Endcase
+
+    Case TYPCOD
+        When 1 : Filter [F:YBP] Where YEMIRECEP = EANEMI and YEANPIDE = EANPIDE and YEANPIDE = EANREC
+        When 2 : Filter [F:YBP] Where YEMIRECEP = EANEMI and YEANPIDE = EANPIDE and YEANRECEPT = EANREC
+        When 3 : Filter [F:YBP] Where YEMIRECEP = EANEMI and YEANPIDE = EANPIDE and YEANCLIENT = EANREC
+        When 4 : Filter [F:YBP] Where YEMIRECEP = EANEMI and YEANPIDE = EANPIDE and YEANPAGA   = EANREC
+        When 5 : Filter [F:YBP] Where find(mid$(EANCOD,1,7),YEANRAIZ(0..1)) and YEMIRECEP = EANEMI
+    Endcase
+
+# JMME - FIN
+    Read [F:YBP]YBP0 First
+
+    If !fstat
+        CLIENTE   = [F:YBP]BPCNUM
+        DIRECCION = [F:YBP]BPAADD
+        If TYPCOD=5
+            Read [F:BPR]BPR0=CLIENTE
+            If !fstat : DIRECCION=[F:BPR]BPAADD : Endif
+        Endif
+      # JMME INI PARA QUE NO SE QUEDEN VACIOS
+        If EANFAC = '' Then
+          EANFAC = [F:YBP]YEANFACTUR
+        Endif
+        If EANPAG = '' Then
+          EANPAG = [F:YBP]YEANPAGA
+        Endif
+      # JMME FIN
+    Endif
+End
+
+#------------------------------------------------------------------------------#
+
+Subprog IMPORTACION(MODELO,NOMFIC)
+Value Char MODELO()
+Value Char NOMFIC()
+
+    If clalev([F:AEN])=0  : Local File AENCHAINE  [AEN]  : Endif
+    If clalev([F:AOE])=0  : Local File AOBJEXT    [AOE]  : Endif
+    If clalev([F:AOD])=0  : Local File AOBJEXTD   [AOD]  : Endif
+    If clalev([F:APX])=0  : Local File APARIMPEXP [APX]  : Endif
+
+    If clalev([F:ACC_])=0 : Local File ACCES      [ACC_] : Endif
+    If clalev([F:AOB_])=0 : Local File AOBJET     [AOB_] : Endif
+    If clalev([F:ATY_])=0 : Local File ATYPE      [ATY_] : Endif
+    If clalev([F:AMK_])=0 : Local File AMSK       [AMK_] : Endif
+    If clalev([F:AMZ_])=0 : Local File AMSKZON    [AMZ_] : Endif
+    If clalev([F:ATB_])=0 : Local File ATABLE     [ATB_] : Endif
+    If clalev([F:ATZ_])=0 : Local File ATABZON    [ATZ_] : Endif
+    If clalev([F:ATI_])=0 : Local File ATABIND    [ATI_] : Endif
+    If clalev([F:AFC_])=0 : Local File AFONCTION  [AFC_] : Endif
+    If clalev([F:ACV_])=0 : Local File ACTIV      [ACV_] : Endif
+
+    If clalev([M:AOE0])=0 : Local Mask AOE0       [AOE0] : Endif
+    If clalev([M:AOE1])=0 : Local Mask AOE1       [AOE1] : Endif
+    If clalev([M:AOE2])=0 : Local Mask AOE2       [AOE2] : Endif
+    If clalev([M:IEX])=0  : Local Mask IMPTEST    [IEX]  : Endif
+    If clalev([M:IMP2])=0 : Local Mask IMPOBJ2    [IMP2] : Endif
+
+    Raz [M:IMP2]
+    Local Integer STAT
+    Local Char    MESSAGE(100)
+
+    If filinfo(NOMFIC,0)<=0 : End : Endif
+    If MODELO=""            : End : Endif
+
+    If !GSERVEUR : : Endif
+
+    STAT = 0
+
+    Call IMPORTSIL(MODELO,NOMFIC) From GIMPOBJ
+
+    Call EFFACE(NOMFIC,STAT) From ORDSYS
+
+    Close Local Mask
+End
+
+#------------------------------------------------------------------------------#
+
+$ERRBATCH
+    Call ECR_TRACE(errmes$(errn)-num$(errl)-errm,1) From GESECRAN
+End
+
+######################################################################################
+##### CONTROL DE LICENCIAS ###########################################################
+Subprog COMPROB_LIC(MODULO,OK)
+Value Integer MODULO
+Variable Integer OK
+##### Existe el fichero de licencia
+If filinfo(filpath(filpath("!",".serialisation",""),"serial_sagespain",""),7)<=0
+   OK=1
+   End
+Endif
+##### Las licencias coinciden??
+
+ Local Mask VISULIC
+Local Integer USER
+Local Integer DIVERS(1..9)
+Local Integer NOMBRE(1..12)
+Local Char CLAVE(12)(10)
+CLAVE(0)="921541158178"
+CLAVE(1)="485069284990"
+CLAVE(2)="568977803782"
+CLAVE(3)="842404070625"
+CLAVE(4)="203650615336"
+CLAVE(5)="637138499047"
+CLAVE(6)="376282736253"
+CLAVE(7)="750715347464"
+CLAVE(8)="119826521819"
+CLAVE(9)="094393962501"
+[M]FICHIER = filpath(filpath("!",".serialisation",""),"serial_adonix","")
+Call SERIAL([M]FICHIER,[M]LICENCE,[M]CHCLI,[M]CHDIS,[M]DATDEB,[M]DATFIN,USER,DIVERS,NOMBRE) From VISULIC
+
+Openi filpath(filpath("!",".serialisation",""),"serial_sagespain","")
+Local Char LICX3(12), LICDV1(12), LICDV2(12), LICDV3(12), LICX32(12)
+Rdseq LICX3
+Rdseq LICDV1
+Rdseq LICDV2
+Rdseq LICDV3
+Rdseq LICX32
+If LICX3<>[M]LICENCE
+    OK=2: End
+Endif
+If len(LICX3)<>12 or len(LICX32)<>12 or len(LICDV1)<>12 or len(LICDV2)<>12 or len(LICDV3)<>12 or val(LICX3)=0 or val(LICDV1)=0
+   OK=3:End
+Endif
+LICENDEV=""
+For X=1 To 12
+  For Y=0 To 9
+   If mid$(LICX32,X,1)=mid$(CLAVE(Y),X,1)
+      LICENDEV+=num$(Y)
+      Break
+   Endif
+  Next
+Next
+If LICENDEV<>LICX3
+  OK=4: End
+Endif
+If MODULO <= 30
+  LICENDEV=""
+  For X=1 To 12
+   For Y=0 To 9
+    If mid$(LICDV1,X,1)=mid$(CLAVE(Y),X,1)
+     LICENDEV+=num$(Y)
+     Break
+    Endif
+   Next
+  Next
+
+  VALORLIC=val(LICENDEV)-val(LICX3)
+  For X=30 To 1 Step -1
+    If 2^(X-1)<=VALORLIC
+       If X=MODULO: End: Endif
+       VALORLIC-=2^(X-1)
+     Endif
+   Next
+Endif
+
+If MODULO > 30 and MODULO <= 60
+
+Endif
+
+If MODULO > 60
+
+Endif
+OK=5
+End
+
+
+
+

@@ -1,0 +1,65 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char PLANTA
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZTH]) : Local File ZTHORASHF [ZTH]     : Endif  ##Tabla temporal
+  If !clalev([F:ZOP]) : Local File MFGOPETRK [ZOP]     : Endif  ##Tabla de seguimiento de Fab. OPERACIONES
+  If !clalev([F:ZCAL]) : Local File ZCALENDARIO [ZCAL]     : Endif  ##Tabla de festivos.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  FECHADEB=mid$(PARAMETRE(36),10,8)
+  FECHAFIN=mid$(PARAMETRE(37),10,8)
+  PLANTA=mid$(PARAMETRE(35),6,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+      Delete [ZTH] Where CREUSR= GUSER
+
+  ###########################
+  ## CARGA DE SEGUIMIENTOS ##
+  ###########################
+  Filter [ZOP] Where (IPTDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and IPTDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) and (MFGFCY=PLANTA)Order By IPTDAT
+  Trbegin [ZTH]
+      For [ZOP]
+          Filter [ZCAL] Where FCY = [F:ZOP]MFGFCY and FECHA= [F:ZOP]IPTDAT
+          Read [ZCAL] First
+          If fstat=0 Then ##Si lo encuentra es festivo
+            [F:ZTH]HABFES=2
+          Else #Día hábil
+            [F:ZTH]HABFES=1
+          Endif
+          [F:ZTH]CPY=COMPANY
+          [F:ZTH]FCY=[F:ZOP]MFGFCY
+          [F:ZTH]CPLWST=[F:ZOP]CPLWST
+          [F:ZTH]MFGNUM=[F:ZOP]MFGNUM
+          [F:ZTH]OPENUM=[F:ZOP]OPENUM
+          [F:ZTH]ITMREF=[F:ZOP]ITMREF
+          [F:ZTH]ROUALT=[F:ZOP]ROUALT
+          [F:ZTH]IPTDAT=[F:ZOP]IPTDAT
+          [F:ZTH]CPLQTY=[F:ZOP]CPLQTY
+          [F:ZTH]REJCPLQTY=[F:ZOP]REJCPLQTY
+          [F:ZTH]MSGNUM=[F:ZOP]MSGNUM
+          [F:ZTH]CPLSETTIM=[F:ZOP]CPLSETTIM
+          [F:ZTH]CPLOPETIM=[F:ZOP]CPLOPETIM
+          [F:ZTH]MFGTRKNUM=[F:ZOP]MFGTRKNUM
+          [F:ZTH]OPETRKLIN=[F:ZOP]OPETRKLIN
+          Write [F:ZTH]
+      Next
+  Commit
+
+  ##Cierre de ficheros
+  Close File [ZCAL]:Close File [ZOP]:Close File [ZTH]
+End
+

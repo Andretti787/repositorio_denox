@@ -1,0 +1,90 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char PLANTA
+  Local Char VALEUR(250)
+
+  Local Date DINI ## Para recoger las fechas y saber si es día disponible
+  Local Date DFIN
+
+  If !clalev([F:ZTH]) : Local File ZTHORASHF [ZTH]     : Endif  ##Tabla temporal
+  If !clalev([F:ZHDM]) : Local File ZHDISPMAQ [ZHDM]     : Endif  ##Tabla temporal días Disponibles
+  If !clalev([F:ZMAQ]) : Local File WORKSTATIO [ZMAQ]     : Endif  ##Tabla de centros de trabajo
+  If !clalev([F:ZOP]) : Local File MFGOPETRK [ZOP]     : Endif  ##Tabla de seguimiento de Fab. OPERACIONES
+  If !clalev([F:ZCAL]) : Local File ZCALENDARIO [ZCAL]     : Endif  ##Tabla de festivos.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  FECHADEB=mid$(PARAMETRE(36),10,8)
+  FECHAFIN=mid$(PARAMETRE(37),10,8)
+  PLANTA=mid$(PARAMETRE(35),6,8)
+
+  ##########################################
+  ## Borrar la tablas temporales del informe ##
+  ##########################################
+  Delete [F:ZTH] Where CREUSR= GUSER
+  Delete [F:ZHDM] Where CREUSR= GUSER
+
+
+  ###########################
+  ## CARGA DE SEGUIMIENTOS ##
+  ###########################
+  Filter [F:ZOP] Where (IPTDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and IPTDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) and (MFGFCY=PLANTA)Order By IPTDAT
+  Trbegin [F:ZTH]
+      For [F:ZOP]
+          Filter [F:ZCAL] Where FCY = [F:ZOP]MFGFCY and FECHA= [F:ZOP]IPTDAT
+          Read [F:ZCAL] First
+          If fstat=0 Then ##Si lo encuentra es festivo
+            [F:ZTH]HABFES=2
+          Else #Día hábil
+            [F:ZTH]HABFES=1
+          Endif
+          [F:ZTH]CPY=COMPANY
+          [F:ZTH]FCY=[F:ZOP]MFGFCY
+          [F:ZTH]CPLWST=[F:ZOP]CPLWST
+          ##BUSCAMOS LOS DÍAS DISPONIBLES DEL CENTRO DE TRABAJO
+          ## Y GUARDAMOS EN LA TABLA TEMPORAL
+          Filter [F:ZMAQ] Where WST=[F:ZOP]CPLWST
+          For [F:ZMAQ]
+            DINI=gdat$(val(right$(FECHADEB,7)),val(mid$(FECHADEB,5,2)),val(left$(FECHADEB,4)))
+            DFIN=gdat$(val(right$(FECHAFIN,7)),val(mid$(FECHAFIN,5,2)),val(left$(FECHAFIN,4)))
+            While DINI<=DFIN
+              Filter [F:ZCAL] Where FCY = [F:ZOP]MFGFCY and FECHA=DINI
+              Read [F:ZCAL] First
+              If fstat<>0 Then ##Si no lo encuentra no es fiesta
+                [F:ZHDM]WST=[F:ZMAQ]WST
+                [F:ZHDM]TWD=[F:ZMAQ]TWD
+                [F:ZHDM]FECHA=DINI
+                Write [F:ZHDM]
+              Endif
+              DINI=DINI+1
+            Wend
+          Next
+          [F:ZTH]MFGNUM=[F:ZOP]MFGNUM
+          [F:ZTH]OPENUM=[F:ZOP]OPENUM
+          [F:ZTH]ITMREF=[F:ZOP]ITMREF
+          [F:ZTH]ROUALT=[F:ZOP]ROUALT
+          [F:ZTH]IPTDAT=[F:ZOP]IPTDAT
+          [F:ZTH]CPLQTY=[F:ZOP]CPLQTY
+          [F:ZTH]REJCPLQTY=[F:ZOP]REJCPLQTY
+          [F:ZTH]MSGNUM=[F:ZOP]MSGNUM
+          [F:ZTH]CPLSETTIM=[F:ZOP]CPLSETTIM
+          [F:ZTH]CPLOPETIM=[F:ZOP]CPLOPETIM
+          [F:ZTH]MFGTRKNUM=[F:ZOP]MFGTRKNUM
+          [F:ZTH]OPETRKLIN=[F:ZOP]OPETRKLIN
+          Write [F:ZTH]
+      Next
+  Commit
+
+  ##Cierre de ficheros
+  Close File [ZCAL]:Close File [ZOP]:Close File [ZTH]:Close File [F:ZHDM]: Close File [F:ZMAQ]
+End
+

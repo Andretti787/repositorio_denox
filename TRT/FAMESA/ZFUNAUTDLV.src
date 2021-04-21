@@ -1,0 +1,168 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+#####################################
+## Realizado por Oscar J. Martínez ##
+## 17/05/2016 Ultima Modif.        ##
+#####################################
+$ACTION
+    Case ACTION
+       When "AUTDLVFIL" : Gosub CARGAPANTFILTRO
+       When "AUTDLVWRK" : Gosub MODIFLINEAS
+    Endcase
+
+Return
+
+$CARGAPANTFILTRO
+    ##Carga mi pantalla de filtro para las líneas a distribuir
+    If GFONCTION="ZDLVDISTRI" Then
+        Call TEMPOFF From GESECRAN
+        Local Mask ZDT3[ZDT3]
+        Local Mask ZDT2[ZDT2]
+
+        Local Integer OK,I
+        Local Char TITULO
+        TITULO="Selección de Distribución"
+        Raz [ZDT2]:Raz [ZDT3]
+        ##llamada a la carga de datos
+        Gosub CARGADATOS
+        ##Lamada a la Ventana
+        Call DIALWIN(OK,TITULO,"ZDISTRI2") From GESECRAN
+
+        If OK<> 2
+           End
+        Else
+           ##Botón OK
+           Gosub GRABARDATOS
+        Endif
+        OK=1
+
+    Endif
+Return
+
+$CARGADATOS
+      If !clalev ([F:ZDT]) : Local File ZDISTRI[ZDT]: Endif ##FICHERO DE DISTRIBUCIONES ##
+      ##FILTRO LAS ENTREGAS DEL CLIENTE ##
+##If GUSER="ADMIN" : Dbgaff : Endif
+      CRITERIO = '[F:ZDT]ALB<>2'
+      If [M:DIA]SOHNUMDEB <> ""
+         CRITERIO -= '& SOHNUM >="'+[M:DIA]SOHNUMDEB+'"'
+      Endif
+      If [M:DIA]SOHNUMFIN <> ""
+         CRITERIO -= '& SOHNUM <="'+[M:DIA]SOHNUMFIN+'"'
+      Endif
+      If [M:DIA]BPCORDDEB <> ""
+         CRITERIO -= '& BPCORD >="'+[M:DIA]BPCORDDEB+'"'
+      Endif
+      If [M:DIA]BPCORDFIN <> ""
+         CRITERIO -= '& BPCORD <="'+[M:DIA]BPCORDFIN+'"'
+      Endif
+
+      Filter [ZDT] Where evalue(CRITERIO)
+      LLISTA=1
+      For [ZDT]ZDT3 ##BPCORD+BPAADD+SOHNUM+SOPLIN
+        [M:ZDT2]BPCORD(LLISTA-1) = [F:ZDT]BPCORD
+        [M:ZDT2]SOHNUM(LLISTA-1) = [F:ZDT]SOHNUM
+        [M:ZDT2]SOPLIN(LLISTA-1) = [F:ZDT]SOPLIN
+        [M:ZDT2]ITMREF(LLISTA-1) = [F:ZDT]ITMREF
+        [M:ZDT2]QTY(LLISTA-1)    = [F:ZDT]QTY
+        [M:ZDT2]BPAADD(LLISTA-1)=[F:ZDT]BPAADD
+        [M:ZDT2]QTYDIS(LLISTA-1)=[F:ZDT]QTYDIS
+        [M:ZDT2]ALB(LLISTA-1)=[F:ZDT]ALB
+        [M:ZDT2]MALB(LLISTA-1)=[F:ZDT]MALB
+        LLISTA+=1
+      Next
+     [M:ZDT2]NBLIG=LLISTA-1
+
+    ##Actualiza las líneas
+    Affzo [M:ZDT2]
+    Close Local File [ZDT]
+Return
+
+$GRABARDATOS
+    If !clalev ([F:ZDT]) : Local File ZDISTRI [ZDT]: Endif ##FICHERO DE DISTRIBUCIONES ##
+
+    ##COMPROBAMOS LOS DATOS ##
+    Trbegin[ZDT]
+       ## BORRAMOS TODA LA DISTRIBUCIÓN DEL PEDIDO ANTES DE GRABAR ##
+       Delete [ZDT] Where evalue(CRITERIO)
+
+       ## GRABA ##
+       For X=0 To [M:ZDT2]NBLIG-1
+         [F:ZDT]SOHNUM=[M:ZDT2]SOHNUM(X)
+         [F:ZDT]SOPLIN=[M:ZDT2]SOPLIN(X)
+         [F:ZDT]BPCORD=[M:ZDT2]BPCORD(X)
+         [F:ZDT]BPAADD=[M:ZDT2]BPAADD(X)
+         [F:ZDT]ITMREF=[M:ZDT2]ITMREF(X)
+         [F:ZDT]QTY   =[M:ZDT2]QTY(X)
+         [F:ZDT]QTYDIS=[M:ZDT2]QTYDIS(X)
+         [F:ZDT]ALB   =[M:ZDT2]ALB(X)
+         [F:ZDT]MALB=[M:ZDT2]MALB(X)
+         Write [ZDT]
+         If fstat : Goto ABANDON : Endif
+       Next
+    Commit : SUCCES = 1
+    Close Local File [ZDT]
+Return
+
+$ABANDON ##retrocede un rollback
+       Rollback : SUCCES = 0
+Return
+
+$MODIFLINEAS
+  ##If GUSER="ADMIN" : Dbgaff : Endif
+  If GFONCTION='ZDLVDISTRI'
+    If !clalev([ZDT]): Local File ZDISTRI : Endif ## Fichero de list. de distribuciones
+    ###################################################################
+    ## Se borran las lineas del temporal que no se vayan a albaranar ##
+    ###################################################################
+    For [SWD]
+      FILTRO = '[F:ZDT]MALB=2 & [F:ZDT]ALB<>2 '
+      FILTRO+= '& SOHNUM="' + [F:SWD]SOHNUM + '" & SOPLIN=' + num$([F:SWD]SOPLIN)
+      Filter [ZDT] Where evalue (FILTRO)
+      Read [ZDT] First
+      If fstat <> 0 ## No se ha encontrado en la lista de Distribución por lo que quitamos la linea para albaranar
+          Delete [SWD]
+      Else ## Si la encuentra
+          ZPRONUM = [F:SWD]PRONUM
+          ZSWDKEY = [F:SWD]SWDKEY
+          ZSOQSEQ = [F:SWD]SOQSEQ
+          ZSWDDATA = [F:SWD]SWDDATA
+          ZSWDKEYD = [F:SWD]SWDKEYD
+          ZODL = [F:SWD]ODL
+          ZIME = [F:SWD]IME
+          ZMDL = [F:SWD]MDL
+          ZBPCINV = [F:SWD]BPCINV
+          ZCHGTYP = [F:SWD]CHGTYP
+          ##Modifico las cantidades y la dirección
+          [F:SWD]SWDKEY = left$(ZSWDKEY,17)+"~"+[F:ZDT]BPAADD+mid$(ZSWDKEY,22,28)
+          [F:SWD]BPAADD =[F:ZDT]BPAADD
+          [F:SWD]QTY =[F:ZDT]QTYDIS
+          [F:SWD]QTYSTU = [F:ZDT]QTYDIS
+          Rewrite [SWD]
+          Read [ZDT] Next
+          For [ZDT] ## grabo las demás lineas de la distribución de la misma linea del pedido
+            [F:SWD]PRONUM = ZPRONUM
+            [F:SWD]SWDKEY = left$(ZSWDKEY,17)+"~"+[F:ZDT]BPAADD+mid$(ZSWDKEY,22,28)
+            [F:SWD]SOHNUM = [F:ZDT]SOHNUM
+            [F:SWD]SOPLIN = [F:ZDT]SOPLIN
+            [F:SWD]SOQSEQ = ZSOQSEQ
+            [F:SWD]SWDDATA = ZSWDDATA
+            [F:SWD]SWDKEYD =ZSWDKEYD
+            [F:SWD]ODL = ZODL
+            [F:SWD]IME =ZIME
+            [F:SWD]MDL = ZMDL
+            [F:SWD]BPCORD = [F:ZDT]BPCORD
+            [F:SWD]BPCINV = ZBPCINV
+            [F:SWD]CHGTYP = ZCHGTYP
+            [F:SWD]BPAADD=[F:ZDT]BPAADD
+            [F:SWD]QTY=[F:ZDT]QTYDIS
+            [F:SWD]QTYSTU= [F:ZDT]QTYDIS
+            Write [SWD]
+            ##Actualiza la Línea de la distribución indicando que está albaranada
+            [F:ZDT]ALB = 2
+            Rewrite [ZDT]
+          Next
+      Endif
+    Next
+  Endif
+Return
+

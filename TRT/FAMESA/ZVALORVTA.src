@@ -1,0 +1,98 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY(GLONCPY)
+  Local Char FECHADEB(30)
+  Local Char FECHAFIN(30)
+  Local Char USUARIO(GLONAUS)
+  Local Char ACTSQL(250)(1..10)
+
+  If !clalev([F:ZVAL]) : Local File ZTMPVALOR [ZVAL] : Endif  ##Tabla temporal de Valoración
+  If !clalev([F:ZCST]) : Local File ITMCOST   [ZCST] : Endif  ##Tabla costes de artículos
+  If !clalev([F:ZGST]) : Local File ITCNAT    [ZGST] : Endif  ##Tabla Detalle Gastos-Costes
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+#  COMPANY=mid$(PARAMETRE(34),9,5)
+#  FECHADEB=mid$(PARAMETRE(35),9,8)
+#  FECHAFIN=mid$(PARAMETRE(36),9,8)
+#  USUARIO=mid$(PARAMETRE(39),9,8)
+
+  Call GETPARAM("company", NBPAR, PARAMETRE, COMPANY) From ETAT
+  Call GETPARAM("datedeb", NBPAR, PARAMETRE, FECHADEB) From ETAT
+  Call GETPARAM("datefin", NBPAR, PARAMETRE, FECHAFIN) From ETAT
+  Call GETPARAM("Usuario", NBPAR, PARAMETRE, USUARIO) From ETAT
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [F:ZVAL]
+  Delete [F:ZVAL] Where CREUSR= USUARIO
+  Commit
+  #################################
+  ## CARGA DE LAS ART FACTURADOS ##
+  #################################
+  Raz ACTSQL
+  ACTSQL(1)='INSERT INTO ZTMPVALOR '
+  ACTSQL(2)='(S.FCY_0,S.CPY_0,LOC_0, ITMREF_0, FECHA_0, CANTIDAD_0,[MATPRIMA_0],[ACCESORIOS_0],[EMBCOMPR_0],[OPERMAQ_0],[AMORTIZACION_0],[ENERGIA_0],[MANOOBRA_0] '
+  ACTSQL(3)=',[CREDATTIM_0],[UPDDATTIM_0],[AUUID_0],[CREUSR_0],[UPDUSR_0]) '
+  ACTSQL(4)= " SELECT S.FCY_0, S.CPY_0, '',ITMREF_0, MAX(INVDAT_0), sum(QTY_0*SNS_0),0,0,0,0,0,0,0,'"
+  ACTSQL(5)= format$("D:YYYYMMDD",date$) + "','" + format$("D:YYYYMMDD",date$) + "',NEWID() "
+  ACTSQL(6)= ",'" + USUARIO + "','" + USUARIO + "' "
+  ACTSQL(7)= " From SINVOICE S INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  ACTSQL(8) = " Where (INVTYP_0=1 or INVTYP_0=2) and S.STA_0=3 and S.CPY_0='" + COMPANY + "'"
+  ACTSQL(8)+= " and (INVDAT_0>='" + FECHADEB + "' and INVDAT_0<='" + FECHAFIN + "') "
+  # N.A.C. <09/01/2018>: Excluir componentes KIT
+  ACTSQL(8)+= " and LINTYP_0 NOT IN (3,4,5,7,8,9) "
+  ACTSQL(9) = " GROUP By S.FCY_0,S.CPY_0,ITMREF_0 "
+
+  Execsql From "5" Sql ACTSQL(1..10)
+  If adxSqlRec>0 Then ## Variable con el nº de registros afectados
+    #################################
+    ## CARGA SEGUN COSTE ESTANDARD ##
+    #################################
+    #Read [F:ZVAL] First
+    ##Trbegin [F:ZVAL]
+      For [F:ZVAL]ZVAL0 Where CREUSR=USUARIO
+        #################################
+        ## CARGA SEGUN COSTE ESTANDARD ##
+        #################################
+        Filter [F:ZCST] Where CSTTYP=1 and STOFCY=[F:ZVAL]FCY and ITMREF=[F:ZVAL]ITMREF and (ITCSTRDAT<= [F:ZVAL]FECHA and ITCENDDAT>=[F:ZVAL]FECHA) Order By ITCSEQ Desc
+        Read [F:ZCST] First
+        If fstat=0 Then
+          [F:ZVAL]MATPRIMA=[F:ZCST]MATCST(2)
+          [F:ZVAL]ACCESORIOS=[F:ZCST]MATCST(0)
+          [F:ZVAL]EMBCOMPR=[F:ZCST]MATCST(1)+[F:ZCST]MATCST(3)
+          [F:ZVAL]OPERMAQ=[F:ZCST]MACTOT
+          Filter [F:ZGST] Where STOFCY=[F:ZCST]STOFCY  and ITMREF=[F:ZCST]ITMREF and CSTTYP= [F:ZCST]CSTTYP and ITCSEQ=[F:ZCST]ITCSEQ and UID=[F:ZCST]UID
+          Read [F:ZGST] First
+          If fstat=0 Then
+            For [F:ZGST]
+              If [F:ZGST]OVENAT='AMO' Then
+                [F:ZVAL]AMORTIZACION=[F:ZGST]NATAMTLEV+ [F:ZGST]NATAMTSSE
+              Else
+               [F:ZVAL]ENERGIA=[F:ZGST]NATAMTLEV+ [F:ZGST]NATAMTSSE
+              Endif
+            Next
+          Else
+            [F:ZVAL]AMORTIZACION=0
+            [F:ZVAL]ENERGIA=0
+          Endif
+
+          [F:ZVAL]MANOOBRA=[F:ZCST]LABTOT
+          Rewrite [F:ZVAL]
+        Endif
+      Next
+    ##Commit
+  Endif
+
+  ##Cierre de ficheros
+  Close File [F:ZVAL]:Close File [F:ZCST]:Close File [F:ZGST]
+End
+
+
+
+

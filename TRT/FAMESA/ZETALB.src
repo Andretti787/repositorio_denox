@@ -1,0 +1,62 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Integer NET ## Nº total de bultos
+  Local Integer ET #Nºde Etiqueta
+  Local Char OSDEB
+  Local Char OSFIN
+  Local Char USUARIO
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZPED]) : Local File SORDER[ZPED]      : Endif  ## TABLA DE PEDIDOS.
+  If !clalev([F:ZENT]) : Local File SDELIVERY[ZENT]      : Endif  ## TABLA ENTREGA.
+  If !clalev([F:ZEND]) : Local File SDELIVERYD[ZEND]      : Endif  ## TABLA LINEAS DE LA ENTREGA.
+  If !clalev([F:ZET]) : Local File ZETSTOPRE [ZET]   : Endif  ## TABLA DE ETIQUETAS.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  OSDEB=mid$(PARAMETRE(34),14,20)
+  OSFIN=mid$(PARAMETRE(35),14,20)
+  USUARIO=mid$(PARAMETRE(36),9,20)
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [F:ZET]
+      Delete [F:ZET] Where CREUSR= USUARIO
+  Commit
+
+  ####################################
+  ## CARGA EN LA TABLA DE ETIQUETAS ##
+  ####################################
+  Filter [F:ZENT] Where (SDHNUM>=OSDEB and SDHNUM<=OSFIN) Order By SDHNUM
+  For [F:ZENT]
+    If [F:ZENT]YPACK<>0 Then
+      NET=[F:ZENT]YPACK: ET=1
+    Else
+      NET=1:ET=1
+    Endif
+    Filter [F:ZEND] Where SDHNUM=[F:ZENT]SDHNUM
+    Read [F:ZEND]First
+    Filter [F:ZPED] Where SOHNUM=[F:ZEND]SOHNUM
+    Read [F:ZPED] First
+    If fstat=0 Then
+      For ET=1 To NET
+        [F:ZET]PRHNUM=[F:ZENT]SDHNUM
+        [F:ZET]ORINUM=[F:ZEND]SOHNUM
+        [F:ZET]CUSORDREF=[F:ZPED]CUSORDREF
+        [F:ZET]ETIQUETA=ET
+        [F:ZET]NETIQUETA=NET
+        Write [F:ZET]
+      Next
+    Endif
+  Next
+  ##Cierre de ficheros
+  Close File [F:ZPED]:Close File [F:ZENT]:Close File [F:ZEND]:Close File [F:ZET]
+End
+
+
+
+

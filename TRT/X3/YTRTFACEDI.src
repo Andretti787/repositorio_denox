@@ -1,0 +1,1098 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+
+# Variables utilizadas en la parametrización de ficheros:
+#
+# Cabecera:
+#     EMISOR: Código EDI del emisor de la factura, quien Factura
+#     ERSOCIAL: Razón social del emisor de la factura
+#     ECALLE: Domicilio del emisor de la factura
+#     EPOBLAC: Población del emisor de la factura
+#     ECP: Código Postal del emisor de la factura
+#     ENIF: NIF del emisor de la factura
+#     COMPRADOR: Código EDI de Quien hace el pedido
+#     RECEPTOR: Código EDI del Receptor de la mercancía
+#     CLIENTE Código EDI del destinatario de la Factura (A quien se factura)
+#     PAGADOR: Código EDI de Quien Paga
+#     DEPTO: Departamento
+#     NODO: Tipo de Factura
+#     SUMBRUTO: Suma de los Importes Brutos de las líneas (Precio_unitario * Cantidad)
+#     CARGOS: Suma de los importes de los cargos GLOBALES (elementos de facturación)
+#     DESCUEN: Suma de los importes de los descuentos GLOBALES (elementos de facturación)
+#     VTO: Fecha vencimiento (1..3)
+#     IMPVTO: Importe vencimiento (1..3)
+#     DESTINO: Código EDI del Destino del Mensaje.
+# Detalle:
+#     NUMLINEA: Número de línea
+#     BRUTO: Precio_Bruto * Cantidad
+#     NETO: Precio_Neto * Cantidad
+#
+# Dto/Cargo Cabecera/Líneas:
+#     NUMDTO: Número Dto/Cargo
+#     NUMSECUEN: Secuencia de aplicación de Dto/Cargo (cascada o paralelo)
+#     CALIF: Calificador de cargo o descuento | A=Descuento  C=Cargos.
+#     TIPODES: Tipo de descuento o cargo
+#     PORCEN: Porcentaje del descuento o cargo
+#     IMPDES: Importe del descuento o cargo
+#
+# YMLGA - Cambios EDI EXPERT ONE - DIC/16
+#
+$ACTION
+    Case ACTION
+        When "INIT"     : Gosub INIT
+        When "INIT_DIA" : Gosub INIT_DIA
+        When "CONTROLE" : Gosub CONTROLE
+        When "EXEC"     : Gosub EXEC
+    Endcase
+
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIT
+    If GSERVEUR : Onerrgo ERRBATCH : Endif
+
+    # Declaración de tablas
+    If clalev([F:YFV])=0  : Local File YEDIFMTSIV [YFV] : Endif
+    If clalev([F:YEV])=0  : Local File YEDISIVFIC [YEV] : Endif
+    If clalev([F:SIV])=0  : Local File SINVOICEV  [SIV] : Endif
+    If clalev([F:SIVX])=0 : Local File SINVOICEV [SIVX] : Endif
+    If clalev([F:SIV2])=0 : Local File SINVOICEV [SIV2] : Endif
+    If clalev([F:SIH])=0  : Local File SINVOICE   [SIH] : Endif
+    If clalev([F:SID])=0  : Local File SINVOICED  [SID] : Endif
+    If clalev([F:DUD])=0  : Local File GACCDUDATE [DUD] : Endif
+    If clalev([F:SDH])=0  : Local File SDELIVERY  [SDH] : Endif
+    If clalev([F:SRD])=0  : Local File SRETURND   [SRD] : Endif
+    If clalev([F:SOH])=0  : Local File SORDER     [SOH] : Endif
+    If clalev([F:YSE])=0  : Local File YSORDEREDI [YSE] : Endif
+    If clalev([F:BPR])=0  : Local File BPARTNER   [BPR] : Endif
+    If clalev([F:BPC])=0  : Local File BPCUSTOMER [BPC] : Endif
+    If clalev([F:CPY])=0  : Local File COMPANY    [CPY] : Endif
+    If clalev([F:FCY])=0  : Local File FACILITY   [FCY] : Endif
+    If clalev([F:BPA])=0  : Local File BPADDRESS  [BPA] : Endif
+    If clalev([F:SFI])=0  : Local File SFOOTINV   [SFI] : Endif
+    If clalev([F:ITM])=0  : Local File ITMMASTER  [ITM] : Endif
+    If clalev([F:TVT])=0  : Local File TABVAT     [TVT] : Endif
+    If clalev([F:TRA])=0  : Local File TABRATVAT  [TRA] : Endif
+    If clalev([F:PRS])=0  : Local File PRICSTRUCT [PRS] : Endif
+    If clalev([F:TPT])=0  : Local File TABPAYTERM [TPT] : Endif
+    If clalev([F:ADI])=0  : Local File ATABDIV    [ADI] : Endif
+    If clalev([F:ITU])=0  : Local File ITMBPC     [ITU] : Endif
+    If clalev([F:SVF])=0  : Local File SVCRFOOT   [SVF] : Endif
+    If clalev([F:SVV])=0  : Local File SVCRVAT    [SVV] : Endif
+
+    # Declaración de varibles
+    Local Char    AUXCHAR(255), YEDISIVDIR(255), YEDISIVFRM(10), MENSAJE(255),
+&                 CRITERE(255), NOMFIC(255), WHORA(8), RESULT(255), CALIF(1),
+&                 TIPODES(GLONADI), EMISOR(20), ERSOCIAL(70), ECALLE(35), EPOBLAC(35),
+&                 ECP(5), ENIF(17), COMPRADOR(17), RECEPTOR(17), CLIENTE(17),
+&                 PAGADOR(17), DEPTO(15), NODO(3), SUFIX(20), DESTINO(20)
+
+    Local Integer OKK, NBFAC, NUMLINEA, WTIPOFIC, STAT, NUMDTO, NUMSECUEN
+
+    Local Decimal RESULTDEC, ENT, DEC, NUMENT, NUMDEC, BRUTO, NETO, SUMBRUTO,
+&                 SUMNETOS, PORCEN, IMPDES, CARGOS, DESCUEN, IMPVTO(1..3)
+
+    Local Date    WFECHA, VTO(1..3)
+
+    # Directorio de exportación de facturas de venta EDI
+    Call PARAM("","YEDISIVDI1",AUXCHAR) From ADOVAL
+    YEDISIVDIR += vireblc(AUXCHAR,2)
+    Call PARAM("","YEDISIVDI2",AUXCHAR) From ADOVAL
+    YEDISIVDIR += vireblc(AUXCHAR,2)
+
+    If YEDISIVDIR = ""
+        GERR=1 : OK=0
+        GMESSAGE ="Parámetro YEDISIVDI1/ YEDISIVDI2 no definido"
+    Else
+        Call EXISTE(YEDISIVDIR,OKK) From ORDSYS
+        If OKK<>2
+            GMESSAGE ="|" + YEDISIVDIR + "|\"
+            GMESSAGE+="Directorio de exportación de facturas no encontrado"
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+
+    # Formato ficheros facturas EDI
+    Call PARAM("","YEDISIVFRM",YEDISIVFRM) From ADOVAL
+    If YEDISIVFRM=""
+        GMESSAGE ="No se ha definido formato de ficheros de facturas EDI"
+        GERR=1 : FIN=1
+        Return
+    Else
+        Read [F:YFV]YFV0=YEDISIVFRM
+        If fstat
+            GMESSAGE ='Formato de fichero "' + YEDISIVFRM + '":'
+            GMESSAGE-="registro inexistente"
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+  ###################################################################
+  ## COMPROBACION DE LICENCIA
+  ###################################################################
+  Local Integer OKDEV
+  Local Integer MODULO
+  Raz OKDEV
+  MODULO=6
+  Call COMPROB_LIC(MODULO,OKDEV) From YTRTFACEDI
+  If OKDEV<>0
+       Infbox("Módulo EDI no autorizado ("-num$(OKDEV)-")")
+     FIN=1
+   Endif
+
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIT_DIA
+    Raz [M:DIA]
+    [M]SALFCY=GFCYDEF(5)
+    [M]TIPOENVIO=1
+    [M]WINVSTA=2
+Return
+
+#------------------------------------------------------------------------------#
+
+$CONTROLE
+    TMP=1
+    TIT="Generando mensajes EDI"
+Return
+
+#------------------------------------------------------------------------------#
+
+$EXEC
+    MENSAJE="Mensajes EDI - Facturas"
+
+    If !GSERVEUR : Call OUVRE_TRACE(MENSAJE) From LECFIC :  Endif
+
+    Call ECR_TRACE(MENSAJE,0) From GESECRAN
+    Call ECR_TRACE(" ",0) From GESECRAN
+    Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+    Call PRTSCR("YFACEDI","DIA","",0,1) From ATRTX3
+    Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+    Call ECR_TRACE(" ",0) From GESECRAN
+
+    Gosub LOAD_CRIT
+    Gosub PRINCIPAL
+
+    If !GSERVEUR : Call FERME_TRACE From LECFIC : Endif
+    TRA=1
+Return
+
+#------------------------------------------------------------------------------#
+
+$LOAD_CRIT
+    CRITERE = 'INVTYP<>5 & YEDIFLG=2'
+
+    If [M]SALFCY <> "" : CRITERE -= '& SALFCY="' + [M]SALFCY + '"' : Endif
+    If [M]WINVSTA = 2  : CRITERE -= '& INVSTA=3'                   : Endif
+
+    If vireblc([M]VCRDEB,2) <> ""
+        If [M]VCRDEB = [M]VCRFIN
+            CRITERE -= '& NUM="'  + [M]VCRDEB + '"'
+        Else
+            CRITERE -= '& NUM>="' + [M]VCRDEB + '"'
+            CRITERE -= '& NUM<="' + [M]VCRFIN + '"'
+        Endif
+    Else
+        If vireblc([M]VCRFIN,2) <> "" : CRITERE -= '& NUM<="' + [M]VCRFIN + '"' : Endif
+    Endif
+
+    If vireblc([M]BPCINVDEB,2) <> ""
+        If [M]BPCINVDEB = [M]BPCINVFIN
+            CRITERE -= '& BPCINV="'  + [M]BPCINVDEB + '"'
+        Else
+            CRITERE -= '& BPCINV>="' + [M]BPCINVDEB + '"'
+            CRITERE -= '& BPCINV<="' + [M]BPCINVFIN + '"'
+        Endif
+    Else
+        If vireblc([M]BPCINVFIN,2) <> "" : CRITERE -= '& BPCINV<="' + [M]BPCINVFIN + '"' : Endif
+    Endif
+
+    If [M]STRDAT <> [0/0/0]
+        If [M]STRDAT = [M]ENDDAT
+            CRITERE -= '& INVDAT=[' + format$(GFMD,[M]STRDAT) + ']'
+        Else
+            CRITERE -= '& INVDAT>=[' + format$(GFMD,[M]STRDAT) + ']'
+            CRITERE -= '& INVDAT<=[' + format$(GFMD,[M]ENDDAT) + ']'
+        Endif
+    Else
+        If [M]ENDDAT <> [0/0/0] : CRITERE -= '& INVDAT<=[' + format$(GFMD,[M]ENDDAT) + ']' : Endif
+    Endif
+
+    Case [M]TIPOENVIO
+        When 1 : CRITERE -= '& YEDIENVFLG<2'
+        When 2 : CRITERE -= '& YEDIENVFLG=2'
+    Endcase
+Return
+
+#------------------------------------------------------------------------------#
+
+$PRINCIPAL
+    If [F:YFV]FMTTYP <> YEDISIVFRM
+        Read [F:YFV]YFV0 = YEDISIVFRM
+        If fstat
+            MENSAJE  ='Formato de fichero "' + YEDISIVFRM + '":'
+            MENSAJE -="registro inexistente"
+            Call ECR_TRACE(MENSAJE,1) From GESECRAN
+            Return
+        Endif
+    Endif
+
+    Gosub CTL_FCY
+    If OKK = 0
+        Call ECR_TRACE(MENSAJE,1) From GESECRAN
+        Return
+    Endif
+
+    SAVIFS = adxifs
+    SAVIRS = adxirs
+    If [F:YFV]TYPFIL=3
+        adxifs = [F:YFV]SEPFLD
+    Else
+        adxifs = ""
+    Endif
+    adxirs = chr$(13) + chr$(10)
+
+    Gosub DEL_FIC_EDI
+
+    WFECHA = date$
+    WHORA  = time$
+    SUFIX  = "_" + format$("D:YYYYMMDD",WFECHA) + left$(WHORA,2) + mid$(WHORA,4,2)
+    Raz NBFAC
+
+    For [F:SIV]SIV0 Where evalue(CRITERE)
+        Gosub VERIF_SIV
+        If OKK=1
+            If NBFAC=0
+                Call ECR_TRACE("Facturas tratadas:",0) From GESECRAN
+                Call ECR_TRACE(" ",0) From GESECRAN
+            Endif
+
+            NBFAC+=1
+            Call ECR_TRACE([F:SIV]NUM,0) From GESECRAN
+            Gosub UPD_FLG
+            If GOK=1
+                Gosub WR_FICHERO
+            Endif
+        Else
+            If MENSAJE<>"" : Call ECR_TRACE(MENSAJE,1) From GESECRAN : Endif
+        Endif
+    Next
+
+    adxifs = SAVIFS
+    adxirs = SAVIRS
+Return
+
+#------------------------------------------------------------------------------#
+
+$CTL_FCY
+    Raz MENSAJE, EMISOR, ERSOCIAL, ECALLE, EPOBLAC, ECP, ENIF
+    OKK=1
+
+    # Código EDI Emisor
+    If [F:FCY]FCY <> [M:DIA]SALFCY
+        Read [F:FCY]FCY0 = [M:DIA]SALFCY
+        If fstat
+            MENSAJE = "Planta" - [M:DIA]SALFCY - "no existe"
+            OKK = 0 : Return
+        Endif
+    Endif
+
+    If [F:CPY]CPY <> [F:FCY]LEGCPY
+        Read [F:CPY]CPY0 = [F:FCY]LEGCPY
+        If fstat
+            MENSAJE = "Sociedad" - [F:FCY]LEGCPY - "no existe"
+            OKK = 0 : Return
+        Endif
+    Endif
+
+    EMISOR = vireblc([F:FCY]YEANCOD,2)
+
+    If EMISOR = ""
+        MENSAJE = "No existe código EDI para el emisor de la factura (" + [F:FCY]FCY + ")"
+        OKK = 0 : Return
+    Endif
+
+    Read [F:BPA]BPA0 = 2;[F:CPY]CPY;[F:CPY]BPAADD
+    If fstat
+        MENSAJE = "No existe dirección por defecto para la sociedad" - [F:CPY]CPY
+        OKK = 0 : Return
+    Else
+        ERSOCIAL = [F:CPY]CPYNAM
+        ECALLE   = [F:BPA]BPAADDLIG(0)
+        EPOBLAC  = [F:BPA]CTY
+        ECP      = [F:BPA]POSCOD
+        ENIF     = [F:CPY]CRN
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$DEL_FIC_EDI
+Return
+    # N.A.C.  <24/02/2009>: Modificado para que no borre los ficheros
+
+    # 1º.- Fichero cabecera de la factura (CABFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICCAB,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 2º.- Fichero observaciones cabecera/pie factura (OBSFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICOBC,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 3º.- Fichero descuentos y cargos globales de la factura (DTOFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICELEM,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 4º.- Fichero desglose de impuestos de la factura (IMPFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICIMP,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 5º.- Fichero líneas de la factura (LINFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICLIN,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 6º.- Fichero observaciones por línea factura (OBSLFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICOBL,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 7º.- Fichero descuentos y cargos por línea factura (DTOLFAC.TXT)
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICDTOL,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$VERIF_SIV
+
+    OKK = 1
+    Raz MENSAJE, COMPRADOR, RECEPTOR, CLIENTE, PAGADOR, DEPTO, NODO, CARGOS, DESCUEN,
+&       VTO, IMPVTO, DESTINO, SUMNETOS
+
+    Read [F:SIH]SIH0 = [F:SIV]NUM
+    If fstat
+        MENSAJE = "No existe la factura" - [F:SIV]NUM - "en la tabla SINVOICE [SIH]"
+        OKK = 0 : Return
+    Else
+        For [F:SVV]SVV0 Where VCRTYP=4 and VCRNUM= [F:SIV]NUM
+            SUMNETOS+=[F:SVV]VATGRO
+        Next
+
+    Endif
+
+    If [F:BPC]BPCNUM <> [F:SIV]BPCINV
+        Read [F:BPC]BPC0 = [F:SIV]BPCINV
+        If fstat
+            MENSAJE = "Cliente" - [F:SIV]BPCINV - "no existe"
+            OKK = 0 : Return
+        Endif
+    Endif
+
+    If [F:BPR]BPRNUM <> [F:SIV]BPCINV
+        Read [F:BPR]BPR0 = [F:SIV]BPCINV
+        If fstat
+            MENSAJE = "Tercero" - [F:SIV]BPCINV - "no existe"
+            OKK = 0 : Return
+        Endif
+    Endif
+
+    Raz [F:SDH],[F:SOH],[F:SIV2]
+
+    # Si el origen de la factura es otra factura
+    If [F:SIV]SIHORI = 4 and [F:SIV]SIHORINUM <> ""
+        Read [F:SIV2]SIV0 = [F:SIV]NUM
+        If fstat
+            MENSAJE  = [F:SIV]NUM
+            MENSAJE += ": Origen factura" - [F:SIV]SIHORINUM - "no encontrado"
+            OKK = 0 : Return
+        Endif
+    Elsif [F:SIV]NUM <> [F:SIV2]NUM
+        [F:SIV2] = [F:SIV]
+    Endif
+
+    Case [F:SIV2]SIHORI
+        When 2 : # Pedido
+            If [F:SIV2]SIHORINUM <> ""
+                Read [F:SOH]SOH0 = [F:SIV2]SIHORINUM
+                If fstat
+                    MENSAJE  = [F:SIV2]NUM
+                    MENSAJE += ": Pedido" - [F:SIV2]SIHORINUM - "no encontrado"
+                    OKK = 0 : Return
+                Endif
+            Endif
+        When 3 : # Entrega
+            If [F:SIV2]SIHORINUM <> ""
+                Read [F:SDH]SDH0 = [F:SIV2]SIHORINUM
+                If fstat
+                    MENSAJE  = [F:SIV2]NUM
+                    MENSAJE += ": Entrega" - [F:SIV2]SIHORINUM - "no encontrada"
+                    OKK = 0 : Return
+                Endif
+
+                If [F:SDH]SOHNUM<>""
+                    Read [F:SOH]SOH0 = [F:SDH]SOHNUM
+                    If fstat
+                        MENSAJE  = [F:SIV2]NUM
+                        MENSAJE += ": Pedido" - [F:SDH]SOHNUM - "no encontrado"
+                        OKK = 0 : Return
+                    Endif
+                Endif
+            Endif
+        When 4 : # Factura
+            # << No se puede hacer abono de un abono >>
+        When 6 : # Devolución
+            If [F:SIV2]SIHORINUM <> ""
+                Raz AUXCHAR
+                For [F:SRD]SRD0 Where SRHNUM = [F:SIV2]SIHORINUM
+                    If [F:SRD]SDHNUM <> ""
+                        If AUXCHAR = ""
+                            AUXCHAR = [F:SRD]SDHNUM
+                        Elsif AUXCHAR <> [F:SRD]SDHNUM
+                            Raz AUXCHAR
+                            Break
+                        Endif
+                    Else
+                        Break
+                    Endif
+                Next
+                If AUXCHAR <> ""
+                    Read [F:SDH]SDH0 = AUXCHAR
+                    If fstat
+                        MENSAJE  = [F:SIV2]NUM
+                        MENSAJE += ": Entrega" - AUXCHAR - "no encontrada"
+                        OKK = 0 : Return
+                    Endif
+
+                    If [F:SDH]SOHNUM <> ""
+                        Read [F:SOH]SOH0 = [F:SDH]SOHNUM
+                        If fstat
+                            MENSAJE  = [F:SIV2]NUM
+                            MENSAJE += ": Pedido" - [F:SDH]SOHNUM - "no encontrado"
+                            OKK = 0 : Return
+                        Endif
+                    Endif
+                Endif
+            Endif
+        When Default
+    Endcase
+
+    If [F:SOH]SOHNUM <> ""
+        Read [F:YSE]YSE0 = [F:SOH]SOHNUM
+        If fstat : Raz [F:YSE] : Endif
+    Endif
+
+    COMPRADOR = [F:YSE]YEANPIDE
+    RECEPTOR  = [F:YSE]YEANRECEPT
+    CLIENTE   = [F:YSE]YEANFACTUR
+    PAGADOR   = [F:YSE]YEANPAGA
+    DEPTO     = [F:YSE]YSECCION
+
+    If COMPRADOR = ""
+        COMPRADOR = func GET_EANCOD([F:SIV]BPCINV,[F:SIV]BPAADD,1)
+        If COMPRADOR = ""
+            MENSAJE  = [F:SIV2]NUM
+            MENSAJE += ': Código EAN de "Quién pide" no encontrado'
+            OKK = 0 : Return
+        Endif
+    Endif
+    If RECEPTOR = ""
+        RECEPTOR = func GET_EANCOD([F:SIV]BPCINV,[F:SIV]BPAADD,2)
+        If RECEPTOR = ""
+            MENSAJE  = [F:SIV2]NUM
+            MENSAJE += ': Código EAN de "Quién recibe" no encontrado'
+            OKK = 0 : Return
+        Endif
+    Endif
+    If CLIENTE = ""
+        CLIENTE = func GET_EANCOD([F:SIV]BPCINV,[F:SIV]BPAADD,3)
+        If CLIENTE = "" : CLIENTE = COMPRADOR : Endif
+    Endif
+    If PAGADOR = ""
+        # Ojo: En la propuesta de interfaz de EDICOM, pagador no es obligatorio,
+        #      pero si lo es para CARREFOUR
+
+        PAGADOR = func GET_EANCOD([F:SIV]BPCINV,[F:SIV]BPAADD,4)
+        If CLIENTE = "" : CLIENTE = COMPRADOR : Endif
+    Endif
+
+    DESTINO = func GET_EANCOD([F:SIV]BPCINV,[F:SIV]BPAADD,5)
+
+    If [F:BPC]YEDITYP = 2
+        # YEDITYP --> Tipo cliente EDI (Grupo Auchan: Alcampo, Sabeco, ...)
+        # Formato departamento ALCAMPO: SSS/PPPPP (SSS: Sección | PPPPP: código Proveedor)
+        If vireblc(DEPTO,2)="" or !pat(DEPTO,"###/#####") : DEPTO=[F:BPC]BPCBPSNUM : Endif
+    Endif
+
+    ##################################################################################
+    #    Punto entrada para cambio del EANCOD para las variables: COMPRADOR,         #
+    #    RECEPTOR, CLIENTE, PAGADOR Y DEPTO                                          #
+    ##################################################################################
+
+    GPOINT="EANCOD":    Gosub ENTREE From EXEFNC
+
+    # NODO: Tipo de Factura
+    #     380=Factura Comercial (Valor por defecto)
+    #     381=Nota de Abono
+    #     383=Nota de Cargo
+    #     384=Factura corregida
+    #     385=Factura recapitulativa
+    #     325=Factura pro-forma
+    #     389=AUTOFACTURA
+
+    Case [F:SIV]INVTYP
+        When 1       : NODO="380"
+        When 2       : NODO="381"
+        When 3       : NODO="380"
+        When 4       : NODO="381"
+        When 5       : NODO="325"
+        When Default : NODO="380"
+    Endcase
+
+    Read [F:BPA]BPA0 = 1;[F:SIH]BPR;[F:SIH]BPAINV
+    If fstat
+        Read [F:BPA]BPA0 = 1;[F:SIV]BPCINV;[F:SIV]BPAADD
+        If fstat
+            Read [F:BPA]BPA0 = 1;[F:BPR]BPRNUM;[F:BPR]BPAADD
+            If fstat : Raz [F:BPA] : Endif
+        Endif
+    Endif
+
+    # Cargos, Descuentos
+#      YMLGA - Ini
+#    For I=0 To dim([F:SIV]DTA)-1
+#        If [F:SIV]DTA(I)=0 : Break : Endif
+#        Read [F:SFI]SFI0=[F:SIV]DTA(I)
+#        If !fstat
+#            If [F:SFI]INCDCR=1
+#                CARGOS+=abs([F:SIV]DTANOT(I))
+#            Elsif [F:SFI]INCDCR=2
+#                DESCUEN+=abs([F:SIV]DTANOT(I))
+#            Endif
+#        Endif
+#    Next
+   For [F:SVF] Where [F:SVF]VCRNUM=[F:SIV]NUM
+        If [F:SVF]DTA<>0 Then
+            If [F:SVF]DTANOT>0 Then
+                CARGOS+=abs([F:SVF]DTANOT)
+            Else
+                DESCUEN+=abs([F:SVF]DTANOT)
+            Endif
+        Endif
+    Next
+# YMLGA - Fin
+    I=1
+    For [F:DUD]DUD1 Where ACCNUM=[F:SIH]ACCNUM
+        If I>dim(VTO) : Break : Endif
+        VTO(I)=[F:DUD]DUDDAT
+        IMPVTO(I)=[F:DUD]AMTCUR
+        I+=1
+    Next
+
+    # Ñapa para que no salgan los IVA Exentos si base imponible
+    For I=0 To dim ([F:SIH]TAX)-1
+        If [F:SIH]TAX(I) = "" : Break            : Endif
+        If [F:SIH]BASTAX(I)=0 : [F:SIH]TAX(I)="" : Endif
+    Next
+Return
+
+#------------------------------------------------------------------------------#
+
+$UPD_FLG
+    Call DEBTRANS From GLOCK
+    Gosub TRT1
+Return
+
+#------------------------------------------------------------------------------#
+
+$TRT1
+    GOK=1
+    Trbegin [SIV]
+
+    Readlock [F:SIV]SIV0 Curr
+    If fstat=1
+        GOK=-1 : GLOCK="$SINVOICEV"+[F:SIV]NUM          : Goto ROL_TRT1
+    Elsif fstat
+        GOK=0  : Call RSTA("SIV",[F:SIV]NUM) From GLOCK : Goto AB_TRT1
+    Endif
+
+    [F:SIV]YEDIENVFLG=2
+    [F:SIV]YEDIDATE=WFECHA
+    [F:SIV]YEDITIME=WHORA
+    Rewrite [F:SIV]
+
+    If fstat : GOK=0 : Call FSTA("SIV") From GLOCK : Goto AB_TRT1 : Endif
+
+    Commit
+Return
+
+#-- Bloqueo
+$ROL_TRT1
+    Rollback
+    Call ROLL From GLOCK
+    If GROLL
+        If GTRACE <> ""
+            Call ECR_TRACE([F:SIV]NUM-mess(17,107,1),1) From GESECRAN
+        Else
+            If GMESSAGE <> "" : GMESSAGE += "\" : Endif
+            GERR=1 : GMESSAGE += [F:SIV]NUM-mess(17,107,1)
+        Endif
+    Else
+        Goto TRT1
+    Endif
+Return
+
+#-- Rollback
+$AB_TRT1
+    Rollback
+    If GTRACE <> ""
+        Call ECR_TRACE([F:SIV]NUM-mess(17,107,1),1) From GESECRAN
+    Else
+        If GMESSAGE <> "" GMESSAGE += "\" Endif
+        GERR=1 : GMESSAGE += [F:SIV]NUM-mess(17,107,1)
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$WR_FICHERO
+    Raz NUMLINEA, SUMBRUTO
+
+    For [F:SID]SID0 Where NUM=[F:SIV]NUM
+        ## JMME Resulta que si es componente kit no hay que mandarlo es lógico ya que mandas el padre y no el hijo
+
+        If  find(num$([F:SID]LINTYP) ,"3","4","5","7","8","9" ) = 0 Then
+          If [F:ITM]ITMREF<>[F:SID]ITMREF
+              Read [F:ITM]ITM0=[F:SID]ITMREF
+              If fstat : Raz [F:ITM] : Endif
+          Endif
+
+          If [F:ITU]ITMREF <> [F:SID]ITMREF or [F:ITU]BPCNUM<>[F:SIV]BPCINV
+              Read [F:ITU]ITU0 = [F:SID]ITMREF;[F:SIV]BPCINV
+              If fstat : Raz [F:ITU] : Endif
+          Endif
+
+          NUMLINEA+=1
+          SUMBRUTO+=arr([F:SID]GROPRI*[F:SID]QTY,0.001)
+
+          # 1º.- Fichero descuentos y cargos por línea factura (DTOLFAC.TXT)
+          Gosub DTOLFAC
+          # 2º.- Fichero líneas de la factura (LINFAC.TXT)
+          Gosub LINFAC
+          # 3º.- Fichero observaciones por línea factura (OBSLFAC.TXT)
+          Gosub OBSLFAC
+       Endif
+    Next
+    # 4º.- Fichero cabecera de la factura (CABFAC.TXT)
+    Gosub CABFAC
+    # 5º.- Fichero observaciones cabecera/pie factura (OBSFAC.TXT)
+    Gosub OBSFAC
+    # 6º.- Fichero descuentos y cargos globales de la factura (DTOFAC.TXT)
+    Gosub DTOFAC
+    # 7º.- Fichero desglose de impuestos de la factura (IMPFAC.TXT)
+    Gosub IMPFAC
+Return
+
+#------------------------------------------------------------------------------#
+
+$DTOLFAC
+    WTIPOFIC=7
+
+    Raz NUMDTO : NUMSECUEN=1
+    BRUTO=arr([F:SID]GROPRI*[F:SID]QTY,0.001)
+
+    NETO=BRUTO
+
+    If [F:PRS]BPCBPS<>1 or [F:PRS]PLISTC <>""
+        Read [F:PRS]PRS0=1;""
+        If fstat : Raz [F:PRS] : Endif
+    Endif
+
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICDTOL,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    For I=0 To dim([F:PRS]INCDCR(I))-1
+        If [F:PRS]INCDCR(I)=0 : Break : Endif
+
+        If [F:PRS]NPRNOTFLG(I)=2 and [F:PRS]INVDTA(I)=0 and evalue("[F:SID]DISCRGVAL"+num$(I+1)+"<>0")
+            NUMDTO+=1
+            Raz CALIF, TIPODES, PORCEN, IMPDES
+
+            # INCDCR: 1 --> Aumento(cargo: C)  |  2 --> Disminución(Descuento: A)
+            #
+            # VALTYP: Tipo de valor
+            #    1 --> Importe
+            #    2 --> % Acumulado
+            #    3 --> % Cascada
+            #
+            # CLCRUL: Base de cálculo
+            #    1 --> Por Unidad
+            #    2 --> Por Línea
+            #    3 --> Por Documento
+
+            If [F:PRS]INCDCR(I)=1
+                CALIF="C"
+            Else
+                CALIF="A"
+            Endif
+
+            If NUMDTO<>1
+                If [F:PRS]VALTYP(I)=3 : NUMSECUEN+=1 : Endif
+            Endif
+
+            TIPODES=func YEDIFRM.RECODIFICA(4,[F:SIV]BPCINV,num$(I+1))
+
+            If [F:PRS]VALTYP(I)=1
+                PORCEN=0
+                If [F:PRS]CLCRUL(I)=1
+                    IMPDES=evalue("[F:SID]DISCRGVAL"+num$(I+1)+"*[F:SID]QTY")
+                Else
+                    IMPDES=evalue("[F:SID]DISCRGVAL"+num$(I+1))
+                Endif
+            Elsif [F:PRS]VALTYP(I)=2
+                PORCEN=evalue("[F:SID]DISCRGVAL"+num$(I+1))
+                IMPDES=arr((BRUTO*PORCEN)/100,0.001)
+                #YMLGA -Ini
+                #PORCEN=0
+                #YMLGA -Fin
+            Else
+                PORCEN=evalue("[F:SID]DISCRGVAL"+num$(I+1))
+                IMPDES=arr((NETO*PORCEN)/100,0.001)
+            Endif
+
+            If [F:PRS]INCDCR(I)=1
+                NETO+=IMPDES
+            Else
+                NETO-=IMPDES
+            Endif
+
+            Gosub ENREG
+        Endif
+    Next
+
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$LINFAC
+    WTIPOFIC=5
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICLIN,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    Gosub ENREG
+
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$OBSLFAC
+
+Return
+
+#------------------------------------------------------------------------------#
+
+$CABFAC
+    WTIPOFIC=1
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICCAB,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    Gosub ENREG
+
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$OBSFAC
+Return
+
+#------------------------------------------------------------------------------#
+
+$DTOFAC
+    WTIPOFIC=3
+
+    NOMFIC=filpath(YEDISIVDIR,[F:YFV]NOMFICELEM,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    Raz NUMDTO
+    For I=0 To dim([F:SIV]INVDTA)-1
+        If [F:SIV]INVDTA(I)=0 : Break : Endif
+
+        Read [F:SFI]SFI0=[F:SIV]INVDTA(I)
+        If !fstat
+            NUMDTO+=1
+            Raz CALIF, TIPODES, PORCEN, IMPDES
+            If [F:SFI]INCDCR=1
+               CALIF="C"
+            Else
+               CALIF="A"
+            Endif
+            # En X3 la secuencia siempre será 1.Los Cargos/Dtos no se aplican en cascada
+            NUMSECUEN=1
+
+            TIPODES=func YEDIFRM.RECODIFICA(3,[F:SIV]BPCINV,num$([F:SIV]INVDTA(I)))
+
+            If [F:SFI]AMTCOD=1  # % + Imp ###
+               PORCEN=[F:SIV]INVDTAAMT(I)
+               Read [F:SVF]SVF0=[F:SIV]NUM;4;[F:SIV]INVDTA(I)
+               If !fstat
+                   IMPDES=abs([F:SVF]DTANOT)
+               Endif
+            Else
+               PORCEN=0
+               IMPDES=abs([F:SIV]INVDTAAMT(I))
+            Endif
+
+            Gosub ENREG
+        Endif
+    Next
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$IMPFAC
+Return
+
+#------------------------------------------------------------------------------#
+
+$ENREG
+    For [F:YEV]YEV0 Where TIPOFIC=WTIPOFIC and FMTTYP=YEDISIVFRM
+        Raz RESULT, AUXCHAR
+
+        If [F:YEV]FRM<>""
+            Onerrgo ERREUR
+            RESULT = num$(evalue([F:YEV]FRM))
+            Onerrgo
+        Endif
+
+#      If [F:YEV]FRM='SUMBRUTO' Then Dbgaff Endif
+
+        Call PARTE_DEC([F:YEV]LONGITUD,ENT,DEC,STAT)
+        LONG = ENT
+        If DEC>0
+            If [F:YFV]SEPDEC<>"" : LONG += 1 : Endif
+            LONG += DEC
+        Endif
+
+
+
+        Case [F:YEV]TIPO
+            When 1 : # Alfanumérico
+                RESULT = toupper(ctrans(left$(RESULT+space$(LONG),LONG)))
+            When 2 : # Numérico
+                # 1º- Redondeo
+                RESULTDEC=val(RESULT)
+                RESULTDEC=arr(RESULTDEC,10^-DEC)
+
+                # 2º- Parte entera / Parte decimal
+                NUMENT = int(RESULTDEC)
+                NUMDEC = RESULTDEC-NUMENT
+                # 3º- Construir cadena
+                If NUMDEC<>0
+                    AUXCHAR = mid$(num$(NUMDEC),3,len(num$(NUMDEC))-2)
+                Else
+                    AUXCHAR = ""
+                Endif
+                If len(AUXCHAR)<=DEC
+                    AUXCHAR+= string$(DEC-len(AUXCHAR),"0")
+                Else
+                    AUXCHAR+= left$(AUXCHAR,DEC)
+                Endif
+
+                RESULT = num$(NUMENT)
+                If DEC>0
+                    If [F:YFV]SEPDEC<>"" : RESULT+= vireblc([F:YFV]SEPDEC,2) : Endif
+                    RESULT+= AUXCHAR
+                Endif
+
+                RESULT = right$(string$(LONG,"0")+RESULT,len(RESULT)+1)
+
+            When 3 : # Fecha (AAAAMMDD)
+                RESULT = mid$(RESULT,7,4)+mid$(RESULT,4,2)+mid$(RESULT,1,2)
+                If RESULT = "00000000" : Raz RESULT : Endif
+            When 4 : # Fecha (AAAAMMDDhhmm)
+                If RESULT <> ""
+                    RESULT = mid$(RESULT,7,4)+mid$(RESULT,4,2)+mid$(RESULT,1,2)
+                    If RESULT = "00000000"
+                        Raz RESULT
+                    Else
+                        RESULT+="    "
+                    Endif
+                Endif
+        Endcase
+        RESULT = left$(RESULT+space$(LONG),LONG)
+        Wrseq RESULT; Using [YEDI]
+    Next
+    Wrseq "" Using [YEDI]
+Return
+
+$ERREUR
+Resume
+
+
+
+Subprog PARTE_DEC(NUM,ENT,DEC,STAT)
+Value    Decimal NUM
+Variable Decimal ENT, DEC
+Variable Integer STAT
+
+    STAT=1 : DEC=0
+
+    ENT = int(NUM)
+    DEC  = NUM-ENT
+
+    If ENT=0   : STAT=0 : End : Endif
+    If DEC=0   : End    : Endif
+    If DEC<0.1 : STAT=0 : End : Endif
+
+    While DEC<>int(DEC)
+        DEC *= 10
+    Wend
+End
+
+#------------------------------------------------------------------------------#
+
+Funprog GET_EANCOD(CLIENTE,DIRECCION,TYPCOD)
+Value    Char CLIENTE()
+Value    Char DIRECCION()
+Value    Integer TYPCOD
+Local    Char EANCOD(20)
+
+    # TYPCOD: Tipo de Código EAN cliente
+    #
+    #    1 --> YEANPIDE (Quién pide)
+    #    2 --> YEANRECEPT (Quién recibe)
+    #    3 --> YEANCLIENT (A quién se factura)
+    #    4 --> YEANPAGA   (Quién paga)
+    #    5 --> YEMIRECEP  (Destino)
+
+    If clalev([F:YBP])=0 : Local File YBPCEANCOD [YBP] : Endif
+
+    Raz EANCOD
+    Read [F:YBP]YBP0=CLIENTE;DIRECCION
+    If fstat
+        Read [F:YBP]YBP0=CLIENTE;""
+        If fstat : Raz [F:YBP] : Endif
+    Endif
+
+    Case TYPCOD
+        When 1 : EANCOD=[F:YBP]YEANPIDE
+        When 2 : EANCOD=[F:YBP]YEANRECEPT
+        When 3 : EANCOD=[F:YBP]YEANFACTUR
+        When 4 : EANCOD=[F:YBP]YEANPAGA
+        When 5 : EANCOD=[F:YBP]YEMIRECEP
+    Endcase
+
+End EANCOD
+
+#------------------------------------------------------------------------------#
+
+$ERRBATCH
+    Call ECR_TRACE(errmes$(errn)-num$(errl)-errm,1) From GESECRAN
+End
+
+######################################################################################
+##### CONTROL DE LICENCIAS ###########################################################
+Subprog COMPROB_LIC(MODULO,OK)
+Value Integer MODULO
+Variable Integer OK
+##### Existe el fichero de licencia
+#If filinfo(filpath(filpath("!",".serialisation",""),"serial_sagespain",""),7)<=0
+   #OK=1
+   End
+#Endif
+##### Las licencias coinciden??
+
+Local Mask VISULIC
+Local Integer USER
+Local Integer DIVERS(1..9)
+Local Integer NOMBRE(1..12)
+Local Char CLAVE(12)(10)
+CLAVE(0)="921541158178"
+CLAVE(1)="485069284990"
+CLAVE(2)="568977803782"
+CLAVE(3)="842404070625"
+CLAVE(4)="203650615336"
+CLAVE(5)="637138499047"
+CLAVE(6)="376282736253"
+CLAVE(7)="750715347464"
+CLAVE(8)="119826521819"
+CLAVE(9)="094393962501"
+[M]FICHIER = filpath(filpath("!",".serialisation",""),"serial_adonix","")
+Call SERIAL([M]FICHIER,[M]LICENCE,[M]CHCLI,[M]CHDIS,[M]DATDEB,[M]DATFIN,USER,DIVERS,NOMBRE) From VISULIC
+
+Openi filpath(filpath("!",".serialisation",""),"serial_sagespain","")
+Local Char LICX3(12), LICDV1(12), LICDV2(12), LICDV3(12), LICX32(12)
+Rdseq LICX3
+Rdseq LICDV1
+Rdseq LICDV2
+Rdseq LICDV3
+Rdseq LICX32
+If LICX3<>[M]LICENCE
+    OK=2: End
+Endif
+If len(LICX3)<>12 or len(LICX32)<>12 or len(LICDV1)<>12 or len(LICDV2)<>12 or len(LICDV3)<>12 or val(LICX3)=0 or val(LICDV1)=0
+   OK=3:End
+Endif
+LICENDEV=""
+For X=1 To 12
+  For Y=0 To 9
+   If mid$(LICX32,X,1)=mid$(CLAVE(Y),X,1)
+      LICENDEV+=num$(Y)
+      Break
+   Endif
+  Next
+Next
+If LICENDEV<>LICX3
+  OK=4: End
+Endif
+If MODULO <= 30
+  LICENDEV=""
+  For X=1 To 12
+   For Y=0 To 9
+    If mid$(LICDV1,X,1)=mid$(CLAVE(Y),X,1)
+     LICENDEV+=num$(Y)
+     Break
+    Endif
+   Next
+  Next
+
+  VALORLIC=val(LICENDEV)-val(LICX3)
+  For X=30 To 1 Step -1
+    If 2^(X-1)<=VALORLIC
+       If X=MODULO: End: Endif
+       VALORLIC-=2^(X-1)
+     Endif
+   Next
+Endif
+
+If MODULO > 30 and MODULO <= 60
+
+Endif
+
+If MODULO > 60
+
+Endif
+OK=5
+End
+

@@ -1,0 +1,19 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+###################################
+## 20161104 Ultima actualización ##
+## Oscar Julio Martínez Cabañero ##
+###################################
+
+
+$ACTION
+  Case ACTION
+      When "CALFACTURE" : Gosub CALFACTURE
+      When Default
+  Endcase
+Return
+
+
+$CALFACTURE
+    Call ACTUALIZACOMISION From SPESIH
+Return
+

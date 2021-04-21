@@ -1,0 +1,55 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char PLANTA
+  Local Char VALEUR(250)
+
+  Local Date DINI ## Para recoger las fechas y saber si es día disponible
+  Local Date DFIN
+
+  If !clalev([F:ZHDM]) : Local File ZHDISPMAQ [ZHDM]     : Endif  ##Tabla temporal días Disponibles
+  If !clalev([F:ZCAL]) : Local File ZCALENDARIO [ZCAL]     : Endif  ##Tabla de festivos.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  FECHADEB=mid$(PARAMETRE(36),10,8)
+  FECHAFIN=mid$(PARAMETRE(37),10,8)
+  PLANTA=mid$(PARAMETRE(35),6,8)
+
+  ##########################################
+  ## Borrar la tablas temporales del informe ##
+  ##########################################
+      Delete [F:ZHDM] Where CREUSR= GUSER
+
+  ###########
+  ## CARGA ##
+  ###########
+  ##BUSCAMOS LOS DÍAS DISPONIBLES DEL CENTRO DE TRABAJO
+  ## Y GUARDAMOS EN LA TABLA TEMPORAL
+  Trbegin [F:ZHDM]
+    DINI=gdat$(val(right$(FECHADEB,7)),val(mid$(FECHADEB,5,2)),val(left$(FECHADEB,4)))
+    DFIN=gdat$(val(right$(FECHAFIN,7)),val(mid$(FECHAFIN,5,2)),val(left$(FECHAFIN,4)))
+    While DINI<=DFIN
+      Filter [F:ZCAL] Where FCY = PLANTA and FECHA=DINI
+      Read [F:ZCAL] First
+      If fstat<>0 Then ##Si no lo encuentra no es fiesta
+        [F:ZHDM]WST="MAQ"
+        [F:ZHDM]TWD="T5T"
+        [F:ZHDM]FECHA=DINI
+        Write [F:ZHDM]
+      Endif
+      DINI=DINI+1
+    Wend
+  Commit
+
+  ##Cierre de ficheros
+  Close File [ZCAL]:Close File [F:ZHDM]
+End
+

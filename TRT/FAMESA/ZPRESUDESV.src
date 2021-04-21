@@ -1,0 +1,130 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZPC]) : Local File SQUOTE [ZPC]      : Endif  ##FACT. DE PRESUPUESTOS CABECERA
+  If !clalev([F:ZPD]) : Local File SQUOTED [ZPD]      : Endif  ##FACT. DE PRESUPUESTOS DETALLE
+  If !clalev([F:ZVC]) : Local File SINVOICE [ZVC]      : Endif  ##FACT. DE VENTAS CABECERA
+  If !clalev([F:ZVD]) : Local File SINVOICED [ZVD]      : Endif  ##FACT. DE VENTAS DETALLE
+  If !clalev([F:ZIT]) : Local File ITMMASTER [ZIT]      : Endif  ##Articulos
+  If !clalev([F:ZPF]) : Local File ZTMPPREDV [ZPF]     : Endif  ##Tabla temporal de Desv. de PRESUPUESTOS
+  If !clalev([F:ZCL]) : Local File BPCUSTOMER [ZCL]     : Endif  ##CLIENTES para buscar el sector
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(33),9,5)
+  FECHADEB=mid$(PARAMETRE(34),9,8)
+  FECHAFIN=mid$(PARAMETRE(35),9,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [ZPF]
+      Delete [ZPF] Where CREUSR= GUSER
+  Commit
+
+  #########################################
+  ## CARGA DE Presupuestos               ##
+  ## Mensual y ACUMULADO del año         ##
+  #########################################
+  Filter [ZPC] Where CPY = COMPANY and (QUODAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and QUODAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By QUODAT
+  Trbegin [ZPF]
+      For [ZPC]
+          Filter [ZPD] Where SQHNUM = [F:ZPC]SQHNUM
+          For [ZPD]
+            ##Se busca el sector del cliente y el grupo
+            Filter [ZCL] Where BPCNUM=[F:ZPC]BPCORD
+            Read [ZCL] First
+            [F:ZPF]BPCGRU=[F:ZCL]BPCGRU
+            [F:ZPF]BPCNUM=[F:ZPC]BPCORD
+            [F:ZPF]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZPF]CANALC=[F:ZCL]TSCCOD(0)
+            Else
+              [F:ZPF]CANALC=[F:ZCL]TSCCOD(2)
+            Endif
+            ##Se busca el canal del Artículo
+            Filter [ZIT] Where ITMREF=[F:ZPD]ITMREF
+            Read [ZIT] First
+            [F:ZPF]CANALA = [F:ZIT]TSICOD(1)
+            [F:ZPF]CPY=[F:ZPC]CPY
+            [F:ZPF]FCY=[F:ZPC]SALFCY
+            [F:ZPF]DAT=[F:ZPC]QUODAT
+            [F:ZPF]NUM=[F:ZPC]SQHNUM
+            [F:ZPF]LIN=[F:ZPD]SQDLIN
+            [F:ZPF]REP=[F:ZPC]REP
+            If month([F:ZPC]QUODAT)=month(FECHAFIN) Then
+              [F:ZPF]AMTATIPREM=[F:ZPD]NETPRINOT*[F:ZPD]QTY
+            Else
+              [F:ZPF]AMTATIPREM=0
+            Endif
+            [F:ZPF]AMTATIFACM=0
+            [F:ZPF]AMTATIPREA=[F:ZPD]NETPRINOT*[F:ZPD]QTY
+            [F:ZPF]AMTATIFACA=0
+            Write [ZPF]
+          Next
+      Next
+  Commit
+
+  #########################################
+  ## CARGA DE FACTURAS                   ##
+  ## Mensual y ACUMULADO del año         ##
+  #########################################
+  Filter [ZVC] Where (INVTYP<>5) and CPY = COMPANY and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By ACCDAT
+  Trbegin [ZPF]
+      For [ZVC]
+          Filter [ZVD] Where NUM = [F:ZVC]NUM
+          For [ZVD]
+            ##Se busca el sector del cliente y el grupo
+            Filter [ZCL] Where BPCNUM=[F:ZVC]BPR
+            Read [ZCL] First
+            [F:ZPF]BPCGRU=[F:ZCL]BPCGRU
+            [F:ZPF]BPCNUM=[F:ZVC]BPR
+            [F:ZPF]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZPF]CANALC=[F:ZCL]TSCCOD(0)
+            Else
+              [F:ZPF]CANALC=[F:ZCL]TSCCOD(2)
+            Endif
+            ##Se busca el canal del Artículo
+            Filter [ZIT] Where ITMREF=[F:ZPD]ITMREF
+            Read [ZIT] First
+            [F:ZPF]CANALA = [F:ZIT]TSICOD(1)
+            [F:ZPF]CPY=[F:ZVC]CPY
+            [F:ZPF]FCY=[F:ZVC]FCY
+            [F:ZPF]DAT=[F:ZVC]ACCDAT
+            [F:ZPF]NUM=[F:ZVC]NUM
+            [F:ZPF]LIN=[F:ZVD]SIDLIN
+            [F:ZPF]REP(0)=[F:ZVD]REP1
+            [F:ZPF]REP(1)=[F:ZVD]REP2
+            If month([F:ZVC]ACCDAT)=month(FECHAFIN) Then
+              If [F:ZVC]INVTYP=1 Then ##Factura
+                [F:ZPF]AMTATIFACM=[F:ZVD]NETPRINOT*[F:ZVD]QTY
+              Else ##Abono
+                [F:ZPF]AMTATIFACM=[F:ZVD]NETPRINOT*[F:ZVD]QTY*(-1)
+              Endif
+            Else
+              [F:ZPF]AMTATIFACM=0
+            Endif
+            [F:ZPF]AMTATIPREM=0
+            If [F:ZVC]INVTYP=1 Then ##Factura
+              [F:ZPF]AMTATIFACA=[F:ZVD]NETPRINOT*[F:ZVD]QTY
+            Else ##Abono
+              [F:ZPF]AMTATIFACA=[F:ZVD]NETPRINOT*[F:ZVD]QTY*(-1)
+            Endif
+            [F:ZPF]AMTATIPREA=0
+            Write [ZPF]
+          Next
+      Next
+  Commit
+  ##Cierre de ficheros
+  Close File [ZPF]
+  Close File [ZPC]:Close File [ZPD]
+  Close File [ZVC]:Close File [ZVD]
+  Close File [ZCL]:Close File [ZIT]
+End
+

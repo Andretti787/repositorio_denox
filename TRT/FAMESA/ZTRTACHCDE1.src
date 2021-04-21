@@ -1,0 +1,24 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+$ACTION
+    Case ACTION
+       When "ECLBESOINS" : Gosub ECLBESOINS
+    Endcase
+Return
+
+$ECLBESOINS
+# SOLICITADO POR FAMESA. QUE NO REAGRUPE LAS LINEAS
+If dim([M:PMG]RGRFLG)>0 and TRAIT=3 Then
+  If GFONCTION = 'GESPSH' Then
+    [M:PMG]RGRFLG = 1
+  Endif
+Endif
+
+# PERDEMOS ESTA FUNCIONALIDAD
+# RGRFLG: Código reagrupamiento de líneas a tratar #
+# 0-1 = No (1 línea = 1 solicitud de compra) #
+# 2 = Sí (1 reagrupamiento = 1 solicitud de compra) #
+# 3 = Oui (X reagrupamientos = X líneas sur même DA) #
+# 4 = Oui (1 reagrupamiento = 1 cde / da ssi tout est ok)
+
+Return
+

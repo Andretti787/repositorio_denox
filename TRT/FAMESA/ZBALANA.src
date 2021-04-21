@@ -1,0 +1,77 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+Variable Integer NBPAR
+Variable Char    PARAMETRE()(1..)
+
+Local Char COMPANY
+Local Char EJERCICIO
+Local Char FECHADEB
+Local Char FECHAFIN
+Local Char VALEUR(250)
+Local Integer I ##VARIABLE DE MESES
+
+If !clalev([F:BLA]) : Local File BALANA [BLA]: Endif  ##Balance Analítico
+
+If !clalev([F:ZBA]) : Local File ZBALANA [ZBA]    : Endif  ##TABLA TEMPORAL DE BALANCE ANALITICO
+
+#####################
+## RECOGER FILTROS ##
+#####################
+COMPANY=right$(PARAMETRE(34),9)
+EJERCICIO=right$(PARAMETRE(35),11)
+FECHADEB=right$(PARAMETRE(36),15)
+FECHAFIN=right$(PARAMETRE(37),10)
+
+##########################################
+## Borrar la tabla temporal del informe ##
+##########################################
+
+Trbegin [ZBA]
+    Delete [ZBA] Where FIY<>"" and CREUSR=GUSER
+Commit
+
+
+#################################
+## CARGA DEL BALANCE ANALITICO ##
+#################################
+
+
+    Filter [BLA] Where CUR="EUR"  and BPR="" and FIY<=val(EJERCICIO) and (CPY=COMPANY and FCY<>"") Order By CPY;FCY;ACC
+    Trbegin [ZBA]
+        For [BLA]
+            [F:ZBA]CPY=[F:BLA]CPY
+            [F:ZBA]FCY=[F:BLA]FCY
+            If len(num$([F:BLA]FIY))=1 Then
+                [F:ZBA]FIY="0" + num$([F:BLA]FIY)
+            Else
+                [F:ZBA]FIY=num$([F:BLA]FIY)
+            Endif
+            [F:ZBA]MES= num$(mid$(FECHAFIN,5,2))
+            [F:ZBA]COA=[F:BLA]COA
+            [F:ZBA]ACC=[F:BLA]ACC
+            [F:ZBA]DIE=[F:BLA]DIE(0)
+            [F:ZBA]CCE=[F:BLA]CCE1
+            [F:ZBA]CUR=[F:BLA]CUR
+            [F:ZBA]HABER=0
+            [F:ZBA]DEBE=0
+            [F:ZBA]HABERACU=0
+            [F:ZBA]DEBEACU=0
+            For I=0 To val(mid$(FECHAFIN,5,2)) ##del 1 to 12 son los meses y el 0 es el saldo de apertura
+              ##Mes Actual
+              If month(FECHAFIN)=I Then
+                [F:ZBA]HABER=[F:BLA]CDT(I)
+                [F:ZBA]DEBE=[F:BLA]DEB(I)
+              Endif
+
+              ##Acumulado
+              [F:ZBA]HABERACU=[F:ZBA]HABERACU+[F:BLA]CDT(I)
+              [F:ZBA]DEBEACU=[F:ZBA]DEBEACU+[F:BLA]DEB(I)
+            Next I
+            Write [ZBA]   ## ESCRIBE
+        Next
+    Commit
+##CERRAMOS TODOS LOS FICHERO LOCALES
+Close Local File
+
+End
+

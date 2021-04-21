@@ -1,0 +1,120 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char BPRVENTA
+  Local Char ITMREFDEB
+  Local Char ITMREFFIN
+  Local Char CANALDEB
+  Local Char CANALFIN
+  Local Date FECHADEB
+  Local Date FECHAFIN
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZDT]) : Local File PINVOICED [ZDT]     : Endif  ##FACT. DE COMPRAS
+  If !clalev([F:ZVC]) : Local File SINVOICE [ZVC]      : Endif  ##FACT. DE VENTAS CABECERA
+  If !clalev([F:ZVD]) : Local File SINVOICED [ZVD]     : Endif  ##FACT. DE VENTAS DETALLE
+  If !clalev([F:ZPA]) : Local File ZPINVOICEAN  [ZPA]  : Endif  ##TABLA TEMPORAL DE COMPRAS ANUALES Y VENTAS CONTRARIAS
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+
+## OSCAR LOS FILTROS NO LOS RECOJAS NUNC ASÍ HAY QUE HACERLO POR NOMBRE DEL PARÁMETRO ""
+## HAY UN PROCESO DE EJEMPLO DE SAGE POR EJEMPLO EN SBONFAC
+## ESTO ES UN EJEMPLO
+## CUIDADO QUE LOS VARIABLES QUE CREAS YA TENDRIAN QUE SER DEL TIPO DE DATOS DEL PARÁMETRO
+## Y YA SE PUEDEN ASIGNAR ES DECIR SI EL PARAMETRO ES FECHA LO PUEDES ASIGNAR A UNA VARIABLE FEHCA SIN PROBLEMA.
+
+
+#For I=1 To [L]NBPAR
+#  J=instr(1,[L]PARAMETRE(I),"=")
+#  If J
+#    [L]PARAM  = left$([L]PARAMETRE(I),J-1)
+#    Call GETPARAM ([L]PARAM,[L]NBPAR,[L]PARAMETRE,VALEUR) From ETAT
+#    Case [L]PARAM
+#      When "clientdeb"   : [L]CRITERE(0) -= "& BPCINV>='"+[L]VALEUR+"'"
+#      When "clientfin"   : [L]CRITERE(0) -= "& BPCINV<='"+[L]VALEUR+"'"
+#      When "datedeb"     : [L]DATREF   = gdat$(val(right$([L]VALEUR,7)),
+#&                                        val(seg$([L]VALEUR,5,6)),val(left$([L]VALEUR,4)))
+#    Endcase
+#  Endif
+#Next
+
+
+
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  #### Para saber que compañia de ventas coger lo hacemos a pelo
+  If COMPANY='TI300' Then
+    BPRVENTA='809165' ## FABRICANTES DE MENAJE, S.A.
+  Else
+    BPRVENTA='280923' ##TRILLA INDUPLAST IBERICA, S.L.U.
+  Endif
+
+
+
+  ITMREFDEB=mid$(PARAMETRE(35),8,11)
+  ITMREFFIN=mid$(PARAMETRE(36),8,11)
+  CANALDEB=mid$(PARAMETRE(37),10,5)
+  CANALFIN=mid$(PARAMETRE(38),10,5)
+
+  FECHADEB=right$(PARAMETRE(40),8)
+  FECHAFIN=right$(PARAMETRE(41),8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+      Delete [ZPA] Where CREUSR= GUSER
+
+  ######################################
+  ## CARGA DE LAS FACTURAS DE COMPRAS ##
+  ######################################
+  Filter [ZDT] Where (([F:ZDT]INVTYP<>5) and CPY = COMPANY and ITMREF>=ITMREFDEB and ITMREF<=ITMREFFIN) and ACCDAT >= FECHADEB and ACCDAT <= FECHAFIN
+  #(ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN) ,month(FECHAFIN),year(FECHAFIN))) Order By ACCDAT
+  Trbegin [ZPA]
+      For [ZDT]
+          [F:ZPA]NUM=[F:ZDT]NUM
+          [F:ZPA]LINEA=[F:ZDT]PIDLIN
+          [F:ZPA]INVTYP=[F:ZDT]INVTYP
+          [F:ZPA]TIPO = 'C'
+          [F:ZPA]CPY=[F:ZDT]CPY
+          [F:ZPA]FCY=[F:ZDT]FCY
+          [F:ZPA]ACCDAT=[F:ZDT]ACCDAT
+          [F:ZPA]BPR=[F:ZDT]BPR
+          [F:ZPA]ITMREF=[F:ZDT]ITMREF
+          [F:ZPA]QTY=[F:ZDT]QTYUOM
+          [F:ZPA]UOM=[F:ZDT]UOM
+          [F:ZPA]NETPRI=[F:ZDT]NETPRI
+          Write [ZPA]
+      Next
+  Commit
+
+  ##################################
+  ## CARGA DE LAS FACT. DE VENTAS ##
+  ##################################
+  Filter [ZVC] Where ((INVTYP<>5) and BPR = BPRVENTA) and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By ACCDAT
+
+  Trbegin [ZPA]
+      For [ZVC]
+        Filter [ZVD] Where (NUM=[F:ZVC]NUM) and (ITMREF>=ITMREFDEB and ITMREF<=ITMREFFIN) Order By NUM;SIDLIN
+        For [ZVD]
+          [F:ZPA]NUM=[F:ZVD]NUM
+          [F:ZPA]LINEA=[F:ZVD]SIDLIN
+          [F:ZPA]INVTYP=[F:ZVC]INVTYP
+          [F:ZPA]TIPO = 'V'
+          [F:ZPA]CPY=[F:ZVC]CPY
+          [F:ZPA]FCY=[F:ZVC]FCY
+          [F:ZPA]ACCDAT=[F:ZVC]ACCDAT
+          [F:ZPA]BPR=[F:ZVC]BPR
+          [F:ZPA]ITMREF=[F:ZVD]ITMREF
+          [F:ZPA]QTY=[F:ZVD]QTY
+          [F:ZPA]UOM=[F:ZVD]SAU
+          [F:ZPA]NETPRI=[F:ZVD]NETPRINOT
+          Write [ZPA]
+        Next
+      Next
+  Commit
+End
+

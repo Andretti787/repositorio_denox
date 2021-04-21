@@ -1,0 +1,58 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Integer NET ## Nº total de bultos
+  Local Integer ET #Nºde Etiqueta
+  Local Char OSDEB
+  Local Char OSFIN
+  Local Char USUARIO
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZENT]) : Local File SDELIVERY[ZENT]      : Endif  ## TABLA ENTREGA.
+  If !clalev([F:ZET]) : Local File ZETSSCC [ZET]   : Endif  ## TABLA DE ETIQUETAS.
+  If !clalev([F:ZSSCC]) : Local File SPACK [ZSSCC]   : Endif  ## TABLA DE bultos.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  OSDEB=mid$(PARAMETRE(34),14,20)
+  OSFIN=mid$(PARAMETRE(35),14,20)
+  USUARIO=mid$(PARAMETRE(36),9,20)
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+
+      Delete [F:ZET] Where CREUSR= USUARIO
+
+
+  ####################################
+  ## CARGA EN LA TABLA DE ETIQUETAS ##
+  ####################################
+  Filter [F:ZENT] Where (SDHNUM>=OSDEB and SDHNUM<=OSFIN) Order By SDHNUM
+  For [F:ZENT]
+    If [F:ZENT]PACNBR<>0 Then
+      NET=[F:ZENT]PACNBR: ET=1
+    Else
+      NET=1:ET=1
+    Endif
+    Filter [F:ZSSCC] Where VCRNUM=[F:ZENT]SDHNUM Order By PACNUM Asc
+    Read [F:ZSSCC]First
+    If fstat=0 Then
+      For ET=1 To NET
+        [F:ZET]PRHNUM=[F:ZSSCC]VCRNUM
+        [F:ZET]ORINUM=[F:ZSSCC]PACNUM
+        [F:ZET]ETIQUETA=ET
+        [F:ZET]NETIQUETA=NET
+        [F:ZET]SCCCOD=[F:ZSSCC]SCCCOD
+        Write [F:ZET]
+        Read [F:ZSSCC] Next
+      Next
+    Endif
+  Next
+
+  ##Cierre de ficheros
+  Close File [F:ZENT]:Close File [F:ZSSCC]:Close File [F:ZET]
+End
+

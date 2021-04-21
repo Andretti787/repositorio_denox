@@ -1,0 +1,63 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char ANNO
+  Local Char PLANTA
+  Local Char USUARIO
+  Local Integer MES
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZKILO]) : Local File ZTMPKILOS [ZKILO]  : Endif  ##Tabla temporal
+  If !clalev([F:ZEV]) : Local File STOJOU [ZEV]         : Endif  ##Tabla de MOvimientos.
+  If !clalev([F:ZIT]) : Local File ITMMASTER [ZIT]      : Endif  ##Tabla de artículos.
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  ANNO=mid$(PARAMETRE(35),6,5)
+  PLANTA=mid$(PARAMETRE(34),6,5)
+  USUARIO=mid$(PARAMETRE(36),9,10)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Delete [F:ZKILO] Where CREUSR= GUSER
+
+  ###########
+  ## CARGA ##
+  ###########
+
+  ##BUSCAMOS Filtro y sólo movimiento 19 que son las entradas varias
+  ## Y GUARDAMOS EN LA TABLA TEMPORAL
+  Trbegin [F:ZKILO]
+      Filter [F:ZEV] Where STOFCY = PLANTA and year(IPTDAT)=val(ANNO) and VCRTYP=19
+      For [F:ZEV]
+        Filter [F:ZIT] Where ITMREF=[F:ZEV]ITMREF
+          Read [F:ZIT] First
+          If fstat=0 Then
+            If [F:ZIT]TSICOD(2)='PEREC' or [F:ZIT]TSICOD(2)='PETRI' Then
+              ##Para Introducir todos los meses del año
+              For MES=1 To 12
+                [F:ZKILO]FCY=PLANTA
+                [F:ZKILO]ITMREF=[F:ZEV]ITMREF
+                [F:ZKILO]QTY=0
+                [F:ZKILO]STU='KG'
+                [F:ZKILO]FECHA=gdat$(1,MES,val(ANNO))
+                Write [F:ZKILO]
+              Next
+              [F:ZKILO]FCY=[F:ZEV]STOFCY
+              [F:ZKILO]ITMREF=[F:ZEV]ITMREF
+              [F:ZKILO]QTY=[F:ZEV]QTYSTU
+              [F:ZKILO]STU=[F:ZEV]STU
+              [F:ZKILO]FECHA=[F:ZEV]IPTDAT
+              Write [F:ZKILO]
+            Endif
+          Endif
+      Next
+  Commit
+
+  ##Cierre de ficheros
+  Close File [ZKILO]:Close File [F:ZEV]
+End
+

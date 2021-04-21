@@ -1,0 +1,59 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Integer NET ## Nº total de bultos
+  Local Integer ET #Nºde Etiqueta
+  Local Char OFDEB
+  Local Char OFFIN
+  Local Char USUARIO
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZPED]) : Local File SORDER[ZPED]      : Endif  ## TABLA DE PEDIDOS.
+  If !clalev([F:ZVAL]) : Local File STOPREH[ZVAL]      : Endif  ## TABLA VALES DE PREPARACION.
+  If !clalev([F:ZVAD]) : Local File STOPRED[ZVAD]      : Endif  ## TABLA LINEAS DEL VALE.
+  If !clalev([F:ZET]) : Local File ZETSTOPRE [ZET]   : Endif  ## TABLA DE ETIQUETAS.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  OFDEB=mid$(PARAMETRE(34),13,20)
+  OFFIN=mid$(PARAMETRE(35),13,20)
+  USUARIO=mid$(PARAMETRE(36),9,20)
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [F:ZET]
+      Delete [F:ZET] Where CREUSR= USUARIO
+  Commit
+
+  ####################################
+  ## CARGA EN LA TABLA DE ETIQUETAS ##
+  ####################################
+  Filter [F:ZVAL] Where (PRHNUM>=OFDEB and PRHNUM<=OFFIN) Order By PRHNUM
+  For [F:ZVAL]
+    If [F:ZVAL]PACNBR<>0 Then
+      NET=[F:ZVAL]PACNBR: ET=1
+    Else
+      NET=1:ET=1
+    Endif
+    Filter [F:ZVAD] Where PRHNUM=[F:ZVAL]PRHNUM
+    Read [F:ZVAD]First
+    Filter [F:ZPED] Where SOHNUM=[F:ZVAD]ORINUM
+    Read [F:ZPED] First
+    If fstat=0 Then
+      For ET=1 To NET
+        [F:ZET]PRHNUM=[F:ZVAL]PRHNUM
+        [F:ZET]ORINUM=[F:ZVAD]ORINUM
+        [F:ZET]CUSORDREF=[F:ZPED]CUSORDREF
+        [F:ZET]ETIQUETA=ET
+        [F:ZET]NETIQUETA=NET
+        Write [F:ZET]
+      Next
+    Endif
+  Next
+  ##Cierre de ficheros
+  Close File [F:ZPED]:Close File [F:ZVAL]:Close File [F:ZET]
+End
+

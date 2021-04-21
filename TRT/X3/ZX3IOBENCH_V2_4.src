@@ -1,0 +1,550 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+#<AdxTL>@(#)5.0.0.0 $Revision$ 
+##############################################################################
+#
+# ZX3IOBENCH - Database I/O benchmark for SAFE X3 based software
+#
+# Adapted by Bertrand LETEMPLIER from YCALCUL (Version V3) test program
+# initially written by Réné LEVESQUE and modified by many people :).
+#
+##############################################################################
+# Version: V2.4 - Date: 2016-04-12
+##############################################################################
+# History
+# * V1.0 : Transpose YCALCUL V3 created for Sage France PSG
+#   - translate messages to English.
+# * V1.1 to V1.3: Enhance
+#   - add millisecond metering;
+#   - add new metering indexes (keep LEGACY for comparison with YCALCUL);
+#   - add technical information on servers, version, etc;
+#   - beautify output.
+# * V2.0: Adapt to U9
+#   - Due to trace file buffering : add 'Call FLUSH_TRACE from GESECRAN'
+#     where needed to be able to monitor trace file in real time.
+# * V2.1: Structural changes
+#   - Reorganize (poorly) code with functions;
+#   - Launch a first reading loop on all tables to populate database cache
+#     not taken into account while metering time.
+# * V2.2: Modify / enrich end summary
+#   - Add Legacy read / create / erase times (in seconds only)
+#   - Slighly change display for LEGACY INDEX
+#   - Change message for existing new timings in milliseconds
+# * V2.3: Correct timing issue since V1.3
+#   - Time for creating YYYYY table and deleting YYYYY entries
+#     in dictionary were not taken into account.
+# * V2.4: Deleting Test table YYYYY properly
+##############################################################################
+
+# Gives the ability to run from a patch integration directly. 
+Call patch (nomap)
+End
+
+#-------------------------------------------------------------#
+Subprog patch(FOLNAM)
+Value char FOLNAM
+
+#If not on the reference folder, leave. 
+If FOLNAM<>adxmother : Infbox "This folder is not the reference folder. Exiting." : End : Endif
+
+Gosub START
+
+End
+
+
+#############################################
+# Save version and date for this program for display
+$START
+Local Char PROGVERS(10), PROGDATE(10)
+PROGVERS = "V2.4"
+PROGDATE="24/04/2016"
+
+# Retrieve technical parameters from environment
+#
+# Runtime version
+Local Char RUNTIMEVERS(20)
+Local Integer RUNTIMEDBOPTIM
+RUNTIMEVERS = func AFNC.PARTSEP(ver$(0),2," ")
+If (RUNTIMEVERS >= "16r.216")
+  # Runtime database optimization (adxftl, adxwrb) after version 16r.216 (X3 V6)
+  RUNTIMEDBOPTIM = 1
+Else
+  RUNTIMEDBOPTIM = 0
+Endif
+
+# Manage adxftl only if relevant runtime version
+If (RUNTIMEDBOPTIM = 1)
+  Local Integer ADXFTLBAK :# For saving adxftl
+  ADXFTLBAK = adxftl      :# Save current adxftl value (should be something like 0 or 20)
+  ADXFTL = 20             :# So you can vary adxftl value for this benchmark
+Endif
+
+# Variables for printing nice spacer lines in trace file
+Local Char SPACERLINE1(80), SPACERLINE2(80), SPACERLINE3(80)
+SPACERLINE1 = string$(78, "#")
+SPACERLINE2 = string$(78, "=")
+SPACERLINE3 = string$(78, "-")
+
+#GTRACE="A"
+
+# For timestamping in seconds
+Local Integer STARTTIME, ENDTIME, DIFFTIME, TOTALTIME, GLOBREADTIME, WRITETIME, ERASETIME
+Local Integer CRYYYYYTIME, CLYYYYYTIME
+# For timestamping in milliseconds
+Local Decimal STARTMSECS, ENDMSECS, DIFFMSECS, TOTALMSECS
+Local Decimal ATEXTEREADMSECS, GLOBREADMSECS, WRITEMSECS, ERASEMSECS
+Local Decimal CRYYYYYMSECS, CLYYYYYYMSECS
+# For # of records
+Local Integer N1, TSTNBREC
+TSTNBREC = 100000  :#  This is the number of loops that will be run on tables
+
+If GFONCTION<>"PATCH"
+Call OUVRE_TRACE("* SAFE X3 DATABASE I/O BENCHMARK *") From LECFIC 
+Endif
+
+# Retrieve hostnames for application server, runtime server and client
+#
+APPHOSTNAME = adxmac(0)
+RUNHOSTNAME = adxmac(-1)
+CLIHOSTNAME = adxmac(-2)
+If (APPHOSTNAME = "")
+  # Empty adxmac(0) means that the application server
+  # is the same as the runtime server (weird behavior of adxmac()).
+  APPHOSTNAME = RUNHOSTNAME
+Endif
+
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+Call ECR_TRACE("# SAFE X3 DATABASE I/O BENCHMARK version"-PROGVERS-"- created "-PROGDATE, 0) From GESECRAN
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+Call ECR_TRACE("# Hostnames for benchmark:", 0) from GESECRAN
+Call ECR_TRACE("# - Application server  : '" + APPHOSTNAME + "'", 0) from GESECRAN
+call ECR_TRACE("# - Runtime server      : '" + RUNHOSTNAME + "'", 0) from GESECRAN
+Call ECR_TRACE("# - Client workstation  : '" + CLIHOSTNAME + "'", 0) from GESECRAN
+Call ECR_TRACE("# Runtime engine version: '" + RUNTIMEVERS + "'", 0) From GESECRAN
+Call ECR_TRACE("# Runtime server ADXDIR : '" + "|" + adxdir + "|" + "'", 0) From GESECRAN
+Call ECR_TRACE("# Folder name           : '" + nomap + "'", 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+If (RUNTIMEDBOPTIM = 1)
+  Call ECR_TRACE("# Origin ADXFTL =" - num$(ADXFTLBAK) - "# ADXFTL for test =" - num$(ADXFTL), 0) From GESECRAN
+Endif
+
+Call ECR_TRACE("# Number of read/write/delete operations:" - num$(TSTNBREC), 0) From GESECRAN
+
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+
+Call ECR_TRACE("SAFE X3 DATABASE I/O BENCHMARK START:" - time$,0) From GESECRAN
+
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Local Char TSTTABLE(20)(1..5),CURRTABLE
+TSTTABLE(1) = "ATEXTE"
+TSTTABLE(2) = "APLSTD"
+TSTTABLE(3) = "POSCOD"
+TSTTABLE(4) = "ADOCUMENT"
+TSTTABLE(5) = "ATEXTRA"
+
+#############################################################
+#### Atomic Read test #1 to populate OS & database cache ####
+#############################################################
+Call ECR_TRACE("# ATOMIC READ  TEST #1 for populating OS & database caches.",0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Gosub READTEST
+
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+#####################################################
+#### Atomic Read test #2 to collect time metrics ####
+#####################################################
+TOTALTIME = 0
+TOTALMSECS = 0
+
+Call ECR_TRACE("# ATOMIC READ  TEST #2 for collecting metrics.",0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Gosub READTEST
+
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+TOTALTIME += DIFFTIME
+TOTALMSECS += DIFFMSECS
+
+# Save global read index in seconds and milliseconds
+GLOBREADTIME = TOTALTIME
+GLOBREADMSECS = TOTALMSECS
+
+###################################################
+#### Create test table for writing and erasing ####
+###################################################
+Call ECR_TRACE("# CREATE TEST TABLE",0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Gosub CREATETESTTABLE
+
+TOTALTIME += DIFFTIME
+TOTALMSECS += DIFFMSECS
+
+# Save create YYYYY table index in seconds and milliseconds
+CRYYYYYTIME = DIFFTIME
+CRYYYYYMSECS = DIFFMSECS
+
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+###########################
+#### Atomic Write test ####
+###########################
+Call ECR_TRACE("# ATOMIC WRITE TEST",0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Gosub WRITETEST
+
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+WRITETIME = DIFFTIME
+TOTALTIME += DIFFTIME
+TOTALMSECS += DIFFMSECS
+
+# Compute write index by removing ATEXTE read time
+WRITEMSECS = DIFFMSECS - ATEXTEREADMSECS
+
+###########################
+#### Atomic Erase test ####
+###########################
+Call ECR_TRACE("# ATOMIC ERASE TEST",0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Gosub ERASETEST
+
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+ERASETIME = DIFFTIME
+TOTALTIME += DIFFTIME
+TOTALMSECS += DIFFMSECS
+
+# Compute erase index by removing ATEXTE read time
+ERASEMSECS = DIFFMSECS - ATEXTEREADMSECS
+
+###########################
+#### Delete test table ####
+###########################
+Call ECR_TRACE("# DELETE TEST TABLE",0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Gosub DELETETESTTABLE
+
+TOTALTIME += DIFFTIME
+TOTALMSECS += DIFFMSECS
+
+# Save YYYYY table cleanup index in seconds and milliseconds
+CLYYYYYTIME = DIFFTIME
+CLYYYYYMSECS = DIFFMSECS
+
+###########################
+#### Global exit point ####
+###########################
+$EXITPOINT
+Close File  [ATB],[ATZ],[ATI]
+
+If (RUNTIMEDBOPTIM = 1)
+  ADXFTL = ADXFTLBAK  #### Reset adxftl to origin value if changed
+Endif
+
+Call ECR_TRACE("", 0) from GESECRAN
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+
+Call ECR_TRACE("SAFE X3 DATABASE I/O BENCHMARK END  :" - time$, 0) From GESECRAN
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+Call ECR_TRACE("= LEGACY     PERFORMANCE INDEX:" - num$(TOTALTIME) - "seconds (" + num$(TOTALMSECS) - "milliseconds).", 0) From GESECRAN
+Call ECR_TRACE("                          READ:" - num$(GLOBREADTIME) - "seconds", 0) From GESECRAN
+Call ECR_TRACE("            CREATE YYYYY TABLE:" - num$(CRYYYYYTIME) - "seconds", 0) From GESECRAN
+Call ECR_TRACE("                         WRITE:" - num$(WRITETIME) - "seconds", 0) From GESECRAN
+Call ECR_TRACE("                         ERASE:" - num$(ERASETIME) - "seconds", 0) From GESECRAN
+Call ECR_TRACE("        CLEAN YYYYY DICTIONARY:" - num$(CLYYYYYTIME) - "seconds", 0) From GESECRAN
+Call ECR_TRACE(SPACERLINE2, 0) from GESECRAN
+Call ECR_TRACE("= NEW GLOBAL PERFORMANCE INDEX:" - num$(GLOBREADMSECS+WRITEMSECS+ERASEMSECS) - "milliseconds.", 0) From GESECRAN
+Call ECR_TRACE("                          READ:" - num$(GLOBREADMSECS) - "milliseconds.", 0) From GESECRAN
+Call ECR_TRACE("                         WRITE:" - num$(WRITEMSECS) - "milliseconds.", 0) From GESECRAN
+Call ECR_TRACE("                         ERASE:" - num$(ERASEMSECS) - "milliseconds.", 0) From GESECRAN
+
+Call ECR_TRACE(SPACERLINE1, 0) from GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+If GFONCTION<>"PATCH"
+Call FERME_TRACE From LECFIC
+Call LEC_TRACE From LECFIC 
+Endif
+
+Return
+#######################################################################
+## End of main body
+#######################################################################
+
+#######################################################################
+## Read multiple tables test subprogram
+#######################################################################
+$READTEST
+
+Local Char CURRTABLE
+
+STARTTIME = time
+STARTMSECS = val(timestamp$)
+
+# Loop read test on 5 different tables
+For I = 1 To 5
+  CURRTABLE = nomap + "." + TSTTABLE(I)
+  Local File  =CURRTABLE [TBL]
+
+  N1 = 0
+  Call ECR_TRACE("Execute atomic read loop on table" - TSTTABLE(I) + ":", 0) From GESECRAN
+  Call ECR_TRACE("- Start:" - time$, 0) From GESECRAN
+  Call FLUSH_TRACE from GESECRAN
+
+  THISTABLESTARTTIME = time
+  THISTABLESTARTMSECS = val(timestamp$)
+
+  For [F]
+    N1 += 1
+    If N1 >= TSTNBREC
+      Break
+    Endif
+  Next
+
+  ENDTIME = time
+  ENDMSECS = val(timestamp$)
+  THISTABLEDIFFTIME = ENDTIME - THISTABLESTARTTIME
+  THISTABLEDIFFMSECS = ENDMSECS - THISTABLESTARTMSECS
+
+  Call ECR_TRACE("- End  :" - time$ - "-" - num$(N1) - "records read in" - num$(THISTABLEDIFFTIME) - "secs /" - num$(THISTABLEDIFFMSECS) - "msecs.", 0) From GESECRAN
+  Call FLUSH_TRACE from GESECRAN
+
+  Close File [TBL]
+  If TSTTABLE(I) = "ATEXTE"
+    ATEXTEREADMSECS = THISTABLEDIFFMSECS
+  Endif
+Next
+
+ENDTIME = time
+ENDMSECS = val(timestamp$)
+DIFFTIME = ENDTIME - STARTTIME
+DIFFMSECS = ENDMSECS - STARTMSECS
+
+Return
+#######################################################################
+## End of READTEST subprogram
+#######################################################################
+
+#######################################################################
+## Create test table subprogram
+#######################################################################
+$CREATETESTTABLE
+Local File ATABLE, ATABZON, ATABIND, AMSKPAR
+
+Call ECR_TRACE("Create table YYYYY with same structure as ATEXTE:", 0) From GESECRAN
+Call ECR_TRACE("- Start:" - time$, 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+STARTMSECS = val(timestamp$)
+STARTTIME = time
+
+Read [ATB]CODFIC = "YYYYY"
+If fstat = 0  
+  Call ECR_TRACE("A table named YYYYY already exists. Write/Erase test cannot be performed.", 1) From GESECRAN
+  Call FLUSH_TRACE from GESECRAN
+  Goto EXITPOINT
+Endif
+
+Read [ATB]ABRFIC  = "YYY"
+If fstat = 0  
+  Call ECR_TRACE("A table with abbreviation YYY already exists. Write/Erase test cannot be performed.", 1)  From GESECRAN
+  Call FLUSH_TRACE from GESECRAN
+  Goto EXITPOINT
+Endif 
+
+# Create YYYYY test table in SAFE X3 dictionary
+Trbegin [ATB]
+Read [ATB]CODFIC = "ATEXTE"
+[F:ATB]CODFIC = "YYYYY"
+[F:ATB]ABRFIC = "YYY"
+Write [ATB]
+
+For [ATZ]  Where CODFIC = "ATEXTE"
+  [F:ATZ]CODFIC = "YYYYY"
+  Write [ATZ]
+Next
+
+For [ATI]  Where CODFIC = "ATEXTE"
+  [F:ATI]CODFIC = "YYYYY"
+  Write [ATI]
+Next
+
+Commit
+
+# Call dictionary function to create table
+Call MAJFIC("YYYYY", nomap, 2) From VALDIC
+
+ENDTIME = time
+ENDMSECS = val(timestamp$)
+
+DIFFTIME = ENDTIME - STARTTIME
+DIFFMSECS = ENDMSECS - STARTMSECS
+
+Call ECR_TRACE("- End  :" - time$ -"- Elapsed:" - num$(DIFFTIME) - "secs /" - num$(DIFFMSECS) - "msecs.", 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Return
+#######################################################################
+## End of CREATETESTTABLE subprogram
+#######################################################################
+
+#######################################################################
+## Write test subprogram
+#######################################################################
+$WRITETEST
+
+Call ECR_TRACE("Execute atomic copy loop from ATEXTE to YYYYY for " - num$(TSTNBREC) - "records:", 0) From GESECRAN
+Call ECR_TRACE("- Start:" - time$, 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+STARTMSECS = val(timestamp$)
+STARTTIME = time
+N1 = 0
+
+Local File ATEXTE [ATX]
+Local File YYYYY  [YYY]
+Trbegin [YYY]
+For [F:ATX]
+  [F:YYY] = [F:ATX]
+  Write [F:YYY]
+  N1 += 1
+  If N1 >= TSTNBREC
+    Break
+  Endif
+Next
+
+Commit
+
+ENDTIME = time
+ENDMSECS = val(timestamp$)
+DIFFTIME = ENDTIME - STARTTIME
+DIFFMSECS = ENDMSECS - STARTMSECS
+
+Call ECR_TRACE("- End  :" - time$ - "-" - num$(N1) - "records created in" - num$(DIFFTIME) - "secs /" - num$(DIFFMSECS) - "msecs.", 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Return
+#######################################################################
+## End of WRITETEST subprogram
+#######################################################################
+
+#######################################################################
+## Erase test subprogram
+#######################################################################
+$ERASETEST
+N1=0
+Call ECR_TRACE("Execute atomic erase loop on table YYYYY:", 0) From GESECRAN
+Call ECR_TRACE("- Start:" - time$, 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+STARTMSECS = val(timestamp$)
+STARTTIME = time
+
+Trbegin [YYY]
+For [ATX]
+  # 11/04/2015 - Added 'Hint Key "NUMERO"' according to Frederick Sussan's advice for V7
+  Read [F:YYY]NUMERO = [F:ATX]LAN;[F:ATX]NUMERO Hint Key "NUMERO"
+    If fstat = 0 
+    Delete [F:YYY]
+  Else
+     Break
+  Endif
+  N1 += 1
+  If N1 >= TSTNBREC
+    Break
+  Endif
+Next
+
+ENDTIME = time
+ENDMSECS = val(timestamp$)
+
+DIFFTIME = ENDTIME - STARTTIME
+DIFFMSECS = ENDMSECS - STARTMSECS
+
+Call ECR_TRACE("- End  :" - time$ - "-" - num$(N1) - "records erased in" - num$(DIFFTIME) - "secs /" - num$(DIFFMSECS) - "msecs.", 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+####  Verify that all is properly erased
+Delete [F:YYY]   Where 1 = 1
+If adxdlrec  >   0
+  Call ECR_TRACE("Something went wrong in table YYYYY erase job:" - num$(adxdlrec) - "records found.", 1) From GESECRAN
+  Call FLUSH_TRACE from GESECRAN
+Endif
+
+Commit
+
+Return
+#######################################################################
+## End of ERASETEST subprogram
+#######################################################################
+
+#######################################################################
+## Delete test table subprogram
+#######################################################################
+$DELETETESTTABLE
+#### Cleanup SAFE X3 tables dictionary from YYYYY table references
+
+#### We should there cleanup table in database but I don't know how to do it ####
+
+Call ECR_TRACE("Delete test table YYYYY:", 0) From GESECRAN
+Call ECR_TRACE("- Start:" - time$, 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+STARTMSECS = val(timestamp$)
+STARTTIME = time
+
+Local Integer STAT
+Local Char    SUF(10) , FICTRT(GDIMFIC) , CODE, APPLI
+CODE="YYYYY"
+APPLI=nomap
+
+Trbegin [F:YYY]
+#ATABLE table not deleted in ANNULE routine
+Delete [ATB] Where CODFIC=[L]CODE
+Gosub ANNULE From SUBATB
+Commit
+
+ENDTIME = time
+ENDMSECS = val(timestamp$)
+
+DIFFTIME = ENDTIME - STARTTIME
+DIFFMSECS = ENDMSECS - STARTMSECS
+
+Call ECR_TRACE("- End  :" - time$ -"- Elapsed:" - num$(DIFFTIME) - "secs /" - num$(DIFFMSECS) - "msecs.", 0) From GESECRAN
+Call FLUSH_TRACE from GESECRAN
+
+Return
+#######################################################################
+## End of ERASETEST subprogram
+#######################################################################
+
+#######################################################################
+## End of ZXIOBENCH_V2 program
+#######################################################################
+
+
+
+
+
+
+

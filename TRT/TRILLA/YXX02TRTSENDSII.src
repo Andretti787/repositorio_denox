@@ -1,0 +1,21 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+$ACTION
+#If GUSER = "ADMIN"
+If 1=2
+  Case ACTION
+    When "WSIIFILE" : Gosub WSIIFILE
+    When "WSIIRESP" : Gosub WSIIRESP
+    Endcase
+Endif
+Return
+$WSIIFILE
+  Openo filpath("BQT", "XXX", "XML"),0 Using [XXX]
+  Wrseq DATAXML Using [XXX]
+  Openo Using [XXX]
+Return
+$WSIIRESP
+  Openo filpath("BQT", "RESPUESTA", "XML"),0 Using [XXX]
+  Wrseq DATAXML Using [XXX]
+  Openo Using [XXX]
+Return
+

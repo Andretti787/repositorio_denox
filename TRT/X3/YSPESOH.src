@@ -1,0 +1,400 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+#<AdxTL>@(#)8.0.0.0 $Revision$
+
+$ACTION
+    Case ACTION
+        When "OUVRE"     : Gosub OUVRE
+        When "LIENS"     : Gosub LIENS
+        When "RAZCRE"    : Gosub RAZCRE
+        When "RAZDUP"    : Gosub RAZDUP
+        When "VERIF_MOD" : Gosub VERIF_MOD
+        When "INICRE"    : Gosub INICRE
+        When "CREATION"  : Gosub CREATION
+        When "MODIF"     : Gosub MODIF
+        When "ANNULE"    : Gosub ANNULE
+        When "APRES_CRE" : Gosub ESCSOH
+        When "APRES_MOD" : Gosub ESCSOH
+
+    Endcase
+Return
+
+######################################################################################
+
+$OUVRE
+    If clalev([F:YSE])=0 : Local File YSORDEREDI [YSE] : Endif
+    If clalev([F:YSI])=0 : Local File YSOHEDIINC [YSI] : Endif
+    If clalev([F:YSH])=0 : Local File YIMPSOH    [YSH] : Endif
+    If clalev([F:YSD])=0 : Local File YIMPSOD    [YSD] : Endif
+
+    If GIMPORT
+        If clalev([M:YOH5])=0 : Local Mask YOH5 [YOH5] : Endif
+    Endif
+
+    Local Integer STAT, WTEX, I
+    Local Char    WTEXTO(255)
+Return
+
+######################################################################################
+
+$LIENS
+    Read [F:YSE]YSE0=[F:SOH]SOHNUM
+    If fstat : Raz [F:YSE] : Return : Endif
+
+    [M:YOH5]=[F:YSE]
+    [M:SOH0]YEDIFLG=2 : Affzo [M:SOH0]YEDIFLG
+
+    Raz [M:YOH5]NBERR, I
+    For [F:YSI]YSI0 Where SOHNUM=[F:SOH]SOHNUM
+        If I >= dim([M:YOH5]TEXTO) : Break : Endif
+        [M:YOH5]TEXTO(I)=[F:YSI]TEXTO
+        I+=1
+    Next
+    [M:YOH5]NBERR=I
+
+    Affzo [M:YOH5]
+Return
+
+######################################################################################
+
+$RAZCRE
+    If GIMPORT and dim(GYIMPSOH)>0
+        If GYIMPSOH=1
+            # Comprobar si el pedido creado viene de la importación de pedidos EDI
+            Read [F:YSH]YSH2=[F:SOH]BPCORD;[F:SOH]BPAADD;[F:SOH]CUSORDREF
+            If fstat : Return : Endif
+
+            If GTRACE<>""
+                Call ECR_TRACE("Pedido EDI" - [F:YSH]CLAVE,0) From GESECRAN
+            Endif
+        Endif
+    Endif
+Return
+
+######################################################################################
+
+$RAZDUP
+    Raz [M:YOH5]        : If !GIMPORT : Affzo [M:YOH5]        : Endif
+    Raz [M:SOH0]YEDIFLG : If !GIMPORT : Affzo [M:SOH0]YEDIFLG : Endif
+Return
+
+######################################################################################
+
+$VERIF_MOD
+    If GIMPORT and dim(GYIMPSOH)>0
+        Local Integer SAVXGCCECOD
+        Global Integer GCCECOD
+        SAVXGCCECOD=GCCECOD
+        Raz GCCECOD
+        Gosub ACTION From =PROGSUB : GPE=1
+        GCCECOD=SAVXGCCECOD
+    Endif
+Return
+
+######################################################################################
+
+$INICRE
+    If GIMPORT and dim(GYIMPSOH)>0
+        If GYIMPSOH=1
+            # Comprobar si el pedido creado viene de la importación de pedidos EDI
+            Read [F:YSH]YSH2=[F:SOH]BPCORD;[F:SOH]BPAADD;[F:SOH]CUSORDREF
+            If fstat : Return : Endif
+
+            Setlob WTEXTO With [F:YSH]TEXTO
+            If len(WTEXTO)>0
+                Raz STAT
+                Call NUM_TXC("SOH",WTEX,STAT) From TRTX3TEX
+                If STAT<>0 : Return : Endif
+                [F:SOH]SOHTEX1="SOH"+"~"+format$("N0:8#",num$(WTEX))
+                Call RANGE_CLOB([F:YSH]TEXTO,[F:SOH]SOHTEX1,STAT) From ACLOB
+                If STAT<>0 : Return : Endif
+                Call CRE_CLOB([F:SOH]SOHTEX1,GOK) From TRTX3TEX
+            Endif
+        Endif
+    Endif
+Return
+
+######################################################################################
+
+$CREATION
+
+    If GIMPORT #and dim(GYIMPSOH)>0
+    #    If GYIMPSOH=1 :
+       Gosub CRE_YSE
+    Else
+        # MO NO ESTA CREADO POR EDI GUARDAMOS TODOS LOS DATOS DE LA PANTALLA SI TIENE
+        # JMME
+        If [M:YOH5]YEANPIDE+[M:YOH5]YEANRECEPT+[M:YOH5]YEANFACTUR+[M:YOH5]YEANPAGA <> ''
+            Raz [F:YSE]
+            [F:YSE]SOHNUM=[F:SOH]SOHNUM
+            [F:YSE]YEANPIDE=[M:YOH5]YEANPIDE
+            [F:YSE]YEANRECEPT=[M:YOH5]YEANRECEPT
+            [F:YSE]YEANFACTUR=[M:YOH5]YEANFACTUR
+            [F:YSE]YEANPAGA=[M:YOH5]YEANPAGA
+            [F:YSE]YSECCION=[M:YOH5]YSECCION
+            [F:YSE]YCENTRO=[M:YOH5]YCENTRO
+            [F:YSE]YIMPDAT=date$
+            [F:YSE]YIMPTIM=time$
+            [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+            [F:YSE]YEDICONFIR=1
+            [F:YSE]YEDIENVFLG=1
+            [F:YSE]YEMISOR=[M:YOH5]YEMISOR #JMME
+            Write [F:YSE]
+        Endif
+    Endif
+
+Return
+
+######################################################################################
+
+$CRE_YSE
+    Read [F:YSH]YSH2=[F:SOH]BPCORD;[F:SOH]BPAADD;[F:SOH]CUSORDREF
+
+    If fstat
+        Return # El pedido creado no viene de la importación de pedidos EDI
+    Endif
+
+     Read [BPC]BPC0= [F:SOH]BPCORD
+     If !fstat : [M:YOH5]YEDIRSPSOH=[F:BPC]YEDIRSPSOH : Endif
+
+    If GREP="C"
+        Raz [F:YSE]
+
+        [F:YSE]SOHNUM=[F:SOH]SOHNUM
+        [F:YSE]YEANPIDE=[F:YSH]YEANPIDE
+        [F:YSE]YEANRECEPT=[F:YSH]YEANRECEPT
+        [F:YSE]YEANFACTUR=[F:YSH]YEANFACTUR
+        [F:YSE]YEANPAGA=[F:YSH]YEANPAGA
+        [F:YSE]YSECCION=[F:YSH]YSECCION
+        [F:YSE]YCENTRO=[F:YSH]YCENTRO
+        [F:YSE]YIMPDAT=date$
+        [F:YSE]YIMPTIM=time$
+        [F:YSE]YNOMFIC=[F:YSH]YNOMFIC
+        [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+        [F:YSE]YEDICONFIR=1
+        [F:YSE]YEDIENVFLG=1
+        [F:YSE]YEMISOR=[F:YSH]YEMISOR #JMME
+
+        Write [F:YSE]
+        If fstat
+            GOK = 0 : Call FSTA("YSE") From GLOCK
+            Return
+        Endif
+    Elsif GREP="M"
+        Read [F:YSE]YSE0=[F:SOH]SOHNUM
+        If !fstat
+            [F:YSE]YEANPIDE=[F:YSH]YEANPIDE
+            [F:YSE]YEANRECEPT=[F:YSH]YEANRECEPT
+            [F:YSE]YEANFACTUR=[F:YSH]YEANFACTUR
+            [F:YSE]YEANPAGA=[F:YSH]YEANPAGA
+            [F:YSE]YSECCION=[F:YSH]YSECCION
+            [F:YSE]YCENTRO=[F:YSH]YCENTRO
+            [F:YSE]YIMPDAT=date$
+            [F:YSE]YIMPTIM=time$
+            [F:YSE]YNOMFIC=[F:YSH]YNOMFIC
+            [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+            [F:YSE]YEDICONFIR=1
+            [F:YSE]YEDIENVFLG=1
+            [F:YSE]YEMISOR=[F:YSH]YEMISOR #JMME
+
+            Rewrite [F:YSE]
+            If fstat
+                GOK = 0 : Call FSTA("YSE") From GLOCK
+                Return
+            Endif
+        Endif
+    Endif
+
+    For I=0 To [M:YOH5]NBERR-1
+        Raz [F:YSI]
+
+        [F:YSI]SOHNUM=[F:SOH]SOHNUM
+        [F:YSI]LINEA=I+1
+        [F:YSI]TEXTO=[M:YOH5]TEXTO(I)
+
+        Write [F:YSI]
+        If fstat : GOK = 0 : Break : Endif
+    Next
+    If GOK=0 : Call FSTA("YSI") From GLOCK : Return : Endif
+
+    Delete [YSD] Where CLAVE=[F:YSH]CLAVE
+    If fstat=1
+        GOK = -1 : GLOCK = "$YIMPSOD"-[F:YSH]CLAVE
+    Endif
+
+    Delete [YSH] Curr
+    If fstat=1
+        GOK = -1 : GLOCK = "$YIMPSOH"-[F:YSH]CLAVE
+    Endif
+Return
+
+######################################################################################
+
+$MODIF
+
+    If GIMPORT and dim(GYIMPSOH)>0 Then
+        If GYIMPSOH=1 : Gosub CRE_YSE : Endif
+    #Elsif dim([F:YSE]YEDIRSPSOH)>0
+    Else
+        If [M:YOH5]YEANPIDE+[M:YOH5]YEANRECEPT+[M:YOH5]YEANFACTUR+[M:YOH5]YEANPAGA <> '' Then
+            Read [F:YSE]YSE0=[F:SOH]SOHNUM
+            If fstat <> 0 Then
+              Raz [F:YSE]
+              [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+              [F:YSE]YEDICONFIR=[M:YOH5]YEDICONFIR
+              [F:YSE]YEDIDATE=[M:YOH5]YEDIDATE
+              [F:YSE]YEDITIME=[M:YOH5]YEDITIME
+              [F:YSE]YEDIENVFLG=[M:YOH5]YEDIENVFLG
+
+              # JMME
+              [F:YSE]SOHNUM=[F:SOH]SOHNUM
+              [F:YSE]YEANPIDE=[M:YOH5]YEANPIDE
+              [F:YSE]YEANRECEPT=[M:YOH5]YEANRECEPT
+              [F:YSE]YEANFACTUR=[M:YOH5]YEANFACTUR
+              [F:YSE]YEANPAGA=[M:YOH5]YEANPAGA
+              [F:YSE]YSECCION=[M:YOH5]YSECCION
+              [F:YSE]YCENTRO=[M:YOH5]YCENTRO
+              [F:YSE]YIMPDAT=date$
+              [F:YSE]YIMPTIM=time$
+              [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+              [F:YSE]YEDICONFIR=1
+              [F:YSE]YEDIENVFLG=1
+              [F:YSE]YEMISOR=[M:YOH5]YEMISOR #JMME
+              # JMME
+              Write [F:YSE]
+            Else
+              [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+              [F:YSE]YEDICONFIR=[M:YOH5]YEDICONFIR
+              [F:YSE]YEDIDATE=[M:YOH5]YEDIDATE
+              [F:YSE]YEDITIME=[M:YOH5]YEDITIME
+              [F:YSE]YEDIENVFLG=[M:YOH5]YEDIENVFLG
+
+              # JMME
+              [F:YSE]SOHNUM=[F:SOH]SOHNUM
+              [F:YSE]YEANPIDE=[M:YOH5]YEANPIDE
+              [F:YSE]YEANRECEPT=[M:YOH5]YEANRECEPT
+              [F:YSE]YEANFACTUR=[M:YOH5]YEANFACTUR
+              [F:YSE]YEANPAGA=[M:YOH5]YEANPAGA
+              [F:YSE]YSECCION=[M:YOH5]YSECCION
+              [F:YSE]YCENTRO=[M:YOH5]YCENTRO
+              [F:YSE]YIMPDAT=date$
+              [F:YSE]YIMPTIM=time$
+              [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+              [F:YSE]YEDICONFIR=1
+              [F:YSE]YEDIENVFLG=1
+              [F:YSE]YEMISOR=[M:YOH5]YEMISOR #JMME
+              # JMME
+              Rewrite [F:YSE]
+            Endif # DEL CREAR O MODIFICAR
+        Endif # DEL EXISTEN DATOS QUE GUARDAR
+    Endif # DEL IMPORTACION O NO
+
+Return
+
+######################################################################################
+
+$ANNULE
+    Delete [F:YSE] Where SOHNUM=[F:SOH]SOHNUM
+    If fstat = 1
+        GOK = -1 : GLOCK = "$YSORDEREDI" : Return
+    Endif
+
+    Delete [F:YSI] Where SOHNUM=[F:SOH]SOHNUM
+    If fstat = 1
+        GOK = -1 : GLOCK = "$YSOHEDIINC"
+    Endif
+Return
+
+######################################################################################
+
+$ESCSOH
+
+Read [BPC]BPC0= [F:SOH]BPCORD
+If !fstat
+   If [M:SOH0]YEDIFLG=2
+        [F:YSE]YEANPIDE=[M:YOH5]YEANPIDE
+        [F:YSE]YEANRECEPT=[M:YOH5]YEANRECEPT
+        [F:YSE]YEANFACTUR=[M:YOH5]YEANFACTUR
+        [F:YSE]YEANPAGA=[M:YOH5]YEANPAGA
+        If [F:BPC]YEDIRSPSOH=2
+            [F:YSE]YEDIRSPSOH=[M:YOH5]YEDIRSPSOH
+        Endif
+       Rewrite [F:YSE]
+       If fstat
+           GOK = 0 : Call FSTA("YSE") From GLOCK
+           Return
+       Endif
+   Endif
+Endif
+
+Return
+
+
+######################################################################################
+
+Subprog AS_CUSORDREF(VALEUR)
+Variable Char    VALEUR()
+    Read [F:YSE]YSE0=[M:SOH0]SOHNUM
+    If !fstat : mkstat = 2 : Endif
+End
+
+######################################################################################
+
+Subprog APRES_NBLIG
+
+    If !GIMPORT         : End : Endif    # Sólo importación
+    If dim(GYIMPSOH)<=0 : End : Endif    # Viene de la importación de pedidos EDI
+
+    Local Integer NOL, LINEA, DIFF
+    Local Char    MENSAJE(255)
+
+    NOL=(nolign-1)
+    Read [F:YSH]YSH2=[M:SOH0]BPCORD;[M:SOH1]BPAADD;[M:SOH0]CUSORDREF
+    If fstat : End : Endif
+
+    LINEA=nolign
+
+    Filter [F:YSD] Where CLAVE=[F:YSH]CLAVE and ITMREF=[M:SOH4]ITMREF(NOL) and QTY=[M:SOH4]QTY(NOL)
+    Read [F:YSD]YSD0 First
+    Filter [F:YSD]
+    If fstat : End : Endif
+
+    DIFF  = 0
+    DIFF += ([F:YSD]GROPRI<>0 and [M:SOH4]GROPRI(NOL)<>0 and [M:SOH4]GROPRI(NOL)<>[F:YSD]GROPRI)
+
+    If DIFF > 0
+        MENSAJE="Línea" - num$(LINEA) + ", Artículo" - [M:SOH4]ITMREF(NOL) + ":"
+        [M:YOH5]NBERR+=1
+        [M:YOH5]TEXTO([M:YOH5]NBERR-1)=MENSAJE
+
+        If [M:SOH4]GROPRI(NOL)<>[F:YSD]GROPRI
+            MENSAJE ="    Precio bruto (" + num$([F:YSD]GROPRI) + ")"
+            MENSAJE-="distinto de tarifa (" + num$([M:SOH4]GROPRI(NOL)) + ")"
+            [M:YOH5]NBERR+=1
+            [M:YOH5]TEXTO([M:YOH5]NBERR-1)=MENSAJE
+        Endif
+
+        If [M:SOH4]NETPRI(NOL)<>[F:YSD]NETPRI
+            MENSAJE ="    Precio neto (" + num$([F:YSD]NETPRI) + ")"
+            MENSAJE-="distinto de tarifa (" + num$([M:SOH4]NETPRI(NOL)) + ")"
+            [M:YOH5]NBERR+=1
+            [M:YOH5]TEXTO([M:YOH5]NBERR-1)=MENSAJE
+        Endif
+    Endif
+End
+
+######################################################################################
+Subprog C_YEDIRSPSOH(VALEUR)
+Variable Integer VALEUR
+Read [BPC]BPC0= [F:SOH]BPCORD
+If !fstat and VALEUR=2 and [F:BPC]YEDIRSPSOH<>2 and [M:SOH0]YEDIFLG=1
+   Raz VALEUR
+   [M:YOH5]YEDIRSPSOH=1
+   GMESSAGE="Cliente no permite respuesta o no es un pedido EDI"
+   mkstat=2
+   Actzo [M:YOH5]YEDIRSPSOH
+Endif
+
+End
+
+######################################################################################
+

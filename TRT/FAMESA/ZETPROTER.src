@@ -1,0 +1,114 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char OFDEB
+  Local Char OFFIN
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Integer NETIQUETA
+  Local Integer ETIQUETA ## Para el for
+  Local Integer NETTOTAL ##Nº de etiquetas a realizar
+  Local Char EMBALAJE
+  Local Decimal CAPACIDAD
+  Local Integer RESTO ## Si =1 Existe etiqueta con con cantidad de restos
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZOF]) : Local File MFGITM [ZOF]      : Endif  ## TABLA DE OF.
+  If !clalev([F:ZIC]) : Local File ITMBPC [ZIC]   : Endif  ## TABLA DE ARTÍCULO-CLIENTE
+  If !clalev([F:ZIT]) : Local File ITMFACILIT [ZIT]   : Endif  ## TABLA DE ARTÍCULO-PLANTA
+  If !clalev([F:ZET]) : Local File ZETPROTER [ZET]   : Endif  ## TABLA DE ETIQUETAS HCO.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  OFDEB=mid$(PARAMETRE(36),11,20)
+  OFFIN=mid$(PARAMETRE(37),11,20)
+
+  ####################################
+  ## CARGA EN LA TABLA DE ETIQUETAS ##
+  ## DEPENDIENDO DEL EMBALAJE       ##
+  ####################################
+  Filter [F:ZOF] Where (MFGNUM>=OFDEB and MFGNUM<=OFFIN) Order By MFGNUM
+  For [F:ZOF]
+    Filter [F:ZIC] Where ITMREF = [F:ZOF]ITMREF and BPCNUM=[F:ZOF]BPCNUM
+    Read [F:ZIC] First
+    If fstat=0 Then
+        CAPACIDAD=[F:ZIC]PCKCAP
+        EMBALAJE=[F:ZIC]PCK
+        If len(EMBALAJE)=0 Then
+          Filter [F:ZIT] Where ITMREF = [F:ZOF]ITMREF and STOFCY = [F:ZOF]MFGFCY
+          For [F:ZIT]
+              ### Guardamos el embalaje y la capacidad del Artículo
+              CAPACIDAD=[F:ZIT]PCKCAP
+              EMBALAJE=[F:ZIT]PCK
+          Next
+        Endif
+    Else
+        Filter [F:ZIT] Where ITMREF = [F:ZOF]ITMREF and STOFCY = [F:ZOF]MFGFCY
+        For [F:ZIT]
+            ### Guardamos el embalaje y la capacidad del Artículo
+            CAPACIDAD=[F:ZIT]PCKCAP
+            EMBALAJE=[F:ZIT]PCK
+        Next
+    Endif
+    ### BUSCA LA ULTIMA ETIQUETA PARA CONTINUAR
+    Filter [F:ZET] Where ITMREF = [F:ZOF]ITMREF and MFGNUM=[F:ZOF]MFGNUM Order By NUMERO Desc
+    Read [F:ZET] First
+    If fstat=0 Then
+      NETIQUETA=[F:ZET]NUMERO
+      Infbox "Ya existen Etiquetas. Para modificarlas vaya a la gestión de Etiquetas de Prod. Acabado/Encurso"
+      End
+    Else
+      NETIQUETA=0
+    Endif
+    If CAPACIDAD>0 Then
+        If mod([F:ZOF]UOMEXTQTY,CAPACIDAD)>0 Then
+           NETTOTAL=[F:ZOF]UOMEXTQTY/CAPACIDAD+1
+           RESTO=1
+        Else
+           NETTOTAL=[F:ZOF]UOMEXTQTY/CAPACIDAD
+           RESTO=0
+        Endif
+     Else
+        NETTOTAL=1
+     Endif
+     ### ESCRIBE LAS ETIQUETAS
+     Trbegin [F:ZET]
+         For ETIQUETA= 1 To NETTOTAL
+               NETIQUETA=NETIQUETA+1
+               [F:ZET]NUMERO=NETIQUETA
+               [F:ZET]MFGNUM=[F:ZOF]MFGNUM
+               [F:ZET]ITMREF=[F:ZOF]ITMREF
+               [F:ZET]FCY= [F:ZOF]MFGFCY
+               [F:ZET]CANTIDAD=[F:ZOF]UOMEXTQTY
+
+               If ETIQUETA=NETTOTAL and RESTO=1 Then
+                  If (CAPACIDAD*(NETIQUETA-1))>=[F:ZOF]UOMEXTQTY Then
+                    [F:ZET]CANTEMBALAJE=(CAPACIDAD*(NETIQUETA-1))-[F:ZOF]UOMEXTQTY
+                  Else
+                    [F:ZET]CANTEMBALAJE=[F:ZOF]UOMEXTQTY-(CAPACIDAD*(NETIQUETA-1))
+                  Endif
+               Else
+                  If [F:ZOF]UOMEXTQTY<=CAPACIDAD Then
+                    [F:ZET]CANTEMBALAJE =[F:ZOF]UOMEXTQTY
+                  Else
+                    [F:ZET]CANTEMBALAJE=CAPACIDAD
+                  Endif
+               Endif
+               [F:ZET]PCK=EMBALAJE
+               [F:ZET]LEIDA=1
+               [F:ZET]FLEIDA=gdat$(1,1,1953)
+               [F:ZET]HLEIDA=""
+               [F:ZET]ZTURNO=0
+               [F:ZET]EMPNUM=0
+               [F:ZET]TERMINAL=""
+               Write [F:ZET]
+         Next
+     Commit
+  Next
+  ##Cierre de ficheros
+  Close File [F:ZOF]:Close File [F:ZIT]:Close File [F:ZIC]:Close File [F:ZET]
+End
+

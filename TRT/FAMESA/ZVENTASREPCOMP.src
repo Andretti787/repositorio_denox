@@ -1,0 +1,130 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char BPCGRUPODEB
+  Local Char BPCGRUPOFIN
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char SECTORDEB
+  Local Char SECTORFIN
+  Local Char REPDEB
+  Local Char REPFIN
+  Local Char VALEUR(250)
+    ## SQL ##
+  Local Integer LINEA
+  Local Char CONSULTA(255)(254)
+  Raz CONSULTA
+
+  If !clalev([F:ZTV]) : Local File ZTMPVENTASLI [ZTV]     : Endif  ##Tabla temporal de ventas por lineas
+  If !clalev([F:ZCL]) : Local File BPCUSTOMER [ZCL]     : Endif  ##CLIENTES para buscar el sector
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  FECHADEB=mid$(PARAMETRE(35),9,8)
+  FECHAFIN=mid$(PARAMETRE(36),9,8)
+  REPDEB=mid$(PARAMETRE(37),10,8)
+  REPFIN=mid$(PARAMETRE(38),10,8)
+  SECTORDEB=mid$(PARAMETRE(39),11,8)
+  SECTORFIN=mid$(PARAMETRE(40),11,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+   Delete [ZTV] Where CREUSR= GUSER
+
+  ######################################
+  ## CARGA DE LAS FACTURAS AÑO ACTUAL ##
+  ######################################
+  CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,S.SNS_0,S.INVTYP_0,S.NUM_0,D.SIDLIN_0,D.SDHNUM_0,S.ACCDAT_0,S.BPR_0,V.BPCGRU_0, D.REP1_0, "
+  CONSULTA(1)=" ((D.AMTNOTLIN_0+D.DDTANOT_0+D.DDTANOT_1+D.DDTANOT_2+D.DDTANOT_3+D.DDTANOT_4)*S.SNS_0) as IMPORTE"
+  CONSULTA(2)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  CONSULTA(3)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+  CONSULTA(4)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) and S.STA_0 = 3 "
+  CONSULTA(5)=" AND (S.CPY_0='" + COMPANY + "') "
+  CONSULTA(6)=" AND (S.ACCDAT_0>='" + FECHADEB + "' and S.ACCDAT_0<='" + FECHAFIN + "') "
+  CONSULTA(7)=" AND (D.REP1_0>='" + REPDEB + "' and D.REP1_0<='" + REPFIN + "') "
+  CONSULTA(8)=" AND (I.TSICOD_0<>'CR' and I.TSICOD_0<>'RA') "
+  CONSULTA(9)=" Order by S.ACCDAT_0"
+    For (Char CPY, Char FCY,Integer SNS,Integer INVTYP,Char NUM(20),Integer SIDLIN,Char SDHNUM(20),Date ACCDAT, Char BPR, Char BPCGRU, Char REP, Decimal IMPORTE) From "S" Sql
+& CONSULTA(0..10) As [ZFV]
+            [F:ZTV]BPCGRU=[F:ZFV]BPCGRU
+            [F:ZTV]BPCNUM=[F:ZFV]BPR
+            Filter [ZCL] Where BPCNUM=[F:ZFV]BPCGRU
+            Read [ZCL] First
+            [F:ZTV]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZTV]CANAL = [F:ZCL]TSCCOD(0)
+            Else
+              [F:ZTV]CANAL = [F:ZCL]TSCCOD(2)
+            Endif
+            If [F:ZCL]TSCCOD(1)<>""
+              [F:ZTV]ZONA=[F:ZCL]TSCCOD(1)
+            Else
+              [F:ZTV]ZONA=[F:ZCL]TSCCOD(3)
+            Endif
+            [F:ZTV]CPY=[F:ZFV]CPY
+            [F:ZTV]FCY=[F:ZFV]FCY
+            [F:ZTV]INVTYP=[F:ZFV]INVTYP
+            [F:ZTV]NUM=[F:ZFV]NUM
+            [F:ZTV]SIDLIN=[F:ZFV]SIDLIN
+            [F:ZTV]SDHNUM=[F:ZFV]SDHNUM
+            [F:ZTV]REP=[F:ZFV]REP
+            [F:ZTV]ACCDAT=[F:ZFV]ACCDAT
+            [F:ZTV]AMTATIACT=[F:ZFV]IMPORTE
+            [F:ZTV]AMTATIANT=0
+            Write [ZTV]
+      Next
+
+  ################################
+  ## CARGA DE LAS FACT. AÑO ANT ##
+  ################################
+  CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,S.SNS_0,S.INVTYP_0,S.NUM_0,D.SIDLIN_0,D.SDHNUM_0,S.ACCDAT_0,S.BPR_0,V.BPCGRU_0, D.REP1_0, "
+  CONSULTA(1)=" ((D.AMTNOTLIN_0+D.DDTANOT_0+D.DDTANOT_1+D.DDTANOT_2+D.DDTANOT_3+D.DDTANOT_4)*S.SNS_0) as IMPORTE"
+  CONSULTA(2)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  CONSULTA(3)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+  CONSULTA(4)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) and S.STA_0 = 3 "
+  CONSULTA(5)=" AND (S.CPY_0='" + COMPANY + "') "
+  CONSULTA(6)=" AND (S.ACCDAT_0>='" + num$(year(FECHADEB)-1) + format$("N0:##",month(FECHADEB)) + format$("N0:##",day(FECHADEB)) + "' "
+  CONSULTA(7)=" AND S.ACCDAT_0<='" + num$(year(FECHAFIN)-1) + format$("N0:##",month(FECHAFIN)) + format$("N0:##",day(FECHAFIN)) + "') "
+  CONSULTA(8)=" AND (D.REP1_0>='" + REPDEB + "' and D.REP1_0<='" + REPFIN + "') "
+  CONSULTA(9)=" AND (I.TSICOD_0<>'CR' and I.TSICOD_0<>'RA') "
+  CONSULTA(10)=" Order by S.ACCDAT_0"
+    For (Char CPY, Char FCY,Integer SNS,Integer INVTYP,Char NUM(20),Integer SIDLIN,Char SDHNUM(20),Date ACCDAT, Char BPR, Char BPCGRU, Char REP, Decimal IMPORTE) From "S" Sql
+& CONSULTA(0..10) As [ZFV]
+            [F:ZTV]BPCGRU=[F:ZFV]BPCGRU
+            [F:ZTV]BPCNUM=[F:ZFV]BPR
+            Filter [ZCL] Where BPCNUM=[F:ZFV]BPCGRU
+            Read [ZCL] First
+            [F:ZTV]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZTV]CANAL = [F:ZCL]TSCCOD(0)
+            Else
+              [F:ZTV]CANAL = [F:ZCL]TSCCOD(2)
+            Endif
+            If [F:ZCL]TSCCOD(1)<>""
+              [F:ZTV]ZONA=[F:ZCL]TSCCOD(1)
+            Else
+              [F:ZTV]ZONA=[F:ZCL]TSCCOD(3)
+            Endif
+            [F:ZTV]CPY=[F:ZFV]CPY
+            [F:ZTV]FCY=[F:ZFV]FCY
+            [F:ZTV]INVTYP=[F:ZFV]INVTYP
+            [F:ZTV]NUM=[F:ZFV]NUM
+            [F:ZTV]SIDLIN=[F:ZFV]SIDLIN
+            [F:ZTV]SDHNUM=[F:ZFV]SDHNUM
+            [F:ZTV]REP=[F:ZFV]REP
+            [F:ZTV]ACCDAT=[F:ZFV]ACCDAT
+            [F:ZTV]AMTATIACT=0
+            [F:ZTV]AMTATIANT=[F:ZFV]IMPORTE
+            Write [ZTV]
+      Next
+
+  ##Cierre de ficheros
+  Close File [ZTV]:Close File [ZCL]
+End
+

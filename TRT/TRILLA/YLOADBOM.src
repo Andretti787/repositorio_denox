@@ -1,0 +1,83 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+
+If clalev([F:YBO])=0 : Local File YBOMPRN   [YBO] : Endif
+If clalev([F:BOH])=0 : Local File BOM       [BOH] : Endif
+If clalev([F:ITM])=0 : Local File ITMMASTER [ITM] : Endif
+
+Local Char WITMREF(GLONITM)
+Local Char CRITERE(250)
+
+#
+#WITMREF="40010.759"
+#Trbegin [F:YBO]
+#Delete [F:YBO] Where ITMORI=WITMREF
+#Commit
+#If GUSER="NAC" : Dbgaff : Endif
+#Call LOAD_BOM(WITMREF, WITMREF, "1")
+
+CRITERE = "SELECT DISTINCT ITMREF_0 FROM MFGITM"
+
+For (Char ITMREF(GLONITM)) From num$(GTYPDBA*2+1) Sql CRITERE As [ZBOH]
+  WITMREF = [F:ZBOH]ITMREF
+
+  Trbegin [F:YBO]
+  Delete [F:YBO] Where ITMORI=WITMREF
+  Commit
+
+  Call LOAD_BOM(WITMREF, WITMREF, "1")
+Next
+
+End
+
+#------------------------------------------------------------------------------#
+
+Subprog LOAD_BOM(WITMORI,WITMREF,WNIV)
+Value Char WITMORI
+Value Char WITMREF
+Value Char WNIV
+
+  Local File BOMD [YBOD]
+
+  Local Integer I, OK
+  Local Char    AUXNIV(20)
+
+  Filter [F:BOH] Where ITMREF=WITMREF and BOMALTTYP=2
+  Read [F:BOH]BOH0 First
+  Filter [F:BOH]
+
+  If !fstat
+
+    Raz I
+
+    For [F:YBOD]BOD0 Where ITMREF=[F:BOH]ITMREF and
+&                         BOMALT=[F:BOH]BOMALT and
+&                         BOMALTTYP=[F:BOH]BOMALTTYP and
+&                         CPNTYP=1
+
+      OK = 1
+      Read [F:ITM]ITM0=[F:YBOD]CPNITMREF
+      If fstat : Raz [F:ITM] : Endif
+      If find([F:ITM]TSICOD,"MP","PT")=0 : OK = 0 : Endif
+      If OK
+        I += 1
+        AUXNIV = WNIV + "." + num$(I)
+        Call LOAD_BOM(WITMORI,[F:YBOD]CPNITMREF,AUXNIV)
+      Endif
+    Next
+  Endif
+
+  Trbegin [F:YBO]
+  Raz [F:YBO]
+  [F:YBO]ITMORI = WITMORI
+  [F:YBO]NIV = WNIV
+  If WITMORI<>WITMREF
+    [F:YBO]CPNITMREF = WITMREF
+  Endif
+  Write [F:YBO]
+  If fstat
+    Rollback
+  Else
+    Commit
+  Endif
+End
+

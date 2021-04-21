@@ -1,0 +1,24 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+#####################################
+## Realizado por Oscar J. Martínez ##
+## 01/12/2016 Ultima Modif.        ##
+#####################################
+$ACTION
+    Case ACTION
+       When "ADDCOLTRO" : Gosub ZADDCOL
+    Endcase
+
+Return
+
+$ZADDCOL
+  NBCOL += 1 : COL(NBCOL)="ITMREF"   : Gosub TEXTE From MFGSELLIB
+  Link [ROH] With [AXX]AXX0="ROUTING";"ROUDESAXX";GLANGUE;[F:ROH]IDENT1;[F:ROH]FCY As [NEW]
+  Default File [NEW]
+  NBCOL += 1 : COL(NBCOL)="ROUDESAXX": Gosub TEXTE From MFGSELLIB : COL(NBCOL)="[F:AXX]TEXTE"
+  NBCOL += 1 : COL(NBCOL)="ROUALT"   : Gosub TEXTE From MFGSELLIB
+  NBCOL += 1 : COL(NBCOL)="FCY"      : Gosub TEXTE From MFGSELLIB
+  NBCOL += 1 : COL(NBCOL)="ROUSTRDAT": Gosub TEXTE From MFGSELLIB
+  NBCOL += 1 : COL(NBCOL)="ROUENDDAT": Gosub TEXTE From MFGSELLIB
+  GPE=1
+Return
+

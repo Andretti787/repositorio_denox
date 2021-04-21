@@ -1,0 +1,109 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHA
+  Local Char FCEHAVAL
+  Local Char PLANTADEB
+  Local Char PLANTAFIN
+  Local Char VALEUR(250)
+  Local Char ACTSQL(250)(254)
+  Local Char TIPO
+  If !clalev([F:ZVAL]) : Local File ZTMPVALOR[ZVAL]     : Endif  ##Tabla temporal de Valoración
+  If !clalev([F:ZCST]) : Local File ITMCOST[ZCST]     : Endif  ##Tabla costes de artículos
+  If !clalev([F:ZGST]) : Local File ITCNAT[ZGST]     : Endif  ##Tabla Detalle Gastos-Costes
+  If !clalev([F:ZSTJ]) : Local File STOJOU[ZSTJ]     : Endif  ##Tabla de mov de stock
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  PLANTADEB=mid$(PARAMETRE(35),9,8)
+  PLANTAFIN=mid$(PARAMETRE(36),9,8)
+  FECHA=mid$(PARAMETRE(39),6,8)
+  FECHAVAL=mid$(PARAMETRE(40),8,8)
+  USUARIO=mid$(PARAMETRE(41),9,8)
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Delete [F:ZVAL] Where CREUSR= USUARIO
+
+  ######################
+  ## CARGA DE LOS ART ##
+  ######################
+  Raz ACTSQL
+  ACTSQL(0)='INSERT INTO ZTMPVALOR '
+  ACTSQL(1)='(CPY_0,FCY_0,LOC_0, ITMREF_0, FECHA_0, CANTIDAD_0,[MATPRIMA_0],[ACCESORIOS_0],[EMBCOMPR_0],[OPERMAQ_0],[AMORTIZACION_0],[ENERGIA_0],[MANOOBRA_0] '
+  ACTSQL(2)=',[CREDATTIM_0],[UPDDATTIM_0],[AUUID_0],[CREUSR_0],[UPDUSR_0]) '
+  ACTSQL(3)= " SELECT C.CPY_0,S.STOFCY_0,S.LOC_0, I.ITMREF_0,'" + FECHA + "',SUM(ISNULL(S.QTYSTU_0,0)) STOCK,0,0,0,0,0,0,0,'"
+  ACTSQL(4)= format$("D:YYYYMMDD",date$) + "','" + format$("D:YYYYMMDD",date$) + "',NEWID() "
+  ACTSQL(5)= ",'" + USUARIO + "','" + USUARIO + "' "
+  ACTSQL(6)= " FROM ITMMASTER I LEFT JOIN STOCK S ON I.ITMREF_0=S.ITMREF_0 "
+  ACTSQL(7)= " LEFT JOIN COMPANY C ON S.STOFCY_0=C.MAIFCY_0 "
+  ACTSQL(8)= " WHERE S.STOFCY_0<>'' AND C.CPY_0='" + COMPANY + "' AND (S.STOFCY_0>='" + PLANTADEB + "' AND S.STOFCY_0<='" + PLANTAFIN + "') "
+  ACTSQL(9)= " GROUP BY C.CPY_0, S.STOFCY_0, S.LOC_0, I.ITMREF_0 "
+  ACTSQL(10)= " ORDER BY S.STOFCY_0, I.ITMREF_0, S.LOC_0 "
+
+  Execsql From "5" Sql ACTSQL(0..100)
+  If adxSqlRec>0 Then ## Variable con el nº de registros afectados
+    Read [F:ZVAL] First
+    ##Trbegin [F:ZVAL]
+      For [F:ZVAL]
+        ####################################
+        ## MODIFICAR EL STOCK SEGUN FECHA ##
+        ####################################
+        ## Buscamos los mov. mayor que la
+        ## fecha seleccionada para restar al
+        ## stock que tienen actualmente
+        ####################################
+        Filter [F:ZSTJ] Where ITMREF=[F:ZVAL]ITMREF and STOFCY=[F:ZVAL]FCY  and LOC=[F:ZVAL]LOC and IPTDAT> gdat$(day(FECHA),month(FECHA),year(FECHA))
+        For [F:ZSTJ]
+          [F:ZVAL]CANTIDAD-=[F:ZSTJ]QTYSTU
+          Rewrite [F:ZVAL]
+        Next
+        #################################
+        ## CARGA SEGUN COSTE ESTANDARD ##
+        #################################
+        Filter [F:ZCST] Where CSTTYP=1 and STOFCY=[F:ZVAL]FCY and ITMREF=[F:ZVAL]ITMREF and (ITCSTRDAT<= gdat$(day(FECHAVAL),month(FECHAVAL),year(FECHAVAL)) and ITCENDDAT>=gdat$(day(FECHAVAL),month(
+& FECHAVAL),year(FECHAVAL))) Order By ITCSEQ Desc
+        Read [F:ZCST] First
+        If fstat=0 Then
+          # SE MODIFICA PARA COGER LOS MULTINIVEL
+          #[F:ZVAL]MATPRIMA=[F:ZCST]MATLEVCST(2)
+          #[F:ZVAL]ACCESORIOS=[F:ZCST]MATLEVCST(0)
+          #[F:ZVAL]EMBCOMPR=[F:ZCST]MATLEVCST(1)
+          #[F:ZVAL]OPERMAQ=[F:ZCST]MACTOT
+          [F:ZVAL]MATPRIMA=[F:ZCST]MATCST(2)
+          [F:ZVAL]ACCESORIOS=[F:ZCST]MATCST(0)
+          [F:ZVAL]EMBCOMPR=[F:ZCST]MATCST(1)+[F:ZCST]MATCST(3)
+          [F:ZVAL]OPERMAQ=[F:ZCST]MACTOT
+          # JMME
+
+          Filter [F:ZGST] Where STOFCY=[F:ZCST]STOFCY  and ITMREF=[F:ZCST]ITMREF and CSTTYP= [F:ZCST]CSTTYP and ITCSEQ=[F:ZCST]ITCSEQ and UID=[F:ZCST]UID
+          Read [F:ZGST] First
+          If fstat=0 Then
+            For [F:ZGST]
+              If [F:ZGST]OVENAT='AMO' Then
+                [F:ZVAL]AMORTIZACION=[F:ZGST]NATAMTLEV+ [F:ZGST]NATAMTSSE # JMME AÑADIDO COSTE SUBNIVEL
+              Else
+                [F:ZVAL]ENERGIA=[F:ZGST]NATAMTLEV+ [F:ZGST]NATAMTSSE # JMME AÑADIDO COSTE SUBNIVEL
+              Endif
+            Next
+          Else
+            [F:ZVAL]AMORTIZACION=0
+            [F:ZVAL]ENERGIA=0
+          Endif
+
+          [F:ZVAL]MANOOBRA=[F:ZCST]LABTOT
+          Rewrite [F:ZVAL]
+        Endif
+      Next
+    ##Commit
+  Endif
+
+  ##Cierre de ficheros
+    Close File [F:ZVAL]:Close File [F:ZCST]:Close File [F:ZGST]:Close File [F:ZSTJ]
+End
+

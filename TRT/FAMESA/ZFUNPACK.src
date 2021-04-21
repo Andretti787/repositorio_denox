@@ -1,0 +1,21 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+$ACTION
+    Case ACTION
+      When "BEFWRISPH" : Gosub BEFWRISPH
+    Endcase
+Return
+
+$BEFWRISPH
+
+If GVCRTYP = 4 Then
+  # ENREGAS
+  [F:SPH]VOL = [M:PKP2]VOL
+  [F:SPH]VOU = [M:PKP2]VOU
+Endif
+
+If GVCRTYP = 3 Then
+  # PREPARACION
+  Dbgaff
+Endif
+Return
+

@@ -1,0 +1,147 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char BPCGRUPODEB
+  Local Char BPCGRUPOFIN
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char SECTORDEB
+  Local Char SECTORFIN
+  Local Char REPDEB
+  Local Char REPFIN
+  Local Char VALEUR(250)
+  Local Decimal IMPORTE ## Suma de Importes de las líneas
+
+  If !clalev([F:ZVC]) : Local File SINVOICE [ZVC]      : Endif  ##FACT. DE VENTAS CABECERA
+  If !clalev([F:ZVV]) : Local File SINVOICEV [ZVV]      : Endif  ##FACT. DE VENTAS VALORADO
+  If !clalev([F:ZVD]) : Local File SINVOICED [ZVD]      : Endif  ##FACT. DE VENTAS Lineas
+  If !clalev([F:ZIT]) : Local File ITMMASTER [ZIT]      : Endif   ##Tabla de Artículos
+  If !clalev([F:ZVA]) : Local File ZTMPVENTAACU [ZVA]     : Endif  ##Tabla temporal de ventas Acumulado
+  If !clalev([F:ZCL]) : Local File BPCUSTOMER [ZCL]     : Endif  ##CLIENTES para buscar el sector
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  BPCGRUPODEB=mid$(PARAMETRE(35),10,15)
+  BPCGRUPOFIN=mid$(PARAMETRE(36),10,15)
+  FECHADEB=mid$(PARAMETRE(37),9,8)
+  FECHAFIN=mid$(PARAMETRE(38),9,8)
+  REPDEB=mid$(PARAMETRE(39),10,8)
+  REPFIN=mid$(PARAMETRE(40),10,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+      Delete [ZVA] Where CREUSR= GUSER
+
+  ######################################
+  ## CARGA DE LAS FACTURAS AÑO ACTUAL ##
+  ######################################
+  Filter [ZVC] Where (INVTYP= 1 or INVTYP= 2) and CPY = COMPANY and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN)))
+& Order By ACCDAT
+  Trbegin [ZVA]
+      For [ZVC]
+          IMPORTE=0 ## Se inicia a 0 cada vez que cambia de Factura
+          Filter [ZVV] Where NUM = [F:ZVC]NUM and (BPCGRU>=BPCGRUPODEB and BPCGRU<=BPCGRUPOFIN) and (REP(0)>=REPDEB and REP(0)<=REPFIN)
+          For [ZVV]
+            [F:ZVA]BPCGRU=[F:ZVV]BPCGRU
+            [F:ZVA]BPCNUM=[F:ZVC]BPR
+            Filter [ZCL] Where BPCNUM=[F:ZVV]BPCGRU
+            Read [ZCL] First
+            [F:ZVA]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZVA]CANAL = [F:ZCL]TSCCOD(0)
+            Else
+              [F:ZVA]CANAL = [F:ZCL]TSCCOD(2)
+            Endif
+            If [F:ZCL]TSCCOD(1)<>""
+              [F:ZVA]ZONA=[F:ZCL]TSCCOD(1)
+            Else
+              [F:ZVA]ZONA=[F:ZCL]TSCCOD(3)
+            Endif
+            [F:ZVA]CPY=[F:ZVC]CPY
+            [F:ZVA]FCY=[F:ZVC]FCY
+            [F:ZVA]INVTYP=[F:ZVC]INVTYP
+            [F:ZVA]NUM=[F:ZVC]NUM
+            [F:ZVA]REP=[F:ZVV]REP
+            [F:ZVA]ACCDAT=[F:ZVC]ACCDAT
+            Filter [F:ZVD] Where NUM=[F:ZVC]NUM
+            For [F:ZVD]
+              Filter [F:ZIT] Where ITMREF=[F:ZVD]ITMREF and TSICOD<>'CR' and TSICOD<>'RA'
+              Read [F:ZIT] First
+              If fstat=0 Then ## Entonces suma la línea
+                IMPORTE = IMPORTE + (([F:ZVD]AMTNOTLIN+[F:ZVD]DDTANOT(0)+[F:ZVD]DDTANOT(1)+[F:ZVD]DDTANOT(2)+[F:ZVD]DDTANOT(3)+[F:ZVD]DDTANOT(4))*[F:ZVC]SNS)
+              Endif
+            Next
+            [F:ZVA]AMTATIACTA=IMPORTE
+            If month([F:ZVC]ACCDAT)=month(FECHAFIN) Then
+              [F:ZVA]AMTATIACT=IMPORTE
+            Else
+              [F:ZVA]AMTATIACT=0
+            Endif
+            [F:ZVA]AMTATIANT=0
+            [F:ZVA]AMTATIANTA=0
+            Write [ZVA]
+          Next
+      Next
+  Commit
+
+  ################################
+  ## CARGA DE LAS FACT. AÑO ANT ##
+  ################################
+Filter [ZVC] Where (INVTYP= 1 or INVTYP= 2) and CPY = COMPANY and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)-1) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN)-1))
+& Order By ACCDAT
+  Trbegin [ZVA]
+      For [ZVC]
+          IMPORTE=0 ## Se inicia a 0 cada vez que cambia de Factura
+          Filter [ZVV] Where NUM = [F:ZVC]NUM and (BPCGRU>=BPCGRUPODEB and BPCGRU<=BPCGRUPOFIN) and (REP(0)>=REPDEB and REP(0)<=REPFIN)
+          For [ZVV]
+            [F:ZVA]BPCGRU=[F:ZVV]BPCGRU
+            [F:ZVA]BPCNUM=[F:ZVC]BPR
+            Filter [ZCL] Where BPCNUM=[F:ZVV]BPCGRU
+            Read [ZCL] First
+            [F:ZVA]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZVA]CANAL = [F:ZCL]TSCCOD(0)
+            Else
+              [F:ZVA]CANAL = [F:ZCL]TSCCOD(2)
+            Endif
+            If [F:ZCL]TSCCOD(1)<>""
+              [F:ZVA]ZONA=[F:ZCL]TSCCOD(1)
+            Else
+              [F:ZVA]ZONA=[F:ZCL]TSCCOD(3)
+            Endif
+            [F:ZVA]CPY=[F:ZVC]CPY
+            [F:ZVA]FCY=[F:ZVC]FCY
+            [F:ZVA]INVTYP=[F:ZVC]INVTYP
+            [F:ZVA]NUM=[F:ZVC]NUM
+            [F:ZVA]REP=[F:ZVV]REP
+            [F:ZVA]ACCDAT=[F:ZVC]ACCDAT
+            Filter [F:ZVD] Where NUM=[F:ZVC]NUM
+            For [F:ZVD]
+              Filter [F:ZIT] Where ITMREF=[F:ZVD]ITMREF and TSICOD<>'CR' and TSICOD<>'RA'
+              Read [F:ZIT] First
+              If fstat=0 Then ## Entonces suma la línea
+                IMPORTE = IMPORTE + (([F:ZVD]AMTNOTLIN+[F:ZVD]DDTANOT(0)+[F:ZVD]DDTANOT(1)+[F:ZVD]DDTANOT(2)+[F:ZVD]DDTANOT(3)+[F:ZVD]DDTANOT(4))*[F:ZVC]SNS)
+              Endif
+            Next
+            [F:ZVA]AMTATIANTA=IMPORTE
+            If month([F:ZVC]ACCDAT)=month(FECHAFIN) Then
+              [F:ZVA]AMTATIANT=IMPORTE
+            Else
+              [F:ZVA]AMTATIANT=0
+            Endif
+            [F:ZVA]AMTATIACT=0
+            [F:ZVA]AMTATIACTA=0
+            Write [ZVA]
+          Next
+      Next
+  Commit
+  ##Cierre de ficheros
+  Close File [ZVA]:Close File [ZVC]:Close File [ZVV]:Close File [ZVD]:Close File [ZCL]:Close File [ZIT]
+End
+

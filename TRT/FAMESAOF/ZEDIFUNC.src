@@ -1,0 +1,83 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+
+
+Funprog MULTI_ALB (pNUMFA)
+    Value Char pNUMFA
+    If clalev([F:SID])=0  : Local File SINVOICED   [SID] : Endif
+    Local Integer vLINEAS
+    Local Integer I
+    Local Char vRETORNO(20)
+   
+    Filter [F:SID] Where NUM= pNUMFA
+    vLINEAS=rowcount([F:SID])
+   
+
+    Local Char vNUMALB(20) (1..vLINEAS)
+    Filter [F:SID]
+
+    Read [F:SID]NUM=pNUMFA
+    If !fstat
+        I=1
+        For [F:SID]NUM
+            vNUMALB(I) = [F:SID]SOHNUM
+            If vNUMALB(I) <> vNUMALB(1)
+                vRETORNO=""
+            Else
+                vRETORNO=vNUMALB(1)
+            Endif
+            I+=1
+        Next
+    Endif
+End vRETORNO
+
+Funprog MULTI_ALB2 (pNUMFA)
+    Value Char pNUMFA
+    If clalev([F:SID])=0  : Local File SINVOICED   [SID] : Endif
+    Local Integer vLINEAS
+    Local Integer I
+    Local Char vRETORNO(2)
+   
+    Filter [F:SID] Where NUM= pNUMFA
+    vLINEAS=rowcount([F:SID])
+   
+
+    Local Char vNUMALB(20) (1..vLINEAS)
+  
+
+    Read [F:SID]First
+    If !fstat
+        I=1
+        For [F:SID]NUM
+            vNUMALB(I) = [F:SID]SOHNUM
+            If vNUMALB(I) <> vNUMALB(1)
+                vRETORNO="SI"
+                Break
+            Else
+                vRETORNO="NO"
+            Endif
+            I+=1
+        Next
+    Endif
+End vRETORNO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

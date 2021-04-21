@@ -1,0 +1,28 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+$ACTION
+    Case ACTION
+      When "CREPYH" : Gosub CREPYH
+    Endcase
+Return
+
+$CREPYH
+  # BUSCAR EN FACTURAS DE VENTA
+  # ASUMO QUE EL F:PYD ESTA EN LA ÚLTIMA FACTURA QUE HA COGIDO EN EL PAGO
+  Read [F:SIH]SIH0 = [F:PYD]VCRNUM
+  If fstat = 0 Then
+    If [F:SIH]ZBANK <> '' Then
+      [F:PYH]BAN = [F:SIH]ZBANK
+    Endif
+  Endif
+  Read [F:PIH]PIH0 = [F:PYD]VCRNUM
+  If fstat = 0 Then
+    If [F:PIH]ZBANK <> '' Then
+      [F:PYH]BAN = [F:PIH]ZBANK
+    Endif
+    If [F:PIH]ZBID <> '' Then
+      [F:PYH]BIDCRY = [F:PIH]ZCRY
+      [F:PYH]BID = [F:PIH]ZBID
+    Endif
+  Endif
+Return
+

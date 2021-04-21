@@ -1,0 +1,164 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char CANALDEB
+  Local Char CANALFIN
+  Local Char CANAL
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZVV]) : Local File SINVOICEV [ZVV]      : Endif  ##FACT. DE VENTAS CABECERA VALORADO
+  If !clalev([F:ZVD]) : Local File SINVOICED [ZVD]      : Endif  ##FACT. DE VENTAS DETALLE
+  If !clalev([F:ZIT]) : Local File ITMMASTER [ZIT]      : Endif  ##Articulos
+  If !clalev([F:ZTV]) : Local File ZTMPVENTAS [ZTV]     : Endif  ##Tabla temporal de ventas
+  If !clalev([F:ZCL]) : Local File BPCUSTOMER [ZCL]     : Endif  ##CLIENTES para buscar el sector
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  FECHADEB=mid$(PARAMETRE(35),9,8)
+  FECHAFIN=mid$(PARAMETRE(36),9,8)
+  CANALDEB=mid$(PARAMETRE(37),11,8)
+  CANALFIN=mid$(PARAMETRE(38),11,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Delete [F:ZTV] Where CREUSR= GUSER
+
+
+  ## La variable CANAl la INICIAMOS A ""
+  CANAL=""
+
+  ######################################
+  ## CARGA DE LAS FACTURAS AÑO ACTUAL ##
+  ######################################
+  Filter [F:ZVV] Where INVSTA=3 and (INVTYP<>5) and CPY = COMPANY and (INVDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and INVDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN)))
+& Order By INVDAT
+  Trbegin [F:ZTV]
+      For [F:ZVV]
+          Filter [F:ZVD] Where NUM = [F:ZVV]NUM
+          For [F:ZVD]
+            [F:ZTV]BPCNUM=[F:ZVV]BPCINV
+            ##Se busca el sector del cliente y el grupo
+            Filter [F:ZCL] Where BPCNUM=[F:ZVV]BPCINV
+            Read [F:ZCL] First
+            [F:ZTV]SECTOR=[F:ZCL]TSCCOD(4)
+            [F:ZTV]BPCGRU=[F:ZCL]BPCGRU
+            ##Se busca el canal del Artículo
+            Filter [F:ZIT] Where ITMREF=[F:ZVD]ITMREF
+            Read [F:ZIT] First
+            If [F:ZIT]SEAKEY<>'RAPPEL' Then
+              [F:ZTV]CANAL = [F:ZIT]TSICOD(1)
+              If CANAL<>[F:ZIT]TSICOD(1) Then
+                #########################################
+                ## Rellenar Tabla para tener todos los ##
+                ## meses para la tabla del informe.    ##
+                #########################################
+                CANAL=[F:ZIT]TSICOD(1)
+                For MES=1 To 12
+                  [F:ZTV]BPCGRU=""
+                  [F:ZTV]BPCNUM=""
+                  [F:ZTV]SECTOR=""
+                  [F:ZTV]CANAL =CANAL
+                  [F:ZTV]ZONA=""
+                  [F:ZTV]CPY=COMPANY
+                  [F:ZTV]FCY=[F:ZVV]SALFCY
+                  [F:ZTV]INVTYP=[F:ZVV]INVTYP
+                  [F:ZTV]NUM=CANAL + "-" + num$(MES)
+                  [F:ZTV]REP=""
+                  [F:ZTV]ACCDAT=gdat$(01,MES,year(FECHAFIN))
+                  [F:ZTV]AMTATIACT=0
+                  [F:ZTV]AMTATIANT=0
+                  Write [ZTV]
+                Next
+              Endif
+              If [F:ZCL]TSCCOD(1)<>""
+                [F:ZTV]ZONA=[F:ZCL]TSCCOD(1)
+              Else
+                [F:ZTV]ZONA=[F:ZCL]TSCCOD(3)
+              Endif
+              [F:ZTV]CPY=[F:ZVV]CPY
+              [F:ZTV]FCY=[F:ZVV]SALFCY
+              [F:ZTV]INVTYP=[F:ZVV]INVTYP
+              [F:ZTV]NUM=[F:ZVV]NUM
+              [F:ZTV]REP=""
+              [F:ZTV]ACCDAT=[F:ZVV]INVDAT
+              [F:ZTV]AMTATIACT=([F:ZVD]AMTNOTLIN + sum([F:ZVD]DDTANOT))
+              [F:ZTV]AMTATIANT=0
+              Write [ZTV]
+             Endif
+          Next
+      Next
+  Commit
+
+  ################################
+  ## CARGA DE LAS FACT. AÑO ANT ##
+  ################################
+    Filter [F:ZVV] Where INVSTA=3 and (INVTYP<>5) and CPY = COMPANY and (INVDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)-1) and INVDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN)-1)
+& ) Order By INVDAT
+   Trbegin [F:ZTV]
+      For [F:ZVV]
+          Filter [F:ZVD] Where NUM = [F:ZVV]NUM
+          For [F:ZVD]
+            [F:ZTV]BPCNUM=[F:ZVV]BPCINV
+            ##Se busca el sector del cliente y el grupo
+            Filter [F:ZCL] Where BPCNUM=[F:ZVV]BPCINV
+            Read [F:ZCL] First
+            [F:ZTV]SECTOR=[F:ZCL]TSCCOD(4)
+            [F:ZTV]BPCGRU=[F:ZCL]BPCGRU
+            ##Se busca el canal del Artículo
+            Filter [F:ZIT] Where ITMREF=[F:ZVD]ITMREF
+            Read [F:ZIT] First
+            If [F:ZIT]SEAKEY<>'RAPPEL' Then
+              [F:ZTV]CANAL = [F:ZIT]TSICOD(1)
+              If CANAL<>[F:ZIT]TSICOD(1) Then
+                #########################################
+                ## Rellenar Tabla para tener todos los ##
+                ## meses para la tabla del informe.    ##
+                #########################################
+                CANAL=[F:ZIT]TSICOD(1)
+                For MES=1 To 12
+                  [F:ZTV]BPCGRU=""
+                  [F:ZTV]BPCNUM=""
+                  [F:ZTV]SECTOR=""
+                  [F:ZTV]CANAL =CANAL
+                  [F:ZTV]ZONA=""
+                  [F:ZTV]CPY=COMPANY
+                  [F:ZTV]FCY=[F:ZVV]SALFCY
+                  [F:ZTV]INVTYP=[F:ZVV]INVTYP
+                  [F:ZTV]NUM=CANAL + "-" + num$(MES)
+                  [F:ZTV]REP=""
+                  [F:ZTV]ACCDAT=gdat$(01,MES,year(FECHAFIN))
+                  [F:ZTV]AMTATIACT=0
+                  [F:ZTV]AMTATIANT=0
+                  Write [ZTV]
+                Next
+              Endif
+              If [F:ZCL]TSCCOD(1)<>""
+                [F:ZTV]ZONA=[F:ZCL]TSCCOD(1)
+              Else
+                [F:ZTV]ZONA=[F:ZCL]TSCCOD(3)
+              Endif
+              [F:ZTV]CPY=[F:ZVV]CPY
+              [F:ZTV]FCY=[F:ZVV]SALFCY
+              [F:ZTV]INVTYP=[F:ZVV]INVTYP
+              [F:ZTV]NUM=[F:ZVV]NUM
+              [F:ZTV]REP=""
+              [F:ZTV]ACCDAT=[F:ZVV]INVDAT
+              [F:ZTV]AMTATIANT=([F:ZVD]AMTNOTLIN + sum([F:ZVD]DDTANOT))
+              [F:ZTV]AMTATIACT=0
+              Write [ZTV]
+             Endif
+          Next
+      Next
+  Commit
+  ##Cierre de ficheros
+  Close File [ZTV]:Close File [ZVV]:Close File [ZVD]:Close File [ZCL]:Close File [ZIT]
+End
+

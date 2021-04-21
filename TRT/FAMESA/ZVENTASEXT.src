@@ -1,0 +1,108 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char BPCGRUPODEB
+  Local Char BPCGRUPOFIN
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char SECTORDEB
+  Local Char SECTORFIN
+  Local Char REPDEB
+  Local Char REPFIN
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZVC]) : Local File SINVOICE [ZVC]      : Endif  ##FACT. DE VENTAS CABECERA
+  If !clalev([F:ZVV]) : Local File SINVOICEV [ZVV]      : Endif  ##FACT. DE VENTAS VALORADO
+  If !clalev([F:ZTV]) : Local File ZTMPVENTAS [ZTV]     : Endif  ##Tabla temporal de ventas
+  If !clalev([F:ZCL]) : Local File BPCUSTOMER [ZCL]     : Endif  ##CLIENTES para buscar el sector
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  BPCGRUPODEB=mid$(PARAMETRE(35),10,15)
+  BPCGRUPOFIN=mid$(PARAMETRE(36),10,15)
+  FECHADEB=mid$(PARAMETRE(37),9,8)
+  FECHAFIN=mid$(PARAMETRE(38),9,8)
+  REPDEB=mid$(PARAMETRE(39),10,8)
+  REPFIN=mid$(PARAMETRE(40),10,8)
+  SECTORDEB=mid$(PARAMETRE(41),11,8)
+  SECTORFIN=mid$(PARAMETRE(42),11,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [ZTV]
+      Delete [ZTV] Where CREUSR= GUSER
+  Commit
+
+
+  ######################################
+  ## CARGA DE LAS FACTURAS AÑO ACTUAL ##
+  ######################################
+  Filter [ZVC] Where (INVTYP<>5) and CPY = COMPANY and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By ACCDAT
+  Trbegin [ZTV]
+      For [ZVC]
+          Filter [ZVV] Where NUM = [F:ZVC]NUM and (BPCGRU>=BPCGRUPODEB and BPCGRU<=BPCGRUPOFIN) and (REP(0)>=REPDEB and REP(0)<=REPFIN)
+          For [ZVV]
+            For MES=1 To 12 ## Para que tenga valor todos los meses
+              [F:ZTV]BPCGRU=[F:ZVV]BPCGRU
+              [F:ZTV]BPCNUM=[F:ZVC]BPR
+              Filter [ZCL] Where BPCNUM=[F:ZVV]BPCGRU
+              Read [ZCL] First
+              [F:ZTV]SECTOR=[F:ZCL]TSCCOD(4)
+              If [F:ZCL]TSCCOD(0)<>""
+                [F:ZTV]CANAL = [F:ZCL]TSCCOD(0)
+              Else
+                [F:ZTV]CANAL = [F:ZCL]TSCCOD(2)
+              Endif
+              If [F:ZCL]TSCCOD(1)<>""
+                [F:ZTV]ZONA=[F:ZCL]TSCCOD(1)
+              Else
+                [F:ZTV]ZONA=[F:ZCL]TSCCOD(3)
+              Endif
+              [F:ZTV]CPY=[F:ZVC]CPY
+              [F:ZTV]FCY=[F:ZVC]FCY
+              [F:ZTV]INVTYP=1
+              [F:ZTV]NUM=num$(MES)
+              [F:ZTV]REP=""
+              [F:ZTV]ACCDAT=gdat$(1,MES,year([F:ZVC]ACCDAT))
+              [F:ZTV]AMTATIACT=0
+              [F:ZTV]AMTATIANT=0
+              Write [ZTV]
+            Next
+            [F:ZTV]BPCGRU=[F:ZVV]BPCGRU
+            [F:ZTV]BPCNUM=[F:ZVC]BPR
+            Filter [ZCL] Where BPCNUM=[F:ZVV]BPCGRU
+            Read [ZCL] First
+            [F:ZTV]SECTOR=[F:ZCL]TSCCOD(4)
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZTV]CANAL = [F:ZCL]TSCCOD(0)
+            Else
+              [F:ZTV]CANAL = [F:ZCL]TSCCOD(2)
+            Endif
+            If [F:ZCL]TSCCOD(1)<>""
+              [F:ZTV]ZONA=[F:ZCL]TSCCOD(1)
+            Else
+              [F:ZTV]ZONA=[F:ZCL]TSCCOD(3)
+            Endif
+            [F:ZTV]CPY=[F:ZVC]CPY
+            [F:ZTV]FCY=[F:ZVC]FCY
+            [F:ZTV]INVTYP=[F:ZVC]INVTYP
+            [F:ZTV]NUM=[F:ZVC]NUM
+            [F:ZTV]REP=[F:ZVV]REP
+            [F:ZTV]ACCDAT=[F:ZVC]ACCDAT
+            [F:ZTV]AMTATIACT=[F:ZVC]AMTATI
+            [F:ZTV]AMTATIANT=0
+            Write [ZTV]
+          Next
+      Next
+  Commit
+
+  ##Cierre de ficheros
+  Close File [ZTV]:Close File [ZVC]:Close File [ZVV]:Close File [ZCL]
+End
+

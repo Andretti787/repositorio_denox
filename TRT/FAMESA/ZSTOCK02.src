@@ -1,0 +1,79 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char ITMREFDEB
+  Local Char ITMREFFIN
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZVC]) : Local File SINVOICE [ZVC]      : Endif  ##FACT. DE VENTAS CABECERA
+  If !clalev([F:ZVD]) : Local File SINVOICED [ZVD]      : Endif  ##FACT. DE VENTAS Lineas
+  If !clalev([F:ZCC]) : Local File PINVOICE [ZCC]      : Endif  ##FACT. DE COMPRAS CABECERA
+  If !clalev([F:ZCD]) : Local File PINVOICED [ZCD]      : Endif  ##FACT. DE COMPRAS Lineas
+  If !clalev([F:ZVI]) : Local File ZITMVALOR [ZVI]     : Endif  ##Tabla temporal de Art. valorados
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  ITMREFDEB=mid$(PARAMETRE(35),12,12)
+  ITMREFFIN=mid$(PARAMETRE(36),12,12)
+  FECHADEB=mid$(PARAMETRE(37),10,8)
+  FECHAFIN=mid$(PARAMETRE(38),10,8)
+
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [ZVI]
+      Delete [ZVI] Where CREUSR= GUSER
+  Commit
+
+
+  #####################################
+  ## CARGA DE LAS FACTURAS DE VENTAS ##
+  #####################################
+  Filter [ZVC] Where (INVTYP<>5) and CPY = COMPANY and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By ACCDAT
+  Trbegin [ZVI]
+      For [ZVC]
+          Filter [ZVD] Where NUM = [F:ZVC]NUM and (ITMREF>=ITMREFDEB and ITMREF<=ITMREFFIN) Order By ITMREF
+          For [ZVD]
+            [F:ZVI]CPY=[F:ZVC]CPY
+            [F:ZVI]FCY=[F:ZVC]FCY
+            [F:ZVI]ITMREF=[F:ZVD]ITMREF
+            [F:ZVI]QTYC=0
+            [F:ZVI]PRECC=0
+            [F:ZVI]QTYV=[F:ZVD]QTY*[F:ZVC]SNS
+            [F:ZVI]PRECV=[F:ZVD]NETPRINOT
+            Write [ZVI]
+          Next
+      Next
+  Commit
+
+ #######################################
+  ## CARGA DE LAS FACTURAS DE Compras ##
+  ######################################
+  Filter [ZCC] Where (INVTYP<>5) and CPY = COMPANY and (ACCDAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and ACCDAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By ACCDAT
+  Trbegin [ZVI]
+      For [ZCC]
+          Filter [ZCD] Where NUM = [F:ZCC]NUM and (ITMREF>=ITMREFDEB and ITMREF<=ITMREFFIN) Order By ITMREF
+          For [ZCD]
+            [F:ZVI]CPY=[F:ZCC]CPY
+            [F:ZVI]FCY=[F:ZCC]FCY
+            [F:ZVI]ITMREF=[F:ZCD]ITMREF
+            [F:ZVI]QTYV=0
+            [F:ZVI]PRECV=0
+            [F:ZVI]QTYC=[F:ZCD]QTYUOM*[F:ZCC]SNS
+            [F:ZVI]PRECC=[F:ZCD]NETPRI
+            Write [ZVI]
+          Next
+      Next
+  Commit
+  ##Cierre de ficheros
+  Close File [ZVI]:Close File [ZVC]:Close File [ZVD]:Close File [ZCC]:Close File [ZCD]
+End
+

@@ -1,0 +1,91 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+
+Funprog GET_FUNCION(WSIVTYP)
+Value Char WSIVTYP
+Local Char FUNCION(3)
+
+  Raz FUNCION
+  Case WSIVTYP
+    When "FAC"   : FUNCION = "380"
+    When "PRF"   : FUNCION = "325"
+    When "ABC"   : FUNCION = "381"
+    When "FRC"   : FUNCION = "384"
+    When Default : FUNCION = "380"
+  Endcase
+End FUNCION
+
+#------------------------------------------------------------------------------#
+
+Funprog IIF_CHAR(WEXPRESSION, WTRUE, WFALSE)
+Value Char WEXPRESSION
+Value Char WTRUE
+Value Char WFALSE
+
+  Local Char    WRETURN(255)
+  Local Integer EVALUE_RESULT
+  Onerrgo ERR_IIF
+  EVALUE_RESULT = evalue(WEXPRESSION)
+  Onerrgo
+  If EVALUE_RESULT=0
+    WRETURN = WFALSE
+  Else
+    WRETURN = WTRUE
+  Endif
+End WRETURN
+
+$ERR_IIF
+  EVALUE_RESULT = 0
+Resume
+
+#-- BÚSQUEDA DE LA TASA DE IVA PARA APLICAR. El código fuente original no lo tenemos y no aplicaba bien esta tasa,
+#-- he tenido que recrearlo
+Funprog TASA_IVA (PTAX, PCY, PACCDAT)
+Value Char PTAX
+Value Char PCY
+Value Date PACCDAT
+
+Local Decimal VTASA
+Local Integer VEXENTO
+Raz VTASA, VEXENTO
+
+
+#Infbox("parametros: " + PTAX + " " + PCY + " " + PACCDAT)
+
+#If clalev([F:YFS])=0  : Local File YEDIFMTSOH [YFS] : Endif
+#Infbox("antes de tabtable")
+#If clalev([F:TAB])=0  : Local File TABBRAT [TAB] : Endif
+Local File TABRATVAT[TAB] Where [TAB]VAT = PTAX and STRDAT<= PACCDAT
+#Infbox "Number of records :"-num$(nbrecord([TAB]))
+
+
+#Filter [F:TAB] Where VAT = PTAX
+#Infbox "Number of records  2:"-num$(nbrecord([TAB]))
+
+
+#Ordeno por fecha para seleccionar el último válido (menor o igual que la fecha de factura)
+Filter[TAB] Where VAT = PTAX and STRDAT <= PACCDAT Order By STRDAT
+    #For [TAB]
+    #   Infbox ("FOR.." + [TAB]VAT + " " + [TAB]STRDAT)
+    #Next
+
+
+
+#Read [F:TAB]TRA0 Last
+Read [TAB] Last
+
+
+If !fstat
+  VEXENTO = [F:TAB]VATEXEFLG
+  If VEXENTO = 2
+    VTASA = 0
+  Else
+    VTASA = [F:TAB]VATRAT
+  Endif
+
+  #Infbox("Valor devuelto: "-num$ (VTASA))
+Else
+  #Infbox("tasa de impuesto no encontrada")
+Endif
+
+
+End VTASA

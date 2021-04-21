@@ -1,0 +1,347 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+#####################################
+## Realizado por Oscar J. Martínez ##
+## 07/02/2017 Ultima Modif.        ##
+#####################################
+Subprog IMPRIME(NBPAR,PARAMETRE)
+ Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char REPDEB
+  Local Char REPIN
+  Local Char VALEUR(250)
+  ## SQL ##
+  Local Integer LINEA
+  Local Char CONSULTA(255)(254)
+  Raz CONSULTA
+
+  Local Decimal TIMPORTE #Para guardar el importe total del cliente
+  Local Decimal PORIMPORTE #Para guardar el % que hay que aplicar al importe para el reparto
+  If !clalev([F:ZCOM]) : Local File ZTMPCOMISION [ZCOM]     : Endif  ##Tabla temporal
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  REPDEB=mid$(PARAMETRE(35),8,10)
+  REPFIN=mid$(PARAMETRE(36),8,10)
+  FECHADEB=mid$(PARAMETRE(37),10,8)
+  FECHAFIN=mid$(PARAMETRE(38),10,8)
+
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Delete [ZCOM] Where CREUSR= GUSER
+
+  ##################################
+  ## CARGA DE LAS FACTURAS AGENTE ##
+  ##################################
+  Raz CONSULTA
+  CONSULTA(0)=
+& "SELECT S.CPY_0,S.FCY_0,S.SNS_0,S.INVTYP_0,S.NUM_0,D.SIDLIN_0,S.ACCDAT_0,S.BPR_0,D.REP1_0,D.REP2_0,D.ITMREF_0,D.QTY_0, D.REPRAT1_0,D.REPBAS1_0, D.REPAMT1_0,D.REPRAT2_0,D.REPBAS2_0, D.REPAMT2_0"
+  CONSULTA(1)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  CONSULTA(2)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+  CONSULTA(3)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+  CONSULTA(4)=" AND (S.CPY_0='" + COMPANY + "')"
+  CONSULTA(5)=" AND (S.ACCDAT_0>='" + FECHADEB + "' and S.ACCDAT_0<='" + FECHAFIN + "')"
+  CONSULTA(6)=" AND (V.REP_0<>' ' and V.REP_0>='" + REPDEB + "' and V.REP_0<='" + REPFIN + "')"
+  CONSULTA(7)=" AND (I.TSICOD_0<>'CR')"
+  For (Char CPY, Char FCY,Integer SNS,Integer INVTYP,Char NUM(20),Integer SIDLIN,Date ACCDAT, Char BPR, Char REP1, Char REP2, Char ITMREF, Decimal QTY, Decimal REPRAT1, Decimal REPBAS1, Decimal
+& REPAMT1, Decimal REPRAT2, Decimal REPBAS2, Decimal REPAMT2) From "S" Sql CONSULTA(0..10) As [ZXX]
+      [F:ZCOM]PASO=1
+      [F:ZCOM]CPY=[F:ZXX]CPY
+      [F:ZCOM]FCY=[F:ZXX]FCY
+      [F:ZCOM]SNS=[F:ZXX]SNS
+      [F:ZCOM]INVTYP=[F:ZXX]INVTYP
+      [F:ZCOM]NUM=[F:ZXX]NUM
+      [F:ZCOM]SIDLIN=[F:ZXX]SIDLIN
+      [F:ZCOM]ACCDAT=[F:ZXX]ACCDAT
+      [F:ZCOM]BPR=[F:ZXX]BPR
+      [F:ZCOM]AGSUP="1" ##1 si es agente, 2 si es supervisor
+      [F:ZCOM]REP(0)=[F:ZXX]REP1
+      [F:ZCOM]REP(1)=[F:ZXX]REP2
+      [F:ZCOM]ITMREF=[F:ZXX]ITMREF
+      [F:ZCOM]QTY=[F:ZXX]QTY
+      [F:ZCOM]REPRAT(0)=[F:ZXX]REPRAT1
+      [F:ZCOM]REPBAS(0)=[F:ZXX]REPBAS1
+      [F:ZCOM]REPAMT(0)=[F:ZXX]REPAMT1
+      [F:ZCOM]REPRAT(1)=[F:ZXX]REPRAT2
+      [F:ZCOM]REPBAS(1)=[F:ZXX]REPBAS2
+      [F:ZCOM]REPAMT(1)=[F:ZXX]REPAMT2
+      [F:ZCOM]CREUSR=GUSER
+      Write [F:ZCOM]
+  Next
+
+  ######################################
+  ## CARGA DE LAS FACTURAS SUPERVISOR ##
+  ######################################
+  Raz CONSULTA
+  CONSULTA(0)=
+& "SELECT S.CPY_0,S.FCY_0,S.SNS_0,S.INVTYP_0,S.NUM_0,D.SIDLIN_0,S.ACCDAT_0,S.BPR_0,D.REP1_0,D.REP2_0,D.ITMREF_0,D.QTY_0, D.REPRAT1_0,D.REPBAS1_0, D.REPAMT1_0,D.REPRAT2_0,D.REPBAS2_0, D.REPAMT2_0"
+  CONSULTA(1)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  CONSULTA(2)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+  CONSULTA(3)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+  CONSULTA(4)=" AND (S.CPY_0='" + COMPANY + "')"
+  CONSULTA(5)=" AND (S.ACCDAT_0>='" + FECHADEB + "' and S.ACCDAT_0<='" + FECHAFIN + "')"
+  CONSULTA(6)=" AND (V.REP_1<>' ' and V.REP_1>='" + REPDEB + "' and V.REP_1<='" + REPFIN + "')"
+  CONSULTA(7)=" AND (I.TSICOD_0<>'CR')"
+  For (Char CPY, Char FCY,Integer SNS,Integer INVTYP,Char NUM(20),Integer SIDLIN,Date ACCDAT, Char BPR, Char REP1, Char REP2, Char ITMREF, Decimal QTY, Decimal REPRAT1, Decimal REPBAS1, Decimal
+& REPAMT1, Decimal REPRAT2, Decimal REPBAS2, Decimal REPAMT2) From "S" Sql CONSULTA(0..10) As [ZXX]
+      [F:ZCOM]PASO=1
+      [F:ZCOM]CPY=[F:ZXX]CPY
+      [F:ZCOM]FCY=[F:ZXX]FCY
+      [F:ZCOM]SNS=[F:ZXX]SNS
+      [F:ZCOM]INVTYP=[F:ZXX]INVTYP
+      [F:ZCOM]NUM=[F:ZXX]NUM
+      [F:ZCOM]SIDLIN=[F:ZXX]SIDLIN
+      [F:ZCOM]ACCDAT=[F:ZXX]ACCDAT
+      [F:ZCOM]BPR=[F:ZXX]BPR
+      [F:ZCOM]AGSUP="2" ##1 si es agente, 2 si es supervisor
+      [F:ZCOM]REP(0)=[F:ZXX]REP1
+      [F:ZCOM]REP(1)=[F:ZXX]REP2
+      [F:ZCOM]ITMREF=[F:ZXX]ITMREF
+      [F:ZCOM]QTY=[F:ZXX]QTY
+      [F:ZCOM]REPRAT(0)=[F:ZXX]REPRAT1
+      [F:ZCOM]REPBAS(0)=[F:ZXX]REPBAS1
+      [F:ZCOM]REPAMT(0)=[F:ZXX]REPAMT1
+      [F:ZCOM]REPRAT(1)=[F:ZXX]REPRAT2
+      [F:ZCOM]REPBAS(1)=[F:ZXX]REPBAS2
+      [F:ZCOM]REPAMT(1)=[F:ZXX]REPAMT2
+      [F:ZCOM]CREUSR=GUSER
+      Write [F:ZCOM]
+  Next
+
+  ###################################
+  ## CARGA DE LOS ABONOS DE RAPPEL ##
+  ## para el Agente                ##
+  ###################################
+  Raz CONSULTA
+  CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,S.SNS_0,S.INVTYP_0,S.NUM_0,D.SIDLIN_0,S.ACCDAT_0,V.ZFCOM_0,V.ZFCOM_1, "
+  CONSULTA(1)="S.BPR_0,D.REP1_0,D.ITMREF_0,D.QTY_0, D.REPRAT1_0,D.REPBAS1_0, D.REPAMT1_0,D.AMTNOTLIN_0"
+  CONSULTA(2)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  CONSULTA(3)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+  CONSULTA(4)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+  CONSULTA(5)=" AND (S.CPY_0='" + COMPANY + "') and I.SEAKEY_0='RAPPEL'"
+  CONSULTA(6)=" AND (S.ACCDAT_0>='" + FECHADEB + "' and S.ACCDAT_0<='" + FECHAFIN + "')"
+  For (Char CPY, Char FCY,Integer SNS, Integer INVTYP,Char NUM(20),Integer SIDLIN,Date ACCDAT, Date FCOM0,Date FCOM1, Char BPR, Char REP, Char ITMREF, Decimal QTY, Decimal REPRAT, Decimal REPBAS
+& , Decimal REPAMT, Decimal AMTNOTLIN) From "S" Sql CONSULTA(0..10) As [ZXX]
+      If [F:ZXX]REP<>"" Then ##  Si no es blanco es que ya está repartida la línea
+        [F:ZCOM]PASO=2
+        [F:ZCOM]CPY=[F:ZXX]CPY
+        [F:ZCOM]FCY=[F:ZXX]FCY
+        [F:ZCOM]SNS=[F:ZXX]SNS
+        [F:ZCOM]INVTYP=[F:ZXX]INVTYP
+        [F:ZCOM]NUM=[F:ZXX]NUM
+        [F:ZCOM]SIDLIN=[F:ZXX]SIDLIN
+        [F:ZCOM]ACCDAT=[F:ZXX]ACCDAT
+        [F:ZCOM]BPR=[F:ZXX]BPR
+        [F:ZCOM]AGSUP="1" ##1 si es agente, 2 si es supervisor
+        [F:ZCOM]REP(0)=[F:ZXX]REP
+        [F:ZCOM]REP(1)=[F:ZXX]REP
+        [F:ZCOM]ITMREF=[F:ZXX]ITMREF
+        [F:ZCOM]QTY=[F:ZXX]QTY
+        [F:ZCOM]REPRAT(1)=0
+        [F:ZCOM]REPBAS(1)=0
+        [F:ZCOM]REPAMT(1)=0
+        [F:ZCOM]REPRAT(0)=[F:ZXX]REPRAT
+        [F:ZCOM]REPBAS(0)=[F:ZXX]REPBAS
+        [F:ZCOM]REPAMT(0)=[F:ZXX]REPAMT
+        [F:ZCOM]CREUSR=GUSER
+        Write [F:ZCOM]
+      Else ## Si es blanco...hay que repartir la línea.
+        ## PRIMERO BUSCAMOS EL IMPORTE TOTAL
+        Raz CONSULTA
+        TIMPORTE=0
+        CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,V.BPCGRU_0,SUM(AMTNOTLIN_0*S.SNS_0) AS IMPORTE"
+        CONSULTA(1)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+        CONSULTA(2)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+        CONSULTA(3)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+        CONSULTA(4)=" AND (S.CPY_0='" + COMPANY + "')"
+        CONSULTA(5)=" AND (S.ACCDAT_0>='" + [F:ZXX]FCOM0 + "' and S.ACCDAT_0<='" + [F:ZXX]FCOM1 + "')"
+        CONSULTA(6)=" AND (V.REP_0<>' ') AND (V.BPCGRU='" + [F:ZXX]BPR + "') AND (I.TSICOD_0}<>'CR')"
+        CONSULTA(7)=" GROUP BY S.CPY_0, S.FCY_0,V.BPCGRU_0"
+        For (Char CPY, Char FCY,Char BPR, Decimal IMPORTE) From "S" Sql CONSULTA(0..10) As [ZVT]
+            TIMPORTE=[F:ZVT]IMPORTE
+        Next
+        Raz CONSULTA
+        CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,V.BPCGRU_0,V.REP_0,SUM(AMTNOTLIN_0*S.SNS_0) AS IMPORTE"
+        CONSULTA(1)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+        CONSULTA(2)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+        CONSULTA(3)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+        CONSULTA(4)=" AND (S.CPY_0='" + COMPANY + "')"
+        CONSULTA(5)=" AND (S.ACCDAT_0>='" + [F:ZXX]FCOM_0 + "' and S.ACCDAT_0<='" + [F:ZXX]FCOM_1 + "')"
+        CONSULTA(6)=" AND (V.REP_0<>' ') AND (V.BPCGRU='" + [F:ZXX]BPR + "') AND (I.TSICOD_0}<>'CR')"
+        CONSULTA(7)=" GROUP BY S.CPY_0, S.FCY_0,V.BPCGRU_0, V.REP_0"
+        For (Char CPY, Char FCY,Char BPR, Char REP, Decimal IMPORTE) From "S" Sql CONSULTA(0..10) As [ZFV]
+          [F:ZCOM]PASO=2
+          [F:ZCOM]CPY=[F:ZXX]CPY
+          [F:ZCOM]FCY=[F:ZXX]FCY
+          [F:ZCOM]SNS=[F:ZXX]SNS
+          [F:ZCOM]INVTYP=[F:ZXX]INVTYP
+          [F:ZCOM]NUM=[F:ZXX]NUM
+          [F:ZCOM]SIDLIN=[F:ZXX]SIDLIN
+          [F:ZCOM]ACCDAT=[F:ZXX]ACCDAT
+          [F:ZCOM]BPR=[F:ZXX]BPR
+          [F:ZCOM]AGSUP="1" ##1 si es agente, 2 si es supervisor
+          [F:ZCOM]REP(0)=[F:ZFV]REP
+          [F:ZCOM]REP(1)=[F:ZFV]REP
+          [F:ZCOM]REPRAT(1)=0
+          [F:ZCOM]REPBAS(1)=0
+          [F:ZCOM]REPAMT(1)=0
+          [F:ZCOM]ITMREF=[F:ZXX]ITMREF
+          [F:ZCOM]QTY=[F:ZXX]QTY
+          If TIMPORTE<>0 Then
+            PORIMPORTE=([F:ZFV]IMPORTE*100)/TIMPORTE
+          Else
+            PORIMPORTE=0
+          Endif
+          [F:ZCOM]REPBAS(0)= ([F:ZXX]AMTNOTLIN*PORIMPORTE)/100
+          ##Buscamos el % de comisión según el cliente
+          Raz CONSULTA
+          CONSULTA(0)="SELECT C.COMCAT_0, V.COMRAT1_0, V.COMRAT1_1, V.COMRAT1_2, V.COMRAT1_3, V.COMRAT1_4, V.COMRAT1_5"
+          CONSULTA(1)=" FROM BPCUSTOMER C INNER JOIN SALESREP V "
+          CONSULTA(2)=" ON C.REP_0=V.REPNUM_0"
+          CONSULTA(3)=" Where (C.BPCNUM='" + [F:ZXX]BPR + "')"
+          CONSULTA(7)=" GROUP BY S.CPY_0, S.FCY_0,V.BPCGRU_0, V.REP_0"
+          For (Integer COMCAT, Decimal COMRAT0, Decimal COMRAT1,Decimal COMRAT2, Decimal COMRAT3, Decimal COMRAT4, Decimal COMRAT5) From
+& "S" Sql CONSULTA(0..254) As [ZSR]
+            [F:ZCOM]REPRAT(0)=evalue("[F:ZSR]COMRAT"+num$([F:ZSR]COMCAT-1))
+#            Case [F:ZSR]COMCAT
+#              When 1: [F:ZCOM]REPRAT=[F:ZSR]COMRAT0##FAMESA RED
+#              When 2: [F:ZCOM]REPRAT=[F:ZSR]COMRAT1##FAMESA GRANDES ESPACIOS
+#              When 3: [F:ZCOM]REPRAT=[F:ZSR]COMRAT2##FAMESA ESPECIALES
+#              When 4: [F:ZCOM]REPRAT=[F:ZSR]COMRAT3##TRILLA
+#              When 5: [F:ZCOM]REPRAT=[F:ZSR]COMRAT4##TRILLA ESPECIALES
+#              When 6: [F:ZCOM]REPRAT=[F:ZSR]COMRAT5##CLIENTES NUEVOS
+#              When Default: [F:ZCOM]REPRAT=0
+#            Endcase
+            [F:ZCOM]REPAMT(1)=([F:ZCOM]REPBAS*[F:ZCOM]REPRAT)/100
+          Next
+          [F:ZCOM]CREUSR=GUSER
+          Write [F:ZCOM]
+        Next
+      Endif
+
+  Next
+
+  ###################################
+  ## CARGA DE LOS ABONOS DE RAPPEL ##
+  ## para el Supervidor            ##
+  ###################################
+  Raz CONSULTA
+  CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,S.SNS_0,S.INVTYP_0,S.NUM_0,D.SIDLIN_0,S.ACCDAT_0,V.ZFCOM_0,V.ZFCOM_1, "
+  CONSULTA(1)="S.BPR_0,D.REP2_0,D.ITMREF_0,D.QTY_0, D.REPRAT2_0,D.REPBAS2_0, D.REPAMT2_0,D.AMTNOTLIN_0"
+  CONSULTA(2)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+  CONSULTA(3)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+  CONSULTA(4)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+  CONSULTA(5)=" AND (S.CPY_0='" + COMPANY + "') and I.SEAKEY_0='RAPPEL'"
+  CONSULTA(6)=" AND (S.ACCDAT_0>='" + FECHADEB + "' and S.ACCDAT_0<='" + FECHAFIN + "')"
+  For (Char CPY, Char FCY,Integer SNS, Integer INVTYP,Char NUM(20),Integer SIDLIN,Date ACCDAT, Date FCOM0,Date FCOM1, Char BPR, Char REP, Char ITMREF, Decimal QTY, Decimal REPRAT, Decimal REPBAS
+& , Decimal REPAMT, Decimal AMTNOTLIN) From "S" Sql CONSULTA(0..10) As [ZXX]
+      If [F:ZXX]REP<>"" Then ##  Si no es blanco es que ya está repartida la línea
+        [F:ZCOM]PASO=2
+        [F:ZCOM]CPY=[F:ZXX]CPY
+        [F:ZCOM]FCY=[F:ZXX]FCY
+        [F:ZCOM]SNS=[F:ZXX]SNS
+        [F:ZCOM]INVTYP=[F:ZXX]INVTYP
+        [F:ZCOM]NUM=[F:ZXX]NUM
+        [F:ZCOM]SIDLIN=[F:ZXX]SIDLIN
+        [F:ZCOM]ACCDAT=[F:ZXX]ACCDAT
+        [F:ZCOM]BPR=[F:ZXX]BPR
+        [F:ZCOM]AGSUP="2" ##1 si es agente, 2 si es supervisor
+        [F:ZCOM]REP(0)=[F:ZXX]REP
+        [F:ZCOM]REP(1)=[F:ZXX]REP
+        [F:ZCOM]ITMREF=[F:ZXX]ITMREF
+        [F:ZCOM]QTY=[F:ZXX]QTY
+        [F:ZCOM]REPRAT(0)=0
+        [F:ZCOM]REPBAS(0)=0
+        [F:ZCOM]REPAMT(0)=0
+        [F:ZCOM]REPRAT(1)=[F:ZXX]REPRAT
+        [F:ZCOM]REPBAS(1)=[F:ZXX]REPBAS
+        [F:ZCOM]REPAMT(1)=[F:ZXX]REPAMT
+        [F:ZCOM]CREUSR=GUSER
+        Write [F:ZCOM]
+      Else ## Si es blanco...hay que repartir la línea.
+        ## PRIMERO BUSCAMOS EL IMPORTE TOTAL
+        Raz CONSULTA
+        TIMPORTE=0
+        CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,V.BPCGRU_0,SUM(AMTNOTLIN_0*S.SNS_0) AS IMPORTE"
+        CONSULTA(1)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+        CONSULTA(2)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+        CONSULTA(3)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+        CONSULTA(4)=" AND (S.CPY_0='" + COMPANY + "')"
+        CONSULTA(5)=" AND (S.ACCDAT_0>='" + [F:ZXX]FCOM0 + "' and S.ACCDAT_0<='" + [F:ZXX]FCOM1 + "')"
+        CONSULTA(6)=" AND (V.REP_1<>' ') AND (V.BPCGRU='" + [F:ZXX]BPR + "') AND (I.TSICOD_0}<>'CR')"
+        CONSULTA(7)=" GROUP BY S.CPY_0, S.FCY_0,V.BPCGRU_0"
+        For (Char CPY, Char FCY,Char BPR, Decimal IMPORTE) From "S" Sql CONSULTA(0..10) As [ZVT]
+            TIMPORTE=[F:ZVT]IMPORTE
+        Next
+        Raz CONSULTA
+        CONSULTA(0)="SELECT S.CPY_0,S.FCY_0,V.BPCGRU_0,V.REP_1,SUM(AMTNOTLIN_0*S.SNS_0) AS IMPORTE"
+        CONSULTA(1)=" From SINVOICE S INNER JOIN SINVOICEV V ON S.NUM_0=V.NUM_0 INNER JOIN SINVOICED D ON S.NUM_0=D.NUM_0 "
+        CONSULTA(2)=" INNER JOIN ITMMASTER I ON D.ITMREF_0=I.ITMREF_0"
+        CONSULTA(3)=" Where (S.INVTYP_0= 1 or S.INVTYP_0= 2) "
+        CONSULTA(4)=" AND (S.CPY_0='" + COMPANY + "')"
+        CONSULTA(5)=" AND (S.ACCDAT_0>='" + [F:ZXX]FCOM_0 + "' and S.ACCDAT_0<='" + [F:ZXX]FCOM_1 + "')"
+        CONSULTA(6)=" AND (V.REP_1<>' ') AND (V.BPCGRU='" + [F:ZXX]BPR + "') AND (I.TSICOD_0}<>'CR')"
+        CONSULTA(7)=" GROUP BY S.CPY_0, S.FCY_0,V.BPCGRU_0, V.REP_1"
+        For (Char CPY, Char FCY,Char BPR, Char REP, Decimal IMPORTE) From "S" Sql CONSULTA(0..10) As [ZFV]
+          [F:ZCOM]PASO=2
+          [F:ZCOM]CPY=[F:ZXX]CPY
+          [F:ZCOM]FCY=[F:ZXX]FCY
+          [F:ZCOM]SNS=[F:ZXX]SNS
+          [F:ZCOM]INVTYP=[F:ZXX]INVTYP
+          [F:ZCOM]NUM=[F:ZXX]NUM
+          [F:ZCOM]SIDLIN=[F:ZXX]SIDLIN
+          [F:ZCOM]ACCDAT=[F:ZXX]ACCDAT
+          [F:ZCOM]BPR=[F:ZXX]BPR
+          [F:ZCOM]AGSUP="2" ##1 si es agente, 2 si es supervisor
+          [F:ZCOM]REP(0)=[F:ZFV]REP
+          [F:ZCOM]REP(1)=[F:ZFV]REP
+          [F:ZCOM]REPRAT(0)=0
+          [F:ZCOM]REPBAS(0)=0
+          [F:ZCOM]REPAMT(0)=0
+          [F:ZCOM]ITMREF=[F:ZXX]ITMREF
+          [F:ZCOM]QTY=[F:ZXX]QTY
+          If TIMPORTE<>0 Then
+            PORIMPORTE=([F:ZFV]IMPORTE*100)/TIMPORTE
+          Else
+            PORIMPORTE=0
+          Endif
+          [F:ZCOM]REPBAS(1)= ([F:ZXX]AMTNOTLIN*PORIMPORTE)/100
+          ##Buscamos el % de comisión según el cliente
+          Raz CONSULTA
+          CONSULTA(0)="SELECT C.COMCAT_0, V.COMRAT2_0, V.COMRAT2_1, V.COMRAT2_2, V.COMRAT2_3, V.COMRAT2_4, V.COMRAT2_5"
+          CONSULTA(1)=" FROM BPCUSTOMER C INNER JOIN SALESREP V "
+          CONSULTA(2)=" ON C.REP_1=V.REPNUM_0"
+          CONSULTA(3)=" Where (C.BPCNUM='" + [F:ZXX]BPR + "')"
+          CONSULTA(7)=" GROUP BY S.CPY_0, S.FCY_0,V.BPCGRU_0, V.REP_1"
+          For (Integer COMCAT, Decimal COMRAT0, Decimal COMRAT1,Decimal COMRAT2, Decimal COMRAT3, Decimal COMRAT4, Decimal COMRAT5) From
+& "S" Sql CONSULTA(0..254) As [ZSR]
+            [F:ZCOM]REPRAT(1)=evalue("[F:ZSR]COMRAT"+num$([F:ZSR]COMCAT-1))
+#            Case [F:ZSR]COMCAT
+#              When 1: [F:ZCOM]REPRAT=[F:ZSR]COMRAT0##FAMESA RED
+#              When 2: [F:ZCOM]REPRAT=[F:ZSR]COMRAT1##FAMESA GRANDES ESPACIOS
+#              When 3: [F:ZCOM]REPRAT=[F:ZSR]COMRAT2##FAMESA ESPECIALES
+#              When 4: [F:ZCOM]REPRAT=[F:ZSR]COMRAT3##TRILLA
+#              When 5: [F:ZCOM]REPRAT=[F:ZSR]COMRAT4##TRILLA ESPECIALES
+#              When 6: [F:ZCOM]REPRAT=[F:ZSR]COMRAT5##CLIENTES NUEVOS
+#              When Default: [F:ZCOM]REPRAT=0
+#            Endcase
+            [F:ZCOM]REPAMT(1)=([F:ZCOM]REPBAS*[F:ZCOM]REPRAT)/100
+          Next
+          [F:ZCOM]CREUSR=GUSER
+          Write [F:ZCOM]
+        Next
+      Endif
+
+  Next
+
+  ##Cierre de ficheros
+  Close File [F:ZCOM]
+End
+

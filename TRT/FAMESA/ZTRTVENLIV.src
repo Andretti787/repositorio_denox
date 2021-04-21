@@ -1,0 +1,56 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+#####################################
+## Realizado por Oscar J. Martínez ##
+## 17/05/2016 Ultima Modif.        ##
+#####################################
+$ACTION
+    Case ACTION
+       When "CPYSLSTXT" : Gosub ACTUALIZADIR
+    Endcase
+Gosub ACTION From YSPESDH
+Return
+
+$ACTUALIZADIR
+  ###################################################
+  ## Actualiza la dirección del Albarán a procesar ##
+  ###################################################
+  If GFONCTION="ZDLVDISTRI" Then
+    ##If GUSER='ADMIN' Then  Dbgaff Endif
+      [F:SDH]BPAADD = [F:SWD]BPAADD
+      Read [BPA]BPA0=1;[F:SDH]BPCORD;[F:SDH]BPAADD
+      If fstat Raz [F:BPA] Endif
+      [F:SDH]BPDNAM(0)=[F:BPD]BPDNAM(0)
+      [F:SDH]BPDNAM(1)=[F:BPD]BPDNAM(1)
+
+      For I=0 To 2
+        Assign ("[F:SDH]BPDADDLIG("+num$(I)+")") With evalue("[F:BPA]BPAADDLIG("+num$(I)+")")
+      Next
+
+      Read [BPD]BPD0=[F:SDH]BPCORD;[F:SDH]BPAADD
+      If fstat Raz [F:BPD] Endif
+      [F:SDH]REP(0) = [F:BPD]REP(0)
+      [F:SDH]REP(1) = [F:BPD]REP(1)
+      [F:SDH]BPDCRY    =[F:BPA]CRY
+      [F:SDH]BPDCRYNAM =[F:BPA]CRYNAM
+      [F:SDH]BPDSAT    =[F:BPA]SAT
+      [F:SDH]BPDPOSCOD =[F:BPA]POSCOD
+      [F:SDH]BPDCTY    =[F:BPA]CTY
+  Endif
+
+## PASAR LOS TEXTOS DE LA CABECERA DEL PEDIDO A LA ENTREGA
+## TENER EN CUENTA LA PARAMETRIZACIÓN DE LOS TEXTOS SALTEXDLV
+
+  Local Char ZCABPIE
+  Raz ZCABPIE
+  Call PARAM("","SALTEXDLV",ZCABPIE) From ADOVAL # 1 - CABECERA, 2 - PIE
+  If ZCABPIE = "1" Then # EL TEXTO ENTREGA ESTA PARAMETRIZADO EN CABCERA LO PASO AL PIE
+      [M:SDH0]SDHTEX2 = [SOH]SOHTEX1
+      Call DUP_CLOB("SDH",[M:SDH0]SDHTEX2 ,GOK) From TRTX3TEX
+  Else
+      # EL TEXTO ENTREGA ESTA PARAMETRIZADO PIE LO PASO A LA CABCERA
+      [M:SDH0]SDHTEX1 = [SOH]SOHTEX1
+      Call DUP_CLOB("SDH",[M:SDH0]SDHTEX1 ,GOK) From TRTX3TEX
+  Endif
+
+Return
+

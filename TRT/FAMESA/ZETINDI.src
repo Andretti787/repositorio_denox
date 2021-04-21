@@ -1,0 +1,98 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char USUARIO
+  Local Integer NETIQUETA
+  Local Integer N ## Para el for
+  Local Integer ETIQUETA ## Para nº de etiqueta
+  Local Integer NETTOTAL ##Nº de etiquetas a realizar
+  Local Char EMBALAJE
+  Local Decimal CAPACIDAD
+  Local Integer RESTO ## Si =1 Existe etiqueta con con cantidad de restos
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZTMP]) : Local File ZETINDITMP [ZTMP]      : Endif  ## TABLA DE CAB. DE PEDIDOS TEMPORAL
+  If !clalev([F:ZPL]) : Local File SORDERQ [ZPL]      : Endif  ## TABLA DE LINEAS DE PEDIDO
+  If !clalev([F:ZIC]) : Local File ITMBPC [ZIC]   : Endif  ## TABLA DE ARTÍCULO-CLIENTE
+  If !clalev([F:ZIT]) : Local File ITMFACILIT [ZIT]   : Endif  ## TABLA DE ARTÍCULO-PLANTA
+  If !clalev([F:ZET]) : Local File ZETINDI [ZET]   : Endif  ## TABLA DE ETIQUETAS HCO.
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  USUARIO=mid$(PARAMETRE(34),6,10)
+
+  ###########################
+  ## BORRAR TABLA TEMPORAL ##
+  ###########################
+  Trbegin [ZET]
+      Delete [ZET] Where CREUSR= USUARIO
+  Commit
+
+  ####################################
+  ## CARGA EN LA TABLA DE ETIQUETAS ##
+  ## DEPENDIENDO DEL EMBALAJE       ##
+  ####################################
+
+  Filter [F:ZTMP] Where CREUSR=USUARIO
+  For [F:ZTMP]
+    Filter [F:ZPL] Where SOHNUM=[F:ZTMP]SOHNUM Order By SOPLIN
+    For [F:ZPL]
+      Filter [F:ZIC] Where ITMREF = [F:ZPL]ITMREF and BPCNUM=[F:ZPL]BPCORD
+      Read [F:ZIC] First
+      If fstat=0 Then
+          CAPACIDAD=[F:ZIC]PCKCAP
+          EMBALAJE=[F:ZIC]PCK
+      Else
+          Filter [F:ZIT] Where ITMREF = [F:ZPL]ITMREF and STOFCY = [F:ZTMP]FCY
+          For [F:ZIT]
+              ### Guardamos el embalaje y la capacidad del Artículo
+              CAPACIDAD=[F:ZIT]PCKCAP
+              EMBALAJE=[F:ZIT]PCK
+          Next
+      Endif
+      NETIQUETA=1
+      If CAPACIDAD>0 Then
+          If mod([F:ZPL]QTY,CAPACIDAD)>0 Then
+             NETTOTAL=fix([F:ZPL]QTY/CAPACIDAD)+1
+             RESTO=1
+          Else
+             NETTOTAL=fix([F:ZPL]QTY/CAPACIDAD)
+             RESTO=0
+          Endif
+       Else
+          NETTOTAL=1
+       Endif
+       ### ESCRIBE LAS ETIQUETAS
+       N=1
+       For ETIQUETA= 1 To [F:ZPL]QTY
+           [F:ZET]NUMERO=ETIQUETA
+           If N>CAPACIDAD Then
+              NETIQUETA=NETIQUETA+1
+              N=2
+           Else
+              N=N+1
+           Endif
+           [F:ZET]NEMBALAJE=NETIQUETA
+           [F:ZET]SOHNUM=[F:ZTMP]SOHNUM
+           [F:ZET]SOPLIN=[F:ZPL]SOPLIN
+           [F:ZET]FCY= [F:ZTMP]FCY
+           [F:ZET]CUSORDREF=[F:ZTMP]CUSORDREF
+           [F:ZET]ITMREF=[F:ZPL]ITMREF
+           [F:ZET]CANTIDAD=[F:ZPL]QTY
+           If ETIQUETA=NETTOTAL and RESTO=1 Then
+              [F:ZET]CANTEMBALAJE=[F:ZPL]QTY-(CAPACIDAD*NETIQUETA)
+           Else
+              [F:ZET]CANTEMBALAJE=CAPACIDAD
+           Endif
+           [F:ZET]PCK=EMBALAJE
+           Write [F:ZET]
+        Next
+      Next
+  Next
+  ##Cierre de ficheros
+  Close File [ZTMP]:Close File [ZPL]:Close File [ZIT]:Close File [ZIC]:Close File [ZET]
+End
+

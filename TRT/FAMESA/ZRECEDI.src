@@ -1,0 +1,28 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+#<AdxTL>@(#)3.0.0.0 $Revision$
+
+$ACTION
+    Case ACTION
+        When "EXEC" : Gosub EXEC
+    Endcase
+Return
+
+$INIT
+
+Return
+
+$EXEC
+      Local Char RESULTADO(250)(250)
+      System RESULTADO = 'CMD /C "C:\recibir_de_ediwin_asp.bat"'
+      Infbox "Proceso finalizado. Ejecuta la opción Recepcionar pedios EDI."
+Return
+
+
+
+
+
+
+
+
+
+

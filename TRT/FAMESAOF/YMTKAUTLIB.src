@@ -1,0 +1,39 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+
+$ACTION
+  Case ACTION
+    When "CUSTRTSUP" : Gosub CUSTRTSUP
+  Endcase
+Return
+
+#------------------------------------------------------------------------------#
+
+$CUSTRTSUP
+  # Sólo en la importación de los seguimientos de fabricación de las etiquetas
+  If GIMPORT and clalev([M:IMP2])
+    If [M:IMP2]MODIMP="ZMESMKI"
+      If [F:MKI]YNUMETIQ<>0
+        If clalev([F:ZZEP])=0 : Local File ZETPROTER [ZZEP] : Endif
+
+        Update [F:ZZEP] Where NUMERO=[F:MKI]YNUMETIQ and
+&                             MFGNUM=[F:MKI]MFGNUM and
+&                             ITMREF=[F:MKI]ITMREF
+&                       With  LEIDA=2
+
+        If fstat
+          Call ECR_TRACE("Error en actualización de etiqueta" -
+&                        num$([F:MKI]YNUMETIQ) + "/" +  [F:MKI]MFGNUM +
+&                        ", Error =" - num$(fstat), 1) From GESECRAN
+        Endif
+      Endif
+    Endif
+  Endif
+
+Return
+
+#------------------------------------------------------------------------------#
+
+
+
+
+

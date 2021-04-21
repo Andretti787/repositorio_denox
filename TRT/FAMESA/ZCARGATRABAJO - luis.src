@@ -1,0 +1,98 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char PLANTA
+  Local Char FECHA
+  Local Char ITMREFDEB
+  Local Char ITMREFFIN
+  Local Char USUARIO
+  Local Char VALEUR(250)
+  Local Char ACTSQL(250)(254)
+  Local Integer CANTPDTE
+
+
+  If !clalev([F:ZCAT]) : Local File ZTMPCARGA [ZCAT]     : Endif  ##Tabla temporal del informe
+  If !clalev([F:ZFITM]) : Local File MFGITM [ZFITM]     : Endif  ##Tabla Órdenes fabricación-artículos
+  If !clalev([F:ZROU]) : Local File ROUOPE [ZROU]     : Endif  ##Tabla de Rutas
+  If !clalev([F:ZCT]) : Local File WORKSTATIO [ZCT]     : Endif  ##Tabla de Centros de Trabajo
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  PLANTA=mid$(PARAMETRE(35),6,5)
+  FECHA=mid$(PARAMETRE(36),7,8)
+  ITMREFDEB=mid$(PARAMETRE(37),11,20)
+  ITMREFFIN=mid$(PARAMETRE(38),11,20)
+  USUARIO=mid$(PARAMETRE(41),9,10)
+
+  #############################################
+  ## Borrar la tablas temporales del informe ##
+  #############################################
+  Delete [F:ZCAT] Where CREUSR= GUSER
+
+  ###################
+  ## CARGA PEDIDOS ##
+  ###################
+  Raz ACTSQL
+  ACTSQL(0)='INSERT INTO ZTMPCARGA '
+  ACTSQL(1)='([CPY_0],[FCY_0],[SOHNUM_0],[SOPLIN_0],[CUSORDREF_0],[ITMREF_0],[FECHA_0],[DLVDAT_0],[CANTIDAD_0], '
+  ACTSQL(2)='[WST_0],[WCR_0],[PDTEFAB_0],[PHORA_0],[HPROD_0],[MFGNUM_0],[MFGNUM_1], '
+  ACTSQL(3)='[CREDATTIM_0],[UPDDATTIM_0],[AUUID_0],[CREUSR_0],[UPDUSR_0]) '
+  ACTSQL(4)= " SELECT c.CPY_0,c.SALFCY_0,c.SOHNUM_0,d.SOPLIN_0, c.CUSORDREF_0, d.ITMREF_0, c.ORDDAT_0, c.SHIDAT_0, d.QTY_0,'','',0,0,0,'',''"
+  ACTSQL(5)= ",'" + format$("D:YYYYMMDD",date$) + "','" + format$("D:YYYYMMDD",date$) + "',NEWID() "
+  ACTSQL(6)= ",'" + USUARIO + "','" + USUARIO + "' "
+  ACTSQL(7)= " FROM SORDER c inner join SORDERQ d on c.SOHNUM_0=d.SOHNUM_0 "
+  ACTSQL(8)= " LEfT join ITMFACILIT p on p.ITMREF_0=d.ITMREF_0 AND p.STOFCY_0=c.SALFCY_0"
+  ACTSQL(9)= " Where c.CPY_0='" + COMPANY + "' and c.SALFCY_0='" + PLANTA +"' and c.SHIDAT_0<='" + FECHA + "' "
+  ACTSQL(10)= " and (d.ITMREF_0>='" + ITMREFDEB + "' and d.ITMREF_0<='" + ITMREFFIN +"') "
+  ACTSQL(11)= " AND (c.ORDSTA_0=1) and (p.REOCOD_0=3)" ##Así sólo cogemos los que no estén saldados y los que se fabrican
+  ACTSQL(12)= " ORDER by c.SALFCY_0,c.CPY_0,c.CUSORDREF_0,d.ITMREF_0 "
+
+  Execsql From "5" Sql ACTSQL(0..12)
+  If adxSqlRec>0 Then ## Nº de registros afectados
+    For [F:ZCAT]
+      Filter [F:ZFITM] Where VCRNUMORI= [F:ZCAT]SOHNUM and VCRLINORI=[F:ZCAT]SOPLIN
+      Read [F:ZFITM]First
+      If fstat=0 Then
+        CANTPDTE=0
+        For [F:ZFITM]
+            If CANTPDTE=0 Then
+              [F:ZCAT]MFGNUM(0)=[F:ZFITM]MFGNUM
+              CANTPDTE= [F:ZFITM]EXTQTY-[F:ZFITM]CPLQTY
+            Else
+              [F:ZCAT]MFGNUM(1)=[F:ZFITM]MFGNUM
+              CANTPDTE=CANTPDTE+([F:ZFITM]EXTQTY-[F:ZFITM]CPLQTY)
+            Endif
+        Next
+      Else
+        CANTPDTE=[F:ZCAT]CANTIDAD
+      Endif
+      [F:ZCAT]PDTEFAB=CANTPDTE
+      ##################################
+      ## PONEMOS AHORA DATOS ESTANDAR ##
+      ##################################
+      Filter [F:ZROU] Where ITMREF=[F:ZCAT]ITMREF and ROUALT=1
+      Read [F:ZROU]First
+      If fstat=0 Then
+        [F:ZCAT]WST=[F:ZROU]WST
+        Filter [F:ZCT] Where WST=[F:ZROU]WST
+        Read [F:ZCT] First
+        If fstat=0 Then
+          [F:ZCAT]WCR=[F:ZCT]WCR
+        Endif
+        [F:ZCAT]PHORA=[F:ZROU]BASQTY*([F:ZROU]OPETIM/60)
+        [F:ZCAT]HPROD=CANTPDTE/[F:ZCAT]PHORA
+      Endif
+      Rewrite [F:ZCAT]
+    Next
+  Endif
+
+
+  ##Cierre de ficheros
+  Close File [F:ZCAT]:Close File [F:ZFITM]:Close File [F:ZROU]
+End
+

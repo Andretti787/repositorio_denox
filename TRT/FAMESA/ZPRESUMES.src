@@ -1,0 +1,104 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$
+Subprog IMPRIME(NBPAR,PARAMETRE)
+  Variable Integer NBPAR
+  Variable Char    PARAMETRE()(1..)
+
+  Local Char COMPANY
+  Local Char FECHADEB
+  Local Char FECHAFIN
+  Local Char CANAL
+  Local Char VALEUR(250)
+
+  If !clalev([F:ZPC]) : Local File SQUOTE [ZPC]      : Endif  ##FACT. DE PRESUPUESTOS CABECERA
+  If !clalev([F:ZPD]) : Local File SQUOTED [ZPD]      : Endif  ##FACT. DE PRESUPUESTOS DETALLE
+  If !clalev([F:ZIT]) : Local File ITMMASTER [ZIT]      : Endif  ##Articulos
+  If !clalev([F:ZTP]) : Local File ZTMPPRESU [ZTP]     : Endif  ##Tabla temporal de PRESUPUESTOS
+  If !clalev([F:ZCL]) : Local File BPCUSTOMER [ZCL]     : Endif  ##CLIENTES para buscar el sector
+
+  #####################
+  ## RECOGER FILTROS ##
+  #####################
+  COMPANY=mid$(PARAMETRE(34),9,5)
+  FECHADEB=mid$(PARAMETRE(35),9,8)
+  FECHAFIN=mid$(PARAMETRE(36),9,8)
+
+  ##########################################
+  ## Borrar la tabla temporal del informe ##
+  ##########################################
+  Trbegin [ZTP]
+      Delete [ZTP] Where CREUSR= GUSER
+  Commit
+
+  ## La variable CANAl la INICIAMOS A ""
+  CANAL=""
+
+  ######################################
+  ## CARGA DE Presupuestos AÑO ACTUAL ##
+  ######################################
+  Filter [ZPC] Where CPY = COMPANY and (QUODAT>=gdat$(day(FECHADEB),month(FECHADEB),year(FECHADEB)) and QUODAT<=gdat$(day(FECHAFIN),month(FECHAFIN),year(FECHAFIN))) Order By QUODAT
+  Trbegin [ZTP]
+      For [ZPC]
+          Filter [ZPD] Where SQHNUM = [F:ZPC]SQHNUM
+          For [ZPD]
+            ##Se busca el sector del cliente y el grupo
+            Filter [ZCL] Where BPCNUM=[F:ZPC]BPCORD
+            Read [ZCL] First
+            ##Se busca el canal del Artículo
+            Filter [ZIT] Where ITMREF=[F:ZPD]ITMREF
+            Read [ZIT] First
+            [F:ZTP]CANALA = [F:ZIT]TSICOD(1)
+            If CANAL<>[F:ZIT]TSICOD(1) Then
+              #########################################
+              ## Rellenar Tabla para tener todos los ##
+              ## meses para la tabla del informe.    ##
+              #########################################
+              CANAL=[F:ZIT]TSICOD(1)
+              For MES=1 To 12
+                [F:ZTP]BPCGRU=""
+                [F:ZTP]BPCNUM=""
+                [F:ZTP]SECTOR=""
+                [F:ZTP]CANALA =CANAL
+                [F:ZTP]ZONAC=""
+                If [F:ZCL]TSCCOD(1)<>""
+                  [F:ZTP]ZONAC=[F:ZCL]TSCCOD(1)
+                Else
+                  [F:ZTP]ZONAC=[F:ZCL]TSCCOD(3)
+                Endif
+                [F:ZTP]CPY=COMPANY
+                [F:ZTP]FCY=[F:ZPC]SALFCY
+                [F:ZTP]SQHNUM=CANAL + "-" + num$(MES)
+                [F:ZTP]SQDLIN=1
+                [F:ZTP]REP=""
+                [F:ZTP]QUODAT=gdat$(01,MES,year(FECHAFIN))
+                [F:ZTP]AMTATI=0
+                Write [ZTP]
+              Next
+            Endif
+            [F:ZTP]BPCNUM=[F:ZPC]BPCORD
+            [F:ZTP]SECTOR=[F:ZCL]TSCCOD(4)
+            [F:ZTP]BPCGRU=[F:ZCL]BPCGRU
+            If [F:ZCL]TSCCOD(1)<>""
+              [F:ZTP]ZONAC=[F:ZCL]TSCCOD(1)
+            Else
+              [F:ZTP]ZONAC=[F:ZCL]TSCCOD(3)
+            Endif
+            If [F:ZCL]TSCCOD(0)<>""
+              [F:ZTP]CANALC=[F:ZCL]TSCCOD(0)
+            Else
+              [F:ZTP]CANALC=[F:ZCL]TSCCOD(2)
+            Endif
+            [F:ZTP]CPY=[F:ZPC]CPY
+            [F:ZTP]FCY=[F:ZPC]SALFCY
+            [F:ZTP]SQHNUM=[F:ZPC]SQHNUM
+            [F:ZTP]SQDLIN=[F:ZPD]SQDLIN
+            [F:ZTP]REP=[F:ZPC]REP
+            [F:ZTP]QUODAT=[F:ZPC]QUODAT
+            [F:ZTP]AMTATI=[F:ZPD]NETPRINOT*[F:ZPD]QTY
+            Write [ZTP]
+          Next
+      Next
+  Commit
+  ##Cierre de ficheros
+  Close File [ZTP]:Close File [ZPC]:Close File [ZPD]:Close File [ZCL]:Close File [ZIT]
+End
+

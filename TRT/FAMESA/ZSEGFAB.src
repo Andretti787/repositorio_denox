@@ -1,0 +1,68 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ Importación silenciosa del Seg. de fabri
+#####################################
+## Realizado por Oscar J. Martínez ##
+## 16/11/2016 Ultima Modif.        ##
+#####################################
+$ACTION
+  Case ACTION
+    When "EXEC" : Gosub IMPORTAR_SEG_FAB # Importar Seg. de Fab.
+  Endcase
+Return
+
+$IMPORTAR_SEG_FAB
+  Local Char ARCHIVO_FUENTE(50)
+  ARCHIVO_FUENTE= "SEGFAB" + num$(year(date$)) + num$(month(date$)) + num$(day(date$)) + "_" + num$(left$(time$,2))+ num$(mid$(time$,4,2))+ num$(mid$(time$,7,2))
+  ##Generación del Fichero
+  Call GEN_FICH(ARCHIVO_FUENTE)
+  ##Importación silenciosa.
+  If filinfo(filpath('TMP\IMPSEGFAB', ARCHIVO_FUENTE, 'TXT'),0) >= 0
+    Call IMPORTACION(ARCHIVO_FUENTE)
+  Endif
+  If GSERVEUR Then
+    Sleep 5
+    Goto IMPORTAR_SEG_FAB
+  Endif
+Return
+
+Subprog GEN_FICH(ARCHIVO)
+  ##Apertura de ficheros
+  If !clalev([F:ZET])  : Local File ZETPROTER[ZET]      : Endif  ##Hco. Etiquetas
+
+  Filter [F:ZET] Where LEIDA<>2 and TERMINAL<>''
+  Read [F:ZET]First
+  If fstat=0 Then
+    Openo filpath('TMP\IMPSEGFAB', ARCHIVO, 'TXT'), -1 Using [SFAB]
+    TMPADXIFS = adxifs
+    TMPADXIRS = adxirs
+    TMPADXIUM = adxium
+    adxifs=','
+    adxirs=chr$(13)+chr$(10)
+    adxium = GASCII
+    For [F:ZET]
+        ##Actualizo tambien la tabla de lecturas realizadas para no volver a coger el seguimiento
+        Wrseq "M," +[F:ZET]FCY + ","+[F:ZET]MFGNUM + "," +[F:ZET]ITMREF+ "," + num$([F:ZET]CANTEMBALAJE)  + ","+ [F:ZET]FLEIDA  Using [SFAB]
+        Wrseq "S,GENERAL"  Using [SFAB]
+          [F:ZET]LEIDA=2
+          Rewrite[F:ZET]
+    Next
+    Openo Using [SFAB]
+  Endif
+
+  ##Cierre de ficheros
+  Close File [ZET]
+End
+
+
+Subprog IMPORTACION(ARCHIVO)
+
+Local Char FICHIER(200) : FICHIER = filpath('TMP\IMPSEGFAB',ARCHIVO,'txt')
+  If !GSERVEUR
+      Call OUVRE_TRACE("Importación Archivo " + ARCHIVO) From LECFIC
+  Endif
+  ##Call ECR_TRACE("Procesando fichero:"-FICHIER,0) From GESECRAN
+  Call IMPORTSIL("ZMESMKI",FICHIER)From GIMPOBJ
+  ##If !GSERVEUR
+  ##    Call FERME_TRACE From LECFIC
+  ##Endif
+End
+

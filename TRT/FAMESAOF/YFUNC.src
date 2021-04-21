@@ -1,0 +1,30 @@
+#<AdxTL>@(#)0.0.0.0 $Revision$ 
+Funprog DEST0
+
+    Local Char WDESCRIPCION
+    If clalev([F:AXX])=0 : Local File ATEXTRA   [F:AXX] : Endif
+    Read [F:AXX]AXX0="ATABDIV";"LNGDES";GLANGUE;"34";[F:BPC]TSCCOD(4)
+    If fstat = 0
+       WDESCRIPCION=[F:AXX]TEXTE
+    Else
+       Raz WDESCRIPCION
+    Endif
+End WDESCRIPCION
+
+Funprog COST_AMO
+  Local Decimal COSTE
+  If !clalev([F:MWC])
+    COSTE=0
+  Else
+    COSTE = [F:MWC]ZAMORT
+  Endif
+End COSTE
+Funprog COST_ENE
+  Local Decimal COSTE
+  If !clalev([F:MWC])
+    COSTE=0
+  Else
+    COSTE = [F:MWC]ZENER
+  Endif
+End COSTE
+
