@@ -544,11 +544,6 @@ public class Entregas extends javax.swing.JFrame {
         jLabel45 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jButton_RefrescarAlb1 = new javax.swing.JButton();
-        entityManager = java.beans.Beans.isDesignTime() ? null : javax.persistence.Persistence.createEntityManagerFactory("217.116.8.58:49412;databaseName=x3famesaPU").createEntityManager();
-        abankQuery = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT a FROM Abank a");
-        abankList = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : abankQuery.getResultList();
-        abankQuery1 = java.beans.Beans.isDesignTime() ? null : entityManager.createQuery("SELECT a FROM Abank a");
-        abankList1 = java.beans.Beans.isDesignTime() ? java.util.Collections.emptyList() : abankQuery1.getResultList();
         buttonGroup_DatosAImp = new javax.swing.ButtonGroup();
         buttonGroup_Impresoras = new javax.swing.ButtonGroup();
         buttonGroup_TipoEti = new javax.swing.ButtonGroup();
@@ -1935,7 +1930,7 @@ public class Entregas extends javax.swing.JFrame {
                 .addGap(37, 37, 37))
             .addGroup(jPanel19Layout.createSequentialGroup()
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(jPanel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 65, Short.MAX_VALUE)
+                    .addComponent(jPanel29, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE)
                     .addComponent(jPanel28, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 65, Short.MAX_VALUE))
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -4666,16 +4661,11 @@ super.paintComponent(grafico);
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private java.util.List<pkg_expediciones.Abank> abankList;
-    private java.util.List<pkg_expediciones.Abank> abankList1;
-    private javax.persistence.Query abankQuery;
-    private javax.persistence.Query abankQuery1;
     private javax.swing.ButtonGroup buttonGroup_DatosAImp;
     private javax.swing.ButtonGroup buttonGroup_Impresoras;
     private javax.swing.ButtonGroup buttonGroup_TipoEti;
     private javax.swing.ButtonGroup buttonGroup_idioma;
     private javax.swing.ButtonGroup buttonGroup_idioma_alb;
-    private javax.persistence.EntityManager entityManager;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
