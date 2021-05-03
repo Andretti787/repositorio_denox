@@ -207,6 +207,30 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
          
+         jComboBox_Ubi.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("entrando listener ubicaciones");
+                    String a;
+                    a = jComboBox_Ubi.getSelectedItem().toString();
+                    System.out.println(a);
+                    //determino la posición del espacio para hacer el substring                    
+                    //int pos = pos_espacio(a);
+                                      
+                    //jText_UbiDesde.setText(a.substring(0, a.length()));
+                    //jText_pedproProv.setText(a.substring(pos + 1, a.length()));
+                    
+                    //pinto los datos en los campos correspondientes que he seleccionado con el combobox
+                    //JOptionPane.showMessageDialog(null, "uahahahahah");
+                    
+                    //consultar_tipoUbi();
+
+                }
+            }
+        });
+         
 //      
          //manejo del foco para la ventana jdialog1
          jDialog1.addWindowListener(new WindowAdapter() {
@@ -262,6 +286,19 @@ public class Entregas extends javax.swing.JFrame {
 				jDialog5.setVisible(false);
 			}
 		});
+          jDialog6.addWindowListener(new WindowAdapter() {
+                        @Override
+			public void windowClosing(WindowEvent e) {
+				//JFrame.setVisible(true);
+                                jDialog6.setVisible(false);
+			}
+		
+                        @Override
+			public void windowClosed(WindowEvent e) {
+				//ventanaPrincipal.setVisible(true);
+				jDialog6.setVisible(false);
+			}
+		});
         
     }
     
@@ -293,6 +330,7 @@ public class Entregas extends javax.swing.JFrame {
         jDialog3.setLocationRelativeTo(this);
         jDialog4.setLocationRelativeTo(this);
         jDialog5.setLocationRelativeTo(this);
+        jDialog6.setLocationRelativeTo(this);
         //pongo un título 
         jDialog1.setTitle("Impresión de referencias");
         //pinto pero no va
@@ -326,6 +364,25 @@ public class Entregas extends javax.swing.JFrame {
             String host = "jdbc:sqlserver://192.168.50.10:49412;databaseName=x3famesa;schema=FAMESAOF";
             String uName = "it";
             String uPass = "@Famesa123";
+            con = DriverManager.getConnection(host, uName, uPass);
+
+            //Statement stmt = con.createStatement();//esta conexión sólo permite navegar con los registros hacia adelante
+            stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+           
+        } catch (SQLException err) {
+            System.out.println(err.getMessage());
+        }
+    }
+    
+    public void DoConnect_MSSQLV12() {
+        /*es necesario meter en try catch las operaciones con conexión a db*/
+        try {
+            //String host = "jdbc:mysql://192.168.35.25:3306/mariodb?zeroDateTimeBehavior=convertToNull&serverTimezone=UTC";
+            System.out.println("Conectando MSSQL V12...");
+            //String host = "jdbc:sqlserver://213.149.235.131:49412;databaseName=x3famesa;schema=FAMESAOF";
+            String host = "jdbc:sqlserver://192.168.28.100:51439;databaseName=x3;schema=TEST";
+            String uName = "it";
+            String uPass = "@System345";
             con = DriverManager.getConnection(host, uName, uPass);
 
             //Statement stmt = con.createStatement();//esta conexión sólo permite navegar con los registros hacia adelante
@@ -544,10 +601,36 @@ public class Entregas extends javax.swing.JFrame {
         jLabel45 = new javax.swing.JLabel();
         jButton7 = new javax.swing.JButton();
         jButton_RefrescarAlb1 = new javax.swing.JButton();
+        jDialog6 = new javax.swing.JDialog();
+        jPanel32 = new javax.swing.JPanel();
+        jPanel33 = new javax.swing.JPanel();
+        jButton8 = new javax.swing.JButton();
+        jPanel34 = new javax.swing.JPanel();
+        jFormattedTextField_fontSize3 = new javax.swing.JFormattedTextField();
+        jLabel47 = new javax.swing.JLabel();
+        jPanel36 = new javax.swing.JPanel();
+        jRadioButton_UbiFam = new javax.swing.JRadioButton();
+        jRadioButton_UbiTri = new javax.swing.JRadioButton();
+        jComboBox_Ubi = new javax.swing.JComboBox();
+        jButton_UbiConsulta = new javax.swing.JButton();
+        jPanel37 = new javax.swing.JPanel();
+        jText_UbiHasta = new javax.swing.JTextField();
+        jText_UbiDesde = new javax.swing.JTextField();
+        jLabel51 = new javax.swing.JLabel();
+        jLabel50 = new javax.swing.JLabel();
+        jFormattedTextField_cantidadUbi = new javax.swing.JFormattedTextField();
+        jLabel46 = new javax.swing.JLabel();
+        jPanel35 = new javax.swing.JPanel();
+        jLayeredPane6 = new javax.swing.JLayeredPane();
+        jLabel_logo5 = new javax.swing.JLabel();
+        jScrollPane10 = new javax.swing.JScrollPane();
+        jTextArea7 = new javax.swing.JTextArea();
         buttonGroup_DatosAImp = new javax.swing.ButtonGroup();
         buttonGroup_Impresoras = new javax.swing.ButtonGroup();
         buttonGroup_TipoEti = new javax.swing.ButtonGroup();
         jRadioButton_Pallet.setSelected(true);
+        buttonGroup_Ubicaciones = new javax.swing.ButtonGroup();
+        jMenuItem2 = new javax.swing.JMenuItem();
         jPanel7 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jText_albaran = new javax.swing.JTextField();
@@ -573,6 +656,7 @@ public class Entregas extends javax.swing.JFrame {
         jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_tonta = new javax.swing.JMenuItem();
         jMenuItem_OF = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_salir = new javax.swing.JMenuItem();
 
@@ -2600,6 +2684,329 @@ public class Entregas extends javax.swing.JFrame {
                 .addContainerGap(25, Short.MAX_VALUE))
         );
 
+        jDialog6.setTitle("Ubicaciones");
+        jDialog6.setBackground(new java.awt.Color(240, 181, 81));
+        jDialog6.setBounds(new java.awt.Rectangle(500, 600, 800, 600));
+        jDialog6.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDialog6.setForeground(java.awt.Color.gray);
+        jDialog6.setLocation(new java.awt.Point(0, 0));
+        jDialog6.setSize(new java.awt.Dimension(790, 620));
+        jDialog6.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                jDialog6WindowClosed(evt);
+            }
+        });
+
+        jPanel32.setBackground(new java.awt.Color(240, 232, 150));
+
+        jPanel33.setBackground(new java.awt.Color(141, 191, 72));
+
+        jButton8.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton8.setText("Imprimir");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
+        jPanel34.setBackground(new java.awt.Color(141, 191, 72));
+
+        jFormattedTextField_fontSize3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextField_fontSize3.setText("164");
+        jFormattedTextField_fontSize3.setToolTipText("Introduce el número de etiquetas a imprimir");
+        jFormattedTextField_fontSize3.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jFormattedTextField_fontSize3FocusLost(evt);
+            }
+        });
+        jFormattedTextField_fontSize3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField_fontSize3ActionPerformed(evt);
+            }
+        });
+        jFormattedTextField_fontSize3.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jFormattedTextField_fontSize3KeyTyped(evt);
+            }
+        });
+
+        jLabel47.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel47.setText("Tamaño fuente");
+
+        javax.swing.GroupLayout jPanel34Layout = new javax.swing.GroupLayout(jPanel34);
+        jPanel34.setLayout(jPanel34Layout);
+        jPanel34Layout.setHorizontalGroup(
+            jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel34Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel47, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFormattedTextField_fontSize3, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(178, Short.MAX_VALUE))
+        );
+        jPanel34Layout.setVerticalGroup(
+            jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel34Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(jPanel34Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jFormattedTextField_fontSize3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel47))
+                .addGap(0, 79, Short.MAX_VALUE))
+        );
+
+        buttonGroup_Ubicaciones.add(jRadioButton_UbiFam);
+        jRadioButton_UbiFam.setText("Famesa");
+        jRadioButton_UbiFam.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jRadioButton_UbiFamItemStateChanged(evt);
+            }
+        });
+
+        buttonGroup_Ubicaciones.add(jRadioButton_UbiTri);
+        jRadioButton_UbiTri.setText("Trilla");
+        jRadioButton_UbiTri.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jRadioButton_UbiTriItemStateChanged(evt);
+            }
+        });
+
+        jComboBox_Ubi.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ubicaciones" }));
+        jComboBox_Ubi.setToolTipText("");
+        jComboBox_Ubi.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBox_UbiMouseClicked(evt);
+            }
+        });
+
+        jButton_UbiConsulta.setText("Consulta");
+        jButton_UbiConsulta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_UbiConsultaActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel36Layout = new javax.swing.GroupLayout(jPanel36);
+        jPanel36.setLayout(jPanel36Layout);
+        jPanel36Layout.setHorizontalGroup(
+            jPanel36Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel36Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel36Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton_UbiConsulta)
+                    .addGroup(jPanel36Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel36Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jRadioButton_UbiFam, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadioButton_UbiTri, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jComboBox_Ubi, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(30, Short.MAX_VALUE))
+        );
+        jPanel36Layout.setVerticalGroup(
+            jPanel36Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel36Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jRadioButton_UbiFam)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jRadioButton_UbiTri, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jComboBox_Ubi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton_UbiConsulta)
+                .addContainerGap())
+        );
+
+        jText_UbiHasta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jText_UbiHastaActionPerformed(evt);
+            }
+        });
+
+        jLabel51.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel51.setText("Ubicación Hasta:");
+
+        jLabel50.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel50.setText("Ubicación desde:");
+
+        jFormattedTextField_cantidadUbi.setEditable(false);
+        jFormattedTextField_cantidadUbi.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextField_cantidadUbi.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jFormattedTextField_cantidadUbi.setText("1");
+        jFormattedTextField_cantidadUbi.setToolTipText("Introduce el número de etiquetas a imprimir");
+        jFormattedTextField_cantidadUbi.setEnabled(false);
+        jFormattedTextField_cantidadUbi.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jFormattedTextField_cantidadUbi.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jFormattedTextField_cantidadUbiFocusLost(evt);
+            }
+        });
+        jFormattedTextField_cantidadUbi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField_cantidadUbiActionPerformed(evt);
+            }
+        });
+
+        jLabel46.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel46.setText("Núm. etiquetas");
+
+        javax.swing.GroupLayout jPanel37Layout = new javax.swing.GroupLayout(jPanel37);
+        jPanel37.setLayout(jPanel37Layout);
+        jPanel37Layout.setHorizontalGroup(
+            jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel37Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel37Layout.createSequentialGroup()
+                        .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel50, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel51, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jText_UbiHasta, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jText_UbiDesde, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel37Layout.createSequentialGroup()
+                        .addComponent(jLabel46, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jFormattedTextField_cantidadUbi, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel37Layout.setVerticalGroup(
+            jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel37Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText_UbiDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel50))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText_UbiHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel51))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel37Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jFormattedTextField_cantidadUbi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel46))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel33Layout = new javax.swing.GroupLayout(jPanel33);
+        jPanel33.setLayout(jPanel33Layout);
+        jPanel33Layout.setHorizontalGroup(
+            jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel33Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel33Layout.createSequentialGroup()
+                        .addComponent(jPanel36, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jButton8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(134, 134, 134))
+        );
+        jPanel33Layout.setVerticalGroup(
+            jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel33Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel33Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel37, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel36, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton8)
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel33Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel34, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(22, 22, 22))
+        );
+
+        jPanel35.setBackground(new java.awt.Color(141, 191, 72));
+
+        javax.swing.GroupLayout jPanel35Layout = new javax.swing.GroupLayout(jPanel35);
+        jPanel35.setLayout(jPanel35Layout);
+        jPanel35Layout.setHorizontalGroup(
+            jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel35Layout.setVerticalGroup(
+            jPanel35Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jLayeredPane6.setBackground(new java.awt.Color(141, 191, 72));
+
+        javax.swing.GroupLayout jLayeredPane6Layout = new javax.swing.GroupLayout(jLayeredPane6);
+        jLayeredPane6.setLayout(jLayeredPane6Layout);
+        jLayeredPane6Layout.setHorizontalGroup(
+            jLayeredPane6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jLayeredPane6Layout.setVerticalGroup(
+            jLayeredPane6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 260, Short.MAX_VALUE)
+        );
+
+        jLabel_logo5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
+
+        jTextArea7.setColumns(20);
+        jTextArea7.setRows(5);
+        jTextArea7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ZPL", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
+        jTextArea7.setEnabled(false);
+        jScrollPane10.setViewportView(jTextArea7);
+
+        javax.swing.GroupLayout jPanel32Layout = new javax.swing.GroupLayout(jPanel32);
+        jPanel32.setLayout(jPanel32Layout);
+        jPanel32Layout.setHorizontalGroup(
+            jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel32Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel32Layout.createSequentialGroup()
+                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel_logo5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLayeredPane6))
+                    .addComponent(jPanel35, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel33, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel32Layout.setVerticalGroup(
+            jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel32Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel33, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel32Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLayeredPane6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel32Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel32Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel_logo5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane10))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel35, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jDialog6Layout = new javax.swing.GroupLayout(jDialog6.getContentPane());
+        jDialog6.getContentPane().setLayout(jDialog6Layout);
+        jDialog6Layout.setHorizontalGroup(
+            jDialog6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel32, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jDialog6Layout.setVerticalGroup(
+            jDialog6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel32, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jMenuItem2.setText("jMenuItem2");
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Generación de etiquetas");
         setBackground(new java.awt.Color(141, 191, 72));
@@ -2814,6 +3221,14 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
         jMenu_ir.add(jMenuItem_OF);
+
+        jMenuItem3.setText("Etiquetas Ubicaciones");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu_ir.add(jMenuItem3);
         jMenu_ir.add(jSeparator2);
 
         jMenuItem_salir.setText("Salir");
@@ -2880,7 +3295,7 @@ public class Entregas extends javax.swing.JFrame {
                     }
                     int bultos = rs.getInt("ETIQUETA_POR_BULTO");
                     System.out.println("bultos: " + bultos);
-                    zpl(1, bultos, 0);
+                    zpl(1, bultos, 0, "");
                     
                 }
             }
@@ -3000,7 +3415,7 @@ public class Entregas extends javax.swing.JFrame {
             jText_ref_capacidad.setText(rs.getString("CAPACIDAD_DUN"));
             jText_ref_desc_cte.setText(rs.getString("NOM_CTE"));
             jText_ref_ean.setText(rs.getString("EAN"));
-            zpl(2,Integer.parseInt(jFormattedTextField_cantidad.getText()),0); //le paso la cantidad de etiquetas a imprimir
+            zpl(2,Integer.parseInt(jFormattedTextField_cantidad.getText()),0,""); //le paso la cantidad de etiquetas a imprimir
             System.out.println(rs.getString("DESCRIP") + " " + rs.getString("CLIENTE") + " " + rs.getString("NOM_CTE") + " " + rs.getString("EAN"));
             }
             else
@@ -3105,7 +3520,7 @@ public class Entregas extends javax.swing.JFrame {
                 jTextField_AlbDir2.setText(rs.getString("DIR2"));
                 jTextField_AlbDirPostal.setText(rs.getString("CP") + " " + rs.getString("CITY") + " " + rs.getString("PROVINCIA"));
                 jTextField_AlbPrep.setText(rs.getString("PREPARADOR"));
-                zpl(4,Integer.parseInt(jTextField_AlbBultos.getText()),0);
+                zpl(4,Integer.parseInt(jTextField_AlbBultos.getText()),0,"");
                 System.out.println("salgo...");
             }
             else{
@@ -3152,7 +3567,7 @@ public class Entregas extends javax.swing.JFrame {
                 jText_ref_capacidad.setText(rs.getString("CAPACIDAD_DUN"));
                 jText_ref_desc_cte.setText(rs.getString("NOM_CTE"));
                 jText_ref_ean.setText(rs.getString("EAN"));
-                zpl(2,Integer.parseInt(jFormattedTextField_cantidad.getText()),0); //le paso la cantidad de etiquetas a imprimir
+                zpl(2,Integer.parseInt(jFormattedTextField_cantidad.getText()),0,""); //le paso la cantidad de etiquetas a imprimir
                 System.out.println(rs.getString("DESCRIP") + " " + rs.getString("CLIENTE") + " " + rs.getString("NOM_CTE") + " " + rs.getString("EAN") + " " + rs.getString("CAPACIDAD_DUN"));
 
                 //rellenaTextArea(albaran, num_bulto, articulo, nom_cte, cod_ean);
@@ -3500,7 +3915,7 @@ public class Entregas extends javax.swing.JFrame {
                     System.out.println("001");
                     JOptionPane.showMessageDialog(this, "Referencia: " + jTb.getValueAt(i, 0) + " sin EAN asignado");
                 } else {
-                    zpl(3, cantidad, capacidad_dun);
+                    zpl(3, cantidad, capacidad_dun,"");
                 }
             }
 
@@ -3660,7 +4075,7 @@ public class Entregas extends javax.swing.JFrame {
         // Imprimir "Etiqueta tonta"
         jTextArea5.setText(null);
         //le paso la cantidad de etiquetas a imprimir y el tamaño de la fuente
-        zpl(5,Integer.parseInt(jFormattedTextField_cantidad1.getText()), Integer.parseInt(jFormattedTextField_fontSize.getText())); 
+        zpl(5,Integer.parseInt(jFormattedTextField_cantidad1.getText()), Integer.parseInt(jFormattedTextField_fontSize.getText()),""); 
         generar_fichero (5);
         ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
         
@@ -3767,7 +4182,7 @@ public class Entregas extends javax.swing.JFrame {
         //zpl(6,Integer.parseInt(jFormattedTextField_CantOF.getText()),0); 
         
         
-        zpl(6,cantidad,capacidad); 
+        zpl(6,cantidad,capacidad,""); 
         //zpl(6,cantidad,Integer.parseInt(jFormattedTextField_CapPallet.getText())); 
         //zpl(6,Integer.parseInt(jFormattedTextField_CantOF.getText()),cantidad);
         generar_fichero (6);
@@ -3993,6 +4408,102 @@ public class Entregas extends javax.swing.JFrame {
         // TODO add your handling code here:
         check_radiobuttons_OF();
     }//GEN-LAST:event_jRadioButton_PadreItemStateChanged
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        // TODO add your handling code here:
+        jTextArea7.setText(null);
+        //le paso la cantidad de etiquetas a imprimir y el tamaño de la fuente
+                
+        try {
+           
+            String query = "SELECT LOC_0 AS UBI\n"
+                      + "FROM TEST.STOLOC\n"
+                      + "WHERE LOCTYP_0 = '" + jComboBox_Ubi.getSelectedItem().toString() + "'\n"
+                      + "AND LOC_0 BETWEEN '" + jText_UbiDesde.getText() + "' and '" + jText_UbiHasta.getText() + "'";
+            
+            System.out.println(query);
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            while (rs.next()) { //muevo el cursor al primer registro y paso el tamaño de fuente y la ubicación a imprimir
+                 zpl(7, 0 , Integer.parseInt(jFormattedTextField_fontSize3.getText()), rs.getString("UBI"));
+                 System.out.println("voy al zpl 7");
+            }            
+            
+
+        } catch (SQLException err) {
+            if (err.getErrorCode()!= 0) { //La instrucción Insert no devuelve registros, de modo que elimino la alerta por tener el recordset vacío
+                JOptionPane.showMessageDialog(this, err.getMessage()+ ' ' + err.getErrorCode());
+            }
+
+        }
+        generar_fichero (7);
+        ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jFormattedTextField_cantidadUbiFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jFormattedTextField_cantidadUbiFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_cantidadUbiFocusLost
+
+    private void jFormattedTextField_cantidadUbiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField_cantidadUbiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_cantidadUbiActionPerformed
+
+    private void jFormattedTextField_fontSize3FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jFormattedTextField_fontSize3FocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_fontSize3FocusLost
+
+    private void jFormattedTextField_fontSize3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField_fontSize3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_fontSize3ActionPerformed
+
+    private void jFormattedTextField_fontSize3KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField_fontSize3KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_fontSize3KeyTyped
+
+    private void jDialog6WindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jDialog6WindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jDialog6WindowClosed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+      // Muestro el jDialog6 para las etiquetas de las ubicaciones
+        DoDesconnect();
+        DoConnect_MSSQLV12();
+        jDialog6.setVisible(true);
+           
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jRadioButton_UbiTriItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButton_UbiTriItemStateChanged
+        // TODO add your handling code here:
+      check_radiobutton_ubi();
+                         
+       
+    }//GEN-LAST:event_jRadioButton_UbiTriItemStateChanged
+
+    private void jRadioButton_UbiFamItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButton_UbiFamItemStateChanged
+        // TODO add your handling code here:
+        check_radiobutton_ubi();
+    }//GEN-LAST:event_jRadioButton_UbiFamItemStateChanged
+
+    private void jComboBox_UbiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox_UbiMouseClicked
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_jComboBox_UbiMouseClicked
+
+    private void jButton_UbiConsultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_UbiConsultaActionPerformed
+        // TODO add your handling code here:
+        consultar_tipoUbi();
+        contar_Ubicaciones(jText_UbiDesde.getText(), jText_UbiHasta.getText());
+    }//GEN-LAST:event_jButton_UbiConsultaActionPerformed
+
+    private void jText_UbiHastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jText_UbiHastaActionPerformed
+        // TODO add your handling code here:
+        if (jText_UbiDesde.getText()!="" && jText_UbiHasta.getText()!= ""){
+            contar_Ubicaciones(jText_UbiDesde.getText(), jText_UbiHasta.getText());
+        }else
+            JOptionPane.showMessageDialog(this, "Rellena los valores..." );
+        
+        
+    }//GEN-LAST:event_jText_UbiHastaActionPerformed
     
     private void inicio_tabla(){ 
         //Método para configurar el DefaultTableModel de la tabla.
@@ -4053,6 +4564,9 @@ public class Entregas extends javax.swing.JFrame {
             }else if (p_TextArea == 6){
                 data.writeToFile(jTextArea6.getText());
                 tipo_doc = "OF";      
+            }else if (p_TextArea == 7){
+                data.writeToFile(jTextArea7.getText());
+                tipo_doc = "UBICA";
             }else{
                 data.writeToFile(jTextArea3.getText());
                 tipo_doc = "TIPO3";
@@ -4120,7 +4634,7 @@ public class Entregas extends javax.swing.JFrame {
 
         return valor;
     }
-    public void zpl(int p_modo, int p_num, int p_unidades){
+    public void zpl(int p_modo, int p_num, int p_unidades, String p_codigo){
         //procedimiento ZPL para impresoras compatibles ZPL
         try {
             if (p_modo == 1) {//rellenar etiquetas para albarán
@@ -4484,6 +4998,27 @@ public class Entregas extends javax.swing.JFrame {
                         }
               }
             }
+            else if (p_modo == 7){
+                //aquí etiqueta UBICACIONES
+                jTextArea7.append("^XA\n");
+                jTextArea7.append("^CI28\n"); //juego de caracterse UTF8
+                jTextArea7.append("^FO20,20^XGE:LD5.JPG,1,1^FS\n");
+                jTextArea7.append("^PON\n");
+                //jTextArea5.append("^LH0,0\n");
+                //jTextArea4.append("^FO20,150\n");
+                //jTextArea4.append("^GB760,600,4^FS\n"); //RECUADRO
+                jTextArea7.append("^FO50,350\n");
+                jTextArea7.append("^FB720,1,,C\n");
+                jTextArea7.append("^A0N," + p_unidades + ",\n");
+                jTextArea7.append("^FD" + p_codigo + "^FS\n");
+                jTextArea7.append("^BY8,3,140\n");
+                jTextArea7.append("^FO50,500\n");
+                jTextArea7.append("^FB720,1,,C,\n");
+                jTextArea7.append("^BCN,,N,N,N,A\n");
+                jTextArea7.append("^FD" + p_codigo + "^FS\n");
+                jTextArea7.append("^XZ\n");
+            }
+            
         } catch (SQLException err) {
             JOptionPane.showMessageDialog(this, err.getMessage());
         }
@@ -4598,6 +5133,97 @@ public class Entregas extends javax.swing.JFrame {
         }
     }
     
+    public void check_radiobutton_ubi(){
+          //AL CAMBIAR DE RADIOBUTTON RELLENO EL COMBO CORRESPONDIENTE A LA PLANTA SELECCIONADA
+        jComboBox_Ubi.removeAllItems();
+         if (jRadioButton_UbiFam.isSelected()){
+            System.out.println("ubicaciones famesa...");
+                             
+         try {
+
+             String query = "SELECT DISTINCT LOCTYP_0 AS TIPO_UBI\n" +
+                            "FROM TEST.STOLOC\n" +
+                            "WHERE STOFCY_0 = 'FAM'";
+             
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+         
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                 jComboBox_Ubi.addItem(rs.getString("TIPO_UBI"));
+            }
+        } catch (SQLException err) {
+                JOptionPane.showMessageDialog(this, err.getMessage());
+        }
+        }else{
+            System.out.println("ubicaciones Trilla...");
+        try {
+
+              String query = "SELECT DISTINCT LOCTYP_0 AS TIPO_UBI\n" +
+                            "FROM TEST.STOLOC\n" +
+                            "WHERE STOFCY_0 = 'TRI'";
+             
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            //zpl();
+
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                 jComboBox_Ubi.addItem(rs.getString("TIPO_UBI"));
+            }
+
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        }
+        }
+    }
+    public void consultar_tipoUbi(){
+        //busco las ubicaciones entre el mínimo y el máximo 
+        System.out.println("consultar MIN/MAX ubicaciones");
+        try {
+
+            String query = "SELECT MIN (LOC_0) AS LOC_INI, MAX(LOC_0) AS LOC_FIN\n"
+                      + "FROM TEST.STOLOC\n"
+                      + "WHERE LOCTYP_0 = '" + jComboBox_Ubi.getSelectedItem().toString() + "'";
+             
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+          
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                jText_UbiDesde.setText(rs.getString("LOC_INI"));
+                jText_UbiHasta.setText(rs.getString("LOC_FIN"));
+                
+            }
+
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        } 
+        
+    }
+    public int contar_Ubicaciones(String pUbiDesde, String pUbiHasta) {
+        //busco las ubicaciones entre el mínimo y el máximo 
+        System.out.println("consultar MIN/MAX ubicaciones");
+        try {
+
+              String query = "SELECT COUNT(*) AS NUM_UBI\n"
+                      + "FROM TEST.STOLOC\n"
+                      + "WHERE LOCTYP_0 = '" + jComboBox_Ubi.getSelectedItem().toString() + "'\n"
+                      + "AND LOC_0 BETWEEN '" + pUbiDesde + "' and '" + pUbiHasta + "'";
+              
+             
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+          
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                jFormattedTextField_cantidadUbi.setText(rs.getString("NUM_UBI"));
+                Integer.parseInt(jFormattedTextField_cantidadUbi.getText());
+                
+                
+                
+            }
+
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        } 
+        return 0;
+    }
 	
     
   /*  public void Imagen() {
@@ -4664,6 +5290,7 @@ super.paintComponent(grafico);
     private javax.swing.ButtonGroup buttonGroup_DatosAImp;
     private javax.swing.ButtonGroup buttonGroup_Impresoras;
     private javax.swing.ButtonGroup buttonGroup_TipoEti;
+    private javax.swing.ButtonGroup buttonGroup_Ubicaciones;
     private javax.swing.ButtonGroup buttonGroup_idioma;
     private javax.swing.ButtonGroup buttonGroup_idioma_alb;
     private javax.swing.JButton jButton1;
@@ -4673,15 +5300,18 @@ super.paintComponent(grafico);
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton_ConsultaAlbNormal;
     private javax.swing.JButton jButton_ConsultaOF;
     private javax.swing.JButton jButton_RefrescarAlb;
     private javax.swing.JButton jButton_RefrescarAlb1;
+    private javax.swing.JButton jButton_UbiConsulta;
     private javax.swing.JButton jButton_consultar;
     private javax.swing.JButton jButton_consultar_registro;
     private javax.swing.JComboBox jComboBox_AlbNormal;
     private javax.swing.JComboBox jComboBox_OF;
     private javax.swing.JComboBox jComboBox_Padres;
+    private javax.swing.JComboBox jComboBox_Ubi;
     private javax.swing.JComboBox jCombo_pedpro;
     private javax.swing.JComboBox jCombo_ref;
     private javax.swing.JDialog jDialog1;
@@ -4689,6 +5319,7 @@ super.paintComponent(grafico);
     private javax.swing.JDialog jDialog3;
     private javax.swing.JDialog jDialog4;
     private javax.swing.JDialog jDialog5;
+    private javax.swing.JDialog jDialog6;
     private javax.swing.JFormattedTextField jFormattedTextField_CantCaja;
     private javax.swing.JFormattedTextField jFormattedTextField_CantOF;
     private javax.swing.JFormattedTextField jFormattedTextField_CantPadreCaja;
@@ -4700,9 +5331,11 @@ super.paintComponent(grafico);
     private javax.swing.JFormattedTextField jFormattedTextField_PicoCaja;
     private javax.swing.JFormattedTextField jFormattedTextField_cantidad;
     private javax.swing.JFormattedTextField jFormattedTextField_cantidad1;
+    private javax.swing.JFormattedTextField jFormattedTextField_cantidadUbi;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize1;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize2;
+    private javax.swing.JFormattedTextField jFormattedTextField_fontSize3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -4743,7 +5376,11 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel43;
     private javax.swing.JLabel jLabel44;
     private javax.swing.JLabel jLabel45;
+    private javax.swing.JLabel jLabel46;
+    private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel50;
+    private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -4752,13 +5389,17 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel_logo2;
     private javax.swing.JLabel jLabel_logo3;
     private javax.swing.JLabel jLabel_logo4;
+    private javax.swing.JLabel jLabel_logo5;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JLayeredPane jLayeredPane3;
     private javax.swing.JLayeredPane jLayeredPane4;
     private javax.swing.JLayeredPane jLayeredPane5;
+    private javax.swing.JLayeredPane jLayeredPane6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem_OF;
     private javax.swing.JMenuItem jMenuItem_albaranNormal;
     private javax.swing.JMenuItem jMenuItem_albaranes;
@@ -4791,6 +5432,12 @@ super.paintComponent(grafico);
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel30;
     private javax.swing.JPanel jPanel31;
+    private javax.swing.JPanel jPanel32;
+    private javax.swing.JPanel jPanel33;
+    private javax.swing.JPanel jPanel34;
+    private javax.swing.JPanel jPanel35;
+    private javax.swing.JPanel jPanel36;
+    private javax.swing.JPanel jPanel37;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
@@ -4811,9 +5458,12 @@ super.paintComponent(grafico);
     private javax.swing.JRadioButton jRadioButton_Padre;
     private javax.swing.JRadioButton jRadioButton_Pallet;
     private javax.swing.JRadioButton jRadioButton_Producto;
+    private javax.swing.JRadioButton jRadioButton_UbiFam;
+    private javax.swing.JRadioButton jRadioButton_UbiTri;
     private javax.swing.JRadioButton jRadioButton_Zebra1;
     private javax.swing.JRadioButton jRadioButton_Zebra2;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -4831,6 +5481,7 @@ super.paintComponent(grafico);
     private javax.swing.JTextArea jTextArea4;
     private javax.swing.JTextArea jTextArea5;
     private javax.swing.JTextArea jTextArea6;
+    private javax.swing.JTextArea jTextArea7;
     private javax.swing.JTextArea jTextArea_NetUse;
     private javax.swing.JTextArea jTextArea_log;
     private javax.swing.JTextField jTextField_AlbBultos;
@@ -4852,6 +5503,8 @@ super.paintComponent(grafico);
     private javax.swing.JTextField jTextField_PadreArti;
     private javax.swing.JTextField jTextField_PadreDesc;
     private javax.swing.JTextField jTextField_PadreEan;
+    private javax.swing.JTextField jText_UbiDesde;
+    private javax.swing.JTextField jText_UbiHasta;
     private javax.swing.JTextField jText_albaran;
     private javax.swing.JTextField jText_empresa;
     private javax.swing.JTextField jText_pedproNumped;
