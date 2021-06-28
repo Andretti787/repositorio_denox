@@ -382,7 +382,7 @@ public class Entregas extends javax.swing.JFrame {
             //String host = "jdbc:sqlserver://213.149.235.131:49412;databaseName=x3famesa;schema=FAMESAOF";
             String host = "jdbc:sqlserver://192.168.28.100:51439;databaseName=x3;schema=TEST";
             String uName = "it";
-            String uPass = "@System345";
+            String uPass = "@Famesa123";
             con = DriverManager.getConnection(host, uName, uPass);
 
             //Statement stmt = con.createStatement();//esta conexión sólo permite navegar con los registros hacia adelante
@@ -2712,7 +2712,7 @@ public class Entregas extends javax.swing.JFrame {
         jPanel34.setBackground(new java.awt.Color(141, 191, 72));
 
         jFormattedTextField_fontSize3.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
-        jFormattedTextField_fontSize3.setText("164");
+        jFormattedTextField_fontSize3.setText("128");
         jFormattedTextField_fontSize3.setToolTipText("Introduce el número de etiquetas a imprimir");
         jFormattedTextField_fontSize3.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
@@ -4956,11 +4956,11 @@ public class Entregas extends javax.swing.JFrame {
                                     if(Integer.parseInt(jFormattedTextField_Pico.getText())!= 0){
                                         System.out.println("pico pallet: " + jFormattedTextField_Pico.getText());
                                         jTextArea6.append("^FDCANTIDAD:" + jFormattedTextField_Pico.getText() + "^FS\n");
-                                        OF = jTextField_OF.getText() + "Q" + padLeft(jFormattedTextField_Pico.getText(),4).replace(" ","0") + " " + padLeft(Integer.toString(bulto),4).replace(" ","0");
+                                        OF = jTextField_OF.getText() + "Q" + padLeft(jFormattedTextField_Pico.getText(),4).replace(" ","0") + "E" + padLeft(Integer.toString(bulto),4).replace(" ","0");
                                         System.out.println("OF: " + OF);
                                     }else{
                                        jTextArea6.append("^FDCANTIDAD:" + p_unidades + "^FS\n"); 
-                                       OF = jTextField_OF.getText() + "Q" + padLeft(Integer.toString(p_unidades),4).replace(" ","0") + " " + padLeft(Integer.toString(bulto),4).replace(" ","0");
+                                       OF = jTextField_OF.getText() + "Q" + padLeft(Integer.toString(p_unidades),4).replace(" ","0") + "E" + padLeft(Integer.toString(bulto),4).replace(" ","0");
                                        System.out.println("OF: " + OF);
                                     }
                                        
@@ -4968,16 +4968,16 @@ public class Entregas extends javax.swing.JFrame {
                                     if (Integer.parseInt(jFormattedTextField_PicoCaja.getText())!=0){
                                         System.out.println("pico caja: " + jFormattedTextField_PicoCaja.getText()+ " " + cantxbulto + " " + bulto);
                                         jTextArea6.append("^FDCANTIDAD:" + jFormattedTextField_PicoCaja.getText() + "^FS\n");
-                                        OF = jTextField_OF.getText() + "Q" + padLeft(jFormattedTextField_Pico.getText(),4).replace(" ","0") + " " + padLeft(Integer.toString(bulto),4).replace(" ","0");
+                                        OF = jTextField_OF.getText() + "Q" + padLeft(jFormattedTextField_Pico.getText(),4).replace(" ","0") + "E" + padLeft(Integer.toString(bulto),4).replace(" ","0");
                                         System.out.println("OF: " + OF);
                                     }else{
                                         jTextArea6.append("^FDCANTIDAD:" + p_unidades + "^FS\n");
-                                        OF = jTextField_OF.getText() + "Q" + padLeft(Integer.toString(p_unidades),4).replace(" ","0") + " " + padLeft(Integer.toString(bulto),4).replace(" ","0");
+                                        OF = jTextField_OF.getText() + "Q" + padLeft(Integer.toString(p_unidades),4).replace(" ","0") + "E" + padLeft(Integer.toString(bulto),4).replace(" ","0");
                                     }
                                 }
                         }else{
                             jTextArea6.append("^FDCANTIDAD:" + p_unidades + "^FS\n");
-                            OF = jTextField_OF.getText() + "Q" + padLeft(Integer.toString(p_unidades),4).replace(" ","0") + " " + padLeft(Integer.toString(bulto),4).replace(" ","0");
+                            OF = jTextField_OF.getText() + "Q" + padLeft(Integer.toString(p_unidades),4).replace(" ","0") + "E" + padLeft(Integer.toString(bulto),4).replace(" ","0");
                         }
                             
                         jTextArea6.append("^BY3,2.5,80\n");
@@ -5011,8 +5011,8 @@ public class Entregas extends javax.swing.JFrame {
                 jTextArea7.append("^FB720,1,,C\n");
                 jTextArea7.append("^A0N," + p_unidades + ",\n");
                 jTextArea7.append("^FD" + p_codigo + "^FS\n");
-                jTextArea7.append("^BY8,3,140\n");
-                jTextArea7.append("^FO50,500\n");
+                jTextArea7.append("^BY6,3,140\n");
+                jTextArea7.append("^FO30,500\n");
                 jTextArea7.append("^FB720,1,,C,\n");
                 jTextArea7.append("^BCN,,N,N,N,A\n");
                 jTextArea7.append("^FD" + p_codigo + "^FS\n");
