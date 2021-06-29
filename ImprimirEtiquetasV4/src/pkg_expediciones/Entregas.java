@@ -5525,6 +5525,10 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea8.append("^FO20,20^XGE:LD5.JPG,1,1^FS\n");
                     //jTextArea2.append("^LH0,0\n");
                     jTextArea8.append("^FO50,150\n");
+                    jTextArea8.append("^FO370,50\n");
+                    jTextArea8.append("^BY1,,10\n");
+                    jTextArea8.append("^BQN,2,4\n");
+                    jTextArea8.append("^FDMM,www.denox.eu^FS\n");
                     jTextArea8.append("^FB720,2,,C\n");
                     jTextArea8.append("^A0,58,38\n");
                     jTextArea8.append("^FD www.denox.eu ^FS\n");
