@@ -5565,7 +5565,6 @@ public class Entregas extends javax.swing.JFrame {
     }
   
     
-    //public static void ejecutarCMD(String cmd){
     public void ejecutarCMD(String cmd){
     Process p;
     try {
