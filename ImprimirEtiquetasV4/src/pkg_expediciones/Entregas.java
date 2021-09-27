@@ -254,6 +254,31 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
          
+         jCombo_ElCorte.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("entrando listener ElCorte");
+                    String a;
+                    a = jCombo_ElCorte.getSelectedItem().toString();
+                    System.out.println(a);
+                    //determino la posición del espacio para hacer el substring                    
+                    int pos = pos_espacio(a);
+                                      
+                    //jText_UbiDesde.setText(a.substring(0, a.length()));
+                    jText_ElCorte_Alb.setText(a.substring(0, pos));
+                    jTextField_ElCorte_Art.setText(a.substring(pos + 1, a.length()));
+                    //jTextField_ElCorte_Color.setText(a.substring(pos + 1, a.length()));
+                    consultar_ElCorte();
+                    zpl(9,Integer.parseInt(jFormattedTextField_CantElCorte.getText()),0,"");
+                    
+
+                }
+                
+            }
+        });
+         
 //      
          //manejo del foco para la ventana jdialog1
          jDialog1.addWindowListener(new WindowAdapter() {
@@ -335,6 +360,20 @@ public class Entregas extends javax.swing.JFrame {
 				jDialog7.setVisible(false);
 			}
 		});
+          jDialog8.addWindowListener(new WindowAdapter() {
+                        @Override
+			public void windowClosing(WindowEvent e) {
+				//JFrame.setVisible(true);
+                                jDialog8.setVisible(false);
+			}
+		
+                        @Override
+			public void windowClosed(WindowEvent e) {
+				//ventanaPrincipal.setVisible(true);
+				jDialog8.setVisible(false);
+			}
+		});
+          
         
     }
     
@@ -368,6 +407,7 @@ public class Entregas extends javax.swing.JFrame {
         jDialog5.setLocationRelativeTo(this);
         jDialog6.setLocationRelativeTo(this);
         jDialog7.setLocationRelativeTo(this);
+        jDialog8.setLocationRelativeTo(this);
         //pongo un título 
         jDialog1.setTitle("Impresión de referencias");
         //pinto pero no va
@@ -693,6 +733,45 @@ public class Entregas extends javax.swing.JFrame {
         jScrollPane11 = new javax.swing.JScrollPane();
         jTextArea8 = new javax.swing.JTextArea();
         jLabel_logo6 = new javax.swing.JLabel();
+        jDialog8 = new javax.swing.JDialog();
+        jPanel44 = new javax.swing.JPanel();
+        jPanel45 = new javax.swing.JPanel();
+        jPanel46 = new javax.swing.JPanel();
+        jText_ElCorte_RefCte = new javax.swing.JTextField();
+        jText_ElCorte_Descrip = new javax.swing.JTextField();
+        jLabel53 = new javax.swing.JLabel();
+        jLabel57 = new javax.swing.JLabel();
+        jTextField_ElCorte_Color = new javax.swing.JTextField();
+        jLabel58 = new javax.swing.JLabel();
+        jTextField_ElCorte_UdCaja = new javax.swing.JTextField();
+        jLabel62 = new javax.swing.JLabel();
+        jTextField_ElCorte_Sucursal = new javax.swing.JTextField();
+        jLabel63 = new javax.swing.JLabel();
+        jTextField_ElCorte_Depart = new javax.swing.JTextField();
+        jLabel64 = new javax.swing.JLabel();
+        jTextField_ElCorte_Ped = new javax.swing.JTextField();
+        jLabel65 = new javax.swing.JLabel();
+        jTextField_ElCorte_Alb2 = new javax.swing.JTextField();
+        jLabel66 = new javax.swing.JLabel();
+        jLabel67 = new javax.swing.JLabel();
+        jPanel47 = new javax.swing.JPanel();
+        jButton_ElCorte_Print = new javax.swing.JButton();
+        jButton_ElCorte_Generar = new javax.swing.JButton();
+        jLabel49 = new javax.swing.JLabel();
+        jText_ElCorte_Alb = new javax.swing.JTextField();
+        jTextField_ElCorte_Art = new javax.swing.JTextField();
+        jLabel61 = new javax.swing.JLabel();
+        jPanel48 = new javax.swing.JPanel();
+        jCombo_ElCorte = new javax.swing.JComboBox();
+        jLabel59 = new javax.swing.JLabel();
+        jFormattedTextField_CantElCorte = new javax.swing.JFormattedTextField();
+        jTextField_ElCorte_Cte = new javax.swing.JTextField();
+        jLabel60 = new javax.swing.JLabel();
+        jPanel49 = new javax.swing.JPanel();
+        jLayeredPane8 = new javax.swing.JLayeredPane();
+        jScrollPane12 = new javax.swing.JScrollPane();
+        jTextArea9 = new javax.swing.JTextArea();
+        jLabel_logo7 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jText_albaran = new javax.swing.JTextField();
@@ -720,6 +799,7 @@ public class Entregas extends javax.swing.JFrame {
         jMenuItem_OF = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_salir = new javax.swing.JMenuItem();
 
@@ -3384,6 +3464,459 @@ public class Entregas extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jDialog8.setTitle("Referencias");
+        jDialog8.setBackground(new java.awt.Color(240, 181, 81));
+        jDialog8.setBounds(new java.awt.Rectangle(500, 600, 800, 600));
+        jDialog8.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDialog8.setForeground(java.awt.Color.gray);
+        jDialog8.setLocation(new java.awt.Point(0, 0));
+        jDialog8.setResizable(false);
+        jDialog8.setSize(new java.awt.Dimension(790, 620));
+        jDialog8.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                jDialog8WindowClosed(evt);
+            }
+        });
+
+        jPanel44.setBackground(new java.awt.Color(240, 232, 150));
+
+        jPanel45.setBackground(new java.awt.Color(141, 191, 72));
+
+        jPanel46.setBackground(new java.awt.Color(141, 191, 72));
+        jPanel46.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jText_ElCorte_RefCte.setEditable(false);
+        jText_ElCorte_RefCte.setEnabled(false);
+
+        jText_ElCorte_Descrip.setEditable(false);
+        jText_ElCorte_Descrip.setEnabled(false);
+
+        jLabel53.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel53.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel53.setText("Descripción");
+        jLabel53.setMaximumSize(new java.awt.Dimension(21, 13));
+        jLabel53.setMinimumSize(new java.awt.Dimension(21, 13));
+        jLabel53.setPreferredSize(new java.awt.Dimension(21, 13));
+
+        jLabel57.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel57.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel57.setText("Ref. Cte.");
+        jLabel57.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jTextField_ElCorte_Color.setEditable(false);
+        jTextField_ElCorte_Color.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jTextField_ElCorte_Color.setEnabled(false);
+
+        jLabel58.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel58.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel58.setText("Color");
+        jLabel58.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+
+        jTextField_ElCorte_UdCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_ElCorte_UdCajaActionPerformed(evt);
+            }
+        });
+        jTextField_ElCorte_UdCaja.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTextField_ElCorte_UdCajaPropertyChange(evt);
+            }
+        });
+
+        jLabel62.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel62.setText("Uds / Caja");
+
+        jTextField_ElCorte_Sucursal.setEditable(false);
+        jTextField_ElCorte_Sucursal.setEnabled(false);
+
+        jLabel63.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel63.setText("Sucursal");
+
+        jTextField_ElCorte_Depart.setEditable(false);
+        jTextField_ElCorte_Depart.setEnabled(false);
+
+        jLabel64.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel64.setText("Depart.");
+
+        jTextField_ElCorte_Ped.setEditable(false);
+        jTextField_ElCorte_Ped.setEnabled(false);
+
+        jLabel65.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel65.setText("Nº Ped.");
+
+        jTextField_ElCorte_Alb2.setEditable(false);
+        jTextField_ElCorte_Alb2.setEnabled(false);
+
+        jLabel66.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel66.setText("Albarán:");
+
+        jLabel67.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel67.setForeground(new java.awt.Color(255, 51, 51));
+        jLabel67.setText("(Rellena Uds y presiona ENTER)");
+
+        javax.swing.GroupLayout jPanel46Layout = new javax.swing.GroupLayout(jPanel46);
+        jPanel46.setLayout(jPanel46Layout);
+        jPanel46Layout.setHorizontalGroup(
+            jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel46Layout.createSequentialGroup()
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel46Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel57, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                                    .addComponent(jLabel53, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(9, 9, 9))
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel58, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                                    .addComponent(jLabel63)
+                                    .addComponent(jLabel65))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jText_ElCorte_Descrip)
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addComponent(jTextField_ElCorte_Color, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(53, 53, 53)
+                                .addComponent(jLabel62, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jTextField_ElCorte_UdCaja, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addComponent(jTextField_ElCorte_Ped, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addGroup(jPanel46Layout.createSequentialGroup()
+                        .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel46Layout.createSequentialGroup()
+                                .addGap(111, 111, 111)
+                                .addComponent(jTextField_ElCorte_Sucursal, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(53, 53, 53)
+                                .addComponent(jLabel64)
+                                .addGap(41, 41, 41))
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel46Layout.createSequentialGroup()
+                                        .addGap(111, 111, 111)
+                                        .addComponent(jText_ElCorte_RefCte, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(jPanel46Layout.createSequentialGroup()
+                                        .addGap(24, 24, 24)
+                                        .addComponent(jLabel66)
+                                        .addGap(44, 44, 44)
+                                        .addComponent(jTextField_ElCorte_Alb2, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addComponent(jTextField_ElCorte_Depart, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addComponent(jLabel67, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                .addContainerGap())
+        );
+        jPanel46Layout.setVerticalGroup(
+            jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel46Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ElCorte_Sucursal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel63)
+                    .addComponent(jTextField_ElCorte_Depart, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel64))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ElCorte_Ped, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel65))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ElCorte_Alb2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel66))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText_ElCorte_Descrip, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel53, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel57)
+                    .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jText_ElCorte_RefCte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel67)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ElCorte_Color, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel58)
+                    .addComponent(jTextField_ElCorte_UdCaja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel62))
+                .addGap(6, 6, 6))
+        );
+
+        jPanel47.setBackground(new java.awt.Color(141, 191, 72));
+        jPanel47.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel47.setName(""); // NOI18N
+
+        jButton_ElCorte_Print.setText("Imprimir");
+        jButton_ElCorte_Print.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_ElCorte_PrintActionPerformed(evt);
+            }
+        });
+
+        jButton_ElCorte_Generar.setText("Consultar");
+        jButton_ElCorte_Generar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_ElCorte_GenerarActionPerformed(evt);
+            }
+        });
+
+        jLabel49.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel49.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel49.setText("Albarán");
+        jLabel49.setMaximumSize(new java.awt.Dimension(21, 13));
+        jLabel49.setMinimumSize(new java.awt.Dimension(21, 13));
+        jLabel49.setPreferredSize(new java.awt.Dimension(21, 13));
+
+        jText_ElCorte_Alb.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jText_ElCorte_Alb.setToolTipText("Introduce referencia para hacer consulta");
+
+        jTextField_ElCorte_Art.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jTextField_ElCorte_Art.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField_ElCorte_ArtActionPerformed(evt);
+            }
+        });
+
+        jLabel61.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel61.setText("Art.");
+
+        javax.swing.GroupLayout jPanel47Layout = new javax.swing.GroupLayout(jPanel47);
+        jPanel47.setLayout(jPanel47Layout);
+        jPanel47Layout.setHorizontalGroup(
+            jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel47Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel47Layout.createSequentialGroup()
+                        .addComponent(jButton_ElCorte_Generar)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton_ElCorte_Print)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jLabel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
+                            .addGap(0, 0, Short.MAX_VALUE)
+                            .addComponent(jText_ElCorte_Alb, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
+                            .addComponent(jLabel61)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jTextField_ElCorte_Art, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap())
+        );
+        jPanel47Layout.setVerticalGroup(
+            jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel47Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel49, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jText_ElCorte_Alb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField_ElCorte_Art, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel61))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton_ElCorte_Generar)
+                    .addComponent(jButton_ElCorte_Print))
+                .addGap(45, 45, 45))
+        );
+
+        jPanel48.setBackground(new java.awt.Color(141, 191, 72));
+        jPanel48.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jCombo_ElCorte.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "ALBARAN" }));
+        jCombo_ElCorte.setToolTipText("Despliega para ver Albarán + Art.");
+        jCombo_ElCorte.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jCombo_ElCorte.setEnabled(false);
+        jCombo_ElCorte.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jCombo_ElCorteItemStateChanged(evt);
+            }
+        });
+        jCombo_ElCorte.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jCombo_ElCorteMouseClicked(evt);
+            }
+        });
+        jCombo_ElCorte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCombo_ElCorteActionPerformed(evt);
+            }
+        });
+
+        jLabel59.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel59.setText("Núm. etiquetas");
+
+        jFormattedTextField_CantElCorte.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextField_CantElCorte.setText("1");
+        jFormattedTextField_CantElCorte.setToolTipText("Introduce el número de etiquetas a imprimir");
+        jFormattedTextField_CantElCorte.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jFormattedTextField_CantElCorteFocusLost(evt);
+            }
+        });
+        jFormattedTextField_CantElCorte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField_CantElCorteActionPerformed(evt);
+            }
+        });
+
+        jTextField_ElCorte_Cte.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        jTextField_ElCorte_Cte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        jTextField_ElCorte_Cte.setText("280058");
+
+        jLabel60.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jLabel60.setText("Cliente");
+
+        javax.swing.GroupLayout jPanel48Layout = new javax.swing.GroupLayout(jPanel48);
+        jPanel48.setLayout(jPanel48Layout);
+        jPanel48Layout.setHorizontalGroup(
+            jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel48Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel59, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFormattedTextField_CantElCorte, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel60, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jTextField_ElCorte_Cte, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(38, 38, 38)
+                .addComponent(jCombo_ElCorte, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        jPanel48Layout.setVerticalGroup(
+            jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel48Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel48Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jCombo_ElCorte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jFormattedTextField_CantElCorte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel59)
+                    .addComponent(jTextField_ElCorte_Cte, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel60)))
+        );
+
+        javax.swing.GroupLayout jPanel45Layout = new javax.swing.GroupLayout(jPanel45);
+        jPanel45.setLayout(jPanel45Layout);
+        jPanel45Layout.setHorizontalGroup(
+            jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel45Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel45Layout.createSequentialGroup()
+                        .addComponent(jPanel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel47, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel48, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel45Layout.setVerticalGroup(
+            jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel45Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel48, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel45Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel45Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel46, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel45Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jPanel47, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        jPanel49.setBackground(new java.awt.Color(141, 191, 72));
+
+        javax.swing.GroupLayout jPanel49Layout = new javax.swing.GroupLayout(jPanel49);
+        jPanel49.setLayout(jPanel49Layout);
+        jPanel49Layout.setHorizontalGroup(
+            jPanel49Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel49Layout.setVerticalGroup(
+            jPanel49Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jLayeredPane8.setBackground(new java.awt.Color(141, 191, 72));
+
+        jTextArea9.setEditable(false);
+        jTextArea9.setColumns(20);
+        jTextArea9.setRows(5);
+        jTextArea9.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ZPL", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
+        jTextArea9.setEnabled(false);
+        jScrollPane12.setViewportView(jTextArea9);
+
+        jLabel_logo7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
+
+        javax.swing.GroupLayout jLayeredPane8Layout = new javax.swing.GroupLayout(jLayeredPane8);
+        jLayeredPane8.setLayout(jLayeredPane8Layout);
+        jLayeredPane8Layout.setHorizontalGroup(
+            jLayeredPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane8Layout.createSequentialGroup()
+                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel_logo7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jLayeredPane8Layout.setVerticalGroup(
+            jLayeredPane8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel_logo7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(jLayeredPane8Layout.createSequentialGroup()
+                .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+        jLayeredPane8.setLayer(jScrollPane12, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane8.setLayer(jLabel_logo7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
+        javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
+        jPanel44.setLayout(jPanel44Layout);
+        jPanel44Layout.setHorizontalGroup(
+            jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel44Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLayeredPane8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel45, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel44Layout.setVerticalGroup(
+            jPanel44Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel44Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel45, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLayeredPane8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel49, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout jDialog8Layout = new javax.swing.GroupLayout(jDialog8.getContentPane());
+        jDialog8.getContentPane().setLayout(jDialog8Layout);
+        jDialog8Layout.setHorizontalGroup(
+            jDialog8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel44, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jDialog8Layout.setVerticalGroup(
+            jDialog8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog8Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel44, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Generación de etiquetas");
         setBackground(new java.awt.Color(141, 191, 72));
@@ -3614,6 +4147,14 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
         jMenu_ir.add(jMenuItem4);
+
+        jMenuItem5.setText("Etiqueta El Corte");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu_ir.add(jMenuItem5);
         jMenu_ir.add(jSeparator2);
 
         jMenuItem_salir.setText("Salir");
@@ -4190,6 +4731,93 @@ public class Entregas extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, err.getMessage());
         }
     }
+     
+      private void rellenar_ElCorte(){
+        //jCombo_ElCorte.removeAllItems();       
+                 
+             
+       try {
+
+           String query = "select TOP 100 EDI.YCENTRO_0 AS SUCURSAL, EDI.YSECCION_0 AS DEPART, PED.CUSORDREF_0 AS PDO_CTE, CAB.SDHNUM_0 AS ALB, DET.ITMREF_0 AS ARTI"
+                            + ", DET.ITMDES_0 AS DESCRIP_ARTI\n" +
+                            ", COL.DESCOD_0 AS COLOR, ACT.ITMREFBPC_0 AS ARTI_CTE, ACT.ZITMREFBPC_0\n" +
+                            "from FAMESAOF.SDELIVERY CAB\n" +
+                            "INNER JOIN FAMESAOF.SDELIVERYD DET ON DET.SDHNUM_0 = CAB.SDHNUM_0\n" +
+                            "INNER JOIN FAMESAOF.YSORDEREDI EDI ON EDI.SOHNUM_0 = DET.SOHNUM_0\n" +
+                            "INNER JOIN FAMESAOF.SORDER PED ON PED.SOHNUM_0 = DET.SOHNUM_0\n" +
+                            "LEFT JOIN FAMESAOF.ITMBPC ACT ON ACT.ITMREF_0 = DET.ITMREF_0 AND ACT.BPCNUM_0 = CAB.BPCORD_0\n" +
+                            "INNER JOIN FAMESAOF.TABCTL COL ON COL.ALPCOD_0 = RIGHT(DET.ITMREF_0,3)\n" +
+                            "WHERE CAB.BPCORD_0 = '" + jTextField_ElCorte_Cte.getText()+ "'\n" +
+                            "AND COL.TCT_0 = 'COL'\n" +
+                            "ORDER BY CAB.SDHNUM_0 DESC";
+                               
+             
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            //zpl();
+
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                 jCombo_ElCorte.addItem(rs.getString("ALB")+ " " + rs.getString("ARTI"));
+                
+            }
+        
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        }
+
+      }
+     
+     
+        private void consultar_ElCorte(){//Relleno el combobox de albaranes para el corte inglés
+       
+        jTextArea9.setText(null); //vacío el TextArea para que no se apilen las etiquetas
+        System.out.println("Consultando ElCorte - " + jText_ElCorte_Alb.getText());
+       
+                 
+             
+       try {
+
+           String query = "select EDI.YCENTRO_0 AS SUCURSAL, EDI.YSECCION_0 AS DEPART, PED.CUSORDREF_0 AS PDO_CTE"
+                            + ", CONCAT (SUBSTRING(CAB.SDHNUM_0,5,2), SUBSTRING(CAB.SDHNUM_0, CHARINDEX('-', CAB.SDHNUM_0, 8) +2, LEN(CAB.SDHNUM_0)))  AS ALB, DET.ITMREF_0 AS ARTI"
+                            + ", DET.ITMDES_0 AS DESCRIP_ARTI\n" +
+                            ", COL.DESCOD_0 AS COLOR, SUBSTRING(ACT.ITMREFBPC_0, CHARINDEX('-', ACT.ITMREFBPC_0) +1, LEN(ACT.ITMREFBPC_0)) AS ARTI_CTE, ACT.ZITMREFBPC_0\n" +
+                            ", CAB.SDHNUM_0 AS NUMALB\n" +
+                            "from FAMESAOF.SDELIVERY CAB\n" +
+                            "INNER JOIN FAMESAOF.SDELIVERYD DET ON DET.SDHNUM_0 = CAB.SDHNUM_0\n" +
+                            "INNER JOIN FAMESAOF.YSORDEREDI EDI ON EDI.SOHNUM_0 = DET.SOHNUM_0\n" +
+                            "INNER JOIN FAMESAOF.SORDER PED ON PED.SOHNUM_0 = DET.SOHNUM_0\n" +
+                            "LEFT JOIN FAMESAOF.ITMBPC ACT ON ACT.ITMREF_0 = DET.ITMREF_0 AND ACT.BPCNUM_0 = CAB.BPCORD_0\n" +
+                            "INNER JOIN FAMESAOF.TABCTL COL ON COL.ALPCOD_0 = RIGHT(DET.ITMREF_0,3)\n" +
+//                            "WHERE CAB.SDHNUM_0 = 'ALB-21-FAM-008071'\n" +
+                            "WHERE CAB.SDHNUM_0 = '" + jText_ElCorte_Alb.getText() + "'\n" + 
+                            "AND DET.ITMREF_0 ='"+ jTextField_ElCorte_Art.getText() + "'\n" +
+                            "AND COL.TCT_0 = 'COL'";
+             
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            
+            //zpl();
+            
+            rs.next(); //Muevo el cursor al primer registro
+            if (rs.getRow()!= 0){//comprueba que haya registro en rs para evitar el error de que coja el campo descriptivo en posición 1
+                 jText_ElCorte_Descrip.setText(rs.getString("DESCRIP_ARTI"));
+                 jText_ElCorte_RefCte.setText(rs.getString("ARTI_CTE"));
+                 jTextField_ElCorte_Color.setText(rs.getString("COLOR"));
+                 jTextField_ElCorte_Sucursal.setText(rs.getString("SUCURSAL"));
+                 jTextField_ElCorte_Depart.setText(rs.getString("DEPART"));
+                 jTextField_ElCorte_Ped.setText(rs.getString("PDO_CTE"));
+                 jTextField_ElCorte_Alb2.setText((rs.getString("ALB")));
+                 jText_ElCorte_Alb.setText((rs.getString("NUMALB")));
+            }
+            else
+                JOptionPane.showMessageDialog(this, "registro no encontrado");
+            
+//           
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        }
+       
+   } 
             
     private void jCombo_refMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCombo_refMouseClicked
         // TODO add your handling code here:
@@ -4998,6 +5626,77 @@ public class Entregas extends javax.swing.JFrame {
        
         }
     }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jButton_ElCorte_PrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ElCorte_PrintActionPerformed
+        // TODO add your handling code here:
+        if (jTextField_ElCorte_UdCaja.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Rellena las Uds / Caja: ");
+        }
+        else {
+            //consultar_ElCorte();
+            generar_fichero(9);
+            ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
+        }
+        
+    }//GEN-LAST:event_jButton_ElCorte_PrintActionPerformed
+
+    private void jButton_ElCorte_GenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ElCorte_GenerarActionPerformed
+        // TODO add your handling code here:
+        consultar_ElCorte();
+        zpl(9,Integer.parseInt(jFormattedTextField_CantElCorte.getText()),0,"");
+    }//GEN-LAST:event_jButton_ElCorte_GenerarActionPerformed
+
+    private void jCombo_ElCorteItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jCombo_ElCorteItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCombo_ElCorteItemStateChanged
+
+    private void jCombo_ElCorteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCombo_ElCorteMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCombo_ElCorteMouseClicked
+
+    private void jCombo_ElCorteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCombo_ElCorteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jCombo_ElCorteActionPerformed
+
+    private void jFormattedTextField_CantElCorteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jFormattedTextField_CantElCorteFocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_CantElCorteFocusLost
+
+    private void jFormattedTextField_CantElCorteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField_CantElCorteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_CantElCorteActionPerformed
+
+    private void jDialog8WindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jDialog8WindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jDialog8WindowClosed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        // TODO add your handling code here:
+        DoDesconnect();
+        DoConnect_MSSQL();
+        jDialog8.setVisible(true);
+        rellenar_ElCorte();
+        
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jTextField_ElCorte_ArtActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_ElCorte_ArtActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField_ElCorte_ArtActionPerformed
+
+    private void jTextField_ElCorte_UdCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField_ElCorte_UdCajaActionPerformed
+        // TODO add your handling code here:
+          if (jTextField_ElCorte_UdCaja.getText().trim().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Rellena las Uds / Caja: ");
+            jCombo_ElCorte.setEnabled(false);
+        }
+        else
+            jCombo_ElCorte.setEnabled(true);
+    }//GEN-LAST:event_jTextField_ElCorte_UdCajaActionPerformed
+
+    private void jTextField_ElCorte_UdCajaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField_ElCorte_UdCajaPropertyChange
+        // TODO add your handling code here:
+      
+    }//GEN-LAST:event_jTextField_ElCorte_UdCajaPropertyChange
     
     private void inicio_tabla(){ 
         //Método para configurar el DefaultTableModel de la tabla.
@@ -5064,6 +5763,9 @@ public class Entregas extends javax.swing.JFrame {
             }else if (p_TextArea == 8){
                 data.writeToFile(jTextArea8.getText());
                 tipo_doc = "ETQSIMP";    
+            }else if (p_TextArea == 9){
+                data.writeToFile(jTextArea9.getText());
+                tipo_doc = "ETELCORTE";    
             }else{
                 data.writeToFile(jTextArea3.getText());
                 tipo_doc = "TIPO3";
@@ -5548,6 +6250,99 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea8.append("^XZ\n");
                 }
             }
+            else if (p_modo == 9){
+                //aquí etiqueta para ElCorte
+                String separador = Character.toString((char)92); 
+                int contador;
+                for (contador = 0; contador < p_num; contador++) {
+                    System.out.println("Pinto linea: contador: "+ contador + " Pnum: " + p_num);
+                    jTextArea9.append("^XA\n");
+                    jTextArea9.append("^PON\n");
+                    jTextArea9.append("^CI28\n");
+                    jTextArea9.append("^FO20,20^XGE:LD5.JPG,1,1^FS\n");
+                    jTextArea9.append("^FO40,100\n");
+                    jTextArea9.append("^GB170,100,5^FS\n");
+                    jTextArea9.append("^FO220,100\n");
+                    jTextArea9.append("^GB170,100,5^FS\n");
+                    jTextArea9.append("^FO400,100\n");
+                    jTextArea9.append("^GB170,100,5^FS\n");
+                    jTextArea9.append("^FO580,100\n");
+                    jTextArea9.append("^GB170,100,5^FS\n");
+                    
+                    jTextArea9.append("^FO50, 120\n");
+                    jTextArea9.append("^FB160,3,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FDSUCURSAL \&------\& 0588^FS\n"); // La contrabarra no le gusta a java...
+                    jTextArea9.append("^FDSUCURSAL" + separador + "&------" + separador +"& " + jTextField_ElCorte_Sucursal.getText()+ "^FS\n");
+                    jTextArea9.append("^FO230, 120\n");
+                    jTextArea9.append("^FB160,3,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FDDEPART \&------\& 369^FS\n");
+                    jTextArea9.append("^FDDEPART " + separador + "&------" + separador +"& " + jTextField_ElCorte_Depart.getText()+ "^FS\n");
+                    
+                    jTextArea9.append("^FO410, 120\n");
+                    jTextArea9.append("^FB160,3,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FDN.PEDIDO \&------\& 33116188^FS\n");
+                    jTextArea9.append("^FDN.PEDIDO " + separador + "&------" + separador + "& " + jTextField_ElCorte_Ped.getText() + "^FS\n");
+                    
+                    jTextArea9.append("^FO590, 120\n");
+                    jTextArea9.append("^FB160,3,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FDN.ALBARAN \&------\& 2108071^FS\n");
+                    jTextArea9.append("^FDN.ALBARAN " + separador + "&------" + separador + "& " + jTextField_ElCorte_Alb2.getText() + "^FS\n");
+                    
+                    jTextArea9.append("^FO040,260\n");
+                    jTextArea9.append("^GB520,100,5^FS\n");
+                    jTextArea9.append("^FO580,260\n");
+                    jTextArea9.append("^GB170,100,5^FS\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    jTextArea9.append("^FB520,1,,C\n");
+                    jTextArea9.append("^FO50, 270\n");
+                    jTextArea9.append("^FDARTICULO^FS\n");
+                    
+                    jTextArea9.append("^FO50, 305\n");
+                    jTextArea9.append("^FB520,2,,L\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    jTextArea9.append("^FD"+ jText_ElCorte_RefCte.getText() + " " +  jText_ElCorte_Descrip.getText()+"^FS\n");
+                    
+                    jTextArea9.append("^FO410,270\n");
+                    jTextArea9.append("^FB520,3,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FDCOLOR \&------ \& GRIS/VERDE^FS\n");
+                    jTextArea9.append("^FDCOLOR " + separador + "&------ " + separador + "& "+ jTextField_ElCorte_Color.getText() + "^FS\n");
+                    
+                    jTextArea9.append("^FO40,420\n");
+                    jTextArea9.append("^GB220,120,5^FS\n");
+                    jTextArea9.append("^FO280,420\n");
+                    jTextArea9.append("^GB220,120,5^FS\n");
+                    jTextArea9.append("^FO520,420\n");
+                    jTextArea9.append("^GB230,120,5^FS\n");
+                    
+                    jTextArea9.append("^FO50,430\n");
+                    jTextArea9.append("^FB210,4,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FD REFERENCIA \& CORTE INGLES\&------ \&63100122^FS\n");
+                    jTextArea9.append("^FD REFERENCIA " + separador + "& CORTE INGLES" + separador + "&------ " + separador+ "&" + jText_ElCorte_RefCte.getText() + "^FS\n");
+                    
+                    jTextArea9.append("^FO290,430\n");
+                    jTextArea9.append("^FB210,4,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FD NUMERO DE \& BULTOS \&------\& 1/1^FS\n");
+                    jTextArea9.append("^FD NUMERO DE " + separador + "& BULTOS " + separador + "&------" + separador + "& " + (contador +1) + "/" + p_num +"^FS\n");
+                    
+                    jTextArea9.append("^FO530,430\n");
+                    jTextArea9.append("^FB210,4,,C\n");
+                    jTextArea9.append("^A0,24,28\n");
+                    //jTextArea9.append("^FD UNIDADES \& POR CAJA \&------\& 2^FS\n");
+                    jTextArea9.append("^FD UNIDADES " + separador + "& POR CAJA " + separador + "&------" + separador + "& "+ jTextField_ElCorte_UdCaja.getText() + "^FS\n");
+                    
+                    jTextArea9.append("^FO50,580\n");
+                    jTextArea9.append("^A0,28,40\n");
+                    jTextArea9.append("^FD PROVEEDOR: FABRICANTES DE MENAJE^FS\n");
+                    jTextArea9.append("^XZ\n");
+                }
+            }
         } catch (SQLException err) {
             JOptionPane.showMessageDialog(this, err.getMessage());
         }
@@ -5832,6 +6627,8 @@ super.paintComponent(grafico);
     private javax.swing.JButton jButton8;
     private javax.swing.JButton jButton_ConsultaAlbNormal;
     private javax.swing.JButton jButton_ConsultaOF;
+    private javax.swing.JButton jButton_ElCorte_Generar;
+    private javax.swing.JButton jButton_ElCorte_Print;
     private javax.swing.JButton jButton_EtqSimple_Generar;
     private javax.swing.JButton jButton_EtqSimple_Imprimir;
     private javax.swing.JButton jButton_RefrescarAlb;
@@ -5843,6 +6640,7 @@ super.paintComponent(grafico);
     private javax.swing.JComboBox jComboBox_OF;
     private javax.swing.JComboBox jComboBox_Padres;
     private javax.swing.JComboBox jComboBox_Ubi;
+    private javax.swing.JComboBox jCombo_ElCorte;
     private javax.swing.JComboBox jCombo_EtqSimple_ref;
     private javax.swing.JComboBox jCombo_pedpro;
     private javax.swing.JComboBox jCombo_ref;
@@ -5853,7 +6651,9 @@ super.paintComponent(grafico);
     private javax.swing.JDialog jDialog5;
     private javax.swing.JDialog jDialog6;
     private javax.swing.JDialog jDialog7;
+    private javax.swing.JDialog jDialog8;
     private javax.swing.JFormattedTextField jFormattedTextField_CantCaja;
+    private javax.swing.JFormattedTextField jFormattedTextField_CantElCorte;
     private javax.swing.JFormattedTextField jFormattedTextField_CantOF;
     private javax.swing.JFormattedTextField jFormattedTextField_CantPadreCaja;
     private javax.swing.JFormattedTextField jFormattedTextField_CantPadrePallet;
@@ -5913,14 +6713,27 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel46;
     private javax.swing.JLabel jLabel47;
     private javax.swing.JLabel jLabel48;
+    private javax.swing.JLabel jLabel49;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel50;
     private javax.swing.JLabel jLabel51;
     private javax.swing.JLabel jLabel52;
+    private javax.swing.JLabel jLabel53;
     private javax.swing.JLabel jLabel54;
     private javax.swing.JLabel jLabel55;
     private javax.swing.JLabel jLabel56;
+    private javax.swing.JLabel jLabel57;
+    private javax.swing.JLabel jLabel58;
+    private javax.swing.JLabel jLabel59;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel60;
+    private javax.swing.JLabel jLabel61;
+    private javax.swing.JLabel jLabel62;
+    private javax.swing.JLabel jLabel63;
+    private javax.swing.JLabel jLabel64;
+    private javax.swing.JLabel jLabel65;
+    private javax.swing.JLabel jLabel66;
+    private javax.swing.JLabel jLabel67;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
@@ -5930,6 +6743,7 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel_logo4;
     private javax.swing.JLabel jLabel_logo5;
     private javax.swing.JLabel jLabel_logo6;
+    private javax.swing.JLabel jLabel_logo7;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JLayeredPane jLayeredPane3;
@@ -5937,11 +6751,13 @@ super.paintComponent(grafico);
     private javax.swing.JLayeredPane jLayeredPane5;
     private javax.swing.JLayeredPane jLayeredPane6;
     private javax.swing.JLayeredPane jLayeredPane7;
+    private javax.swing.JLayeredPane jLayeredPane8;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
     private javax.swing.JMenuItem jMenuItem_OF;
     private javax.swing.JMenuItem jMenuItem_albaranNormal;
     private javax.swing.JMenuItem jMenuItem_albaranes;
@@ -5987,6 +6803,12 @@ super.paintComponent(grafico);
     private javax.swing.JPanel jPanel41;
     private javax.swing.JPanel jPanel42;
     private javax.swing.JPanel jPanel43;
+    private javax.swing.JPanel jPanel44;
+    private javax.swing.JPanel jPanel45;
+    private javax.swing.JPanel jPanel46;
+    private javax.swing.JPanel jPanel47;
+    private javax.swing.JPanel jPanel48;
+    private javax.swing.JPanel jPanel49;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -6013,6 +6835,7 @@ super.paintComponent(grafico);
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
+    private javax.swing.JScrollPane jScrollPane12;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -6032,6 +6855,7 @@ super.paintComponent(grafico);
     private javax.swing.JTextArea jTextArea6;
     private javax.swing.JTextArea jTextArea7;
     private javax.swing.JTextArea jTextArea8;
+    private javax.swing.JTextArea jTextArea9;
     private javax.swing.JTextArea jTextArea_NetUse;
     private javax.swing.JTextArea jTextArea_log;
     private javax.swing.JTextField jTextField_AlbBultos;
@@ -6044,6 +6868,14 @@ super.paintComponent(grafico);
     private javax.swing.JTextField jTextField_AlbPedidoCte;
     private javax.swing.JTextField jTextField_AlbPrep;
     private javax.swing.JTextField jTextField_AlbTrans;
+    private javax.swing.JTextField jTextField_ElCorte_Alb2;
+    private javax.swing.JTextField jTextField_ElCorte_Art;
+    private javax.swing.JTextField jTextField_ElCorte_Color;
+    private javax.swing.JTextField jTextField_ElCorte_Cte;
+    private javax.swing.JTextField jTextField_ElCorte_Depart;
+    private javax.swing.JTextField jTextField_ElCorte_Ped;
+    private javax.swing.JTextField jTextField_ElCorte_Sucursal;
+    private javax.swing.JTextField jTextField_ElCorte_UdCaja;
     private javax.swing.JTextField jTextField_EtqSimple_lan;
     private javax.swing.JTextField jTextField_OF;
     private javax.swing.JTextField jTextField_OFarti;
@@ -6054,6 +6886,9 @@ super.paintComponent(grafico);
     private javax.swing.JTextField jTextField_PadreArti;
     private javax.swing.JTextField jTextField_PadreDesc;
     private javax.swing.JTextField jTextField_PadreEan;
+    private javax.swing.JTextField jText_ElCorte_Alb;
+    private javax.swing.JTextField jText_ElCorte_Descrip;
+    private javax.swing.JTextField jText_ElCorte_RefCte;
     private javax.swing.JTextField jText_EtqSimple_Ean;
     private javax.swing.JTextField jText_EtqSimple_descrip;
     private javax.swing.JTextField jText_EtqSimple_ref;
