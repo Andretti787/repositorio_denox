@@ -1,0 +1,1682 @@
+****************************************************************************
+Location : Local or Network Folders
+Host     : PORTATIL-INFORM
+Path     : C:\Código Fuente\Reporting SAGE\V12\ZECHTIERST.rpt
+****************************************************************************
+
+
+Report Information
+    Version:    14.0
+    Title:    Registro de vencimientos
+    Printer:    Unknown/Not Set
+
+Main Body
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+        Source:    Connection #2
+            Database DLL:    crdb_odbc.dll
+            Server:    ADX_CS_X3V6
+
+            Properties:    QE_LogonProperties
+                DSN:    ADX_CS_X3V6
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3ETA
+            Data Type:    String
+            Description:    Code de l'état
+            List Type:    Static
+            List Values:    ECHTIERS
+            Default Values:    ECHTIERS
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3BUG;sodaix01;1940;140;FRA
+            Default Values:    X3BUG;sodaix01;1940;140;FRA
+
+        Parameter:    X3OPE
+            Data Type:    String
+            Description:    Nom & Prénom de l'opérateur
+            List Type:    Static
+            List Values:    Bertrand Yvinec
+            Default Values:    Bertrand Yvinec
+
+        Parameter:    X3TIT
+            Data Type:    String
+            Description:    Titre de l'état
+            List Type:    Static
+            List Values:    Echéancier par tiers payeur
+            Default Values:    Echéancier par tiers payeur
+
+        Parameter:    X3EDT
+            Data Type:    String
+            Description:    Information éditeur
+            List Type:    Static
+            List Values:    X3
+            Default Values:    X3
+
+        Parameter:    X3CLI
+            Data Type:    String
+            Description:    Informations client
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    X3SIT1
+            Data Type:    String
+            Description:    Site autorisé
+            List Type:    Static
+            List Values:    *
+            Default Values:    *
+
+        Parameter:    X3SIT2
+            Data Type:    String
+            Description:    Site interdit
+            List Type:    Static
+            List Values:    z
+            Default Values:    z
+
+        Parameter:    societe
+            Data Type:    String
+            Description:    Société
+            List Type:    Static
+            List Values:    ADX
+            Default Values:    ADX
+
+        Parameter:    sitedeb
+            Data Type:    String
+            Description:    Site début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    sitefin
+            Data Type:    String
+            Description:    Site fin
+            List Type:    Static
+            List Values:    zzzz
+            Default Values:    zzzz
+
+        Parameter:    datdeb
+            Data Type:    Date
+            Description:    Date début
+            List Type:    Static
+            List Values:    01/01/2006 0:00:00
+            Default Values:    01/01/2006 0:00:00
+
+        Parameter:    datfin
+            Data Type:    Date
+            Description:    Date de fin
+            List Type:    Static
+            List Values:    31/12/2006 0:00:00
+            Default Values:    31/12/2006 0:00:00
+
+        Parameter:    modreg
+            Data Type:    String
+            Description:    Mode de règlement
+            List Type:    Static
+
+        Parameter:    bprdeb
+            Data Type:    String
+            Description:    Tiers début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    bprfin
+            Data Type:    String
+            Description:    Tiers fin
+            List Type:    Static
+            List Values:    zzzz
+            Default Values:    zzzz
+
+        Parameter:    devise
+            Data Type:    String
+            Description:    Devise
+            List Type:    Static
+            List Values:    EUR
+            Default Values:    EUR
+
+        Parameter:    coldeb
+            Data Type:    String
+            Description:    Collectif début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    colfin
+            Data Type:    String
+            Description:    Collectif fin
+            List Type:    Static
+            List Values:    zzz
+            Default Values:    zzz
+
+        Parameter:    grpcol
+            Data Type:    String
+            Description:    Groupe collectif
+            List Type:    Static
+
+        Parameter:    tmpreg
+            Data Type:    Boolean
+            Description:    Règlements non comptabilisés
+            List Type:    Static
+            List Values:    False
+                            True
+            Default Values:    False
+                               True
+
+        Parameter:    X3FCT
+            Data Type:    String
+            Description:    Fonction
+            List Type:    Static
+            List Values:    MODECHE
+            Default Values:    MODECHE
+
+        Parameter:    X3USR
+            Data Type:    String
+            Description:    Utilisateur
+            List Type:    Static
+            List Values:    ADMIN
+            Default Values:    ADMIN
+
+        Parameter:    X3PRF
+            Data Type:    String
+            Description:    Profil fonction
+            List Type:    Static
+            List Values:    ADMIN
+            Default Values:    ADMIN
+
+        Parameter:    X3SIT
+            Data Type:    String
+            Description:    Sites interdits
+            List Type:    Static
+
+        Parameter:    tri
+            Data Type:    Number
+            Description:    Ordre de tri
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    X3LAN
+            Data Type:    String
+            Description:    Langue
+            List Type:    Static
+
+        Parameter:    ecrisim
+            Data Type:    Boolean
+            Description:    Ecritures de simulations
+            List Type:    Static
+            List Values:    False
+                            True
+            Default Values:    False
+                               True
+
+        Parameter:    bapdeb
+            Data Type:    Number
+            List Type:    Static
+
+        Parameter:    bapfin
+            Data Type:    Number
+            List Type:    Static
+
+        Parameter:    plan
+            Data Type:    String
+            Description:    Plan comptable
+            List Type:    Static
+            List Values:    SOC
+            Default Values:    SOC
+
+        Parameter:    impselections
+            Data Type:    Number
+            List Type:    Static
+
+        Parameter:    numedt
+            Data Type:    Number
+            Description:    Numéro de requête
+            List Type:    Static
+
+    Tables
+
+        Table:    GX3APP.GACCDUDATE
+            Connection:    Connection #1
+            Used Columns:    {GACCDUDATE.TYP_0} : String[32]
+                             {GACCDUDATE.NUM_0} : String[122]
+                             {GACCDUDATE.CPY_0} : String[32]
+                             {GACCDUDATE.FCY_0} : String[32]
+                             {GACCDUDATE.CUR_0} : String[20]
+                             {GACCDUDATE.SAC_0} : String[26]
+                             {GACCDUDATE.BPR_0} : String[92]
+                             {GACCDUDATE.BPRPAY_0} : String[92]
+                             {GACCDUDATE.DUDDAT_0} : Date
+                             {GACCDUDATE.PAM_0} : String[122]
+                             {GACCDUDATE.SNS_0} : Number
+                             {GACCDUDATE.AMTCUR_0} : Number
+                             {GACCDUDATE.AMTLOC_0} : Number
+                             {GACCDUDATE.PAYCUR_0} : Number
+                             {GACCDUDATE.PAYLOC_0} : Number
+                             {GACCDUDATE.TMPCUR_0} : Number
+                             {GACCDUDATE.TMPLOC_0} : Number
+                             {GACCDUDATE.FLGPAZ_0} : Number
+                             {GACCDUDATE.DUDSTA_0} : Number
+
+        Table:    GX3APP.BPARTNER
+            Connection:    Connection #1
+            Report Alias:    FACTURE
+            Used Columns:    {FACTURE.BPRNAM_0} : String[212]
+
+        Table:    GX3APP.FACILITY
+            Connection:    Connection #1
+            Used Columns:    {FACILITY.FCY_0} : String[32]
+
+        Table:    GX3APP.COMPANY
+            Connection:    Connection #1
+            Used Columns:    {COMPANY.CPY_0} : String[32]
+                             {COMPANY.LEG_0} : String[122]
+                             {COMPANY.ACCCUR_0} : String[20]
+
+        Table:    GX3APP.TABCUR
+            Connection:    Connection #1
+            Used Columns:    {TABCUR.CUR_0} : String[20]
+                             {TABCUR.DECNBR_0} : Number
+
+        Table:    GX3APP.BPARTNER
+            Connection:    Connection #1
+            Report Alias:    PAYEUR
+            Used Columns:    {PAYEUR.BPRNAM_0} : String[212]
+
+        Table:    GX3APP.FACGROUP
+            Connection:    Connection #1
+            Used Columns:    {FACGROUP.CPY_0} : String[32]
+                             {FACGROUP.FCY_0} : String[32]
+
+        Table:    GX3APP.AFCTFCY
+            Connection:    Connection #1
+            Used Columns:    {AFCTFCY.FCY_0} : String[32]
+                             {AFCTFCY.PRFCOD_0} : String[32]
+                             {AFCTFCY.FNC_0} : String[62]
+
+        Table:    GX3APP.ACCES
+            Connection:    Connection #1
+            Used Columns:    {ACCES.CODACC_0} : String[62]
+                             {ACCES.USR_0} : String[32]
+                             {ACCES.CONSUL_0} : Number
+
+        Table:    GX3APP.GACCENTRY
+            Connection:    Connection #1
+            Used Columns:    {GACCENTRY.TYP_0} : String[32]
+                             {GACCENTRY.NUM_0} : String[122]
+                             {GACCENTRY.CAT_0} : Number
+                             {GACCENTRY.FLGREP_0} : Number
+
+        Table:    GX3APP.GTYPACCENT
+            Connection:    Connection #1
+            Used Columns:    {GTYPACCENT.TYP_0} : String[32]
+                             {GTYPACCENT.LEG_0} : String[122]
+                             {GTYPACCENT.DUDDATFLG_0} : Number
+
+        Table:    GX3APP.AREPORTM
+            Connection:    Connection #1
+            Used Columns:    {AREPORTM.NUMREQ_0} : Number
+                             {AREPORTM.CLEA1_0} : String[122]
+                             {AREPORTM.CLEA2_0} : String[122]
+                             {AREPORTM.CLEA3_0} : String[122]
+
+        Table:    x3famesa.FAMESA.PINVOICE
+            Connection:    Connection #1
+            Used Columns:    {PINVOICE.NUM_0} : String[42]
+                             {PINVOICE.GTE_0} : String[12]
+                             {PINVOICE.BPRVCR_0} : String[42]
+
+    Table Links
+        Joins:    GX3APP.GACCDUDATE LEFT OUTER JOIN GX3APP.BPARTNER FACTURE ON GX3APP.GACCDUDATE.BPR_0 = FACTURE.BPRNUM_0
+                  GX3APP.GACCDUDATE INNER JOIN GX3APP.FACILITY ON GX3APP.GACCDUDATE.FCY_0 = GX3APP.FACILITY.FCY_0
+                  GX3APP.GACCDUDATE LEFT OUTER JOIN GX3APP.BPARTNER PAYEUR ON GX3APP.GACCDUDATE.BPRPAY_0 = PAYEUR.BPRNUM_0
+                  GX3APP.GACCDUDATE INNER JOIN GX3APP.FACGROUP ON GX3APP.GACCDUDATE.FCY_0 = GX3APP.FACGROUP.FCY_0
+                  GX3APP.GACCDUDATE LEFT OUTER JOIN GX3APP.AFCTFCY ON GX3APP.GACCDUDATE.FCY_0 = GX3APP.AFCTFCY.FCY_0
+                  GX3APP.GACCDUDATE INNER JOIN GX3APP.GACCENTRY ON GX3APP.GACCDUDATE.NUM_0,TYP_0 = GX3APP.GACCENTRY.NUM_0,TYP_0
+                  GX3APP.GACCDUDATE INNER JOIN GX3APP.COMPANY ON GX3APP.GACCDUDATE.CPY_0 = GX3APP.COMPANY.CPY_0
+                  GX3APP.GACCDUDATE LEFT OUTER JOIN x3famesa.FAMESA.PINVOICE ON GX3APP.GACCDUDATE.NUM_0,TYP_0 = x3famesa.FAMESA.PINVOICE.NUM_0,GTE_0
+                  GX3APP.GACCENTRY INNER JOIN GX3APP.GTYPACCENT ON GX3APP.GACCENTRY.TYP_0 = GX3APP.GTYPACCENT.TYP_0
+                  GX3APP.GTYPACCENT INNER JOIN GX3APP.AREPORTM ON GX3APP.GTYPACCENT.TYP_0,LEG_0 = GX3APP.AREPORTM.CLEA1_0,CLEA2_0
+                  GX3APP.BPARTNER PAYEUR LEFT OUTER JOIN GX3APP.ACCES ON PAYEUR.ACS_0 = GX3APP.ACCES.CODACC_0
+                  GX3APP.COMPANY INNER JOIN GX3APP.TABCUR ON GX3APP.COMPANY.ACCCUR_0 = GX3APP.TABCUR.CUR_0
+                  GX3APP.COMPANY INNER JOIN GX3APP.AREPORTM ON GX3APP.COMPANY.LEG_0 = GX3APP.AREPORTM.CLEA3_0
+
+    Record Selection Formulas
+        Formula:    {GACCDUDATE.DUDSTA_0} = 2 and
+                    {GACCENTRY.FLGREP_0} <> 2 and
+                    ({?devise}="" or {?devise}={GACCDUDATE.CUR_0} ) and
+                    {GACCDUDATE.BPRPAY_0} in {?bprdeb} to {?bprfin} and
+                    {GACCDUDATE.FCY_0} in {?sitedeb} to {?sitefin} and
+                    ( {?modreg}='' or {?modreg}={GACCDUDATE.PAM_0} ) and
+                    {FACGROUP.CPY_0} = {?societe} and
+                    {GACCDUDATE.SAC_0} in {?coldeb} to {?colfin} and
+                    {GACCDUDATE.DUDDAT_0} <= {?datfin} and
+                    {GACCDUDATE.DUDDAT_0} >= {?datdeb} and
+                    {GACCDUDATE.FLGPAZ_0} in{?bapdeb} to{?bapfin} and
+                    // Bug 20518 (17/12/03)
+                    {GTYPACCENT.DUDDATFLG_0} = 2 and 
+                    {ACCES.CONSUL_0} = 2.00 and
+                    {ACCES.USR_0} = {?X3USR} and
+                    {AFCTFCY.PRFCOD_0} = {?X3PRF} and
+                    {AFCTFCY.FNC_0} = {?X3FCT} and
+                    {AREPORTM.NUMREQ_0} = {?numedt}
+
+    Record Sorting
+        Sort By:    COMPANY.CPY_0 -- Ascending Order Group #1
+                    @grp -- Ascending Order Group #2
+                    GACCDUDATE.DUDDAT_0 -- Ascending Order 
+                    GACCDUDATE.NUM_0 -- Ascending Order 
+
+    Formula Fields
+
+        Field:    debit
+            Formula:    if {GACCDUDATE.SNS_0}=1 then
+                         {@montant}
+                        else
+                         0
+
+        Field:    credit
+            Formula:    if {GACCDUDATE.SNS_0}=1 then
+                         0
+                        else
+                         {@montant}
+
+        Field:    decimales
+            Formula:    {TABCUR.DECNBR_0}
+
+        Field:    solde
+            Formula:    shared numbervar solde ;
+                        solde
+                        
+                        
+
+        Field:    calsolde
+            Formula:    shared numbervar solde ;
+                        shared numbervar nombre ;
+                        shared numbervar totdeb ;
+                        shared numbervar totcre ;
+                        if {@groupe} then
+                         if {GACCDUDATE.SNS_0}=1 then
+                          solde := solde + {@montant}
+                         else
+                          solde := solde - {@montant}
+                        ;
+                        if {@groupe} then
+                         nombre := nombre + 1
+                        ;
+                        if {@groupe} then
+                         totdeb := totdeb + {@debit}
+                        ;
+                        if {@groupe} then
+                         totcre := totcre + {@credit}
+                        ;
+                        
+
+        Field:    razsol
+            Formula:    shared numbervar solde  := 0 ;
+                        shared numbervar nombre := 0 ;
+                        
+                        
+                        
+                        
+
+        Field:    montant
+            Formula:    if {?devise}="" then
+                         if {?tmpreg} then
+                          {GACCDUDATE.AMTLOC_0}-{GACCDUDATE.PAYLOC_0}-{GACCDUDATE.TMPLOC_0}
+                         else
+                          {GACCDUDATE.AMTLOC_0}-{GACCDUDATE.PAYLOC_0}
+                        else
+                         if {?tmpreg} then
+                          {GACCDUDATE.AMTCUR_0}-{GACCDUDATE.PAYCUR_0}-{GACCDUDATE.TMPCUR_0}
+                         else
+                          {GACCDUDATE.AMTCUR_0}-{GACCDUDATE.PAYCUR_0}
+                        
+
+        Field:    debut
+            Formula:    shared stringvar c00 := '' ;
+                        shared stringvar c01 := '' ;
+                        shared stringvar c02 := '' ;
+                        shared stringvar c03 := '' ;
+                        shared stringvar c04 := '' ;
+                        shared stringvar c05 := '' ;
+                        shared stringvar c06 := '' ;
+                        shared stringvar c07 := '' ;
+                        shared stringvar c08 := '' ;
+                        shared stringvar c09 := '' ;
+                        shared stringvar c10 := '' ;
+                        shared stringvar c11 := '' ;
+                        shared stringvar c12 := '' ;
+                        shared stringvar c13 := '' ;
+                        shared stringvar c14 := '' ;
+                        shared stringvar c15 := '' ;
+                        shared stringvar c16 := '' ;
+                        shared stringvar c17 := '' ;
+                        shared stringvar c18 := '' ;
+                        shared stringvar c19 := '' ;
+                        shared stringvar c20 := '' ;
+                        shared stringvar c21 := '' ;
+                        shared stringvar c22 := '' ;
+                        shared stringvar c23 := '' ;
+                        shared stringvar c24 := '' ;
+                        shared stringvar c25 := '' ;
+                        shared stringvar c26 := '' ;
+                        shared stringvar c27 := '' ;
+                        shared stringvar c28 := '' ;
+                        shared stringvar c29 := '' ;
+                        
+                        
+
+        Field:    groupe
+            Formula:    shared stringvar c00 ;
+                        shared stringvar c01 ;
+                        shared stringvar c02 ;
+                        shared stringvar c03 ;
+                        shared stringvar c04 ;
+                        shared stringvar c05 ;
+                        shared stringvar c06 ;
+                        shared stringvar c07 ;
+                        shared stringvar c08 ;
+                        shared stringvar c09 ;
+                        shared stringvar c10 ;
+                        shared stringvar c11 ;
+                        shared stringvar c12 ;
+                        shared stringvar c13 ;
+                        shared stringvar c14 ;
+                        shared stringvar c15 ;
+                        shared stringvar c16 ;
+                        shared stringvar c17 ;
+                        shared stringvar c18 ;
+                        shared stringvar c19 ;
+                        shared stringvar c20 ;
+                        shared stringvar c21 ;
+                        shared stringvar c22 ;
+                        shared stringvar c23 ;
+                        shared stringvar c24 ;
+                        shared stringvar c25 ;
+                        shared stringvar c26 ;
+                        shared stringvar c27 ;
+                        shared stringvar c28 ;
+                        shared stringvar c29 ;
+                        
+                        
+                        if ({?tmpreg} and {GACCDUDATE.AMTCUR_0}*({GACCDUDATE.AMTCUR_0}-{GACCDUDATE.PAYCUR_0}-{GACCDUDATE.TMPCUR_0})<=0)
+                        // jmm si coge los no pendientes tiene que coger todos
+                        //or (not({?tmpreg}) and {GACCDUDATE.AMTCUR_0}*({GACCDUDATE.AMTCUR_0}-{GACCDUDATE.PAYCUR_0})<=0) 
+                        then
+                        
+                         false
+                        else if {GACCENTRY.CAT_0} in [3.00,5.00] or ( not({?ecrisim}) and  {GACCENTRY.CAT_0} in [2.00] ) then
+                               false
+                          else if {?grpcol}=""  then
+                               true
+                            else
+                                 if {GACCDUDATE.SAC_0}  in
+                                 [
+                                   c00,c01,c02,c03,c04,c05,c06,c07,c08,c09,c10,c11,c12,c13,c14
+                                   ,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29
+                                 ]
+                                 then
+                                      true
+                                 else 
+                                      false
+                        ;
+                        
+                        
+
+        Field:    totdeb
+            Formula:    shared numbervar totdeb ;
+                        totdeb
+                        
+                        
+                        
+
+        Field:    totcre
+            Formula:    shared numbervar totcre ;
+                        totcre
+                        
+
+        Field:    totsol
+            Formula:    shared numbervar totdeb ;
+                        shared numbervar totcre ;
+                        totdeb-totcre
+                        
+                        
+
+        Field:    inivar
+            Formula:    shared numbervar totdeb := 0 ;
+                        shared numbervar totcre := 0 ;
+                        
+                        
+
+        Field:    tmpreg
+            Formula:    WhilePrintingRecords;
+                        global stringVar Non;
+                        global stringVar Oui;
+                        
+                        if {?tmpreg} then
+                         Oui
+                        else
+                         Non
+
+        Field:    grp
+            Formula:    if {?tri}=2 then
+                         ""
+                        else
+                         {GACCDUDATE.BPRPAY_0}
+                        
+                        
+                        
+
+        Field:    pr_tri
+            Formula:    WhilePrintingRecords;
+                        global stringVar Datech;
+                        global stringVar Tiers;
+                        
+                        if {?tri}=2 then
+                         Datech
+                        else
+                          Tiers
+                        
+
+        Field:    pr_ecrisim
+            Formula:    WhilePrintingRecords;
+                        global stringVar Non;
+                        global stringVar Oui;
+                        
+                        if {?ecrisim} then
+                         Oui
+                        else
+                         Non
+
+    Unused Formula Fields
+
+        Field:    vide
+            Formula:    " "
+                        
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar Non    := TextOfChapter ({?X3DOS},{?X3LAN},2288,1);
+                        global stringVar Oui    := TextOfChapter ({?X3DOS},{?X3LAN},2288,2);
+                        global stringVar Datech := TextOfChapter ({?X3DOS},{?X3LAN},2289,2);
+                        global stringVar Tiers  := TextOfChapter ({?X3DOS},{?X3LAN},2289,3);
+
+        Field:    libbapdeb
+            Formula:    TextForCode ({?X3DOS}, "{GACCDUDATE.FLGPAZ_0}",{?bapdeb} ) 
+
+        Field:    libbapfin
+            Formula:    TextForCode ({?X3DOS}, "{GACCDUDATE.FLGPAZ_0}",{?bapfin} )
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar Non    := TextOfChapter ({?X3DOS},{?X3LAN},2288,1);
+                        global stringVar Oui    := TextOfChapter ({?X3DOS},{?X3LAN},2288,2);
+                        global stringVar Datech := TextOfChapter ({?X3DOS},{?X3LAN},2289,2);
+                        global stringVar Tiers  := TextOfChapter ({?X3DOS},{?X3LAN},2289,3);
+
+        Field:    libbapdeb
+            Formula:    TextForCode ({?X3DOS}, "{GACCDUDATE.FLGPAZ_0}",{?bapdeb} ) 
+
+        Field:    libbapfin
+            Formula:    TextForCode ({?X3DOS}, "{GACCDUDATE.FLGPAZ_0}",{?bapfin} )
+
+    Report Header
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {?impselections}=0 then true
+                                else false;
+
+            Fields
+
+                Field:    textofchapter1
+                    Data Source:    {@textofchapter}
+                    Data Type:    String
+
+                Field:    X3TIT1
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+                Field:    Dateimpression1
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Heureimpression1
+                    Data Source:    PrintTime
+                    Data Type:    Time
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Time Format:    MM/DD/YY h:mm:ss
+
+                Field:    X3OPE1
+                    Data Source:    {?X3OPE}
+                    Data Type:    String
+
+                Field:    X3ETA1
+                    Data Source:    {?X3ETA}
+                    Data Type:    String
+
+                Field:    X3DOS1
+                    Data Source:    {?X3DOS}
+                    Data Type:    String
+
+                Field:    Champ6
+                    Data Source:    {?societe}
+                    Data Type:    String
+
+                Field:    Champ7
+                    Data Source:    {?sitedeb}
+                    Data Type:    String
+
+                Field:    Champ8
+                    Data Source:    {?sitefin}
+                    Data Type:    String
+
+                Field:    Champ9
+                    Data Source:    {?bprdeb}
+                    Data Type:    String
+
+                Field:    Champ10
+                    Data Source:    {?bprfin}
+                    Data Type:    String
+
+                Field:    Champ11
+                    Data Source:    {?datfin}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Champ12
+                    Data Source:    {?modreg}
+                    Data Type:    String
+
+                Field:    Champ13
+                    Data Source:    {?devise}
+                    Data Type:    String
+
+                Field:    Champ14
+                    Data Source:    {?coldeb}
+                    Data Type:    String
+
+                Field:    Champ15
+                    Data Source:    {?colfin}
+                    Data Type:    String
+
+                Field:    Champ16
+                    Data Source:    {@tmpreg}
+                    Data Type:    String
+
+                Field:    Champ18
+                    Data Source:    {?datdeb}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    precrisim1
+                    Data Source:    {@pr_ecrisim}
+                    Data Type:    String
+
+                Field:    libbapdeb1
+                    Data Source:    {@libbapdeb}
+                    Data Type:    String
+
+                Field:    libbapfin1
+                    Data Source:    {@libbapfin}
+                    Data Type:    String
+
+                Field:    Champ19
+                    Data Source:    {@pr_tri}
+                    Data Type:    String
+
+                Field:    Champ5
+                    Data Source:    {@debut}
+                    Data Type:    String
+
+                Field:    Champ20
+                    Data Source:    {@inivar}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+            Text Fields
+
+                Text Field:    Text5
+                    Text:    Criterios de selección
+
+                Text Field:    Texte2
+                    Text:    Sociedad
+
+                Text Field:    Texte3
+                    Text:    De
+
+                Text Field:    Texte4
+                    Text:    De
+
+                Text Field:    Texte5
+                    Text:    a
+
+                Text Field:    Texte6
+                    Text:    a
+
+                Text Field:    Texte7
+                    Text:    a
+
+                Text Field:    Texte8
+                    Text:    Plantas
+
+                Text Field:    Texte9
+                    Text:    Tercero
+
+                Text Field:    Texte10
+                    Text:    Rangos de vencimientos
+
+                Text Field:    Texte11
+                    Text:    Moda de pago
+
+                Text Field:    Texte12
+                    Text:    Divisa
+
+                Text Field:    Texte13
+                    Text:    Colectivos
+
+                Text Field:    Texte14
+                    Text:    Grupo de colectivos
+
+                Text Field:    Texte15
+                    Text:    De
+
+                Text Field:    Texte16
+                    Text:    Pagos no contabilizados
+
+                Text Field:    Texte18
+                    Text:    De
+
+                Text Field:    Texte19
+                    Text:    a
+
+                Text Field:    Text1
+                    Text:    Asientos de simulación
+
+                Text Field:    Text2
+                    Text:    Nivel autoriz. de pago
+
+                Text Field:    Text4
+                    Text:    De
+
+                Text Field:    Text3
+                    Text:    a
+
+                Text Field:    Texte21
+                    Text:    Criterio de orden
+
+            Boxes
+
+                Box:    Box1
+                    Ends in Section:    Section1
+                    Size:    134x451
+                    Line Type:    None
+                    Line Thickness:    0
+
+                Box:    Box2
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box3
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box4
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box5
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box6
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box7
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box8
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box9
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box10
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box11
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box12
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box13
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box14
+                    Ends in Section:    Section1
+                    Size:    752x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+            SubReports
+
+                SubReport:    logo2
+                    Links:    {?X3DOS} => {?X3DOS}
+
+                SubReport:    logo3
+                    Links:    {?X3DOS} => {?X3DOS}
+
+                SubReport:    groupcol
+                    Links:    {?grpcol} => {?groupe}
+                              {?plan} => {?plan}
+                              {?X3LAN} => {?X3LAN}
+
+    Page Header
+
+        Section:    Section a
+
+            Fields
+
+                Field:    X3TIT2
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+                Field:    Dateimpression2
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+            Lines
+
+                Line:    Line1
+                    Ends in Section:    Section12
+                    Line Type:    Single
+                    Line Thickness:    25
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {COMPANY.CPY_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    SubReports
+
+                        SubReport:    groupcol2
+                            Links:    {?grpcol} => {?groupe}
+                                      {?plan} => {?plan}
+
+        Group:    Group #2
+            Grouped By:    {@grp}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    Champ26
+                            Data Source:    {@razsol}
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    True
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+            Group Footer
+
+                Section:    Section a
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    shared numbervar nombre;
+                                        nombre=0
+                                        
+                                        
+
+    Detail
+
+        Section:    Section a
+
+            Fields
+
+                Field:    Champ27
+                    Data Source:    {@calsolde}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+        Section:    Section b
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    shared numbervar nombre ;
+                                not {@groupe} or nombre<>1
+                                
+                                
+
+            Fields
+
+                Field:    Champ28
+                    Data Source:    {GACCDUDATE.BPRPAY_0}
+                    Data Type:    String
+                    Suppression Formula:    {?tri}=2
+                                            
+
+                Field:    Champ29
+                    Data Source:    {PAYEUR.BPRNAM_0}
+                    Data Type:    String
+                    Suppression Formula:    {?tri}=2
+                                            
+
+                Field:    Champ30
+                    Data Source:    {?datfin}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+            Text Fields
+
+                Text Field:    Texte23
+                    Text:    Vencimiento
+
+                Text Field:    Texte24
+                    Text:    Tercero facturado
+
+                Text Field:    Texte26
+                    Text:    Número de asiento
+
+                Text Field:    Texte28
+                    Text:    Debe
+
+                Text Field:    Texte29
+                    Text:    Haber
+
+                Text Field:    Texte30
+                    Text:    Saldo
+
+                Text Field:    Texte31
+                    Text:    Vencimientos hasta el
+
+                Text Field:    Texte32
+                    Text:    Planta
+
+                Text Field:    Texte33
+                    Text:    Div
+
+                Text Field:    Texte27
+                    Text:    Forma de pago
+
+                Text Field:    Text6
+                    Text:    Ref tercero
+
+                Text Field:    Text7
+                    Text:    Fecha Factura
+
+            Boxes
+
+                Box:    Box16
+                    Ends in Section:    Section16
+                    Size:    1045x38
+                    Line Type:    None
+                    Line Thickness:    10
+
+        Section:    Section c
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    not {@groupe}
+                                
+
+            Fields
+
+                Field:    Champ39
+                    Data Source:    {FACTURE.BPRNAM_0}
+                    Data Type:    String
+
+                Field:    Champ32
+                    Data Source:    {GACCDUDATE.BPR_0}
+                    Data Type:    String
+
+                Field:    Champ31
+                    Data Source:    {GACCDUDATE.DUDDAT_0}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Champ41
+                    Data Source:    {GACCDUDATE.FCY_0}
+                    Data Type:    String
+
+                Field:    Champ42
+                    Data Source:    {GACCDUDATE.CUR_0}
+                    Data Type:    String
+
+                Field:    Champ33
+                    Data Source:    {GACCDUDATE.TYP_0}
+                    Data Type:    String
+
+                Field:    Champ34
+                    Data Source:    {GACCDUDATE.NUM_0}
+                    Data Type:    String
+
+                Field:    Champ38
+                    Data Source:    {@solde}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    Champ36
+                    Data Source:    {@credit}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    Champ35
+                    Data Source:    {@debit}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    Champ37
+                    Data Source:    {GACCDUDATE.PAM_0}
+                    Data Type:    String
+
+                Field:    BPRVCR01
+                    Data Source:    {PINVOICE.BPRVCR_0}
+                    Data Type:    String
+
+    Page Footer
+
+        Section:    Section a
+
+            Fields
+
+                Field:    PageNM1
+                    Data Source:    PageNofM
+                    Data Type:    String
+
+            Lines
+
+                Line:    Ligne5
+                    Ends in Section:    Section20
+                    Line Type:    Single
+                    Line Thickness:    0
+
+            SubReports
+
+                SubReport:    logo1
+                    Links:    {?X3DOS} => {?X3DOS}
+
+    Report Footer
+
+        Section:    Section a
+
+            Fields
+
+                Field:    Champ43
+                    Data Source:    {@totdeb}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    Champ44
+                    Data Source:    {@totcre}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    Champ45
+                    Data Source:    {@totsol}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+            Text Fields
+
+                Text Field:    Texte34
+                    Text:    TOTAL GENERAL
+
+            Boxes
+
+                Box:    Cadre1
+                    Ends in Section:    Section19
+                    Size:    1030x36
+                    Line Type:    Single
+                    Line Thickness:    20
+
+Subreport:    groupcol
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    groupe
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    plan
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    X3LAN
+            Data Type:    String
+            List Type:    Static
+
+    Tables
+
+        Table:    GX3APP.GRPSAC
+            Connection:    Connection #1
+            Used Columns:    {GRPSAC.COA_0} : String[20]
+                             {GRPSAC.GRU_0} : String[26]
+
+        Table:    GX3APP.AVWTEXTRA
+            Connection:    Connection #1
+            Used Columns:    {AVWTEXTRA.LAN_0} : String[20]
+                             {AVWTEXTRA.CODFIC_0} : String[62]
+                             {AVWTEXTRA.ZONE_0} : String[74]
+                             {AVWTEXTRA.IDENT1_0} : String[482]
+                             {AVWTEXTRA.IDENT2_0} : String[482]
+                             {AVWTEXTRA.TEXTE_0} : String[482]
+
+    Table Links
+        Joins:    GX3APP.GRPSAC INNER JOIN GX3APP.AVWTEXTRA ON GX3APP.GRPSAC.COA_0,GRU_0 = GX3APP.AVWTEXTRA.IDENT1_0,IDENT2_0
+
+    Record Selection Formulas
+        Formula:    {GRPSAC.GRU_0} = {?groupe} and
+                    {GRPSAC.COA_0} = {?plan}
+                     and
+                    {AVWTEXTRA.CODFIC_0}='GRPSAC' and
+                    {AVWTEXTRA.ZONE_0}='DESTRA' and
+                    {AVWTEXTRA.LAN_0}={?X3LAN}
+                    
+                    
+
+    Record Sorting
+        Sort By:    GRPSAC.GRU_0 -- Ascending Order Group #1
+
+    Unused Formula Fields
+
+        Field:    collectifs
+            Formula:    shared stringvar c00 ;
+                        shared stringvar c01 ;
+                        shared stringvar c02 ;
+                        shared stringvar c03 ;
+                        shared stringvar c04 ;
+                        shared stringvar c05 ;
+                        shared stringvar c06 ;
+                        shared stringvar c07 ;
+                        shared stringvar c08 ;
+                        shared stringvar c09 ;
+                        shared stringvar c10 ;
+                        shared stringvar c11 ;
+                        shared stringvar c12 ;
+                        shared stringvar c13 ;
+                        shared stringvar c14 ;
+                        shared stringvar c15 ;
+                        shared stringvar c16 ;
+                        shared stringvar c17 ;
+                        shared stringvar c18 ;
+                        shared stringvar c19 ;
+                        shared stringvar c20 ;
+                        shared stringvar c21 ;
+                        shared stringvar c22 ;
+                        shared stringvar c23 ;
+                        shared stringvar c24 ;
+                        shared stringvar c25 ;
+                        shared stringvar c26 ;
+                        shared stringvar c27 ;
+                        shared stringvar c28 ;
+                        shared stringvar c29 ;
+                        select {GRPSAC.NUMLIN_0}
+                         case  1 : c00 := {GRPSAC.SAC_0}
+                         case  2 : c01 := {GRPSAC.SAC_0}
+                         case  3 : c02 := {GRPSAC.SAC_0}
+                         case  4 : c03 := {GRPSAC.SAC_0}
+                         case  5 : c04 := {GRPSAC.SAC_0}
+                         case  6 : c05 := {GRPSAC.SAC_0}
+                         case  7 : c06 := {GRPSAC.SAC_0}
+                         case  8 : c07 := {GRPSAC.SAC_0}
+                         case  9 : c08 := {GRPSAC.SAC_0}
+                         case 10 : c09 := {GRPSAC.SAC_0}
+                         case 11 : c10 := {GRPSAC.SAC_0}
+                         case 12 : c11 := {GRPSAC.SAC_0}
+                         case 13 : c12 := {GRPSAC.SAC_0}
+                         case 14 : c13 := {GRPSAC.SAC_0}
+                         case 15 : c14 := {GRPSAC.SAC_0}
+                         case 16 : c15 := {GRPSAC.SAC_0}
+                         case 17 : c16 := {GRPSAC.SAC_0}
+                         case 18 : c17 := {GRPSAC.SAC_0}
+                         case 19 : c18 := {GRPSAC.SAC_0}
+                         case 20 : c19 := {GRPSAC.SAC_0}
+                         case 21 : c20 := {GRPSAC.SAC_0}
+                         case 22 : c21 := {GRPSAC.SAC_0}
+                         case 23 : c22 := {GRPSAC.SAC_0}
+                         case 24 : c23 := {GRPSAC.SAC_0}
+                         case 25 : c24 := {GRPSAC.SAC_0}
+                         case 26 : c25 := {GRPSAC.SAC_0}
+                         case 27 : c26 := {GRPSAC.SAC_0}
+                         case 28 : c27 := {GRPSAC.SAC_0}
+                         case 29 : c28 := {GRPSAC.SAC_0}
+                         case 30 : c29 := {GRPSAC.SAC_0}
+                        
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {GRPSAC.GRU_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    Champ1
+                            Data Source:    {GRPSAC.GRU_0}
+                            Data Type:    String
+
+                        Field:    TEXTE01
+                            Data Source:    {AVWTEXTRA.TEXTE_0}
+                            Data Type:    String
+
+Subreport:    groupcol2
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Server:    ADX_CS_X3V6
+
+            Properties:    QE_LogonProperties
+                DSN:    ADX_CS_X3V6
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    groupe
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    plan
+            Data Type:    String
+            List Type:    Static
+
+    Tables
+
+        Table:    DEMOPRM.GRPSAC
+            Connection:    Connection #1
+            Used Columns:    {GRPSAC.COA_0} : String[20]
+                             {GRPSAC.GRU_0} : String[32]
+                             {GRPSAC.NUMLIN_0} : Number
+                             {GRPSAC.SAC_0} : String[26]
+
+    Record Selection Formulas
+        Formula:    {GRPSAC.GRU_0} = {?groupe} and
+                    {GRPSAC.COA_0} = {?plan}
+                    
+                    
+
+    Formula Fields
+
+        Field:    collectifs
+            Formula:    shared stringvar c00 ;
+                        shared stringvar c01 ;
+                        shared stringvar c02 ;
+                        shared stringvar c03 ;
+                        shared stringvar c04 ;
+                        shared stringvar c05 ;
+                        shared stringvar c06 ;
+                        shared stringvar c07 ;
+                        shared stringvar c08 ;
+                        shared stringvar c09 ;
+                        shared stringvar c10 ;
+                        shared stringvar c11 ;
+                        shared stringvar c12 ;
+                        shared stringvar c13 ;
+                        shared stringvar c14 ;
+                        shared stringvar c15 ;
+                        shared stringvar c16 ;
+                        shared stringvar c17 ;
+                        shared stringvar c18 ;
+                        shared stringvar c19 ;
+                        shared stringvar c20 ;
+                        shared stringvar c21 ;
+                        shared stringvar c22 ;
+                        shared stringvar c23 ;
+                        shared stringvar c24 ;
+                        shared stringvar c25 ;
+                        shared stringvar c26 ;
+                        shared stringvar c27 ;
+                        shared stringvar c28 ;
+                        shared stringvar c29 ;
+                        select {GRPSAC.NUMLIN_0}
+                         case  1 : c00 := {GRPSAC.SAC_0}
+                         case  2 : c01 := {GRPSAC.SAC_0}
+                         case  3 : c02 := {GRPSAC.SAC_0}
+                         case  4 : c03 := {GRPSAC.SAC_0}
+                         case  5 : c04 := {GRPSAC.SAC_0}
+                         case  6 : c05 := {GRPSAC.SAC_0}
+                         case  7 : c06 := {GRPSAC.SAC_0}
+                         case  8 : c07 := {GRPSAC.SAC_0}
+                         case  9 : c08 := {GRPSAC.SAC_0}
+                         case 10 : c09 := {GRPSAC.SAC_0}
+                         case 11 : c10 := {GRPSAC.SAC_0}
+                         case 12 : c11 := {GRPSAC.SAC_0}
+                         case 13 : c12 := {GRPSAC.SAC_0}
+                         case 14 : c13 := {GRPSAC.SAC_0}
+                         case 15 : c14 := {GRPSAC.SAC_0}
+                         case 16 : c15 := {GRPSAC.SAC_0}
+                         case 17 : c16 := {GRPSAC.SAC_0}
+                         case 18 : c17 := {GRPSAC.SAC_0}
+                         case 19 : c18 := {GRPSAC.SAC_0}
+                         case 20 : c19 := {GRPSAC.SAC_0}
+                         case 21 : c20 := {GRPSAC.SAC_0}
+                         case 22 : c21 := {GRPSAC.SAC_0}
+                         case 23 : c22 := {GRPSAC.SAC_0}
+                         case 24 : c23 := {GRPSAC.SAC_0}
+                         case 25 : c24 := {GRPSAC.SAC_0}
+                         case 26 : c25 := {GRPSAC.SAC_0}
+                         case 27 : c26 := {GRPSAC.SAC_0}
+                         case 28 : c27 := {GRPSAC.SAC_0}
+                         case 29 : c28 := {GRPSAC.SAC_0}
+                         case 30 : c29 := {GRPSAC.SAC_0}
+                        
+
+    Detail
+
+        Section:    Section a
+
+            Fields
+
+                Field:    collectifs1
+                    Data Source:    {@collectifs}
+                    Data Type:    String
+
+Subreport:    logo1
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    GX3APP.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[62]
+                             {ABLOB.IDENT1_0} : String[482]
+                             {ABLOB.IDENT2_0} : String[482]
+                             {ABLOB.IDENT3_0} : String[62]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.IDENT3_0} = "001" and
+                    {ABLOB.IDENT2_0} = " " and
+                    {ABLOB.CODBLB_0} = "PJ_ADS"
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    53x22
+
+Subreport:    logo2
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    GX3APP.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[62]
+                             {ABLOB.IDENT1_0} : String[482]
+                             {ABLOB.IDENT2_0} : String[482]
+                             {ABLOB.IDENT3_0} : String[62]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.IDENT3_0} = "002" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Unused Formula Fields
+
+        Field:    test
+            Formula:    Split ({?X3DOS},";")[1] 
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    140x56
+
+Subreport:    logo3
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    GX3APP.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[62]
+                             {ABLOB.IDENT1_0} : String[482]
+                             {ABLOB.IDENT2_0} : String[482]
+                             {ABLOB.IDENT3_0} : String[62]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT3_0} = "003" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    151x128

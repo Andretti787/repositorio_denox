@@ -1,0 +1,1596 @@
+****************************************************************************
+Location : Local or Network Folders
+Host     : PORTATIL-INFORM
+Path     : C:\Código Fuente\Reporting SAGE\V12\ZBONPREPAC.rpt
+****************************************************************************
+
+
+Report Information
+    Version:    14.0
+    Title:    VALE DE PREPARACION CON SUBINFORME (apaisado)
+    Printer:    No Printer
+
+Main Body
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3ETA
+            Data Type:    String
+            Description:    Code de l'état
+            List Type:    Static
+            List Values:    BONLIV
+            Default Values:    BONLIV
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    GX3APP;aydaix05.sage.fr.adinternal.com;2050;150;FRA
+            Default Values:    GX3APP;aydaix05.sage.fr.adinternal.com;2050;150;FRA
+
+        Parameter:    X3OPE
+            Data Type:    String
+            Description:    Nom & Prénom de l'opérateur
+            List Type:    Static
+            List Values:    [Opérateur]
+            Default Values:    [Opérateur]
+
+        Parameter:    X3TIT
+            Data Type:    String
+            Description:    Titre de l'état
+            List Type:    Static
+            List Values:    Bon de préparation
+            Default Values:    Bon de préparation
+
+        Parameter:    X3CLI
+            Data Type:    String
+            Description:    Informations client
+            List Type:    Static
+            List Values:     X3
+            Default Values:     X3
+
+        Parameter:    X3LAN
+            Data Type:    String
+            List Type:    Static
+            List Values:    FRA
+            Default Values:    FRA
+
+        Parameter:    sitedeb
+            Data Type:    String
+            Description:    Site DEBUT
+            List Type:    Static
+            List Values:    A
+            Default Values:    A
+
+        Parameter:    sitefin
+            Data Type:    String
+            Description:    Site FIN
+            List Type:    Static
+            List Values:    ZZZ
+            Default Values:    ZZZ
+
+        Parameter:    clientdeb
+            Data Type:    String
+            Description:    N° client Commande DEBUT
+            List Type:    Static
+            List Values:    A
+            Default Values:    A
+
+        Parameter:    clientfin
+            Data Type:    String
+            Description:    N° client Commande FIN
+            List Type:    Static
+            List Values:    ZZZZZZZZZZ
+            Default Values:    ZZZZZZZZZZ
+
+        Parameter:    impselections
+            Data Type:    Number
+            Description:    Impression des selections (Oui/Non)
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    etatdeb
+            Data Type:    Number
+            Description:    Code Etat du bon de préparation DEBUT (1/2/3)
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    etatfin
+            Data Type:    Number
+            Description:    Code Etat du bon de préparation FIN (1/2/3)
+            List Type:    Static
+            List Values:    3
+            Default Values:    3
+
+        Parameter:    colisagedeb
+            Data Type:    Number
+            Description:    Colisage réalisé DEBUT (Oui/non)
+            List Type:    Static
+            List Values:    0
+            Default Values:    0
+
+        Parameter:    colisagefin
+            Data Type:    Number
+            Description:    Colisage réalisé FIN (Oui/non)
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    preparationdeb
+            Data Type:    String
+            Description:    N° bon de préparation DEBUT
+            List Type:    Static
+            List Values:    A
+            Default Values:    A
+
+        Parameter:    preparationfin
+            Data Type:    String
+            Description:    N° bon de préparation FIN
+            List Type:    Static
+            List Values:    zzzzzzzzzzzzzzzzz
+            Default Values:    zzzzzzzzzzzzzzzzz
+
+        Parameter:    usr
+            Data Type:    String
+            Description:    Code USER pour Traitement INIT
+            List Type:    Static
+
+        Parameter:    etat
+            Data Type:    String
+            Description:    Code ETAT pour Traitement INIT
+            List Type:    Static
+
+        Parameter:    numedt
+            Data Type:    Number
+            Description:    N° REQUETE pour Traitement INIT
+            List Type:    Static
+
+        Parameter:    gwrhact
+            Data Type:    Number
+            Description:    Entrer gwrhact :
+            List Type:    Static
+
+        Parameter:    listedeb
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    listefin
+            Data Type:    String
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.FACILITY
+            Connection:    Connection #1
+            Used Columns:    {FACILITY.FCY_0} : String[12]
+                             {FACILITY.FCYNAM_0} : String[72]
+                             {FACILITY.BPAADD_0} : String[12]
+
+        Table:    x3famesa.FAMESA.ITMSALES
+            Connection:    Connection #1
+            Used Columns:    {ITMSALES.ITMREF_0} : String[42]
+
+        Table:    x3famesa.FAMESA.TABUNIT
+            Connection:    Connection #1
+            Report Alias:    TABUNIT_PRE
+            Used Columns:    {TABUNIT_PRE.UOMDEC_0} : Number
+
+        Table:    x3famesa.FAMESA.ITMMASTER
+            Connection:    Connection #1
+            Used Columns:    {ITMMASTER.ITMREF_0} : String[42]
+                             {ITMMASTER.STU_0} : String[8]
+                             {ITMMASTER.STOMGTCOD_0} : Number
+
+        Table:    x3famesa.FAMESA.TABUNIT
+            Connection:    Connection #1
+            Report Alias:    TABUNIT_ITM
+            Used Columns:    {TABUNIT_ITM.UOMDEC_0} : Number
+
+        Table:    x3famesa.FAMESA.BPADDRESS
+            Connection:    Connection #1
+            Report Alias:    BPADDRESS_FCY
+            Used Columns:    {BPADDRESS_FCY.BPATYP_0} : Number
+
+        Table:    x3famesa.FAMESA.BPDLVCUST
+            Connection:    Connection #1
+            Used Columns:    {BPDLVCUST.BPCNUM_0} : String[32]
+                             {BPDLVCUST.BPAADD_0} : String[12]
+                             {BPDLVCUST.BPDNAM_0} : String[72]
+
+        Table:    x3famesa.FAMESA.BPADDRESS
+            Connection:    Connection #1
+            Report Alias:    BPADDRESS_PRH
+            Used Columns:    {BPADDRESS_PRH.BPATYP_0} : Number
+                             {BPADDRESS_PRH.BPAADDLIG_0} : String[102]
+                             {BPADDRESS_PRH.BPAADDLIG_1} : String[102]
+                             {BPADDRESS_PRH.BPAADDLIG_2} : String[102]
+                             {BPADDRESS_PRH.POSCOD_0} : String[22]
+                             {BPADDRESS_PRH.CTY_0} : String[82]
+                             {BPADDRESS_PRH.CRYNAM_0} : String[82]
+
+        Table:    x3famesa.FAMESA.STOPREH
+            Connection:    Connection #1
+            Used Columns:    {STOPREH.PRHNUM_0} : String[42]
+                             {STOPREH.STOFCY_0} : String[12]
+                             {STOPREH.BPCORD_0} : String[32]
+                             {STOPREH.BPAADD_0} : String[12]
+                             {STOPREH.SHIDAT_0} : Date
+                             {STOPREH.DLVDAT_0} : Date
+                             {STOPREH.BPTNUM_0} : String[32]
+                             {STOPREH.PREUSR_0} : String[12]
+
+        Table:    x3famesa.FAMESA.STOPRED
+            Connection:    Connection #1
+            Used Columns:    {STOPRED.PRHNUM_0} : String[42]
+                             {STOPRED.PRELIN_0} : Number
+                             {STOPRED.LINTYP_0} : Number
+                             {STOPRED.ITMREF_0} : String[42]
+                             {STOPRED.QTYSTU_0} : Number
+                             {STOPRED.STU_0} : String[8]
+                             {STOPRED.LOCDES_0} : String[22]
+                             {STOPRED.PCK_0} : String[12]
+                             {STOPRED.PCKCAP_0} : Number
+
+        Table:    x3famesa.FAMESA.AREPORTM
+            Connection:    Connection #1
+            Used Columns:    {AREPORTM.USR_0} : String[12]
+                             {AREPORTM.RPTCOD_0} : String[32]
+                             {AREPORTM.NUMREQ_0} : Number
+                             {AREPORTM.CLEA1_0} : String[82]
+                             {AREPORTM.CLEA2_0} : String[82]
+
+        Table:    x3famesa.FAMESA.AVWTEXTRA
+            Connection:    Connection #1
+            Used Columns:    {AVWTEXTRA.LAN_0} : String[8]
+                             {AVWTEXTRA.CODFIC_0} : String[26]
+                             {AVWTEXTRA.ZONE_0} : String[26]
+                             {AVWTEXTRA.IDENT1_0} : String[162]
+                             {AVWTEXTRA.TEXTE_0} : String[162]
+
+        Table:    x3famesa.FAMESA.SORDER
+            Connection:    Connection #1
+            Used Columns:    {SORDER.SOHNUM_0} : String[42]
+                             {SORDER.BPCORD_0} : String[32]
+                             {SORDER.CUSORDREF_0} : String[42]
+                             {SORDER.BPDNAM_0} : String[72]
+                             {SORDER.BPDADDLIG_0} : String[102]
+                             {SORDER.BPDADDLIG_1} : String[102]
+                             {SORDER.BPDADDLIG_2} : String[102]
+                             {SORDER.BPDPOSCOD_0} : String[22]
+                             {SORDER.BPDCTY_0} : String[82]
+                             {SORDER.BPDCRYNAM_0} : String[82]
+                             {SORDER.DLRNOT_0} : Number
+
+        Table:    x3famesa.FAMESA.AUTILIS
+            Connection:    Connection #1
+            Used Columns:    {AUTILIS.NOMUSR_0} : String[62]
+                             {AUTILIS.USR_0} : String[12]
+
+        Table:    x3famesa.FAMESA.BPCUSTOMER
+            Connection:    Connection #1
+            Used Columns:    {BPCUSTOMER.BPCNUM_0} : String[32]
+                             {BPCUSTOMER.BPCBPSNUM_0} : String[32]
+
+    Table Links
+        Joins:    x3famesa.FAMESA.AREPORTM INNER JOIN x3famesa.FAMESA.STOPREH ON x3famesa.FAMESA.AREPORTM.CLEA1_0 = x3famesa.FAMESA.STOPREH.PRHNUM_0
+                  x3famesa.FAMESA.AREPORTM LEFT OUTER JOIN x3famesa.FAMESA.SORDER ON x3famesa.FAMESA.AREPORTM.CLEA2_0 = x3famesa.FAMESA.SORDER.SOHNUM_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.BPCUSTOMER ON x3famesa.FAMESA.SORDER.BPCORD_0 = x3famesa.FAMESA.BPCUSTOMER.BPCNUM_0
+                  x3famesa.FAMESA.STOPREH INNER JOIN x3famesa.FAMESA.BPDLVCUST ON x3famesa.FAMESA.STOPREH.BPCORD_0,BPAADD_0 = x3famesa.FAMESA.BPDLVCUST.BPCNUM_0,BPAADD_0
+                  x3famesa.FAMESA.STOPREH INNER JOIN x3famesa.FAMESA.BPADDRESS BPADDRESS_PRH ON x3famesa.FAMESA.STOPREH.BPAADD_0,BPCORD_0 = BPADDRESS_PRH.BPAADD_0,BPANUM_0
+                  x3famesa.FAMESA.STOPREH INNER JOIN x3famesa.FAMESA.FACILITY ON x3famesa.FAMESA.STOPREH.STOFCY_0 = x3famesa.FAMESA.FACILITY.FCY_0
+                  x3famesa.FAMESA.STOPREH INNER JOIN x3famesa.FAMESA.STOPRED ON x3famesa.FAMESA.STOPREH.PRHNUM_0 = x3famesa.FAMESA.STOPRED.PRHNUM_0
+                  x3famesa.FAMESA.STOPREH LEFT OUTER JOIN x3famesa.FAMESA.AUTILIS ON x3famesa.FAMESA.STOPREH.PREUSR_0 = x3famesa.FAMESA.AUTILIS.USR_0
+                  x3famesa.FAMESA.STOPRED INNER JOIN x3famesa.FAMESA.ITMSALES ON x3famesa.FAMESA.STOPRED.ITMREF_0 = x3famesa.FAMESA.ITMSALES.ITMREF_0
+                  x3famesa.FAMESA.STOPRED INNER JOIN x3famesa.FAMESA.ITMMASTER ON x3famesa.FAMESA.STOPRED.ITMREF_0 = x3famesa.FAMESA.ITMMASTER.ITMREF_0
+                  x3famesa.FAMESA.STOPRED LEFT OUTER JOIN x3famesa.FAMESA.TABUNIT TABUNIT_PRE ON x3famesa.FAMESA.STOPRED.STU_0 = TABUNIT_PRE.UOM_0
+                  x3famesa.FAMESA.ITMMASTER LEFT OUTER JOIN x3famesa.FAMESA.TABUNIT TABUNIT_ITM ON x3famesa.FAMESA.ITMMASTER.STU_0 = TABUNIT_ITM.UOM_0
+                  x3famesa.FAMESA.ITMMASTER LEFT OUTER JOIN x3famesa.FAMESA.AVWTEXTRA ON x3famesa.FAMESA.ITMMASTER.ITMREF_0 = x3famesa.FAMESA.AVWTEXTRA.IDENT1_0
+                  x3famesa.FAMESA.FACILITY INNER JOIN x3famesa.FAMESA.BPADDRESS BPADDRESS_FCY ON x3famesa.FAMESA.FACILITY.BPAADD_0,FCY_0 = BPADDRESS_FCY.BPAADD_0,BPANUM_0
+
+    Record Selection Formulas
+        Formula:    {AREPORTM.RPTCOD_0}   = {?etat} and
+                    {AREPORTM.NUMREQ_0}   = {?numedt} and
+                    {BPADDRESS_FCY.BPATYP_0} = 3 and
+                    {BPADDRESS_PRH.BPATYP_0} = 1 and
+                    {AVWTEXTRA.LAN_0} = {?X3LAN} and
+                    {AVWTEXTRA.CODFIC_0} = 'ITMMASTER' and
+                    {AREPORTM.USR_0} = {?usr} and
+                    {AVWTEXTRA.ZONE_0} = "DES1AXX"
+
+    Record Sorting
+        Sort By:    STOPREH.PRHNUM_0 -- Ascending Order Group #1
+                    STOPRED.PRELIN_0 -- Ascending Order 
+
+    Formula Fields
+
+        Field:    lbl_option_ou_kit
+            Formula:    WhilePrintingRecords;
+                        global stringVar opt;
+                        global stringVar kit;
+                        
+                        // STOPRED.LINTYP = Type de ligne / Menu Local n° 423 
+                        // (1 = Article Normal         / 2 = Composé Kit         / 6 = Composé nomenclature)
+                        // (3 = Composant Kit          / 4 = Option Kit          / 5 = Variante Kit)
+                        // (7 = Composant Nomenclature / 8 = Option Nomenclature / 9 = Variante Nomenclature)
+                        // Affichage de Opt ou Kit selon l'article (Option ou kit)
+                        If {STOPRED.LINTYP_0} = 4 or  
+                           {STOPRED.LINTYP_0} = 8 
+                           then 
+                               opt
+                           else 
+                               if {STOPRED.LINTYP_0} = 2 
+                                  then 
+                                      kit
+                                  else  "";
+                        
+
+        Field:    decimalsau
+            Formula:    // TABUNIT_PRE.UOMDEC = Décimales 
+                        {TABUNIT_PRE.UOMDEC_0}
+
+        Field:    CODBARRAS
+            Formula:    {STOPRED.PRHNUM_0} + totext({STOPRED.PRELIN_0},0) + "A" +{STOPRED.ITMREF_0} +"Q" +totext({STOPRED.QTYSTU_0},0)
+
+    Unused Formula Fields
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar opt     := TextOfChapter ({?X3DOS},{?X3LAN},2281,2);
+                        global stringVar kit     := TextOfChapter ({?X3DOS},{?X3LAN},2281,3);
+                        
+
+        Field:    txttournee
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le code tournée du bon de préparation STOPREH.DRN
+                        TextForCode ({?X3DOS},"{STOPREH.DRN_0}",{STOPREH.DRN_0})
+
+        Field:    txtcolisagedeb
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le colisage réalisé du bon de préparation STOPREH.PACFLG
+                        TextForCode ({?X3DOS},"{STOPREH.PACFLG_0}",{?colisagedeb}+1 )
+                        
+
+        Field:    txtcolisagefin
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le colisage réalisé du bon de préparation STOPREH.PACFLG
+                        TextForCode ({?X3DOS},"{STOPREH.PACFLG_0}",{?colisagefin}+1 )
+
+        Field:    dlvflg
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour l'état du bon de préparation STOPREH.DLVFLG
+                        TextForCode ({?X3DOS},"{STOPREH.DLVFLG_0}",{STOPREH.DLVFLG_0})
+
+        Field:    pacflg
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le colisage réalisé du bon de préparation STOPREH.PACFLG
+                        TextForCode ({?X3DOS},"{STOPREH.PACFLG_0}",{STOPREH.PACFLG_0})
+
+        Field:    txtetatdeb
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour l'état du bon de préparation STOPREH.DLVFLG
+                        TextForCode ({?X3DOS},"{STOPREH.DLVFLG_0}",{?etatdeb})
+
+        Field:    txtetatfin
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour l'état du bon de préparation STOPREH.DLVFLG
+                        TextForCode ({?X3DOS},"{STOPREH.DLVFLG_0}",{?etatfin})
+
+        Field:    txtcolisagedeb
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le colisage réalisé du bon de préparation STOPREH.PACFLG
+                        TextForCode ({?X3DOS},"{STOPREH.PACFLG_0}",{?colisagedeb}+1 )
+                        
+
+        Field:    txtetatdeb
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour l'état du bon de préparation STOPREH.DLVFLG
+                        TextForCode ({?X3DOS},"{STOPREH.DLVFLG_0}",{?etatdeb})
+
+        Field:    txtcolisagefin
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le colisage réalisé du bon de préparation STOPREH.PACFLG
+                        TextForCode ({?X3DOS},"{STOPREH.PACFLG_0}",{?colisagefin}+1 )
+
+        Field:    txtetatfin
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour l'état du bon de préparation STOPREH.DLVFLG
+                        TextForCode ({?X3DOS},"{STOPREH.DLVFLG_0}",{?etatfin})
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar opt     := TextOfChapter ({?X3DOS},{?X3LAN},2281,2);
+                        global stringVar kit     := TextOfChapter ({?X3DOS},{?X3LAN},2281,3);
+                        
+
+        Field:    txttournee
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le code tournée du bon de préparation STOPREH.DRN
+                        TextForCode ({?X3DOS},"{STOPREH.DRN_0}",{STOPREH.DRN_0})
+
+        Field:    dlvflg
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour l'état du bon de préparation STOPREH.DLVFLG
+                        TextForCode ({?X3DOS},"{STOPREH.DLVFLG_0}",{STOPREH.DLVFLG_0})
+
+        Field:    pacflg
+            Formula:    WhilePrintingRecords;
+                        // Recherche du texte pour le colisage réalisé du bon de préparation STOPREH.PACFLG
+                        TextForCode ({?X3DOS},"{STOPREH.PACFLG_0}",{STOPREH.PACFLG_0})
+
+    Summary Fields
+
+        Field:    ITMREF_0
+            Formula:    Count ({STOPRED.ITMREF_0}, {STOPREH.PRHNUM_0})
+
+    Report Header
+
+        Conditional Formulas
+
+            Condition:    EnableSuppress
+                Formula:    if  {?impselections} = 0  then 
+                                true 
+                            else 
+                                false ;
+
+            Condition:    EnableResetPageNumberAfter
+                Formula:    if  {?impselections} = 1 then 
+                                true 
+                            else 
+                                false ;
+                            
+
+        Section:    Section a
+
+            Fields
+
+                Field:    X3TIT1
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+                Field:    Dateimpression1
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Heureimpression1
+                    Data Source:    PrintTime
+                    Data Type:    Time
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Time Format:    MM/DD/YY h:mm:ss
+
+                Field:    X3OPE1
+                    Data Source:    {?X3OPE}
+                    Data Type:    String
+
+                Field:    X3ETA1
+                    Data Source:    {?X3ETA}
+                    Data Type:    String
+
+                Field:    X3DOS1
+                    Data Source:    {?X3DOS}
+                    Data Type:    String
+
+                Field:    txtcolisagefin1
+                    Data Source:    {@txtcolisagefin}
+                    Data Type:    String
+
+                Field:    txtetatfin1
+                    Data Source:    {@txtetatfin}
+                    Data Type:    String
+
+                Field:    etatfin1
+                    Data Source:    {?etatfin}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555
+
+                Field:    Champ6
+                    Data Source:    {?clientfin}
+                    Data Type:    String
+
+                Field:    txtcolisagedeb1
+                    Data Source:    {@txtcolisagedeb}
+                    Data Type:    String
+
+                Field:    etatdeb1
+                    Data Source:    {?etatdeb}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555
+
+                Field:    Champ5
+                    Data Source:    {?clientdeb}
+                    Data Type:    String
+
+                Field:    preparationdeb1
+                    Data Source:    {?preparationdeb}
+                    Data Type:    String
+
+                Field:    preparationfin1
+                    Data Source:    {?preparationfin}
+                    Data Type:    String
+
+                Field:    Champ10
+                    Data Source:    {?sitefin}
+                    Data Type:    String
+
+                Field:    Champ9
+                    Data Source:    {?sitedeb}
+                    Data Type:    String
+
+                Field:    txtetatdeb1
+                    Data Source:    {@txtetatdeb}
+                    Data Type:    String
+
+                Field:    listedeb1
+                    Data Source:    {?listedeb}
+                    Data Type:    String
+
+                Field:    listefin1
+                    Data Source:    {?listefin}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text20
+                    Text:    Criterios de selección
+
+                Text Field:    Texte10
+                    Text:    A
+
+                Text Field:    Text11
+                    Text:    a
+
+                Text Field:    Text8
+                    Text:    a
+
+                Text Field:    Texte6
+                    Text:    a
+
+                Text Field:    Text10
+                    Text:    De
+
+                Text Field:    Text7
+                    Text:    De
+
+                Text Field:    Texte5
+                    Text:    De
+
+                Text Field:    Text9
+                    Text:    Empaquetado realizado/no realizado
+
+                Text Field:    Texte41
+                    Text:    Informe orden preparación
+
+                Text Field:    Texte7
+                    Text:    Cliente pedido
+
+                Text Field:    Texte4
+                    Text:    Vale de preparación
+
+                Text Field:    Texte2
+                    Text:    De
+
+                Text Field:    Texte3
+                    Text:    a
+
+                Text Field:    Texte9
+                    Text:    De
+
+                Text Field:    Texte8
+                    Text:    Planta de almacenam.
+
+                Text Field:    Text19
+                    Text:    )
+
+                Text Field:    Text18
+                    Text:    (
+
+                Text Field:    Text17
+                    Text:    )
+
+                Text Field:    Text16
+                    Text:    (
+
+                Text Field:    Text22
+                    Text:    Lista de preparación
+
+                Text Field:    Text28
+                    Text:    De
+
+                Text Field:    Text29
+                    Text:    a
+
+                Text Field:    Texte13
+                    Text:    Ascendente
+
+                Text Field:    Texte12
+                    Text:    Vale de preparación
+
+            Boxes
+
+                Box:    Box1
+                    Ends in Section:    Section1
+                    Size:    136x458
+                    Line Type:    None
+                    Line Thickness:    0
+
+                Box:    Box2
+                    Ends in Section:    Section1
+                    Size:    537x19
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box7
+                    Ends in Section:    Section1
+                    Size:    537x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box10
+                    Ends in Section:    Section1
+                    Size:    537x19
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box11
+                    Ends in Section:    Section1
+                    Size:    537x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box3
+                    Ends in Section:    Section1
+                    Size:    537x18
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box5
+                    Ends in Section:    Section1
+                    Size:    537x19
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box6
+                    Ends in Section:    Section1
+                    Size:    537x16
+                    Line Type:    Single
+                    Line Thickness:    10
+
+                Box:    Box12
+                    Ends in Section:    Section1
+                    Size:    537x19
+                    Line Type:    Single
+                    Line Thickness:    10
+
+            SubReports
+
+                SubReport:    logo2
+                    Links:    {?X3DOS} => {?X3DOS}
+
+        Section:    Section b
+
+            Fields
+
+                Field:    textofchapter1
+                    Data Source:    {@textofchapter}
+                    Data Type:    String
+
+    Page Header
+
+        Section:    Section a
+
+            Fields
+
+                Field:    Champ11
+                    Data Source:    {FACILITY.FCYNAM_0}
+                    Data Type:    String
+
+                Field:    PRHNUM01
+                    Data Source:    {STOPREH.PRHNUM_0}
+                    Data Type:    String
+
+                Field:    X3TIT2
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+                Field:    Dateimpression2
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    Custom
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    NOMUSR01
+                    Data Source:    {AUTILIS.NOMUSR_0}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text4
+                    Text:    Nº
+
+                Text Field:    Text31
+                    Text:    Preparador :
+
+            Lines
+
+                Line:    Line1
+                    Ends in Section:    Section10
+                    Line Type:    Single
+                    Line Thickness:    25
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {STOPREH.PRHNUM_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    Champ39
+                            Data Source:    {BPDLVCUST.BPDNAM_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    Champ40
+                            Data Source:    {BPADDRESS_PRH.BPAADDLIG_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    Champ41
+                            Data Source:    {BPADDRESS_PRH.BPAADDLIG_1}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    Champ42
+                            Data Source:    {BPADDRESS_PRH.BPAADDLIG_2}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    Champ43
+                            Data Source:    {BPADDRESS_PRH.POSCOD_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    Champ44
+                            Data Source:    {BPADDRESS_PRH.CTY_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    Champ45
+                            Data Source:    {BPADDRESS_PRH.CRYNAM_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}<> ' '
+
+                        Field:    txttournee2
+                            Data Source:    {@txttournee}
+                            Data Type:    String
+
+                        Field:    SHIDAT02
+                            Data Source:    {STOPREH.SHIDAT_0}
+                            Data Type:    Date
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    Custom
+                                Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                        Field:    DLVDAT02
+                            Data Source:    {STOPREH.DLVDAT_0}
+                            Data Type:    Date
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    Custom
+                                Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                        Field:    BPTNUM02
+                            Data Source:    {STOPREH.BPTNUM_0}
+                            Data Type:    String
+
+                        Field:    BPCORD01
+                            Data Source:    {STOPREH.BPCORD_0}
+                            Data Type:    String
+
+                        Field:    BPDNAM01
+                            Data Source:    {SORDER.BPDNAM_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    BPDADDLIG01
+                            Data Source:    {SORDER.BPDADDLIG_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    BPDADDLIG11
+                            Data Source:    {SORDER.BPDADDLIG_1}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    BPDADDLIG21
+                            Data Source:    {SORDER.BPDADDLIG_2}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    BPDPOSCOD01
+                            Data Source:    {SORDER.BPDPOSCOD_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    BPDCTY01
+                            Data Source:    {SORDER.BPDCTY_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    BPDCRYNAM01
+                            Data Source:    {SORDER.BPDCRYNAM_0}
+                            Data Type:    String
+                            Suppression Formula:    {AREPORTM.CLEA2_0}= ' '
+
+                        Field:    CUSORDREF01
+                            Data Source:    {SORDER.CUSORDREF_0}
+                            Data Type:    String
+
+                        Field:    BPCBPSNUM01
+                            Data Source:    {BPCUSTOMER.BPCBPSNUM_0}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Texte27
+                            Text:    Código cliente :
+
+                        Text Field:    Texte29
+                            Text:    Fecha expedición :
+
+                        Text Field:    Texte30
+                            Text:    Fecha entrega :
+
+                        Text Field:    Texte32
+                            Text:    Transportista :
+
+                        Text Field:    Texte33
+                            Text:    Preparado para :
+
+                        Text Field:    Text6
+                            Text:    O.C. Cliente :
+
+                        Text Field:    Text32
+                            Text:    Nº Prov. Cliente :
+
+                    Boxes
+
+                        Box:    Cadre2
+                            Ends in Section:    GroupHeaderSection1
+                            Size:    393x108
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                Section:    Section b
+
+                    Fields
+
+                        Field:    dlvflg1
+                            Data Source:    {@dlvflg}
+                            Data Type:    String
+
+                        Field:    pacflg1
+                            Data Source:    {@pacflg}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text12
+                            Text:    Informe vale prepa :
+
+                        Text Field:    Text13
+                            Text:    Empaquetado realizado :
+
+                Section:    Section c
+
+                    Text Fields
+
+                        Text Field:    Texte34
+                            Text:    Cant. en US
+
+                        Text Field:    Texte35
+                            Text:    Artículo
+
+                        Text Field:    Texte36
+                            Text:    Descripción
+
+                        Text Field:    Text5
+                            Text:    Embalaje
+
+                        Text Field:    Text14
+                            Text:    Capacidad
+
+                        Text Field:    Texte37
+                            Text:    Lote
+
+                        Text Field:    Text1
+                            Text:    Sub-lote
+
+                        Text Field:    Text3
+                            Text:    Nº de serie
+
+                        Text Field:    Texte39
+                            Text:    Ubicación
+                            Suppression Formula:    {?gwrhact}=1
+
+                        Text Field:    Text23
+                            Text:    Cant. en US
+
+                        Text Field:    Text24
+                            Text:    Cdad en UC
+
+                        Text Field:    Text2
+                            Text:    Estado
+
+                        Text Field:    Text15
+                            Text:    ubi. destino
+
+                        Text Field:    Text43
+                            Text:    Depósito
+                            Suppression Formula:    {?gwrhact}=1
+
+                        Text Field:    Text21
+                            Text:    Ubicación
+                            Suppression Formula:    {?gwrhact}=2
+
+                    Boxes
+
+                        Box:    Box4
+                            Ends in Section:    GroupHeaderSection3
+                            Size:    742x36
+                            Line Type:    Single
+                            Line Thickness:    20
+
+            Group Footer
+
+                Section:    Section b
+
+                    Fields
+
+                        Field:    ComptagedeITMREF01
+                            Data Source:    Count ({STOPRED.ITMREF_0}, {STOPREH.PRHNUM_0})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555
+
+                        Field:    DLRNOT01
+                            Data Source:    {SORDER.DLRNOT_0}
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                    Text Fields
+
+                        Text Field:    Texte40
+                            Text:    Número de referencias de artículos :
+
+                        Text Field:    Text30
+                            Text:    Total Importe Orden:
+
+                    Boxes
+
+                        Box:    Cadre4
+                            Ends in Section:    GroupFooterSection2
+                            Size:    696x31
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                Section:    Section c
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    //if {SDELIVERY.PRPTEX2_0} = "" then true else false;
+                                        
+
+    Detail
+
+        Section:    Section a
+
+            Fields
+
+                Field:    Champ48
+                    Data Source:    {@lbl_option_ou_kit}
+                    Data Type:    String
+                    Suppression Formula:    // STOPRED.LINTYP = Type de ligne / Menu Local n° 423 
+                                            // (1 = Article Normal         / 2 = Composé Kit         / 6 = Composé nomenclature)
+                                            // (3 = Composant Kit          / 4 = Option Kit          / 5 = Variante Kit)
+                                            // (7 = Composant Nomenclature / 8 = Option Nomenclature / 9 = Variante Nomenclature)
+                                            // Non affichage de la ligne si article non composant d'un kit ou option
+                                            if  {STOPRED.LINTYP_0} = 2 or
+                                                {STOPRED.LINTYP_0} = 4 or
+                                                {STOPRED.LINTYP_0} = 8 
+                                            then
+                                                false
+                                            else
+                                                true; 
+
+        Section:    Section b
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // STOPRED.LINTYP = Type de ligne / Menu Local n° 423 
+                                // (1 = Article Normal         / 2 = Composé Kit         / 6 = Composé nomenclature)
+                                // (3 = Composant Kit          / 4 = Option Kit          / 5 = Variante Kit)
+                                // (7 = Composant Nomenclature / 8 = Option Nomenclature / 9 = Variante Nomenclature)
+                                // Affichage Ligne si article Normal ou Composé (1 / 2 / 3)
+                                if  {STOPRED.LINTYP_0} = 3 or
+                                    {STOPRED.LINTYP_0} = 4 or
+                                    {STOPRED.LINTYP_0} = 5 or
+                                    {STOPRED.LINTYP_0} = 7 or
+                                    {STOPRED.LINTYP_0} = 8 or
+                                    {STOPRED.LINTYP_0} = 9 
+                                then
+                                    true
+                                else 
+                                    false;
+
+            Fields
+
+                Field:    ITMREF01
+                    Data Source:    {STOPRED.ITMREF_0}
+                    Data Type:    String
+
+                Field:    STU01
+                    Data Source:    {STOPRED.STU_0}
+                    Data Type:    String
+
+                Field:    QTYSTU01
+                    Data Source:    {STOPRED.QTYSTU_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    PCK01
+                    Data Source:    {STOPRED.PCK_0}
+                    Data Type:    String
+
+                Field:    PCKCAP01
+                    Data Source:    {STOPRED.PCKCAP_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    LOCDES01
+                    Data Source:    {STOPRED.LOCDES_0}
+                    Data Type:    String
+
+                Field:    TEXTE02
+                    Data Source:    {AVWTEXTRA.TEXTE_0}
+                    Data Type:    String
+
+        Section:    Section c
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // STOPRED.LINTYP = Type de ligne / Menu Local n° 423 
+                                // (1 = Article Normal         / 2 = Composé Kit         / 6 = Composé nomenclature)
+                                // (3 = Composant Kit          / 4 = Option Kit          / 5 = Variante Kit)
+                                // (7 = Composant Nomenclature / 8 = Option Nomenclature / 9 = Variante Nomenclature)
+                                // Affichage Ligne si article Composant (3 / 4 / 5 / 7 / 8 / 9)
+                                if  {STOPRED.LINTYP_0} = 3 or
+                                    {STOPRED.LINTYP_0} = 4 or
+                                    {STOPRED.LINTYP_0} = 5 or
+                                    {STOPRED.LINTYP_0} = 7 or
+                                    {STOPRED.LINTYP_0} = 8 or
+                                    {STOPRED.LINTYP_0} = 9 
+                                then 
+                                    false
+                                else
+                                    true;
+
+            Fields
+
+                Field:    ITMREF02
+                    Data Source:    {STOPRED.ITMREF_0}
+                    Data Type:    String
+
+                Field:    STU02
+                    Data Source:    {STOPRED.STU_0}
+                    Data Type:    String
+
+                Field:    QTYSTU02
+                    Data Source:    {STOPRED.QTYSTU_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    PCK02
+                    Data Source:    {STOPRED.PCK_0}
+                    Data Type:    String
+
+                Field:    PCKCAP02
+                    Data Source:    {STOPRED.PCKCAP_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    LOCDES02
+                    Data Source:    {STOPRED.LOCDES_0}
+                    Data Type:    String
+
+                Field:    TEXTE01
+                    Data Source:    {AVWTEXTRA.TEXTE_0}
+                    Data Type:    String
+
+        Section:    Section d
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // ITMMASTER.STOMGTCOD = Gestion Stock / Menu Local n° 215 
+                                // (1 = Article Non géré / 2 = Article géré / 3 = Article géré titre)
+                                // Affichage ligne de détail Stock par sous-état S_LOT si Article géré ( 2 / 3)
+                                If {ITMMASTER.STOMGTCOD_0} <> 1 then false else true; 
+                                
+
+            SubReports
+
+                SubReport:    S_LOT.rpt
+                    Links:    {ITMMASTER.STU_0} => {?Pm-ITMMASTER.STU_0}
+                              {STOPRED.ITMREF_0} => {?Pm-STOALL.ITMREF_0}
+                              {STOPRED.PRELIN_0} => {?Pm-STOALL.VCRLIN_0}
+                              {STOPREH.STOFCY_0} => {?Pm-STOALL.STOFCY_0}
+                              {STOPREH.PRHNUM_0} => {?Pm-STOALL.VCRNUM_0}
+                              {TABUNIT_ITM.UOMDEC_0} => {?Pm-TABUNIT_ITM.UOMDEC_0}
+                              {?gwrhact} => {?gwhract}
+                    Suppression Formula:    If {ITMMASTER.STOMGTCOD_0} = 1 then true else false; 
+
+        Section:    Section e
+
+            Fields
+
+                Field:    CODBARRAS1
+                    Data Source:    {@CODBARRAS}
+                    Data Type:    String
+                    Display String Formula:    BarcodeC39ASCII( ToText(CurrentFieldValue) )
+
+                Field:    CODBARRAS2
+                    Data Source:    {@CODBARRAS}
+                    Data Type:    String
+
+            Lines
+
+                Line:    Line2
+                    Ends in Section:    DetailSection1
+                    Line Type:    Single
+                    Line Thickness:    20
+
+    Page Footer
+
+        Section:    Section a
+
+            Fields
+
+                Field:    PageNM1
+                    Data Source:    PageNofM
+                    Data Type:    String
+
+            Lines
+
+                Line:    Line3
+                    Ends in Section:    Section25
+                    Line Type:    Single
+                    Line Thickness:    20
+
+Subreport:    S_LOT.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-STOALL.VCRNUM_0
+            Data Type:    String
+            Description:    Pm-STOALL.VCRNUM_0
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    Pm-STOALL.STOFCY_0
+            Data Type:    String
+            Description:    Pm-STOALL.STOFCY_0
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    Pm-STOALL.ITMREF_0
+            Data Type:    String
+            Description:    Pm-STOALL.ITMREF_0
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    Pm-STOALL.VCRLIN_0
+            Data Type:    Number
+            Description:    Pm-STOALL.VCRLIN_0
+            List Type:    Static
+
+        Parameter:    Pm-ITMMASTER.STU_0
+            Data Type:    String
+            Description:    Pm-ITMMASTER.STU_0
+            List Type:    Static
+
+        Parameter:    Pm-TABUNIT_ITM.UOMDEC_0
+            Data Type:    Number
+            Description:    Pm-TABUNIT_ITM.UOMDEC_0
+            List Type:    Static
+
+        Parameter:    gwhract
+            Data Type:    Number
+            Description:    Entrer gwhract :
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.STOALL
+            Connection:    Connection #1
+            Used Columns:    {STOALL.STOFCY_0} : String[12]
+                             {STOALL.ITMREF_0} : String[42]
+                             {STOALL.STOCOU_0} : Number
+                             {STOALL.ALLTYP_0} : Number
+                             {STOALL.VCRTYP_0} : Number
+                             {STOALL.VCRNUM_0} : String[42]
+                             {STOALL.VCRLIN_0} : Number
+                             {STOALL.QTYSTUACT_0} : Number
+                             {STOALL.WRH_0} : String[12]
+                             {STOALL.LOC_0} : String[22]
+                             {STOALL.LOT_0} : String[32]
+                             {STOALL.SLO_0} : String[12]
+                             {STOALL.STA_0} : String[8]
+                             {STOALL.SERNUM_0} : String[42]
+
+        Table:    x3famesa.FAMESA.STOCK
+            Connection:    Connection #1
+            Used Columns:    {STOCK.STOFCY_0} : String[12]
+                             {STOCK.STOCOU_0} : Number
+                             {STOCK.LOT_0} : String[32]
+                             {STOCK.SLO_0} : String[12]
+                             {STOCK.STA_0} : String[8]
+                             {STOCK.LOC_0} : String[22]
+                             {STOCK.WRH_0} : String[12]
+                             {STOCK.SERNUM_0} : String[42]
+                             {STOCK.PCU_0} : String[8]
+                             {STOCK.PCUSTUCOE_0} : Number
+
+    Table Links
+        Joins:    x3famesa.FAMESA.STOALL LEFT OUTER JOIN x3famesa.FAMESA.STOCK ON x3famesa.FAMESA.STOALL.STOCOU_0,STOFCY_0 = x3famesa.FAMESA.STOCK.STOCOU_0,STOFCY_0
+
+    Record Selection Formulas
+        Formula:    // Sélections à partir de l'état principal
+                    {STOALL.STOFCY_0} = {?Pm-STOALL.STOFCY_0} and
+                    {STOALL.ITMREF_0} = {?Pm-STOALL.ITMREF_0} and
+                    {STOALL.VCRNUM_0} = {?Pm-STOALL.VCRNUM_0} and
+                    {STOALL.VCRLIN_0} = {?Pm-STOALL.VCRLIN_0} and
+                    // STOALL.VCRTYP = Type de pièce / Menu Local n° 701 (3 = Préparation / 4 = Livraison)
+                    {STOALL.VCRTYP_0} = 3
+                    
+
+    Formula Fields
+
+        Field:    decimalsau
+            Formula:    {?Pm-TABUNIT_ITM.UOMDEC_0}
+                        
+
+        Field:    qtyuc_calculee
+            Formula:    WhilePrintingRecords;
+                        global NumberVar qtyuc;
+                        
+                        // quantité en UC dans le STOCK = Quantité active en US / Coefficient UC/US
+                        if  {STOCK.PCUSTUCOE_0} = 0
+                        then
+                            qtyuc := 0
+                        else
+                            qtyuc := {STOALL.QTYSTUACT_0} / {STOCK.PCUSTUCOE_0}
+                        
+
+    Report Header
+
+        Section:    Section a
+
+            Text Fields
+
+                Text Field:    Texte37
+                    Text:    Lote
+
+                Text Field:    Text1
+                    Text:    Sub-lote
+
+                Text Field:    Text3
+                    Text:    Nº de serie
+
+                Text Field:    Texte39
+                    Text:    Ubicación
+                    Suppression Formula:    {?gwhract}=1
+
+                Text Field:    Text23
+                    Text:    Cant. en US
+
+                Text Field:    Text24
+                    Text:    Cdad en UC
+
+                Text Field:    Text2
+                    Text:    Estado
+
+                Text Field:    Text4
+                    Text:    Depósito
+                    Suppression Formula:    {?gwhract}=1
+
+                Text Field:    Text6
+                    Text:    Ubicación
+                    Suppression Formula:    {?gwhract}=2
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // STOALL.ALLTYP = Type d'allocation / Menu Local n° 294 (4 = Manquant Détail / 5 = Manquant Global)
+                                // Affichage section si non Manquant
+                                if  {STOALL.ALLTYP_0} = 4 or
+                                    {STOALL.ALLTYP_0} = 5 
+                                then
+                                    true
+                                else
+                                    false;
+                                
+
+            Fields
+
+                Field:    Champ1
+                    Data Source:    {STOCK.LOT_0}
+                    Data Type:    String
+
+                Field:    SLO02
+                    Data Source:    {STOCK.SLO_0}
+                    Data Type:    String
+
+                Field:    Champ2
+                    Data Source:    {?Pm-ITMMASTER.STU_0}
+                    Data Type:    String
+
+                Field:    SERNUM01
+                    Data Source:    {STOCK.SERNUM_0}
+                    Data Type:    String
+
+                Field:    Champ3
+                    Data Source:    {STOCK.LOC_0}
+                    Data Type:    String
+                    Suppression Formula:    {?gwhract}=1
+
+                Field:    STA02
+                    Data Source:    {STOCK.STA_0}
+                    Data Type:    String
+
+                Field:    QTYSTUACT01
+                    Data Source:    {STOALL.QTYSTUACT_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    qtyuccalculee1
+                    Data Source:    {@qtyuc_calculee}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    PCU01
+                    Data Source:    {STOCK.PCU_0}
+                    Data Type:    String
+
+                Field:    WRH02
+                    Data Source:    {STOCK.WRH_0}
+                    Data Type:    String
+                    Suppression Formula:    {?gwhract}=1
+
+                Field:    LOC02
+                    Data Source:    {STOCK.LOC_0}
+                    Data Type:    String
+                    Suppression Formula:    {?gwhract}=2
+
+        Section:    Section b
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // STOALL.ALLTYP = Type d'allocation / Menu Local n° 294 (4 = Manquant Détail / 5 = Manquant Global)
+                                // Affichage section si Manquant 4 ou 5
+                                if  {STOALL.ALLTYP_0} = 4 or 
+                                    {STOALL.ALLTYP_0} = 5 
+                                then 
+                                    false 
+                                else 
+                                    true;
+                                
+
+            Fields
+
+                Field:    LOT01
+                    Data Source:    {STOALL.LOT_0}
+                    Data Type:    String
+
+                Field:    SLO01
+                    Data Source:    {STOALL.SLO_0}
+                    Data Type:    String
+
+                Field:    STA01
+                    Data Source:    {STOALL.STA_0}
+                    Data Type:    String
+
+                Field:    SERNUM02
+                    Data Source:    {STOALL.SERNUM_0}
+                    Data Type:    String
+
+                Field:    LOC01
+                    Data Source:    {STOALL.LOC_0}
+                    Data Type:    String
+                    Suppression Formula:    {?gwhract}=1
+
+                Field:    Champ6
+                    Data Source:    {STOALL.QTYSTUACT_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5 555 555,
+
+                Field:    Champ5
+                    Data Source:    {?Pm-ITMMASTER.STU_0}
+                    Data Type:    String
+
+                Field:    WRH01
+                    Data Source:    {STOALL.WRH_0}
+                    Data Type:    String
+                    Suppression Formula:    {?gwhract}=1
+
+                Field:    LOC03
+                    Data Source:    {STOALL.LOC_0}
+                    Data Type:    String
+                    Suppression Formula:    {?gwhract}=2
+
+            Text Fields
+
+                Text Field:    Texte1
+                    Text:    Faltan
+
+Subreport:    logo2
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    x3famesa.FAMESA.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[22]
+                             {ABLOB.IDENT1_0} : String[162]
+                             {ABLOB.IDENT2_0} : String[162]
+                             {ABLOB.IDENT3_0} : String[22]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.IDENT3_0} = "002" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Unused Formula Fields
+
+        Field:    test
+            Formula:    Split ({?X3DOS},";")[1] 
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    140x56

@@ -1,0 +1,1411 @@
+****************************************************************************
+Location : Local or Network Folders
+Host     : PORTATIL-INFORM
+Path     : C:\Código Fuente\Reporting SAGE\V12\ZFICHSUI1F.rpt
+****************************************************************************
+
+
+Report Information
+    Version:    14.0
+    Author:    Oscar J. Martínez
+    Title:    Ficha seguimiento
+    Printer:    No Printer
+
+Main Body
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3ETA
+            Data Type:    String
+            Description:    Code de l'état
+            List Type:    Static
+            List Values:    NONINPUT
+            Default Values:    NONINPUT
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sage.fr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sage.fr.adinternal.com;15150;150;FRA
+
+        Parameter:    X3OPE
+            Data Type:    String
+            Description:    Nom & Prénom de l'opérateur
+            List Type:    Static
+            List Values:    [Opérateur]
+            Default Values:    [Opérateur]
+
+        Parameter:    X3TIT
+            Data Type:    String
+            Description:    Titre de l'état
+            List Type:    Static
+            List Values:    Fiche suiveuse
+            Default Values:    Fiche suiveuse
+
+        Parameter:    X3EDT
+            Data Type:    String
+            Description:    Information éditeur
+            List Type:    Static
+            List Values:    Adonix
+            Default Values:    Adonix
+
+        Parameter:    X3CLI
+            Data Type:    String
+            Description:    Informations client
+            List Type:    Static
+
+        Parameter:    mfgfcydeb
+            Data Type:    String
+            Description:    Site de production début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    mfgfcyfin
+            Data Type:    String
+            Description:    Site de production fin
+            List Type:    Static
+            List Values:    zzz
+            Default Values:    zzz
+
+        Parameter:    mfgnumdeb
+            Data Type:    String
+            Description:    Ordre de fabrication
+            List Type:    Static
+
+        Parameter:    mfgnumfin
+            Data Type:    String
+            Description:    Ordre de fabrication fin
+            List Type:    Static
+
+        Parameter:    pjtdeb
+            Data Type:    String
+            Description:    Affaire début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    pjtfin
+            Data Type:    String
+            Description:    Affaire fin
+            List Type:    Static
+            List Values:    zzzzzzzzzz
+            Default Values:    zzzzzzzzzz
+
+        Parameter:    strdatdeb
+            Data Type:    Date
+            Description:    Date début
+            List Type:    Static
+
+        Parameter:    strdatfin
+            Data Type:    Date
+            Description:    Date fin
+            List Type:    Static
+
+        Parameter:    gammedeb
+            Data Type:    String
+            Description:    Gamme fin
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    gammefin
+            Data Type:    String
+            Description:    Gamme début
+            List Type:    Static
+            List Values:    zzzzzzzzzzzzzzzzzzzz
+            Default Values:    zzzzzzzzzzzzzzzzzzzz
+
+        Parameter:    usr
+            Data Type:    String
+            Description:    user
+            List Type:    Static
+
+        Parameter:    etat
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    numedt
+            Data Type:    Number
+            Description:    numedt
+            List Type:    Static
+
+        Parameter:    impselection
+            Data Type:    Number
+            Description:    impression des selections
+            List Type:    Static
+            List Values:    0
+            Default Values:    0
+
+        Parameter:    X3LAN
+            Data Type:    String
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESAOF.MFGHEAD
+            Connection:    Connection #1
+            Used Columns:    {MFGHEAD.MFGNUM_0} : String[42]
+                             {MFGHEAD.MFGFCY_0} : String[12]
+                             {MFGHEAD.ENDDAT_0} : Date
+                             {MFGHEAD.STU_0} : String[8]
+                             {MFGHEAD.EXTQTY_0} : Number
+                             {MFGHEAD.CPLQTY_0} : Number
+
+        Table:    x3famesa.FAMESAOF.MFGITM
+            Connection:    Connection #1
+            Used Columns:    {MFGITM.MFGNUM_0} : String[42]
+                             {MFGITM.ITMREF_0} : String[42]
+                             {MFGITM.PJT_0} : String[42]
+                             {MFGITM.BPCNUM_0} : String[32]
+                             {MFGITM.UOM_0} : String[8]
+
+        Table:    x3famesa.FAMESAOF.FACILITY
+            Connection:    Connection #1
+            Used Columns:    {FACILITY.FCY_0} : String[12]
+                             {FACILITY.FCYNAM_0} : String[72]
+
+        Table:    x3famesa.FAMESAOF.ITMMASTER
+            Connection:    Connection #1
+            Used Columns:    {ITMMASTER.ITMREF_0} : String[42]
+                             {ITMMASTER.ITMDES1_0} : String[82]
+                             {ITMMASTER.ITMDES2_0} : String[82]
+
+        Table:    x3famesa.FAMESAOF.TABUNIT
+            Connection:    Connection #1
+            Used Columns:    {TABUNIT.UOM_0} : String[8]
+
+        Table:    x3famesa.FAMESAOF.TABUNIT
+            Connection:    Connection #1
+            Report Alias:    TABUNIT_uom
+
+        Table:    x3famesa.FAMESAOF.BPCUSTOMER
+            Connection:    Connection #1
+            Used Columns:    {BPCUSTOMER.BPCNUM_0} : String[32]
+                             {BPCUSTOMER.BPCNAM_0} : String[72]
+
+    Table Links
+        Joins:    x3famesa.FAMESAOF.MFGHEAD LEFT OUTER JOIN x3famesa.FAMESAOF.FACILITY ON x3famesa.FAMESAOF.MFGHEAD.MFGFCY_0 = x3famesa.FAMESAOF.FACILITY.FCY_0
+                  x3famesa.FAMESAOF.MFGHEAD LEFT OUTER JOIN x3famesa.FAMESAOF.MFGITM ON x3famesa.FAMESAOF.MFGHEAD.MFGNUM_0 = x3famesa.FAMESAOF.MFGITM.MFGNUM_0
+                  x3famesa.FAMESAOF.MFGHEAD LEFT OUTER JOIN x3famesa.FAMESAOF.TABUNIT ON x3famesa.FAMESAOF.MFGHEAD.STU_0 = x3famesa.FAMESAOF.TABUNIT.UOM_0
+                  x3famesa.FAMESAOF.MFGITM LEFT OUTER JOIN x3famesa.FAMESAOF.TABUNIT TABUNIT_uom ON x3famesa.FAMESAOF.MFGITM.UOM_0 = TABUNIT_uom.UOM_0
+                  x3famesa.FAMESAOF.MFGITM LEFT OUTER JOIN x3famesa.FAMESAOF.ITMMASTER ON x3famesa.FAMESAOF.MFGITM.ITMREF_0 = x3famesa.FAMESAOF.ITMMASTER.ITMREF_0
+                  x3famesa.FAMESAOF.MFGITM LEFT OUTER JOIN x3famesa.FAMESAOF.BPCUSTOMER ON x3famesa.FAMESAOF.MFGITM.BPCNUM_0 = x3famesa.FAMESAOF.BPCUSTOMER.BPCNUM_0
+
+    Record Selection Formulas
+        Formula:    ({MFGHEAD.MFGNUM_0} in {?mfgnumdeb} to {?mfgnumfin})
+                    and ({MFGHEAD.MFGFCY_0} in {?mfgfcydeb} to {?mfgfcyfin})
+
+    Record Sorting
+        Sort By:    MFGHEAD.MFGNUM_0 -- Ascending Order Group #1
+
+    Formula Fields
+
+        Field:    GH1
+            Formula:    //{MFGHEAD.MFGFCY_0} + " " + {FACILITY.FCYNAM_0}
+                        {FACILITY.FCYNAM_0}
+
+        Field:    initmyvar
+            Formula:    Global StringVar MyVar := "First";
+                        
+
+        Field:    resetmyvar
+            Formula:    Global StringVar MyVar;
+                        			MyVar := "Second";
+                        
+                        
+
+        Field:    DESTINATARIO
+            Formula:    select {MFGITM.BPCNUM_0}
+                            case "FAM" : "FAMESA"
+                            case "TRI" : "TRILLA"
+                            default: {BPCUSTOMER.BPCNAM_0}
+
+        Field:    v_peso
+            Formula:    //{ITMMASTER.ITMWEI_0} * 1000
+                        //ToText({ITMMASTER.ITMWEI_0} * 1000, 0,'')  + " Gr."
+                        
+
+    Unused Formula Fields
+
+        Field:    decimalstu
+            Formula:    {TABUNIT.UOMDEC_0}
+                        
+
+        Field:    decimaluom
+            Formula:    {TABUNIT_uom.UOMDEC_0}
+                        
+
+        Field:    lblscdmod
+            Formula:    TextForCode ({?X3DOS},"{MFGHEAD.SCDFLG_0}",{MFGHEAD.SCDFLG_0} )
+                        
+
+        Field:    nomtable
+            Formula:    WhilePrintingRecords;
+                        Shared StringVAr nomtable;
+                        nomtable := "ITMMASTER"
+                        
+
+        Field:    nomzone
+            Formula:    WhilePrintingRecords;
+                        Shared StringVAr nomzone;
+                        nomzone := "DES1AXX"
+                        
+
+        Field:    Barcod_MFGNUM
+            Formula:    {MFGHEAD.MFGNUM_0}
+
+    Report Header
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {?impselection} = 0 then true else false;
+                                
+
+            Fields
+
+                Field:    X3TIT1
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+                Field:    X3ETA1
+                    Data Source:    {?X3ETA}
+                    Data Type:    String
+
+                Field:    X3DOS1
+                    Data Source:    {?X3DOS}
+                    Data Type:    String
+
+                Field:    X3OPE2
+                    Data Source:    {?X3OPE}
+                    Data Type:    String
+
+                Field:    Dateimpression2
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Heureimpression1
+                    Data Source:    PrintTime
+                    Data Type:    Time
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Time Format:    MM/DD/YY h:mm:ss
+
+                Field:    mfgfcydeb1
+                    Data Source:    {?mfgfcydeb}
+                    Data Type:    String
+
+                Field:    mfgnumdeb1
+                    Data Source:    {?mfgnumdeb}
+                    Data Type:    String
+
+                Field:    pjtdeb1
+                    Data Source:    {?pjtdeb}
+                    Data Type:    String
+
+                Field:    strdatdeb1
+                    Data Source:    {?strdatdeb}
+                    Data Type:    Date
+                    Suppression Formula:    If {?strdatdeb} =  (Date (1600,01,01)) then true else false;
+                                            
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    gammedeb1
+                    Data Source:    {?gammedeb}
+                    Data Type:    String
+
+                Field:    mfgfcyfin1
+                    Data Source:    {?mfgfcyfin}
+                    Data Type:    String
+
+                Field:    mfgnumfin1
+                    Data Source:    {?mfgnumfin}
+                    Data Type:    String
+
+                Field:    pjtfin1
+                    Data Source:    {?pjtfin}
+                    Data Type:    String
+
+                Field:    strdatfin1
+                    Data Source:    {?strdatfin}
+                    Data Type:    Date
+                    Suppression Formula:    If {?strdatfin} =  (Date (9999,12,31)) then true else false;
+                                            
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    gammefin1
+                    Data Source:    {?gammefin}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text38
+
+                Text Field:    Text75
+                    Text:    Criterios de selección
+
+                Text Field:    Text2
+                    Text:    Planta de producción
+
+                Text Field:    Text13
+                    Text:    Fecha inicio
+
+                Text Field:    Text14
+                    Text:    Ruta
+
+                Text Field:    Text12
+                    Text:    Proyecto
+
+                Text Field:    Text11
+                    Text:    Orden de fabricación
+
+                Text Field:    Text20
+                    Text:    Planta de producción
+
+                Text Field:    Text24
+                    Text:    Orden de fabricación
+
+                Text Field:    Text21
+                    Text:    Orden de fabricación
+
+                Text Field:    Text76
+                    Text:    Criterios de reagrupamiento
+
+                Text Field:    Text3
+                    Text:    De
+
+                Text Field:    Text4
+                    Text:    De
+
+                Text Field:    Text5
+                    Text:    De
+
+                Text Field:    Text6
+                    Text:    De
+
+                Text Field:    Text15
+                    Text:    De
+
+                Text Field:    Text7
+                    Text:    a
+
+                Text Field:    Text8
+                    Text:    a
+
+                Text Field:    Text9
+                    Text:    a
+
+                Text Field:    Text10
+                    Text:    a
+
+                Text Field:    Text16
+                    Text:    a
+
+                Text Field:    Text19
+                    Text:    Ascendente
+
+                Text Field:    Text23
+                    Text:    Si, con salto de página
+
+                Text Field:    Text18
+                    Text:    Ascendente
+
+                Text Field:    Text31
+
+            Boxes
+
+                Box:    Box8
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    520x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box6
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    520x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box11
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    520x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box14
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box15
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box16
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box17
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box18
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box13
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box19
+                    Ends in Section:    ReportHeaderSection1
+                    Size:    519x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+            SubReports
+
+                SubReport:    logo2.rpt
+                    Links:    {?X3DOS} => {?X3DOS}
+
+                SubReport:    logo3.rpt
+                    Links:    {?X3DOS} => {?X3DOS}
+
+    Page Header
+
+        Section:    Section a
+
+            Lines
+
+                Line:    Line2
+                    Ends in Section:    PageHeaderSection1
+                    Line Type:    Single
+                    Line Thickness:    0
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {MFGHEAD.MFGNUM_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    PageNM2
+                            Data Source:    PageNofM
+                            Data Type:    String
+
+                        Field:    Horadeimpresión1
+                            Data Source:    PrintTime
+                            Data Type:    Time
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    System Default
+                                Time Format:    MM/DD/YY h:mm
+
+                        Field:    Fechadeimpresión1
+                            Data Source:    PrintDate
+                            Data Type:    Date
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    Custom
+                                Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                        Field:    initmyvar1
+                            Data Source:    {@initmyvar}
+                            Data Type:    String
+
+                        Field:    GH11
+                            Data Source:    {@GH1}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text1
+                            Text:    FECHA:
+
+                        Text Field:    Text25
+                            Text:    NOTA DE OPERACIÓN
+
+                        Text Field:    Text30
+                            Text:    AÑO
+
+                    Lines
+
+                        Line:    Line1
+                            Ends in Section:    GroupHeaderSection2
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                Section:    Section b
+
+                    Fields
+
+                        Field:    MFGNUM01
+                            Data Source:    {MFGHEAD.MFGNUM_0}
+                            Data Type:    String
+
+                        Field:    ENDDAT01
+                            Data Source:    {MFGHEAD.ENDDAT_0}
+                            Data Type:    Date
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    System Default
+                                Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                        Field:    EXTQTY01
+                            Data Source:    {MFGHEAD.EXTQTY_0}
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                        Field:    STU01
+                            Data Source:    {MFGHEAD.STU_0}
+                            Data Type:    String
+
+                        Field:    PJT01
+                            Data Source:    {MFGITM.PJT_0}
+                            Data Type:    String
+
+                        Field:    DESTINATARIO1
+                            Data Source:    {@DESTINATARIO}
+                            Data Type:    String
+
+                        Field:    ITMREF01
+                            Data Source:    {MFGITM.ITMREF_0}
+                            Data Type:    String
+
+                        Field:    ITMDES101
+                            Data Source:    {ITMMASTER.ITMDES1_0}
+                            Data Type:    String
+
+                        Field:    ITMDES201
+                            Data Source:    {ITMMASTER.ITMDES2_0}
+                            Data Type:    String
+
+                        Field:    vpeso1
+                            Data Source:    {@v_peso}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text66
+                            Text:    Orden de Fabricación:
+
+                        Text Field:    Text67
+                            Text:    Fecha Planificada fin:
+
+                        Text Field:    Text68
+                            Text:    Cantidad Pedida:
+
+                        Text Field:    Text69
+                            Text:    Unidad Stock:
+
+                        Text Field:    Text70
+                            Text:    Proyecto:
+
+                        Text Field:    Text71
+                            Text:    Destinatario:
+
+                        Text Field:    Text32
+                            Text:    Artículo:
+
+                        Text Field:    Text26
+                            Text:    Material: 
+
+                    Lines
+
+                        Line:    Line3
+                            Ends in Section:    GroupHeaderSection3
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                Section:    Section c
+
+                    Fields
+
+                        Field:    CPLQTY01
+                            Data Source:    {MFGHEAD.CPLQTY_0}
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                    Text Fields
+
+                        Text Field:    Text27
+                            Text:    Cantidad Realizada Total:
+
+                        Text Field:    Text28
+                            Text:    Lote Materia Prima:
+
+                        Text Field:    Text29
+                            Text:    Lote Colorante:
+
+            Group Footer
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    resetmyvar1
+                            Data Source:    {@resetmyvar}
+                            Data Type:    String
+
+                    SubReports
+
+                        SubReport:    SFICHSUI
+                            Links:    {MFGHEAD.MFGNUM_0} => {?Pm-MFGHEAD.MFGNUM_0}
+                                      {?X3DOS} => {?X3DOS}
+
+                Section:    Section b
+
+                    Conditional Formulas
+
+                        Condition:    EnableNewPageAfter
+                            Formula:    not OnLastRecord
+
+                    Text Fields
+
+                        Text Field:    Text41
+                            Text:    Código
+
+                        Text Field:    Text46
+                            Text:    PIEZAS MALAS
+
+                        Text Field:    Text49
+                            Text:    Horas
+
+                        Text Field:    Text53
+                            Text:    INCIDENCIAS
+
+                        Text Field:    Text44
+                            Text:    PIEZAS
+                                     BUENAS
+
+                        Text Field:    Text45
+                            Text:    ACUMU.
+                                     PIEZAS
+
+                        Text Field:    Text52
+                            Text:    Vº Bº
+                                     ENCARGADO
+
+                        Text Field:    Text64
+                            Text:    MES
+
+                        Text Field:    Text65
+                            Text:    DÍA
+
+                        Text Field:    Text40
+                            Text:    Turno
+
+                        Text Field:    Text42
+                            Text:    Oper.
+
+                        Text Field:    Text43
+                            Text:    Máq.
+
+                        Text Field:    Text47
+                            Text:    PROD.
+
+                        Text Field:    Text48
+                            Text:    INCID.
+
+                        Text Field:    Text51
+                            Text:    Oper.
+
+                        Text Field:    Text50
+                            Text:    Máq.
+
+                        Text Field:    Text54
+                            Text:    10
+
+                        Text Field:    Text55
+                            Text:    20
+
+                        Text Field:    Text56
+                            Text:    21
+
+                        Text Field:    Text57
+                            Text:    30
+
+                        Text Field:    Text58
+                            Text:    40
+
+                        Text Field:    Text59
+                            Text:    50
+
+                        Text Field:    Text60
+                            Text:    55
+
+                        Text Field:    Text61
+                            Text:    70
+
+                        Text Field:    Text62
+                            Text:    90
+
+                        Text Field:    Text63
+                            Text:    991
+
+                    Boxes
+
+                        Box:    Box3
+                            Ends in Section:    GroupFooterSection1
+                            Size:    709x562
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                    Lines
+
+                        Line:    Line36
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line37
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line35
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line40
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line41
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line42
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line47
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line49
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line44
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line38
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line39
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line43
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line46
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line53
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line55
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line56
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line57
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line45
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line48
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line50
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line51
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line52
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line58
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line59
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line9
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line10
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line11
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line12
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line13
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line14
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line15
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line16
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line17
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line18
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line19
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line20
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line21
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line22
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line23
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line24
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line25
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line26
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line27
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line28
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line29
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line30
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line31
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line32
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line33
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line34
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line5
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                        Line:    Line6
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+    Page Footer
+
+        Section:    Section a
+
+            Text Fields
+
+                Text Field:    Text17
+                    Text:    10 - PRUEBAS DE MOLDE
+                             20 - CAMBIOS DE MOLDE
+                             21 - PUESTA PUNTO
+
+                Text Field:    Text22
+                    Text:    30 - CAMBIOS DE COLOR
+                             40 - AVERÍA DE MÁQUINA
+                             50 - AVERÍA DE MOLDE
+                             55 - CAMBIOS DE VERSIÓN
+
+                Text Field:    Text39
+                    Text:    70   - FALTA MATERIA PRIMA O
+                                            COMPONENTE
+                             90   - MÁQUINA DISPONIBLE
+                             991 - LIMPIEZA
+
+            Lines
+
+                Line:    Line4
+                    Ends in Section:    PageFooterSection1
+                    Line Type:    Single
+                    Line Thickness:    20
+
+Subreport:    SFICHSUI
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-MFGHEAD.MFGNUM_0
+            Data Type:    String
+            Description:    Pm-MFGHEAD.MFGNUM_0
+            List Type:    Static
+
+        Parameter:    X3DOS
+            Data Type:    String
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESAOF.MFGOPE
+            Connection:    Connection #1
+            Used Columns:    {MFGOPE.MFGNUM_0} : String[42]
+                             {MFGOPE.OPENUM_0} : Number
+                             {MFGOPE.EXTWST_0} : String[18]
+                             {MFGOPE.OPESTR_0} : DateTime
+                             {MFGOPE.OPEEND_0} : DateTime
+                             {MFGOPE.ROODES_0} : String[82]
+                             {MFGOPE.OPEUOM_0} : String[8]
+                             {MFGOPE.EXTSETTIM_0} : Number
+                             {MFGOPE.EXTOPETIM_0} : Number
+                             {MFGOPE.MFOTEX_0} : String[26]
+
+        Table:    x3famesa.FAMESAOF.TABUNIT
+            Connection:    Connection #1
+            Used Columns:    {TABUNIT.UOM_0} : String[8]
+
+        Table:    x3famesa.FAMESAOF.TEXCLOB
+            Connection:    Connection #1
+            Used Columns:    {TEXCLOB.CODE_0} : String[26]
+                             {TEXCLOB.TEXTE_0} : Unknown
+
+    Table Links
+        Joins:    x3famesa.FAMESAOF.MFGOPE INNER JOIN x3famesa.FAMESAOF.TABUNIT ON x3famesa.FAMESAOF.MFGOPE.OPEUOM_0 = x3famesa.FAMESAOF.TABUNIT.UOM_0
+                  x3famesa.FAMESAOF.MFGOPE LEFT OUTER JOIN x3famesa.FAMESAOF.TEXCLOB ON x3famesa.FAMESAOF.MFGOPE.MFOTEX_0 = x3famesa.FAMESAOF.TEXCLOB.CODE_0
+
+    Record Selection Formulas
+        Formula:    //{MFGOPE.OPESTA_0} < 4 and 
+                    {MFGOPE.MFGNUM_0} = {?Pm-MFGHEAD.MFGNUM_0}
+
+    Record Sorting
+        Sort By:    MFGOPE.MFGNUM_0 -- Ascending Order Group #1
+
+    Formula Fields
+
+        Field:    barcod_mfgopenum
+            Formula:    {MFGOPE.MFGNUM_0}+ToText ({MFGOPE.OPENUM_0})
+
+    Unused Formula Fields
+
+        Field:    decimalopeuom
+            Formula:    {TABUNIT.UOMDEC_0}
+                        
+
+        Field:    lbltimuom
+            Formula:    TextForCode ({?X3DOS},"{MFGOPE.TIMUOMCOD_0}",{MFGOPE.TIMUOMCOD_0} )
+                        
+
+        Field:    lbltimuom
+            Formula:    TextForCode ({?X3DOS},"{MFGOPE.TIMUOMCOD_0}",{MFGOPE.TIMUOMCOD_0} )
+                        
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {MFGOPE.MFGNUM_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Text Fields
+
+                        Text Field:    Text1
+                            Text:    N° OPE
+
+                        Text Field:    Text2
+                            Text:    Descripción operación
+
+                        Text Field:    Text3
+                            Text:    Centro
+
+                        Text Field:    Text4
+                            Text:    Tpo prep.
+
+                        Text Field:    Text5
+                            Text:    Tpo operatorio
+
+                        Text Field:    Text6
+                            Text:    Unidad
+
+                        Text Field:    Text7
+                            Text:    Inicio
+
+                        Text Field:    Text8
+                            Text:    Fin
+
+                    Boxes
+
+                        Box:    Box1
+                            Ends in Section:    GroupHeaderSection1
+                            Size:    696x21
+                            Line Type:    Single
+                            Line Thickness:    20
+
+    Detail
+
+        Section:    Section a
+
+            Fields
+
+                Field:    OPEEND01
+                    Data Source:    {MFGOPE.OPEEND_0}
+                    Data Type:    DateTime
+                    Format:    Date and Time
+                        Order:    Date Only
+                        Date Type:    System Default
+                        DateTime Format:    DD/MM/YYYY
+
+                Field:    OPESTR01
+                    Data Source:    {MFGOPE.OPESTR_0}
+                    Data Type:    DateTime
+                    Format:    Date and Time
+                        Order:    Date Only
+                        Date Type:    System Default
+                        DateTime Format:    DD/MM/YYYY
+
+                Field:    EXTWST01
+                    Data Source:    {MFGOPE.EXTWST_0}
+                    Data Type:    String
+
+                Field:    lbltimuom1
+                    Data Source:    {@lbltimuom}
+                    Data Type:    String
+
+                Field:    EXTOPETIM01
+                    Data Source:    {MFGOPE.EXTOPETIM_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    EXTSETTIM01
+                    Data Source:    {MFGOPE.EXTSETTIM_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    ROODES01
+                    Data Source:    {MFGOPE.ROODES_0}
+                    Data Type:    String
+
+                Field:    OPENUM01
+                    Data Source:    {MFGOPE.OPENUM_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555
+
+        Section:    Section b
+
+            Fields
+
+                Field:    barcodmfgopenum1
+                    Data Source:    {@barcod_mfgopenum}
+                    Data Type:    String
+
+                Field:    TEXTE01
+                    Data Source:    {TEXCLOB.TEXTE_0}
+                    Data Type:    Unknown
+
+    Report Footer
+
+        Section:    Section a
+
+            Lines
+
+                Line:    Line1
+                    Ends in Section:    ReportFooterSection1
+                    Line Type:    Single
+                    Line Thickness:    40
+
+Subreport:    logo2.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    x3famesa.FAMESAOF.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[22]
+                             {ABLOB.IDENT1_0} : String[162]
+                             {ABLOB.IDENT2_0} : String[162]
+                             {ABLOB.IDENT3_0} : String[22]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.IDENT3_0} = "002" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    140x56
+
+Subreport:    logo3.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    x3famesa.FAMESAOF.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[22]
+                             {ABLOB.IDENT1_0} : String[162]
+                             {ABLOB.IDENT2_0} : String[162]
+                             {ABLOB.IDENT3_0} : String[22]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT3_0} = "003" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    151x128

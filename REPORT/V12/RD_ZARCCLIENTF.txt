@@ -1,0 +1,3702 @@
+****************************************************************************
+Location : Local or Network Folders
+Host     : PORTATIL-INFORM
+Path     : C:\Código Fuente\Reporting SAGE\V12\ZARCCLIENTF.rpt
+****************************************************************************
+
+
+Report Information
+    Version:    14.0
+    Author:    Oscar Julio Martinez Cabañero
+    Title:    Pedido de Venta
+    Printer:    No Printer
+
+Main Body
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3ETA
+            Data Type:    String
+            Description:    Code de l'état
+            List Type:    Static
+            List Values:    NONINPUT
+            Default Values:    NONINPUT
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    GX3APP;aydaix05.sage.fr.adinternal.com;2050;150;FRA
+            Default Values:    GX3APP;aydaix05.sage.fr.adinternal.com;2050;150;FRA
+
+        Parameter:    X3OPE
+            Data Type:    String
+            Description:    Nom & Prénom de l'opérateur
+            List Type:    Static
+            List Values:    [Opérateur]
+            Default Values:    [Opérateur]
+
+        Parameter:    X3TIT
+            Data Type:    String
+            Description:    Titre de l'état
+            List Type:    Static
+            List Values:    ARC
+            Default Values:    ARC
+
+        Parameter:    X3EDT
+            Data Type:    String
+            Description:    Information éditeur
+            List Type:    Static
+            List Values:    Adonix & Prodstar
+            Default Values:    Adonix & Prodstar
+
+        Parameter:    X3CLI
+            Data Type:    String
+            Description:    Informations client
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    X3LAN
+            Data Type:    String
+            Description:    Langue
+            List Type:    Static
+            List Values:    FRA
+            Default Values:    FRA
+
+        Parameter:    clientdeb
+            Data Type:    String
+            Description:    N° Tiers début ?
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    clientfin
+            Data Type:    String
+            Description:    N° Tiers Fin ?
+            List Type:    Static
+            List Values:    ZZZZZZZZZZ
+            Default Values:    ZZZZZZZZZZ
+
+        Parameter:    commandedeb
+            Data Type:    String
+            Description:    N° commande début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    commandefin
+            Data Type:    String
+            Description:    N° commande fin
+            List Type:    Static
+            List Values:    zzzzzzzzzzzzzzz
+            Default Values:    zzzzzzzzzzzzzzz
+
+        Parameter:    sitedeb
+            Data Type:    String
+            Description:    Site début
+            List Type:    Static
+            List Values:     
+            Default Values:     
+
+        Parameter:    sitefin
+            Data Type:    String
+            Description:    Site fin
+            List Type:    Static
+            List Values:    zzz
+            Default Values:    zzz
+
+        Parameter:    avenantdeb
+            Data Type:    Number
+            Description:    Avenant début
+            List Type:    Static
+            List Values:    0
+            Default Values:    0
+
+        Parameter:    avenantfin
+            Data Type:    Number
+            Description:    Avenant Fin
+            List Type:    Static
+            List Values:    9999
+            Default Values:    9999
+
+        Parameter:    impselections
+            Data Type:    Number
+            Description:    Impression des selections ?
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    usr
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    etat
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    numedt
+            Data Type:    Number
+            List Type:    Static
+
+        Parameter:    euro
+            Data Type:    String
+            Description:    devise euro
+            List Type:    Static
+            List Values:    EUR
+            Default Values:    EUR
+
+        Parameter:    codact
+            Data Type:    Number
+            Description:    code activité DEB actif ?
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    arcttc
+            Data Type:    Number
+            Description:    ARC client TTC
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    tauxagios
+            Data Type:    Number
+            Description:    Taux d'agios
+            List Type:    Static
+
+        Parameter:    tauxescompte
+            Data Type:    Number
+            Description:    Taux d'escompte
+            List Type:    Static
+
+        Parameter:    datedeb
+            Data Type:    Date
+            List Type:    Static
+
+        Parameter:    datefin
+            Data Type:    Date
+            List Type:    Static
+
+        Parameter:    devdeb
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    devfin
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    typedeb
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    typefin
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    etatcomdeb
+            Data Type:    Number
+            List Type:    Static
+            List Values:    0
+            Default Values:    0
+
+        Parameter:    etatcomfin
+            Data Type:    Number
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    etatfacdeb
+            Data Type:    Number
+            List Type:    Static
+            List Values:    0
+            Default Values:    0
+
+        Parameter:    etatfacfin
+            Data Type:    Number
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    etatlivdeb
+            Data Type:    Number
+            List Type:    Static
+            List Values:    0
+            Default Values:    0
+
+        Parameter:    etatlivfin
+            Data Type:    Number
+            List Type:    Static
+            List Values:    1
+            Default Values:    1
+
+        Parameter:    datelivdeb
+            Data Type:    Date
+            List Type:    Static
+
+        Parameter:    datelivfin
+            Data Type:    Date
+            List Type:    Static
+
+        Parameter:    X3FCT
+            Data Type:    String
+            Description:    Fonction
+            List Type:    Static
+
+        Parameter:    X3PRF
+            Data Type:    String
+            Description:    Profil fonction
+            List Type:    Static
+
+        Parameter:    categcomdeb
+            Data Type:    Number
+            List Type:    Static
+
+        Parameter:    categcomfin
+            Data Type:    Number
+            List Type:    Static
+
+        Parameter:    impcabecera
+            Data Type:    Number
+            Description:    Especificar impcabecera:
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.SORDER
+            Connection:    Connection #1
+            Used Columns:    {SORDER.SOHNUM_0} : String[42]
+                             {SORDER.CPY_0} : String[12]
+                             {SORDER.SALFCY_0} : String[12]
+                             {SORDER.BPCORD_0} : String[32]
+                             {SORDER.BPAADD_0} : String[12]
+                             {SORDER.CUSORDREF_0} : String[42]
+                             {SORDER.ORDDAT_0} : Date
+                             {SORDER.DEMDLVDAT_0} : Date
+                             {SORDER.BPCNAM_0} : String[72]
+                             {SORDER.BPAORD_0} : String[12]
+                             {SORDER.BPCADDLIG_0} : String[102]
+                             {SORDER.BPCADDLIG_1} : String[102]
+                             {SORDER.BPCADDLIG_2} : String[102]
+                             {SORDER.BPCPOSCOD_0} : String[22]
+                             {SORDER.BPCCTY_0} : String[82]
+                             {SORDER.BPCSAT_0} : String[72]
+                             {SORDER.BPCCRYNAM_0} : String[82]
+                             {SORDER.BPINAM_0} : String[72]
+                             {SORDER.BPIADDLIG_0} : String[102]
+                             {SORDER.BPIADDLIG_1} : String[102]
+                             {SORDER.BPIADDLIG_2} : String[102]
+                             {SORDER.BPIPOSCOD_0} : String[22]
+                             {SORDER.BPICTY_0} : String[82]
+                             {SORDER.BPICRY_0} : String[8]
+                             {SORDER.BPICRYNAM_0} : String[82]
+                             {SORDER.BPDNAM_0} : String[72]
+                             {SORDER.BPDADDLIG_0} : String[102]
+                             {SORDER.BPDADDLIG_1} : String[102]
+                             {SORDER.BPDADDLIG_2} : String[102]
+                             {SORDER.BPDPOSCOD_0} : String[22]
+                             {SORDER.BPDCTY_0} : String[82]
+                             {SORDER.BPDSAT_0} : String[72]
+                             {SORDER.BPDCRY_0} : String[8]
+                             {SORDER.BPDCRYNAM_0} : String[82]
+                             {SORDER.REP_0} : String[32]
+                             {SORDER.CUR_0} : String[8]
+                             {SORDER.LAN_0} : String[8]
+                             {SORDER.PTE_0} : String[32]
+                             {SORDER.DEP_0} : String[12]
+                             {SORDER.BPTNUM_0} : String[32]
+                             {SORDER.MDL_0} : String[12]
+                             {SORDER.SOHTEX1_0} : String[26]
+                             {SORDER.SOHTEX2_0} : String[26]
+                             {SORDER.PRITYP_0} : Number
+                             {SORDER.ORDNOT_0} : Number
+                             {SORDER.ORDATI_0} : Number
+                             {SORDER.ORDINVNOT_0} : Number
+                             {SORDER.ORDINVATI_0} : Number
+                             {SORDER.ZREFA_0} : String[62]
+                             {SORDER.ZREFB_0} : String[62]
+                             {SORDER.ZNPEDREPRE_0} : String[42]
+
+        Table:    x3famesa.FAMESA.SORDERP
+            Connection:    Connection #1
+            Used Columns:    {SORDERP.SOHNUM_0} : String[42]
+                             {SORDERP.SOPLIN_0} : Number
+                             {SORDERP.ITMREF_0} : String[42]
+                             {SORDERP.ITMDES1_0} : String[82]
+                             {SORDERP.ITMDES_0} : String[82]
+                             {SORDERP.GROPRI_0} : Number
+                             {SORDERP.PRIREN_0} : Number
+                             {SORDERP.NETPRI_0} : Number
+                             {SORDERP.DISCRGVAL1_0} : Number
+                             {SORDERP.DISCRGVAL2_0} : Number
+                             {SORDERP.DISCRGVAL3_0} : Number
+                             {SORDERP.DISCRGVAL4_0} : Number
+                             {SORDERP.SAU_0} : String[8]
+                             {SORDERP.LINTYP_0} : Number
+                             {SORDERP.FOCFLG_0} : Number
+
+        Table:    x3famesa.FAMESA.SORDERQ
+            Connection:    Connection #1
+            Used Columns:    {SORDERQ.SOHNUM_0} : String[42]
+                             {SORDERQ.SOPLIN_0} : Number
+                             {SORDERQ.BPCORD_0} : String[32]
+                             {SORDERQ.ITMREF_0} : String[42]
+                             {SORDERQ.QTY_0} : Number
+                             {SORDERQ.SOQTEX_0} : String[26]
+                             {SORDERQ.OCNPRNBOM_0} : Number
+
+        Table:    x3famesa.FAMESA.FACILITY
+            Connection:    Connection #1
+            Used Columns:    {FACILITY.FCY_0} : String[12]
+                             {FACILITY.LEGCPY_0} : String[12]
+                             {FACILITY.BPAADD_0} : String[12]
+
+        Table:    x3famesa.FAMESA.BPARTNER
+            Connection:    Connection #1
+            Used Columns:    {BPARTNER.BPRNUM_0} : String[32]
+                             {BPARTNER.BPRNAM_0} : String[72]
+                             {BPARTNER.CRN_0} : String[42]
+                             {BPARTNER.LAN_0} : String[8]
+
+        Table:    x3famesa.FAMESA.ITMSALES
+            Connection:    Connection #1
+            Used Columns:    {ITMSALES.ITMREF_0} : String[42]
+
+        Table:    x3famesa.FAMESA.AREPORTM
+            Connection:    Connection #1
+            Used Columns:    {AREPORTM.USR_0} : String[12]
+                             {AREPORTM.RPTCOD_0} : String[32]
+                             {AREPORTM.NUMREQ_0} : Number
+                             {AREPORTM.NUMLIG_0} : Number
+                             {AREPORTM.CLEA1_0} : String[82]
+
+        Table:    x3famesa.FAMESA.TABUNIT
+            Connection:    Connection #1
+            Used Columns:    {TABUNIT.UOM_0} : String[8]
+                             {TABUNIT.UOMDEC_0} : Number
+
+        Table:    x3famesa.FAMESA.TABCUR
+            Connection:    Connection #1
+            Used Columns:    {TABCUR.CUR_0} : String[8]
+                             {TABCUR.DECNBR_0} : Number
+
+        Table:    x3famesa.FAMESA.TABMODELIV
+            Connection:    Connection #1
+            Used Columns:    {TABMODELIV.MDL_0} : String[12]
+
+        Table:    x3famesa.FAMESA.BPADDRESS
+            Connection:    Connection #1
+            Report Alias:    BPADDRESS_FCY
+
+        Table:    x3famesa.FAMESA.BPADDRESS
+            Connection:    Connection #1
+            Report Alias:    BPADDRESS_BPR
+            Used Columns:    {BPADDRESS_BPR.BPAADDLIG_0} : String[102]
+                             {BPADDRESS_BPR.BPAADDLIG_1} : String[102]
+                             {BPADDRESS_BPR.BPAADDLIG_2} : String[102]
+                             {BPADDRESS_BPR.POSCOD_0} : String[22]
+                             {BPADDRESS_BPR.CTY_0} : String[82]
+                             {BPADDRESS_BPR.SAT_0} : String[72]
+                             {BPADDRESS_BPR.CRY_0} : String[8]
+                             {BPADDRESS_BPR.CRYNAM_0} : String[82]
+                             {BPADDRESS_BPR.TEL_0} : String[42]
+
+        Table:    x3famesa.FAMESA.BPADDRESS
+            Connection:    Connection #1
+            Report Alias:    BPADDRESS_DLV
+            Used Columns:    {BPADDRESS_DLV.BPAADDLIG_0} : String[102]
+                             {BPADDRESS_DLV.BPAADDLIG_1} : String[102]
+                             {BPADDRESS_DLV.BPAADDLIG_2} : String[102]
+                             {BPADDRESS_DLV.POSCOD_0} : String[22]
+                             {BPADDRESS_DLV.CTY_0} : String[82]
+                             {BPADDRESS_DLV.SAT_0} : String[72]
+                             {BPADDRESS_DLV.CRY_0} : String[8]
+                             {BPADDRESS_DLV.CRYNAM_0} : String[82]
+                             {BPADDRESS_DLV.TEL_0} : String[42]
+
+        Table:    x3famesa.FAMESA.BPDLVCUST
+            Connection:    Connection #1
+            Used Columns:    {BPDLVCUST.BPCNUM_0} : String[32]
+                             {BPDLVCUST.BPAADD_0} : String[12]
+                             {BPDLVCUST.BPDNAM_0} : String[72]
+
+        Table:    x3famesa.FAMESA.TEXCLOB
+            Connection:    Connection #1
+            Report Alias:    TEXCLOB_DEB
+            Used Columns:    {TEXCLOB_DEB.TEXTE_0} : Unknown
+
+        Table:    x3famesa.FAMESA.TEXCLOB
+            Connection:    Connection #1
+            Report Alias:    TEXCLOB_FIN
+            Used Columns:    {TEXCLOB_FIN.TEXTE_0} : Unknown
+
+        Table:    x3famesa.FAMESA.TEXCLOB
+            Connection:    Connection #1
+            Report Alias:    TEXCLOB_DET
+            Used Columns:    {TEXCLOB_DET.TEXTE_0} : Unknown
+
+        Table:    x3famesa.FAMESA.COMPANY
+            Connection:    Connection #1
+            Used Columns:    {COMPANY.CPY_0} : String[12]
+                             {COMPANY.LEG_0} : String[42]
+                             {COMPANY.NAF_0} : String[22]
+                             {COMPANY.NID_0} : String[162]
+                             {COMPANY.CPYLOG_0} : String[22]
+                             {COMPANY.RGCAMT_0} : Number
+                             {COMPANY.RGCCUR_0} : String[8]
+
+        Table:    x3famesa.FAMESA.AFCTFCY
+            Connection:    Connection #1
+            Used Columns:    {AFCTFCY.FCY_0} : String[12]
+                             {AFCTFCY.PRFCOD_0} : String[12]
+                             {AFCTFCY.FNC_0} : String[26]
+
+        Table:    x3famesa.FAMESA.ITMBPC
+            Connection:    Connection #1
+            Used Columns:    {ITMBPC.ITMREF_0} : String[42]
+                             {ITMBPC.BPCNUM_0} : String[32]
+                             {ITMBPC.ITMREFBPC_0} : String[42]
+
+        Table:    x3famesa.FAMESA.ITMMASTER
+            Connection:    Connection #1
+            Used Columns:    {ITMMASTER.ITMREF_0} : String[42]
+                             {ITMMASTER.EANCOD_0} : String[42]
+
+        Table:    x3famesa.FAMESA.BPCARRIER
+            Connection:    Connection #1
+            Used Columns:    {BPCARRIER.BPTNUM_0} : String[32]
+                             {BPCARRIER.BPTNAM_0} : String[72]
+
+        Table:    x3famesa.FAMESA.SALESREP
+            Connection:    Connection #1
+            Used Columns:    {SALESREP.REPNUM_0} : String[32]
+                             {SALESREP.REPNAM_0} : String[72]
+
+        Table:    x3famesa.FAMESA.BPCUSTOMER
+            Connection:    Connection #1
+            Used Columns:    {BPCUSTOMER.BPCNUM_0} : String[32]
+                             {BPCUSTOMER.BPCBPSNUM_0} : String[32]
+                             {BPCUSTOMER.DAYMON_0} : Number
+                             {BPCUSTOMER.DAYMON_1} : Number
+                             {BPCUSTOMER.DAYMON_2} : Number
+                             {BPCUSTOMER.DAYMON_3} : Number
+                             {BPCUSTOMER.DAYMON_4} : Number
+                             {BPCUSTOMER.DAYMON_5} : Number
+
+        Table:    x3famesa.FAMESAOF.SPREASON
+            Connection:    Connection #1
+            Used Columns:    {SPREASON.PRIREN_0} : Number
+                             {SPREASON.DES_0} : String[82]
+
+        Table:    x3famesa.FAMESAOF.TABCOUNTRY
+            Connection:    Connection #1
+            Report Alias:    TABCOUNTRY_BPR
+            Used Columns:    {TABCOUNTRY_BPR.YPREFTEL_0} : String[22]
+
+        Table:    x3famesa.FAMESAOF.TABCOUNTRY
+            Connection:    Connection #1
+            Report Alias:    TABCOUNTRY_BPA_DLV
+            Used Columns:    {TABCOUNTRY_BPA_DLV.YPREFTEL_0} : String[22]
+
+    Table Links
+        Joins:    x3famesa.FAMESA.AREPORTM INNER JOIN x3famesa.FAMESA.SORDER ON x3famesa.FAMESA.AREPORTM.CLEA1_0 = x3famesa.FAMESA.SORDER.SOHNUM_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.SORDERP ON x3famesa.FAMESA.SORDER.SOHNUM_0 = x3famesa.FAMESA.SORDERP.SOHNUM_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.FACILITY ON x3famesa.FAMESA.SORDER.SALFCY_0 = x3famesa.FAMESA.FACILITY.FCY_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.BPARTNER ON x3famesa.FAMESA.SORDER.BPCORD_0 = x3famesa.FAMESA.BPARTNER.BPRNUM_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.TABCUR ON x3famesa.FAMESA.SORDER.CUR_0 = x3famesa.FAMESA.TABCUR.CUR_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.TABMODELIV ON x3famesa.FAMESA.SORDER.MDL_0 = x3famesa.FAMESA.TABMODELIV.MDL_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.BPADDRESS BPADDRESS_DLV ON x3famesa.FAMESA.SORDER.BPAADD_0,BPCORD_0 = BPADDRESS_DLV.BPAADD_0,BPANUM_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.BPDLVCUST ON x3famesa.FAMESA.SORDER.BPAADD_0,BPCORD_0 = x3famesa.FAMESA.BPDLVCUST.BPAADD_0,BPCNUM_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.TEXCLOB TEXCLOB_DEB ON x3famesa.FAMESA.SORDER.SOHTEX1_0 = TEXCLOB_DEB.CODE_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.TEXCLOB TEXCLOB_FIN ON x3famesa.FAMESA.SORDER.SOHTEX2_0 = TEXCLOB_FIN.CODE_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.BPADDRESS BPADDRESS_BPR ON x3famesa.FAMESA.SORDER.BPAORD_0,BPCORD_0 = BPADDRESS_BPR.BPAADD_0,BPANUM_0
+                  x3famesa.FAMESA.SORDER INNER JOIN x3famesa.FAMESA.AFCTFCY ON x3famesa.FAMESA.SORDER.SALFCY_0 = x3famesa.FAMESA.AFCTFCY.FCY_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.BPCARRIER ON x3famesa.FAMESA.SORDER.BPTNUM_0 = x3famesa.FAMESA.BPCARRIER.BPTNUM_0
+                  x3famesa.FAMESA.SORDER LEFT OUTER JOIN x3famesa.FAMESA.SALESREP ON x3famesa.FAMESA.SORDER.REP_0 = x3famesa.FAMESA.SALESREP.REPNUM_0
+                  x3famesa.FAMESA.BPADDRESS BPADDRESS_DLV INNER JOIN x3famesa.FAMESAOF.TABCOUNTRY TABCOUNTRY_BPA_DLV ON BPADDRESS_DLV.CRY_0 = TABCOUNTRY_BPA_DLV.CRY_0
+                  x3famesa.FAMESA.SORDERP INNER JOIN x3famesa.FAMESA.SORDERQ ON x3famesa.FAMESA.SORDERP.SOHNUM_0,SOPLIN_0 = x3famesa.FAMESA.SORDERQ.SOHNUM_0,SOPLIN_0
+                  x3famesa.FAMESA.SORDERP LEFT OUTER JOIN x3famesa.FAMESA.ITMSALES ON x3famesa.FAMESA.SORDERP.ITMREF_0 = x3famesa.FAMESA.ITMSALES.ITMREF_0
+                  x3famesa.FAMESA.SORDERP LEFT OUTER JOIN x3famesa.FAMESA.TABUNIT ON x3famesa.FAMESA.SORDERP.SAU_0 = x3famesa.FAMESA.TABUNIT.UOM_0
+                  x3famesa.FAMESA.SORDERP LEFT OUTER JOIN x3famesa.FAMESAOF.SPREASON ON x3famesa.FAMESA.SORDERP.PRIREN_0 = x3famesa.FAMESAOF.SPREASON.PRIREN_0
+                  x3famesa.FAMESA.SORDERQ LEFT OUTER JOIN x3famesa.FAMESA.TEXCLOB TEXCLOB_DET ON x3famesa.FAMESA.SORDERQ.SOQTEX_0 = TEXCLOB_DET.CODE_0
+                  x3famesa.FAMESA.SORDERQ LEFT OUTER JOIN x3famesa.FAMESA.ITMBPC ON x3famesa.FAMESA.SORDERQ.ITMREF_0,BPCORD_0 = x3famesa.FAMESA.ITMBPC.ITMREF_0,BPCNUM_0
+                  x3famesa.FAMESA.SORDERQ LEFT OUTER JOIN x3famesa.FAMESA.ITMMASTER ON x3famesa.FAMESA.SORDERQ.ITMREF_0 = x3famesa.FAMESA.ITMMASTER.ITMREF_0
+                  x3famesa.FAMESA.FACILITY LEFT OUTER JOIN x3famesa.FAMESA.BPADDRESS BPADDRESS_FCY ON x3famesa.FAMESA.FACILITY.BPAADD_0,FCY_0 = BPADDRESS_FCY.BPAADD_0,BPANUM_0
+                  x3famesa.FAMESA.FACILITY LEFT OUTER JOIN x3famesa.FAMESA.COMPANY ON x3famesa.FAMESA.FACILITY.LEGCPY_0 = x3famesa.FAMESA.COMPANY.CPY_0
+                  x3famesa.FAMESA.BPARTNER LEFT OUTER JOIN x3famesa.FAMESA.BPCUSTOMER ON x3famesa.FAMESA.BPARTNER.BPRNUM_0 = x3famesa.FAMESA.BPCUSTOMER.BPCNUM_0
+                  x3famesa.FAMESA.BPADDRESS BPADDRESS_BPR INNER JOIN x3famesa.FAMESAOF.TABCOUNTRY TABCOUNTRY_BPR ON BPADDRESS_BPR.CRY_0 = TABCOUNTRY_BPR.CRY_0
+
+    Record Selection Formulas
+        Formula:    {AREPORTM.RPTCOD_0} = {?etat} and
+                    {AREPORTM.USR_0} = {?usr} and
+                    {AREPORTM.NUMREQ_0} = {?numedt} and
+                    //{BPADDRESS_FCY.BPATYP_0} = 3 and
+                    //{BPADDRESS_BPR.BPATYP_0} = 1 and
+                    //{BPADDRESS_DLV.BPATYP_0} = 1 and
+                    {AFCTFCY.FNC_0} = {?X3FCT} and
+                    {AFCTFCY.PRFCOD_0} = {?X3PRF}
+                    //71937 Adaptation multi-législation
+                    //{TABPAYTERM.PTELIN_0} = 1.00 and
+                    //{ATABDIV.NUMTAB_0} = 1 and
+                    
+
+    Record Sorting
+        Sort By:    AREPORTM.NUMLIG_0 -- Ascending Order Group #1
+                    SORDER.SOHNUM_0 -- Ascending Order Group #2
+                    SORDERQ.ITMREF_0 -- Ascending Order 
+                    SORDERP.SOPLIN_0 -- Ascending Order 
+
+    Formula Fields
+
+        Field:    Mt_net
+            Formula:    round ( {SORDERP.NETPRI_0} * {SORDERQ.QTY_0} , {@decimald} );
+                        
+                        
+                        
+
+        Field:    lbl_mntnet
+            Formula:    // fonction de PRITYP
+                        WhilePrintingRecords;
+                        global stringVar mntht;
+                        global stringVar mntttc;
+                        
+                        If {SORDER.PRITYP_0} = 1 then mntht else mntttc;
+
+        Field:    lbl_gratuit
+            Formula:    WhilePrintingRecords;
+                        global stringVar gratuit;
+                        
+
+        Field:    lbl_option_ou_kit
+            Formula:    WhilePrintingRecords;
+                        global stringVar opt;     
+                        global stringVar kit;
+                        
+                           If {SORDERP.LINTYP_0} = 4 or  
+                              {SORDERP.LINTYP_0} = 8 
+                           then 
+                                    opt 
+                           else 
+                                    if {SORDERP.LINTYP_0} = 2 
+                                    then 
+                                            kit
+                                    else  "";
+                        
+
+        Field:    decimalsau
+            Formula:    {TABUNIT.UOMDEC_0}
+
+        Field:    decimald
+            Formula:    {TABCUR.DECNBR_0}
+
+        Field:    lbl_total
+            Formula:    WhilePrintingRecords;
+                        global stringVar totht;
+                        global stringVar totttc;
+                        
+                        If {SORDER.PRITYP_0} = 1 then totht else totttc
+                        
+
+        Field:    Mt_total
+            Formula:    If {?arcttc} = 0 then
+                            If {SORDER.PRITYP_0} = 1 then {SORDER.ORDNOT_0} else {SORDER.ORDATI_0}
+                        else
+                        // Bug 52497  Dans le cas d’un client TTC, correction de la zone éditée à droite du total TTC
+                        //    {SORDER.ORDINVNOT_0};
+                            If {SORDER.PRITYP_0} = 1 then {SORDER.ORDINVNOT_0} else {SORDER.ORDINVATI_0};
+                        
+
+        Field:    Province_SORDER_BPC
+            Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                        //    Le pays est affiché dans ce cas à la droite de la province.
+                        // Sinon, le pays est affiché comme auparavant.
+                        // Fait pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                        if {SORDER.BPCSAT_0} <> "" then 
+                           {SORDER.BPCSAT_0}
+                        else 
+                           {SORDER.BPCCRYNAM_0};
+                        
+
+        Field:    Province_BPADDRESS_BPR
+            Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                        //    Le pays est affiché dans ce cas à la droite de la province.
+                        // Sinon, le pays est affiché comme auparavant.
+                        // Fait pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                        if {BPADDRESS_BPR.SAT_0} <> "" then 
+                           {BPADDRESS_BPR.SAT_0}
+                        else 
+                           {BPADDRESS_BPR.CRYNAM_0};
+                        
+
+        Field:    Province_SORDER_BPD
+            Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                        //    Le pays est affiché dans ce cas à la droite de la province.
+                        // Sinon, le pays est affiché comme auparavant.
+                        // Fait pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                        if {SORDER.BPDSAT_0} <> "" then 
+                           {SORDER.BPDSAT_0}
+                        else 
+                           {SORDER.BPDCRYNAM_0};
+                        
+
+        Field:    Province_BPADDRESS_DLV
+            Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                        //    Le pays est affiché dans ce cas à la droite de la province.
+                        // Sinon, le pays est affiché comme auparavant.
+                        // Fait pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                        if {BPADDRESS_DLV.SAT_0} <> "" then 
+                           {BPADDRESS_DLV.SAT_0}
+                        else 
+                           {BPADDRESS_DLV.CRYNAM_0};
+                        
+
+        Field:    lbl_total_ttc
+            Formula:    WhilePrintingRecords;
+                        global stringVar totttc;
+                        
+                            
+                        
+                        
+
+        Field:    lbl_formejuridique
+            Formula:    WhilePrintingRecords;
+                        global stringVar aucapitalde;
+                        global stringVar naf;
+                        local stringVar txtformejuridique;
+                        
+                        txtformejuridique := {COMPANY.CPYLOG_0} + " " +  aucapitalde + " " +  ToText({COMPANY.RGCAMT_0},2," ",",") + " " + {COMPANY.RGCCUR_0} + " " + {COMPANY.NID_0} + " " + naf +  " "  +{COMPANY.NAF_0};
+                        
+                        
+
+        Field:    lbl_baseTVA
+            Formula:    WhilePrintingRecords;
+                        global stringVar baseTVA;
+                        
+
+        Field:    lbl_taux
+            Formula:    WhilePrintingRecords;
+                        global stringVar taux;
+                        taux;
+
+        Field:    lbl_mtTVA
+            Formula:    WhilePrintingRecords;
+                        global stringVar mtTVA;
+                        
+
+        Field:    sumtax
+            Formula:    Shared numbervar sumtax;
+                        
+
+        Field:    lbl_dontTVA
+            Formula:    // Bug 54231 52497
+                        WhilePrintingRecords;
+                        global stringVar mtTVA;
+                        global stringVar dontTVA;
+                        
+                        If {SORDER.PRITYP_0} = 2 then dontTVA  else mtTVA;
+                        
+
+        Field:    lbl_total_lig
+            Formula:    // Bug 54231 52497
+                        // fonction de PRITYP
+                        WhilePrintingRecords;
+                        global stringVar total_light;
+                        global stringVar total_ligttc;
+                        
+                        If {SORDER.PRITYP_0} = 1 then total_light else total_ligttc;
+                        
+
+        Field:    param_X3DOS
+            Formula:    //71937 Adaptation multi-législation
+                        //Afin de passer le paramètre X3DOS au sous-états (pas possible sinon pour ce type de param)
+                        shared stringvar param_X3DOS :={?X3DOS};
+
+        Field:    param_tauxagios
+            Formula:    //71937 Adaptation multi-législation
+                        //Afin de passer le paramètre tauxagios au sous-états (pas possible sinon pour ce type de param)
+                        shared numbervar param_tauxagios :={?tauxagios};
+
+        Field:    param_tauxescompte
+            Formula:    //71937 Adaptation multi-législation
+                        //Afin de passer le paramètre tauxescompte au sous-états (pas possible sinon pour ce type de param)
+                        shared numbervar param_tauxescompte :={?tauxescompte};
+
+        Field:    lblPedido
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtPedido;
+
+        Field:    lblPedidonum
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtPedidonum;
+
+        Field:    lblTel
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtTel;
+
+        Field:    lblFecha
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtFecha;
+
+        Field:    lblcodcliente
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtCodCliente;
+
+        Field:    lblCodPedCli
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtCodPedCli;
+
+        Field:    lblModEntrega
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtModEntrega;
+
+        Field:    lblTransportista
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtTransportista;
+
+        Field:    lblArticulo
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtArticulo;
+
+        Field:    lblEntregara
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtEntregarA;
+
+        Field:    lblFEntrega
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtFEntrega;
+
+        Field:    lblCantidad
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtCantidad;
+
+        Field:    lblConPago
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtConPago;
+
+        Field:    lblRepresentante
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtRepresentante;
+
+        Field:    lblNPedRepre
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtNPedRepre;
+
+        Field:    Representante
+            Formula:    {SORDER.REP_0} & " - " & {SALESREP.REPNAM_0}
+
+        Field:    lblDto
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtDto;
+
+        Field:    lblPrecio
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtPrecio;
+
+        Field:    lblNumProvCli
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtNumProvCli;
+
+        Field:    lblPortes
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtPortes;
+
+        Field:    lblDto 2
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtDto;
+
+        Field:    lbl_diaspago
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtdias_pago;
+                        if {BPCUSTOMER.DAYMON_0} = 0 then
+                            txtdias_pago := "";
+                                           
+                        
+                        txtdias_pago
+                        
+                        
+
+        Field:    txtdias_pago
+            Formula:    WhilePrintingRecords;
+                        local stringVar txtdias_pago2;
+                        if {BPCUSTOMER.DAYMON_0} <> 0 then
+                        (    txtdias_pago2 :=CStr({BPCUSTOMER.DAYMON_0},0);
+                            (if {BPCUSTOMER.DAYMON_1} <> 0 then
+                                txtdias_pago2 := txtdias_pago2 +" / "+CStr({BPCUSTOMER.DAYMON_1},0);
+                                (if {BPCUSTOMER.DAYMON_2} <> 0 then
+                                    txtdias_pago2 := txtdias_pago2 +" / "+CStr({BPCUSTOMER.DAYMON_2},0);
+                                    (if {BPCUSTOMER.DAYMON_3} <> 0 then
+                                        txtdias_pago2 := txtdias_pago2 +" / "+CStr({BPCUSTOMER.DAYMON_3},0);
+                                        (if {BPCUSTOMER.DAYMON_4} <> 0 then
+                                            txtdias_pago2 := txtdias_pago2 +" / "+CStr({BPCUSTOMER.DAYMON_4},0);
+                                            (if {BPCUSTOMER.DAYMON_5} <> 0 then
+                                                txtdias_pago2 := txtdias_pago2 +" / "+CStr({BPCUSTOMER.DAYMON_5},0)
+                                             )
+                                         )
+                                    )
+                                )
+                            )
+                        );
+                        
+                        
+                                            
+                        
+                        txtdias_pago2
+                        
+                        
+
+        Field:    Poscod_BPD
+            Formula:    if {SORDER.BPDCRY_0}<>'ES' then
+                            SELECT {SORDER.BPDCRY_0}
+                                case "PT": left({SORDER.BPDPOSCOD_0},4) + "-" + mid({SORDER.BPDPOSCOD_0},5,3)
+                                default:{SORDER.BPDPOSCOD_0}
+                        else
+                            {SORDER.BPDPOSCOD_0}
+
+        Field:    Poscod_ENT
+            Formula:    if {BPADDRESS_DLV.CRY_0}<>'ES' then
+                            SELECT {BPADDRESS_DLV.CRY_0}
+                                case "PT": left({BPADDRESS_DLV.POSCOD_0},4) + "-" + mid({BPADDRESS_DLV.POSCOD_0},5,3)
+                                default:{BPADDRESS_DLV.POSCOD_0}
+                        else
+                            {BPADDRESS_DLV.POSCOD_0}
+
+        Field:    Poscod_BPI
+            Formula:    if {SORDER.BPICRY_0}<>'ES' then
+                            SELECT {SORDER.BPICRY_0}
+                                case "PT": left({SORDER.BPIPOSCOD_0},4) + "-" + mid({SORDER.BPIPOSCOD_0},5,3)
+                                default:{SORDER.BPIPOSCOD_0}
+                        else
+                            {SORDER.BPIPOSCOD_0}
+
+        Field:    Poscod
+            Formula:    if {BPADDRESS_BPR.CRY_0}<>'ES' then
+                            SELECT {BPADDRESS_BPR.CRY_0}
+                                case "PT": left({BPADDRESS_BPR.POSCOD_0},4) + "-" + mid({BPADDRESS_BPR.POSCOD_0},5,3)
+                                default:{BPADDRESS_BPR.POSCOD_0}
+                        else
+                            {BPADDRESS_BPR.POSCOD_0}
+
+        Field:    DISCGRVAL_1
+            Formula:    IF ({SORDERP.GROPRI_0}<>0) THEN {SORDERP.DISCRGVAL1_0} ELSE 0
+
+        Field:    DISCGRVAL_2
+            Formula:    IF ({SORDERP.GROPRI_0}<>0) THEN {SORDERP.DISCRGVAL2_0} ELSE 0
+
+        Field:    DISCGRVAL_3
+            Formula:    IF ({SORDERP.GROPRI_0}<>0) THEN {SORDERP.DISCRGVAL3_0} ELSE 0
+
+        Field:    DISCGRVAL_4
+            Formula:    IF ({SORDERP.GROPRI_0}<>0) THEN {SORDERP.DISCRGVAL4_0} ELSE 0
+
+    Unused Formula Fields
+
+        Field:    lbl_netpri
+            Formula:    // fonction de PRITYP
+                        WhilePrintingRecords;
+                        global stringVar prixht;
+                        global stringVar prixttc;
+                        
+                        If {SORDER.PRITYP_0} = 1 then prixht else prixttc;
+
+        Field:    lbltxtent
+            Formula:    WhilePrintingRecords;
+                        if {SORDER.SOHTEX1_0}[1] <> " " then X3TextFromServer ({?X3DOS},{SORDER.SOHTEX1_0})
+                        
+
+        Field:    lbltxtfin
+            Formula:    WhilePrintingRecords;
+                        if {SORDER.SOHTEX2_0}[1] <> " " then X3TextFromServer ({?X3DOS},{SORDER.SOHTEX2_0})
+                        
+
+        Field:    lbltxtlin
+            Formula:    if {SORDERQ.SOQTEX_0}[1] <> " " then X3TextFromServer ({?X3DOS},{SORDERQ.SOQTEX_0})
+                        
+
+        Field:    Mt_HTeuro
+            Formula:    if      {TABCUR.EURRAT_0} = 0
+                        then {@Mt_total} 
+                        else  {@Mt_total} / {TABCUR.EURRAT_0}
+                        
+
+        Field:    txtptedes
+            Formula:    //if {TABPAYTERM.DESNUM_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {TABPAYTERM.DESNUM_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "TABPAYTERM~DESAXX~"+{TABPAYTERM.PTE_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    txtsfoot0
+            Formula:    //if {SFOOTINV_0.SHO_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {SFOOTINV_0.SHO_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV_0.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    txtsfoot1
+            Formula:    //if {SFOOTINV_1.SHO_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {SFOOTINV_1.SHO_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV_1.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    txtsfoot2
+            Formula:    //if {SFOOTINV_2.SHO_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {SFOOTINV_2.SHO_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV_2.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    txtsfoot3
+            Formula:    //if {SFOOTINV_3.SHO_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {SFOOTINV_3.SHO_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV_3.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    txtsfoot4
+            Formula:    //if {SFOOTINV_4.SHO_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {SFOOTINV_4.SHO_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV_4.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    mt_net_round
+            Formula:    EvaluateAfter ({@Mt_net});
+                        global numberVar netpri;
+                        Round (netpri, 2)
+                        
+
+        Field:    txtmodliv
+            Formula:    //if {TABMODELIV.SHONUM_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {TABMODELIV.SHONUM_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "TABMODELIV~DESAXX~"+{TABMODELIV.MDL_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar gratuit := TextOfChapter ({?X3DOS},"SPA",2281,1);
+                        global stringVar opt     := TextOfChapter ({?X3DOS},"SPA",2281,2);
+                        global stringVar kit     := TextOfChapter ({?X3DOS},"SPA",2281,3);
+                        global stringVar mntht   := TextOfChapter ({?X3DOS},"SPA",2281,4);
+                        global stringVar mntttc  := TextOfChapter ({?X3DOS},"SPA",2281,5);
+                        global stringVar prixht  := TextOfChapter ({?X3DOS},"SPA",2281,6);
+                        global stringVar prixttc := TextOfChapter ({?X3DOS},"SPA",2281,7);
+                        global stringVar totht   := TextOfChapter ({?X3DOS},"SPA",2281,8);
+                        global stringVar totttc  := TextOfChapter ({?X3DOS},"SPA",2281,9);
+                        // rajout du légal
+                        //71937 Adaptation multi-législation (remplacement global par shared pour passage sous-état)
+                        shared stringVar txtcondiV1  := TextOfChapter ({?X3DOS},"SPA",2281,50);
+                        shared stringVar txtcondiV2  := TextOfChapter ({?X3DOS},"SPA",2281,51);
+                        shared stringVar txtcondiV3  := TextOfChapter ({?X3DOS},"SPA",2281,52);
+                        //71937 Adaptation multi-législation
+                        //global stringVar txtexoTVA  := TextOfChapter ({?X3DOS},{BPARTNER.LAN_0},2281,58);
+                        shared stringVar txtexoTVA   := TextOfChapter ({?X3DOS},"SPA",2281,58);
+                        global stringVar idCEE       := TextOfChapter ({?X3DOS},"SPA",2281,25);
+                        //71937
+                        global stringVar aucapitalde := TextOfChapter ({?X3DOS},"SPA",2281,59);
+                        //71937 Adaptation multi-législation (remplacement global par shared pour passage sous-état)
+                        shared stringVar noescompte  := TextOfChapter ({?X3DOS},"SPA",2281,60);
+                        global stringVar naf         := TextOfChapter ({?X3DOS},"SPA",2281,72);
+                        // rajout pour Pied de Pièce
+                        global stringVar produitht  := TextOfChapter ({?X3DOS},"SPA",2281,10);
+                        global stringVar produitttc := TextOfChapter ({?X3DOS},"SPA",2281,11);
+                        global stringVar mtTVA      := TextOfChapter ({?X3DOS},"SPA",2281,40);
+                        global stringVar baseTVA    := TextOfChapter ({?X3DOS},"SPA",2281,48);
+                        global stringVar taux       := TextOfChapter ({?X3DOS},"SPA",2281,49);
+                        // Bug 54231 52497
+                        global stringVar eltfact      := TextOfChapter ({?X3DOS},"SPA",2281,100);
+                        global stringVar total_light  := TextOfChapter ({?X3DOS},"SPA",2281,101);
+                        global stringVar total_ligttc := TextOfChapter ({?X3DOS},"SPA",2281,102);
+                        global stringVar dontTVA      := TextOfChapter ({?X3DOS},"SPA",2281,103);
+                        
+                        //Textos personalizados
+                        global stringvar txtPedido := TextOfChapter ({?X3DOS},"SPA",6969,1);
+                        global stringvar txtPedidonum := TextOfChapter ({?X3DOS},"SPA",6969,2);
+                        global stringvar txtFecha := TextOfChapter ({?X3DOS},"SPA",6969,3);
+                        global stringvar txtTel := TextOfChapter ({?X3DOS},"SPA",6969,12);
+                        global stringvar txtFax := TextOfChapter ({?X3DOS},"SPA",6969,13);
+                        global stringvar txtNumIVAIntra := TextOfChapter ({?X3DOS},"SPA",6969,25);
+                        global stringvar txtEntregarA := TextOfChapter ({?X3DOS},"SPA",6969,14);
+                        global stringvar txtCodCliente := TextOfChapter ({?X3DOS},"SPA",6969,4);
+                        global stringvar txtNumProvCli := TextOfChapter ({?X3DOS},"SPA",6969,41);
+                        global stringvar txtCodPedCli := TextOfChapter ({?X3DOS},"SPA",6969,5);
+                        global stringvar txtModEntrega := TextOfChapter ({?X3DOS},"SPA",6969,6);
+                        global stringvar txtTransportista := TextOfChapter ({?X3DOS},"SPA",6969,7);
+                        global stringvar txtArticulo := TextOfChapter ({?X3DOS},"SPA",6969,8);
+                        global stringvar txtFEntrega := TextOfChapter ({?X3DOS},"SPA",6969,18);
+                        global stringvar txtCantidad := TextOfChapter ({?X3DOS},"SPA",6969,10);
+                        global stringvar txtPrecio := TextOfChapter ({?X3DOS},"SPA",6969,38);
+                        global stringvar  txtDto:= TextOfChapter ({?X3DOS},"SPA",6969,44); 
+                        global stringvar txtConPago := TextOfChapter ({?X3DOS},"SPA",6969,11);
+                        global stringvar txtRepresentante := TextOfChapter ({?X3DOS},"SPA",6969,27);
+                        global stringvar txtNPedRepre := TextOfChapter ({?X3DOS},"SPA",6969,45);
+                        global stringvar txtDias_pago := TextOfChapter ({?X3DOS},"SPA",6969,57);
+                        
+                        global stringvar txtPortes := TextOfChapter ({?X3DOS},"SPA",6970,{SORDER.ZPORTES_0});
+                        
+                        
+                        
+                        
+
+        Field:    lbl_total_ht
+            Formula:    WhilePrintingRecords;
+                        global stringVar totht;
+                        
+                        
+
+        Field:    lbl_txtexoTVA
+            Formula:    WhilePrintingRecords;
+                        //71937 Adaptation multi-législation
+                        //global stringVar txtexoTVA;
+                        shared stringVar txtexoTVA;
+                        txtexoTVA;
+
+        Field:    EtatComDeb
+            Formula:    textofchapter({?X3DOS},{?X3LAN},415,{?etatcomdeb})
+
+        Field:    etatcomfin
+            Formula:    textofchapter({?X3DOS},{?X3LAN},415,{?etatcomfin})
+
+        Field:    EtatFacDeb
+            Formula:    textofchapter({?X3DOS},{?X3LAN},418,{?etatfacdeb})
+
+        Field:    EtatFacFin
+            Formula:    textofchapter({?X3DOS},{?X3LAN},418,{?etatfacfin})
+
+        Field:    EtatLivDeb
+            Formula:    textofchapter({?X3DOS},{?X3LAN},417,{?etatlivdeb})
+
+        Field:    EtatLivFin
+            Formula:    textofchapter({?X3DOS},{?X3LAN},417,{?etatlivfin})
+
+        Field:    lbl_produit
+            Formula:    // fonction de PRITYP
+                        WhilePrintingRecords;
+                        global stringVar produitht;
+                        global stringVar produitttc;
+                        
+                        If {SORDER.PRITYP_0} = 1 then produitht else produitttc;
+                        
+
+        Field:    Mt_TTCeuro
+            Formula:    if      {TABCUR.EURRAT_0} = 0
+                        then {SORDER.ORDINVATI_0} 
+                        else {SORDER.ORDINVATI_0} / {TABCUR.EURRAT_0}
+
+        Field:    lbl_categcomdeb
+            Formula:    // DM 75115
+                        TextOfChapter ({?X3DOS},{?X3LAN},412,{?categcomdeb})
+
+        Field:    lbl_categcomfin
+            Formula:    // DM 75115
+                        TextOfChapter ({?X3DOS},{?X3LAN},412,{?categcomfin})
+
+        Field:    lbl_idCEE
+            Formula:    WhilePrintingRecords;
+                        global stringVar idCEE;
+                        idCEE;
+
+        Field:    lblFax
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtFax;
+
+        Field:    lblNumIVAIntra
+            Formula:    WhilePrintingRecords;
+                        global stringVar txtNumIVAIntra;
+
+        Field:    EtatComDeb
+            Formula:    textofchapter({?X3DOS},{?X3LAN},415,{?etatcomdeb})
+
+        Field:    EtatFacDeb
+            Formula:    textofchapter({?X3DOS},{?X3LAN},418,{?etatfacdeb})
+
+        Field:    EtatLivDeb
+            Formula:    textofchapter({?X3DOS},{?X3LAN},417,{?etatlivdeb})
+
+        Field:    lbl_categcomdeb
+            Formula:    // DM 75115
+                        TextOfChapter ({?X3DOS},{?X3LAN},412,{?categcomdeb})
+
+        Field:    etatcomfin
+            Formula:    textofchapter({?X3DOS},{?X3LAN},415,{?etatcomfin})
+
+        Field:    EtatFacFin
+            Formula:    textofchapter({?X3DOS},{?X3LAN},418,{?etatfacfin})
+
+        Field:    EtatLivFin
+            Formula:    textofchapter({?X3DOS},{?X3LAN},417,{?etatlivfin})
+
+        Field:    lbl_categcomfin
+            Formula:    // DM 75115
+                        TextOfChapter ({?X3DOS},{?X3LAN},412,{?categcomfin})
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar gratuit := TextOfChapter ({?X3DOS},"SPA",2281,1);
+                        global stringVar opt     := TextOfChapter ({?X3DOS},"SPA",2281,2);
+                        global stringVar kit     := TextOfChapter ({?X3DOS},"SPA",2281,3);
+                        global stringVar mntht   := TextOfChapter ({?X3DOS},"SPA",2281,4);
+                        global stringVar mntttc  := TextOfChapter ({?X3DOS},"SPA",2281,5);
+                        global stringVar prixht  := TextOfChapter ({?X3DOS},"SPA",2281,6);
+                        global stringVar prixttc := TextOfChapter ({?X3DOS},"SPA",2281,7);
+                        global stringVar totht   := TextOfChapter ({?X3DOS},"SPA",2281,8);
+                        global stringVar totttc  := TextOfChapter ({?X3DOS},"SPA",2281,9);
+                        // rajout du légal
+                        //71937 Adaptation multi-législation (remplacement global par shared pour passage sous-état)
+                        shared stringVar txtcondiV1  := TextOfChapter ({?X3DOS},"SPA",2281,50);
+                        shared stringVar txtcondiV2  := TextOfChapter ({?X3DOS},"SPA",2281,51);
+                        shared stringVar txtcondiV3  := TextOfChapter ({?X3DOS},"SPA",2281,52);
+                        //71937 Adaptation multi-législation
+                        //global stringVar txtexoTVA  := TextOfChapter ({?X3DOS},{BPARTNER.LAN_0},2281,58);
+                        shared stringVar txtexoTVA   := TextOfChapter ({?X3DOS},"SPA",2281,58);
+                        global stringVar idCEE       := TextOfChapter ({?X3DOS},"SPA",2281,25);
+                        //71937
+                        global stringVar aucapitalde := TextOfChapter ({?X3DOS},"SPA",2281,59);
+                        //71937 Adaptation multi-législation (remplacement global par shared pour passage sous-état)
+                        shared stringVar noescompte  := TextOfChapter ({?X3DOS},"SPA",2281,60);
+                        global stringVar naf         := TextOfChapter ({?X3DOS},"SPA",2281,72);
+                        // rajout pour Pied de Pièce
+                        global stringVar produitht  := TextOfChapter ({?X3DOS},"SPA",2281,10);
+                        global stringVar produitttc := TextOfChapter ({?X3DOS},"SPA",2281,11);
+                        global stringVar mtTVA      := TextOfChapter ({?X3DOS},"SPA",2281,40);
+                        global stringVar baseTVA    := TextOfChapter ({?X3DOS},"SPA",2281,48);
+                        global stringVar taux       := TextOfChapter ({?X3DOS},"SPA",2281,49);
+                        // Bug 54231 52497
+                        global stringVar eltfact      := TextOfChapter ({?X3DOS},"SPA",2281,100);
+                        global stringVar total_light  := TextOfChapter ({?X3DOS},"SPA",2281,101);
+                        global stringVar total_ligttc := TextOfChapter ({?X3DOS},"SPA",2281,102);
+                        global stringVar dontTVA      := TextOfChapter ({?X3DOS},"SPA",2281,103);
+                        
+                        //Textos personalizados
+                        global stringvar txtPedido := TextOfChapter ({?X3DOS},"SPA",6969,1);
+                        global stringvar txtPedidonum := TextOfChapter ({?X3DOS},"SPA",6969,2);
+                        global stringvar txtFecha := TextOfChapter ({?X3DOS},"SPA",6969,3);
+                        global stringvar txtTel := TextOfChapter ({?X3DOS},"SPA",6969,12);
+                        global stringvar txtFax := TextOfChapter ({?X3DOS},"SPA",6969,13);
+                        global stringvar txtNumIVAIntra := TextOfChapter ({?X3DOS},"SPA",6969,25);
+                        global stringvar txtEntregarA := TextOfChapter ({?X3DOS},"SPA",6969,14);
+                        global stringvar txtCodCliente := TextOfChapter ({?X3DOS},"SPA",6969,4);
+                        global stringvar txtNumProvCli := TextOfChapter ({?X3DOS},"SPA",6969,41);
+                        global stringvar txtCodPedCli := TextOfChapter ({?X3DOS},"SPA",6969,5);
+                        global stringvar txtModEntrega := TextOfChapter ({?X3DOS},"SPA",6969,6);
+                        global stringvar txtTransportista := TextOfChapter ({?X3DOS},"SPA",6969,7);
+                        global stringvar txtArticulo := TextOfChapter ({?X3DOS},"SPA",6969,8);
+                        global stringvar txtFEntrega := TextOfChapter ({?X3DOS},"SPA",6969,18);
+                        global stringvar txtCantidad := TextOfChapter ({?X3DOS},"SPA",6969,10);
+                        global stringvar txtPrecio := TextOfChapter ({?X3DOS},"SPA",6969,38);
+                        global stringvar  txtDto:= TextOfChapter ({?X3DOS},"SPA",6969,44); 
+                        global stringvar txtConPago := TextOfChapter ({?X3DOS},"SPA",6969,11);
+                        global stringvar txtRepresentante := TextOfChapter ({?X3DOS},"SPA",6969,27);
+                        global stringvar txtNPedRepre := TextOfChapter ({?X3DOS},"SPA",6969,45);
+                        global stringvar txtDias_pago := TextOfChapter ({?X3DOS},"SPA",6969,57);
+                        
+                        global stringvar txtPortes := TextOfChapter ({?X3DOS},"SPA",6970,{SORDER.ZPORTES_0});
+                        
+                        
+                        
+                        
+
+        Field:    txtmodliv
+            Formula:    //if {TABMODELIV.SHONUM_0} <> 0 then TranslatedText ({?X3DOS}, {SORDER.LAN_0}, {TABMODELIV.SHONUM_0})
+                        
+                        WhilePrintingRecords;
+                        stringVar X3TEX := "TABMODELIV~DESAXX~"+{TABMODELIV.MDL_0}+"~~";
+                        X3TranslatedText ({?X3DOS},{SORDER.LAN_0},X3TEX)
+
+    Summary Fields
+
+        Field:    Mt_net
+            Formula:    Sum ({@Mt_net}, {SORDER.SOHNUM_0})
+
+    Running Totals
+
+        Running Total:    TotDto2
+            Field:    TotDto2
+            Type:    TotDto2
+            Evaluate:    TotDto2
+            Evaluate Condition:    TotDto2
+            Reset:    TotDto2
+            Reset Condition:    TotDto2
+
+        Running Total:    TotDto1
+            Field:    TotDto1
+            Type:    TotDto1
+            Evaluate:    TotDto1
+            Evaluate Condition:    TotDto1
+            Reset:    TotDto1
+            Reset Condition:    TotDto1
+
+        Running Total:    TotDto3
+            Field:    TotDto3
+            Type:    TotDto3
+            Evaluate:    TotDto3
+            Evaluate Condition:    TotDto3
+            Reset:    TotDto3
+            Reset Condition:    TotDto3
+
+        Running Total:    TotDto4
+            Field:    TotDto4
+            Type:    TotDto4
+            Evaluate:    TotDto4
+            Evaluate Condition:    TotDto4
+            Reset:    TotDto4
+            Reset Condition:    TotDto4
+
+    Report Header
+
+        Conditional Formulas
+
+            Condition:    EnableResetPageNumberAfter
+                Formula:    if {?impselections} = 1 then true else false ;
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {?impselections} =0 then true else false
+
+            Fields
+
+                Field:    Champ1
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+                Field:    Dateimpression2
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Heureimpression1
+                    Data Source:    PrintTime
+                    Data Type:    Time
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Time Format:    MM/DD/YY h:mm:ss
+
+                Field:    X3ETA1
+                    Data Source:    {?X3ETA}
+                    Data Type:    String
+
+                Field:    X3DOS1
+                    Data Source:    {?X3DOS}
+                    Data Type:    String
+
+                Field:    X3OPE1
+                    Data Source:    {?X3OPE}
+                    Data Type:    String
+
+                Field:    sitedeb1
+                    Data Source:    {?sitedeb}
+                    Data Type:    String
+
+                Field:    commandedeb1
+                    Data Source:    {?commandedeb}
+                    Data Type:    String
+
+                Field:    avenantdeb1
+                    Data Source:    {?avenantdeb}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    5555555
+
+                Field:    clientdeb1
+                    Data Source:    {?clientdeb}
+                    Data Type:    String
+
+                Field:    clientfin1
+                    Data Source:    {?clientfin}
+                    Data Type:    String
+
+                Field:    sitefin1
+                    Data Source:    {?sitefin}
+                    Data Type:    String
+
+                Field:    commandefin1
+                    Data Source:    {?commandefin}
+                    Data Type:    String
+
+                Field:    avenantfin1
+                    Data Source:    {?avenantfin}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    5555555
+
+                Field:    NUMREQ01
+                    Data Source:    {AREPORTM.NUMREQ_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    False
+                        Reverse Sign:    False
+                        Number Style:    5555555
+
+                Field:    datedeb1
+                    Data Source:    {?datedeb}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    datefin1
+                    Data Source:    {?datefin}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    devdeb1
+                    Data Source:    {?devdeb}
+                    Data Type:    String
+
+                Field:    devfin1
+                    Data Source:    {?devfin}
+                    Data Type:    String
+
+                Field:    typedeb1
+                    Data Source:    {?typedeb}
+                    Data Type:    String
+
+                Field:    typefin1
+                    Data Source:    {?typefin}
+                    Data Type:    String
+
+                Field:    datelivdeb1
+                    Data Source:    {?datelivdeb}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    datelivfin1
+                    Data Source:    {?datelivfin}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    EtatComDeb2
+                    Data Source:    {@EtatComDeb}
+                    Data Type:    String
+
+                Field:    etatcomfin2
+                    Data Source:    {@etatcomfin}
+                    Data Type:    String
+
+                Field:    EtatFacDeb2
+                    Data Source:    {@EtatFacDeb}
+                    Data Type:    String
+
+                Field:    EtatFacFin2
+                    Data Source:    {@EtatFacFin}
+                    Data Type:    String
+
+                Field:    EtatLivDeb2
+                    Data Source:    {@EtatLivDeb}
+                    Data Type:    String
+
+                Field:    EtatLivFin2
+                    Data Source:    {@EtatLivFin}
+                    Data Type:    String
+
+                Field:    lblcategcom1
+                    Data Source:    {@lbl_categcomdeb}
+                    Data Type:    String
+
+                Field:    lblcategcomfin1
+                    Data Source:    {@lbl_categcomfin}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text8
+
+                Text Field:    Text10
+                    Text:    Criterios de selección
+
+                Text Field:    Text21
+                    Text:    Planta de venta
+
+                Text Field:    Text20
+                    Text:    N° de pedido
+
+                Text Field:    Text13
+                    Text:    Cliente
+
+                Text Field:    Text1
+                    Text:    N° de revisión
+
+                Text Field:    Text24
+                    Text:    Nº de petición
+
+                Text Field:    Text26
+                    Text:    De
+
+                Text Field:    Text3
+                    Text:    De
+
+                Text Field:    Text4
+                    Text:    De
+
+                Text Field:    Text5
+                    Text:    De
+
+                Text Field:    Text42
+                    Text:    a
+
+                Text Field:    Text7
+                    Text:    a
+
+                Text Field:    Text9
+                    Text:    a
+
+                Text Field:    Text11
+                    Text:    a
+
+                Text Field:    Text30
+                    Text:    Clasif. por nº de pedido
+
+                Text Field:    Texte16
+                    Text:    Ascendente
+
+                Text Field:    Text6
+                    Text:    Fecha pedido
+
+                Text Field:    Text12
+                    Text:    del
+
+                Text Field:    Text14
+                    Text:    Al
+
+                Text Field:    Text16
+                    Text:    De
+
+                Text Field:    Text15
+                    Text:    Divisa
+
+                Text Field:    Text17
+                    Text:    a
+
+                Text Field:    Text18
+                    Text:    Tipo pedido
+
+                Text Field:    Text22
+                    Text:    a
+
+                Text Field:    Text19
+                    Text:    De
+
+                Text Field:    Text27
+                    Text:    a
+
+                Text Field:    Text25
+                    Text:    De
+
+                Text Field:    Text23
+                    Text:    Estado pedido
+
+                Text Field:    Text31
+                    Text:    a
+
+                Text Field:    Text29
+                    Text:    De
+
+                Text Field:    Text28
+                    Text:    Estatus factura
+
+                Text Field:    Text34
+                    Text:    a
+
+                Text Field:    Text33
+                    Text:    De
+
+                Text Field:    Text32
+                    Text:    Estatus entrega
+
+                Text Field:    Text37
+                    Text:    Al
+
+                Text Field:    Text36
+                    Text:    del
+
+                Text Field:    Text35
+                    Text:    Fecha ent. solicitud
+
+                Text Field:    Text38
+                    Text:    Categoría
+
+                Text Field:    Text39
+                    Text:    De
+
+                Text Field:    Text40
+                    Text:    a
+
+            Boxes
+
+                Box:    Box1
+                    Ends in Section:    Section1
+                    Size:    477x18
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box3
+                    Ends in Section:    Section1
+                    Size:    477x18
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box4
+                    Ends in Section:    Section1
+                    Size:    477x18
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box5
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box7
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box8
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box6
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box11
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box12
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box13
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box14
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box15
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box16
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box17
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+                Box:    Box19
+                    Ends in Section:    Section1
+                    Size:    477x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+            SubReports
+
+                SubReport:    logo2.rpt
+                    Links:    {?X3DOS} => {?X3DOS}
+
+                SubReport:    logo3.rpt
+                    Links:    {?X3DOS} => {?X3DOS}
+
+    Page Header
+
+        Section:    Section a
+
+            Fields
+
+                Field:    textofchapter2
+                    Data Source:    {@textofchapter}
+                    Data Type:    String
+
+        Section:    Section b
+
+            Fields
+
+                Field:    lblPedido1
+                    Data Source:    {@lblPedido}
+                    Data Type:    String
+
+            Pictures
+
+                Picture:    Picture2
+                    Size:    654x64
+                    Suppression Formula:    {?impcabecera}<>1 or ({SORDER.CPY_0}<>"GT500" and {SORDER.CPY_0}<>"IF250" and {SORDER.CPY_0}<>"IT350" and {SORDER.CPY_0}<>"TI300")
+
+                Picture:    Picture11
+                    Size:    707x75
+                    Suppression Formula:    {?impcabecera}<>1 or ({SORDER.CPY_0}<>"FA200" )
+
+            Lines
+
+                Line:    Ligne2
+                    Ends in Section:    Section11
+                    Line Type:    Single
+                    Line Thickness:    30
+
+                Line:    Ligne3
+                    Ends in Section:    Section11
+                    Line Type:    Single
+                    Line Thickness:    10
+
+        Section:    Section c
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // Bug 52310 on teste toute l'adresse
+                                //if len({SORDER.BPCNAM_0})=0 then true else false
+                                if len({SORDER.BPCNAM_0}+{SORDER.BPCADDLIG_0}+{SORDER.BPCADDLIG_1}+{SORDER.BPCADDLIG_2}+{SORDER.BPCPOSCOD_0}+{SORDER.BPCCTY_0}+{SORDER.BPCSAT_0}+{SORDER.BPCCRYNAM_0})=0 then true else false
+                                
+
+            Fields
+
+                Field:    Champ27
+                    Data Source:    {SORDER.SOHNUM_0}
+                    Data Type:    String
+
+                Field:    Champ28
+                    Data Source:    {SORDER.CUSORDREF_0}
+                    Data Type:    String
+
+                Field:    Champ29
+                    Data Source:    {SORDER.ORDDAT_0}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    Custom
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Champ30
+                    Data Source:    {SORDER.BPCORD_0}
+                    Data Type:    String
+
+                Field:    ProvinceBPC1
+                    Data Source:    {@Province_SORDER_BPC}
+                    Data Type:    String
+
+                Field:    lblPedidonum1
+                    Data Source:    {@lblPedidonum}
+                    Data Type:    String
+
+                Field:    lblFecha1
+                    Data Source:    {@lblFecha}
+                    Data Type:    String
+
+                Field:    lblcodcliente1
+                    Data Source:    {@lblcodcliente}
+                    Data Type:    String
+
+                Field:    lblTel2
+                    Data Source:    {@lblTel}
+                    Data Type:    String
+
+                Field:    lblCodPedCli1
+                    Data Source:    {@lblCodPedCli}
+                    Data Type:    String
+
+                Field:    lblRepresentante1
+                    Data Source:    {@lblRepresentante}
+                    Data Type:    String
+
+                Field:    lblNPedRepre1
+                    Data Source:    {@lblNPedRepre}
+                    Data Type:    String
+
+                Field:    Representante1
+                    Data Source:    {@Representante}
+                    Data Type:    String
+
+                Field:    ZNPEDREPRE01
+                    Data Source:    {SORDER.ZNPEDREPRE_0}
+                    Data Type:    String
+
+                Field:    CRN01
+                    Data Source:    {BPARTNER.CRN_0}
+                    Data Type:    String
+
+                Field:    lblNumProvCli2
+                    Data Source:    {@lblNumProvCli}
+                    Data Type:    String
+
+                Field:    BPCBPSNUM01
+                    Data Source:    {BPCUSTOMER.BPCBPSNUM_0}
+                    Data Type:    String
+
+                Field:    BPCCRYNAM01
+                    Data Source:    {SORDER.BPCCRYNAM_0}
+                    Data Type:    String
+
+                Field:    BPCCTY01
+                    Data Source:    {SORDER.BPCCTY_0}
+                    Data Type:    String
+
+                Field:    BPCADDLIG21
+                    Data Source:    {SORDER.BPCADDLIG_2}
+                    Data Type:    String
+
+                Field:    BPCADDLIG11
+                    Data Source:    {SORDER.BPCADDLIG_1}
+                    Data Type:    String
+
+                Field:    BPCADDLIG01
+                    Data Source:    {SORDER.BPCADDLIG_0}
+                    Data Type:    String
+
+                Field:    BPCNAM01
+                    Data Source:    {SORDER.BPCNAM_0}
+                    Data Type:    String
+
+                Field:    PoscodBPI1
+                    Data Source:    {@Poscod_BPI}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text46
+                    Text:    ({TABCOUNTRY_BPR.YPREFTEL_0}) {BPADDRESS_BPR.TEL_0}
+                    Suppression Formula:    {BPADDRESS_BPR.TEL_0}=""
+
+            Boxes
+
+                Box:    Cadre1
+                    Ends in Section:    Section12
+                    Size:    390x115
+                    Line Type:    Single
+                    Line Thickness:    0
+
+        Section:    Section d
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    // Bug 52310 on teste toute l'adresse
+                                //if len({SORDER.BPCNAM_0})=0 then true else false
+                                if len({SORDER.BPCNAM_0}+{SORDER.BPCADDLIG_0}+{SORDER.BPCADDLIG_1}+{SORDER.BPCADDLIG_2}+{SORDER.BPCPOSCOD_0}+{SORDER.BPCCTY_0}+{SORDER.BPCSAT_0}+{SORDER.BPCCRYNAM_0})=0 then false else true
+                                
+
+            Fields
+
+                Field:    Champ33
+                    Data Source:    {SORDER.CUSORDREF_0}
+                    Data Type:    String
+
+                Field:    Champ34
+                    Data Source:    {SORDER.SOHNUM_0}
+                    Data Type:    String
+
+                Field:    Champ35
+                    Data Source:    {SORDER.ORDDAT_0}
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    Custom
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Champ36
+                    Data Source:    {SORDER.BPCORD_0}
+                    Data Type:    String
+
+                Field:    Champ38
+                    Data Source:    {BPARTNER.BPRNAM_0}
+                    Data Type:    String
+
+                Field:    Champ39
+                    Data Source:    {BPADDRESS_BPR.BPAADDLIG_0}
+                    Data Type:    String
+
+                Field:    Champ40
+                    Data Source:    {BPADDRESS_BPR.BPAADDLIG_1}
+                    Data Type:    String
+
+                Field:    Champ41
+                    Data Source:    {BPADDRESS_BPR.BPAADDLIG_2}
+                    Data Type:    String
+
+                Field:    Champ43
+                    Data Source:    {BPADDRESS_BPR.CTY_0}
+                    Data Type:    String
+
+                Field:    CRYNAM01
+                    Data Source:    {BPADDRESS_BPR.CRYNAM_0}
+                    Data Type:    String
+                    Suppression Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                                            //    Le pays est affiché dans ce cas à la droite de la province.
+                                            // Sinon, le pays est affiché comme auparavant.
+                                            // Pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                                            if {BPADDRESS_BPR.SAT_0} = "" then 
+                                               True
+                                            else 
+                                               False;
+                                            
+
+                Field:    ProvinceBPADDRESSBPR1
+                    Data Source:    {@Province_BPADDRESS_BPR}
+                    Data Type:    String
+
+                Field:    lblPedidonum2
+                    Data Source:    {@lblPedidonum}
+                    Data Type:    String
+
+                Field:    lblFecha2
+                    Data Source:    {@lblFecha}
+                    Data Type:    String
+
+                Field:    lblcodcliente2
+                    Data Source:    {@lblcodcliente}
+                    Data Type:    String
+
+                Field:    lblTel3
+                    Data Source:    {@lblTel}
+                    Data Type:    String
+
+                Field:    lblCodPedCli2
+                    Data Source:    {@lblCodPedCli}
+                    Data Type:    String
+
+                Field:    lblNPedRepre2
+                    Data Source:    {@lblNPedRepre}
+                    Data Type:    String
+
+                Field:    lblRepresentante2
+                    Data Source:    {@lblRepresentante}
+                    Data Type:    String
+
+                Field:    Representante2
+                    Data Source:    {@Representante}
+                    Data Type:    String
+
+                Field:    ZNPEDREPRE02
+                    Data Source:    {SORDER.ZNPEDREPRE_0}
+                    Data Type:    String
+
+                Field:    CRN02
+                    Data Source:    {BPARTNER.CRN_0}
+                    Data Type:    String
+
+                Field:    lblNumProvCli1
+                    Data Source:    {@lblNumProvCli}
+                    Data Type:    String
+
+                Field:    BPCBPSNUM02
+                    Data Source:    {BPCUSTOMER.BPCBPSNUM_0}
+                    Data Type:    String
+
+                Field:    Poscod1
+                    Data Source:    {@Poscod}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text45
+                    Text:    ({TABCOUNTRY_BPR.YPREFTEL_0}) {BPADDRESS_BPR.TEL_0}
+                    Suppression Formula:    {BPADDRESS_BPR.TEL_0}=""
+
+            Boxes
+
+                Box:    Cadre2
+                    Ends in Section:    Section13
+                    Size:    393x120
+                    Line Type:    Single
+                    Line Thickness:    0
+
+        Section:    Section e
+
+            Fields
+
+                Field:    BPIADDLIG21
+                    Data Source:    {SORDER.BPIADDLIG_2}
+                    Data Type:    String
+
+                Field:    BPICRYNAM01
+                    Data Source:    {SORDER.BPICRYNAM_0}
+                    Data Type:    String
+
+                Field:    BPIPOSCOD01
+                    Data Source:    {SORDER.BPIPOSCOD_0}
+                    Data Type:    String
+
+                Field:    BPICTY01
+                    Data Source:    {SORDER.BPICTY_0}
+                    Data Type:    String
+
+                Field:    BPIADDLIG11
+                    Data Source:    {SORDER.BPIADDLIG_1}
+                    Data Type:    String
+
+                Field:    BPIADDLIG01
+                    Data Source:    {SORDER.BPIADDLIG_0}
+                    Data Type:    String
+
+                Field:    BPINAM01
+                    Data Source:    {SORDER.BPINAM_0}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text43
+                    Text:    Registro Mercantil de Madrid, Tomo 27375, libro D, Folio 58, Sección 8, Hoja M-493346, Inscripción 1a. C.I.F.: B-85851368 - Domicilio Social: Avda. de M adrid, 86 - 28802 Alcalá de Henares (Madrid)
+                    Suppression Formula:    {?impcabecera}<>1 or ({SORDER.CPY_0}<>"GT500" and {SORDER.CPY_0}<>"IF250" and {SORDER.CPY_0}<>"IT350" and {SORDER.CPY_0}<>"TI300")
+
+                Text Field:    Text44
+                    Text:    Reg. Mercantil de Zaragoza, Tomo 239, General 145 - Sección 3ª , Folio 19-33, Hoja 3.437 - C.I.F.  A-50040112
+                    Suppression Formula:    {?impcabecera}<>1 or ({SORDER.CPY_0}<>"FA200" )
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {AREPORTM.NUMLIG_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    GroupNameNUMLIG01
+                            Data Source:    GroupName ({AREPORTM.NUMLIG_0})
+                            Data Type:    String
+
+        Group:    Group #2
+            Grouped By:    {SORDER.SOHNUM_0}
+
+            Group Header
+
+                Section:    Section b
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    // Bug 52310 on teste toute l'adresse
+                                        //if {SORDER.BPDNAM_0}[1] = " " then true else false
+                                        if len({SORDER.BPDNAM_0}+{SORDER.BPDADDLIG_0}+{SORDER.BPDADDLIG_1}+{SORDER.BPDADDLIG_2}+{SORDER.BPDPOSCOD_0}+{SORDER.BPDCTY_0}+{SORDER.BPDSAT_0}+{SORDER.BPDCRYNAM_0})=0 then true else false
+                                        
+
+                    Fields
+
+                        Field:    Champ45
+                            Data Source:    {SORDER.BPTNUM_0}
+                            Data Type:    String
+
+                        Field:    Champ46
+                            Data Source:    {SORDER.BPDNAM_0}
+                            Data Type:    String
+
+                        Field:    Champ47
+                            Data Source:    {SORDER.BPDADDLIG_0}
+                            Data Type:    String
+
+                        Field:    Champ48
+                            Data Source:    {SORDER.BPDADDLIG_1}
+                            Data Type:    String
+
+                        Field:    Champ49
+                            Data Source:    {SORDER.BPDADDLIG_2}
+                            Data Type:    String
+
+                        Field:    Champ51
+                            Data Source:    {SORDER.BPDCTY_0}
+                            Data Type:    String
+
+                        Field:    Champ53
+                            Data Source:    {@txtmodliv}
+                            Data Type:    String
+
+                        Field:    BPDCRYNAM02
+                            Data Source:    {SORDER.BPDCRYNAM_0}
+                            Data Type:    String
+                            Suppression Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                                                    //    Le pays est affiché dans ce cas à la droite de la province.
+                                                    // Sinon, le pays est affiché comme auparavant.
+                                                    // Pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                                                    if {SORDER.BPDSAT_0} = "" then 
+                                                       True
+                                                    else 
+                                                       False;
+                                                    
+
+                        Field:    ProvinceSORDERBPD1
+                            Data Source:    {@Province_SORDER_BPD}
+                            Data Type:    String
+
+                        Field:    lblTel4
+                            Data Source:    {@lblTel}
+                            Data Type:    String
+
+                        Field:    lblModEntrega1
+                            Data Source:    {@lblModEntrega}
+                            Data Type:    String
+
+                        Field:    lblTransportista1
+                            Data Source:    {@lblTransportista}
+                            Data Type:    String
+
+                        Field:    lblEntregara2
+                            Data Source:    {@lblEntregara}
+                            Data Type:    String
+
+                        Field:    BPTNAM01
+                            Data Source:    {BPCARRIER.BPTNAM_0}
+                            Data Type:    String
+
+                        Field:    lblPortes2
+                            Data Source:    {@lblPortes}
+                            Data Type:    String
+
+                        Field:    lblFEntrega1
+                            Data Source:    {@lblFEntrega}
+                            Data Type:    String
+
+                        Field:    DEMDLVDAT01
+                            Data Source:    {SORDER.DEMDLVDAT_0}
+                            Data Type:    Date
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    Custom
+                                Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                        Field:    PoscodBPD2
+                            Data Source:    {@Poscod_BPD}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text47
+                            Text:    ({TABCOUNTRY_BPA_DLV.YPREFTEL_0}) {BPADDRESS_DLV.TEL_0}
+                            Suppression Formula:    {BPADDRESS_DLV.TEL_0}=""
+
+                    Boxes
+
+                        Box:    Cadre3
+                            Ends in Section:    Section14
+                            Size:    391x115
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                Section:    Section c
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    // Bug 52310 on teste toute l'adresse
+                                        //if {SORDER.BPDNAM_0}[1] = " " then false else true
+                                        if len({SORDER.BPDNAM_0}+{SORDER.BPDADDLIG_0}+{SORDER.BPDADDLIG_1}+{SORDER.BPDADDLIG_2}+{SORDER.BPDPOSCOD_0}+{SORDER.BPDCTY_0}+{SORDER.BPDSAT_0}+{SORDER.BPDCRYNAM_0})=0 then false else true
+                                        
+
+                    Fields
+
+                        Field:    Champ54
+                            Data Source:    {SORDER.BPTNUM_0}
+                            Data Type:    String
+
+                        Field:    Champ55
+                            Data Source:    {BPADDRESS_DLV.BPAADDLIG_0}
+                            Data Type:    String
+
+                        Field:    Champ56
+                            Data Source:    {BPADDRESS_DLV.BPAADDLIG_1}
+                            Data Type:    String
+
+                        Field:    Champ57
+                            Data Source:    {BPADDRESS_DLV.BPAADDLIG_2}
+                            Data Type:    String
+
+                        Field:    Champ59
+                            Data Source:    {BPADDRESS_DLV.CTY_0}
+                            Data Type:    String
+
+                        Field:    Champ61
+                            Data Source:    {BPDLVCUST.BPDNAM_0}
+                            Data Type:    String
+
+                        Field:    Champ62
+                            Data Source:    {@txtmodliv}
+                            Data Type:    String
+
+                        Field:    CRYNAM02
+                            Data Source:    {BPADDRESS_DLV.CRYNAM_0}
+                            Data Type:    String
+                            Suppression Formula:    // Si la province SAT est présente elle est affichée et le pays situé à la même place n'est pas affiché.
+                                                    //    Le pays est affiché dans ce cas à la droite de la province.
+                                                    // Sinon, le pays est affiché comme auparavant.
+                                                    // Pour la V140 et la V5. (Pour la V6, le champs SAT n'est plus soumis a code activité et est affiché)
+                                                    if {BPADDRESS_DLV.SAT_0} = "" then 
+                                                       True
+                                                    else 
+                                                       False;
+                                                    
+
+                        Field:    ProvinceBPADDRESSDLV1
+                            Data Source:    {@Province_BPADDRESS_DLV}
+                            Data Type:    String
+
+                        Field:    lblTel5
+                            Data Source:    {@lblTel}
+                            Data Type:    String
+
+                        Field:    lblModEntrega2
+                            Data Source:    {@lblModEntrega}
+                            Data Type:    String
+
+                        Field:    lblTransportista2
+                            Data Source:    {@lblTransportista}
+                            Data Type:    String
+
+                        Field:    lblEntregara1
+                            Data Source:    {@lblEntregara}
+                            Data Type:    String
+
+                        Field:    BPTNAM02
+                            Data Source:    {BPCARRIER.BPTNAM_0}
+                            Data Type:    String
+
+                        Field:    lblPortes1
+                            Data Source:    {@lblPortes}
+                            Data Type:    String
+
+                        Field:    lblFEntrega2
+                            Data Source:    {@lblFEntrega}
+                            Data Type:    String
+
+                        Field:    DEMDLVDAT02
+                            Data Source:    {SORDER.DEMDLVDAT_0}
+                            Data Type:    Date
+                            Format:    Date and Time
+                                Order:    Date Time
+                                Date Type:    Custom
+                                Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                        Field:    PoscodENT2
+                            Data Source:    {@Poscod_ENT}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text48
+                            Text:    ({TABCOUNTRY_BPA_DLV.YPREFTEL_0}) {BPADDRESS_DLV.TEL_0}
+                            Suppression Formula:    {BPADDRESS_DLV.TEL_0}=""
+
+                    Boxes
+
+                        Box:    Cadre4
+                            Ends in Section:    Section15
+                            Size:    390x119
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                Section:    Section d
+
+                    Fields
+
+                        Field:    ZREFA01
+                            Data Source:    {SORDER.ZREFA_0}
+                            Data Type:    String
+
+                        Field:    ZREFB01
+                            Data Source:    {SORDER.ZREFB_0}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text2
+                            Text:    Ref. A: 
+
+                        Text Field:    Text41
+                            Text:    Ref. B: 
+
+                Section:    Section e
+
+                    Fields
+
+                        Field:    TEXTE01
+                            Data Source:    {TEXCLOB_DEB.TEXTE_0}
+                            Data Type:    Unknown
+
+                Section:    Section f
+
+                    Fields
+
+                        Field:    Champ64
+                            Data Source:    {@lbl_mntnet}
+                            Data Type:    String
+
+                        Field:    lblArticulo1
+                            Data Source:    {@lblArticulo}
+                            Data Type:    String
+
+                        Field:    lblCantidad1
+                            Data Source:    {@lblCantidad}
+                            Data Type:    String
+
+                        Field:    lblDto1
+                            Data Source:    {@lblDto}
+                            Data Type:    String
+                            Suppression Formula:    {#TotDto1} = 0
+
+                        Field:    lblPrecio1
+                            Data Source:    {@lblPrecio}
+                            Data Type:    String
+
+                        Field:    lblDto21
+                            Data Source:    {@lblDto 2}
+                            Data Type:    String
+                            Suppression Formula:    {#TotDto2} = 0
+
+                        Field:    lblDto22
+                            Data Source:    {@lblDto 2}
+                            Data Type:    String
+                            Suppression Formula:    {#TotDto3} = 0
+
+                    Text Fields
+
+                        Text Field:    Text51
+                            Text:    Dto.
+                                     P.P.
+                            Suppression Formula:    {#TotDto4} = 0
+
+                    Boxes
+
+                        Box:    Cadre5
+                            Ends in Section:    Section26
+                            Size:    699x184
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Box:    Box2
+                            Ends in Section:    Section17
+                            Size:    699x28
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                    Lines
+
+                        Line:    Ligne6
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Ligne7
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Line5
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Line3
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Line4
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Line6
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Line9
+                            Ends in Section:    Section26
+                            Line Type:    Single
+                            Line Thickness:    0
+
+            Group Footer
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    TEXTE02
+                            Data Source:    {TEXCLOB_FIN.TEXTE_0}
+                            Data Type:    Unknown
+
+                Section:    Section c
+
+                    Fields
+
+                        Field:    SommedeMtnet1
+                            Data Source:    Sum ({@Mt_net}, {SORDER.SOHNUM_0})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                        Field:    lblbaseTVA1
+                            Data Source:    {@lbl_baseTVA}
+                            Data Type:    String
+                            Suppression Formula:    {?arcttc} = 0
+
+                        Field:    lbltaux1
+                            Data Source:    {@lbl_taux}
+                            Data Type:    String
+                            Suppression Formula:    {?arcttc} = 0
+
+                        Field:    lblmtTVA1
+                            Data Source:    {@lbl_mtTVA}
+                            Data Type:    String
+                            Suppression Formula:    {?arcttc} = 0
+
+                        Field:    CUR02
+                            Data Source:    {SORDER.CUR_0}
+                            Data Type:    String
+                            Suppression Formula:    // Bug 52623
+                                                    //{?arcttc} <> 0
+
+                        Field:    lbltotallig1
+                            Data Source:    {@lbl_total_lig}
+                            Data Type:    String
+
+                    Boxes
+
+                        Box:    Cadre6
+                            Ends in Section:    GroupFooterSection3
+                            Size:    434x81
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Box:    Cadre7
+                            Ends in Section:    GroupFooterSection3
+                            Size:    261x81
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                    SubReports
+
+                        SubReport:    SORDER_SUMTAX1.rpt
+                            Links:    {SORDER.SOHNUM_0} => {?Pm-SORDER.SOHNUM_0}
+                                      {COMPANY.LEG_0} => {?Pm-COMPANY.LEG_0}
+                            Suppression Formula:    {?arcttc} = 0
+
+                Section:    Section d
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    
+                                        
+
+                    SubReports
+
+                        SubReport:    SORDER_PIED.rpt
+                            Links:    {SORDER.SOHNUM_0} => {?Pm-SORDER.SOHNUM_0}
+                                      {SORDER.LAN_0} => {?Pm-SORDER.LAN_0}
+                                      {@decimald} => {?Pm-@decimald}
+                                      {SORDER.PRITYP_0} => {?Pm-SORDER.PRITYP_0}
+                                      {?X3DOS} => {?Pm-?X3DOS}
+                            Suppression Formula:    // Bug 52497 quand l'état n'est pas TTC on n'affiche pas les éléments de facturation
+                                                    {?arcttc} = 0
+
+                        SubReport:    SORDER_TAXE.rpt
+                            Links:    {SORDER.SOHNUM_0} => {?Pm-SORDER.SOHNUM_0}
+                                      {SORDER.LAN_0} => {?Pm-SORDER.LAN_0}
+                                      {@decimald} => {?Pm-@decimald}
+                                      {COMPANY.LEG_0} => {?Pm-COMPANY.LEG_0}
+                            Suppression Formula:    {?arcttc} = 0
+
+                Section:    Section e
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    // Bug 52497 quand l'état n'est pas TTC on n'affiche pas les éléments de facturation
+                                        //{?arcttc} = 0
+
+                    Fields
+
+                        Field:    Champ93
+                            Data Source:    {SORDER.CUR_0}
+                            Data Type:    String
+                            Suppression Formula:    {?arcttc} = 0
+
+                        Field:    Champ96
+                            Data Source:    {@lbl_total}
+                            Data Type:    String
+                            Suppression Formula:    {?arcttc} = 0
+
+                        Field:    Champ97
+                            Data Source:    {@Mt_total}
+                            Data Type:    Number
+                            Suppression Formula:    {?arcttc} = 0
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                        Field:    sumtax1
+                            Data Source:    {@sumtax}
+                            Data Type:    Number
+                            Suppression Formula:    {?arcttc} = 0
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                        Field:    lbldontTVA1
+                            Data Source:    {@lbl_dontTVA}
+                            Data Type:    String
+                            Suppression Formula:    {?arcttc} = 0
+
+                        Field:    lblConPago1
+                            Data Source:    {@lblConPago}
+                            Data Type:    String
+
+                        Field:    lbldiaspago1
+                            Data Source:    {@lbl_diaspago}
+                            Data Type:    String
+
+                        Field:    txtdiaspago1
+                            Data Source:    {@txtdias_pago}
+                            Data Type:    String
+
+                    Lines
+
+                        Line:    Line1
+                            Ends in Section:    Section33
+                            Line Type:    Single
+                            Line Thickness:    0
+
+                        Line:    Line2
+                            Ends in Section:    Section33
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                    SubReports
+
+                        SubReport:    TABPAYTERM_multileg.rpt
+                            Links:    {COMPANY.LEG_0} => {?Pm-COMPANY.LEG_0}
+                                      {SORDER.PTE_0} => {?Pm-SORDER.PTE_0}
+                                      {@param_X3DOS} => {?Pm-@param_X3DOS}
+                                      {BPARTNER.LAN_0} => {?Pm-BPARTNER.LAN_0}
+
+                Section:    Section f
+
+                    Conditional Formulas
+
+                        Condition:    EnableSuppress
+                            Formula:    {?arcttc} = 0 or {SORDER.PRITYP_0} = 2
+
+                    Fields
+
+                        Field:    lbltotalttc1
+                            Data Source:    {@lbl_total_ttc}
+                            Data Type:    String
+
+                        Field:    CUR01
+                            Data Source:    {SORDER.CUR_0}
+                            Data Type:    String
+
+                        Field:    ORDINVATI01
+                            Data Source:    {SORDER.ORDINVATI_0}
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                    Boxes
+
+                        Box:    Box9
+                            Ends in Section:    GroupFooterSection3
+                            Size:    262x24
+                            Line Type:    Single
+                            Line Thickness:    20
+
+                    SubReports
+
+                        SubReport:    TABDEPAGIO_multileg.rpt
+                            Links:    {@param_tauxagios} => {?Pm-@param_tauxagios}
+                                      {@param_tauxescompte} => {?Pm-@param_tauxescompte}
+                                      {COMPANY.LEG_0} => {?Pm-COMPANY.LEG_0}
+                                      {SORDER.DEP_0} => {?Pm-SORDER.DEP_0}
+
+                Section:    Section g
+
+                    Fields
+
+                        Field:    lblformejuridique1
+                            Data Source:    {@lbl_formejuridique}
+                            Data Type:    String
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SORDERP.LINTYP_0} in [3, 4, 5, 7, 8, 9, 11, 12]
+                                then true else false;
+
+            Fields
+
+                Field:    Champ68
+                    Data Source:    {SORDERQ.ITMREF_0}
+                    Data Type:    String
+
+                Field:    Champ72
+                    Data Source:    {@Mt_net}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    GROPRI01
+                    Data Source:    {SORDERP.GROPRI_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    SAU01
+                    Data Source:    {SORDERP.SAU_0}
+                    Data Type:    String
+
+                Field:    QTY01
+                    Data Source:    {SORDERQ.QTY_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555
+
+                Field:    DISCGRVAL11
+                    Data Source:    {@DISCGRVAL_1}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    DISCGRVAL21
+                    Data Source:    {@DISCGRVAL_2}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    DISCGRVAL31
+                    Data Source:    {@DISCGRVAL_3}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    DISCGRVAL41
+                    Data Source:    {@DISCGRVAL_4}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+            Text Fields
+
+                Text Field:    Text49
+                    Text:    {SORDERP.ITMDES1_0}  
+
+                Text Field:    Text50
+                    Text:    {ITMMASTER.EANCOD_0}
+
+        Section:    Section b
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SORDERP.LINTYP_0} in [3, 4, 5, 7, 8, 9, 11, 12]
+                                then true else false;
+
+            Fields
+
+                Field:    ITMREFBPC02
+                    Data Source:    {ITMBPC.ITMREFBPC_0}
+                    Data Type:    String
+
+                Field:    DES01
+                    Data Source:    {SPREASON.DES_0}
+                    Data Type:    String
+                    Suppression Formula:    {SORDERP.PRIREN_0}<6 
+
+        Section:    Section c
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SORDERP.LINTYP_0} = 3 or
+                                  {SORDERP.LINTYP_0} = 4 or
+                                  {SORDERP.LINTYP_0} = 5 or
+                                  {SORDERP.LINTYP_0} = 7 or
+                                  {SORDERP.LINTYP_0} = 8 or
+                                  {SORDERP.LINTYP_0} = 9  then true else false;
+
+            Fields
+
+                Field:    Champ66
+                    Data Source:    {@lbl_gratuit}
+                    Data Type:    String
+                    Suppression Formula:    If {SORDERP.FOCFLG_0} = 3 then false else true
+
+        Section:    Section d
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    //if {SORDERP.LINTYP_0} <> 1 and
+                                //   {SORDERP.LINTYP_0} <> 2 and
+                                //   {SORDERP.LINTYP_0} <> 6 and
+                                //   {SORDERQ.OCNPRNBOM_0} = 1 then true else false;
+                                // FAMESA NO QUIRE QUE SE VEA LA PALABRA KIT
+                                true
+
+            Fields
+
+                Field:    Champ67
+                    Data Source:    {@lbl_option_ou_kit}
+                    Data Type:    String
+                    Suppression Formula:    if {SORDERP.LINTYP_0} = 2 or
+                                               {SORDERP.LINTYP_0} = 4 or
+                                               {SORDERP.LINTYP_0} = 8 
+                                                then
+                                                        false
+                                                else
+                                                        true; 
+
+        Section:    Section e
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SORDERP.LINTYP_0} in [1, 2, 6, 10] or {SORDERQ.OCNPRNBOM_0} = 1 then 
+                                    true 
+                                else 
+                                    false;
+                                
+
+            Fields
+
+                Field:    Champ76
+                    Data Source:    {SORDERQ.QTY_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    5555555,
+
+                Field:    Champ78
+                    Data Source:    {@Mt_net}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    DISCRGVAL102
+                    Data Source:    {SORDERP.DISCRGVAL1_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    GROPRI02
+                    Data Source:    {SORDERP.GROPRI_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    DISCRGVAL202
+                    Data Source:    {SORDERP.DISCRGVAL2_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    ITMDES01
+                    Data Source:    {SORDERP.ITMDES_0}
+                    Data Type:    String
+
+                Field:    ITMREF01
+                    Data Source:    {SORDERQ.ITMREF_0}
+                    Data Type:    String
+
+        Section:    Section f
+
+            Fields
+
+                Field:    TEXTE03
+                    Data Source:    {TEXCLOB_DET.TEXTE_0}
+                    Data Type:    Unknown
+
+    Page Footer
+
+        Section:    Section a
+
+            Fields
+
+                Field:    PageNM2
+                    Data Source:    PageNofM
+                    Data Type:    String
+                    Display String Formula:    WhilePrintingRecords;
+                                               global stringVar fechs;
+                                               fechs:=TextOfChapter ({?X3DOS},{BPARTNER.LAN_0},6969,54) & ' ' & totext(pagenumber, 0) & ' ' & TextOfChapter ({?X3DOS},{BPARTNER.LAN_0},6969,55) & ' ' & totext(totalpagecount, 0)
+
+Subreport:    SORDER_PIED.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-SORDER.SOHNUM_0
+            Data Type:    String
+            Description:    Pm-SORDER.SOHNUM_0
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.LAN_0
+            Data Type:    String
+            Description:    Pm-SORDER.LAN_0
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.PRITYP_0
+            Data Type:    Number
+            Description:    Pm-SORDER.PRITYP_0
+            List Type:    Static
+
+        Parameter:    Pm-@decimald
+            Data Type:    Number
+            Description:    Pm-@decimald
+            List Type:    Static
+
+        Parameter:    Pm-?X3DOS
+            Data Type:    String
+            Description:    Pm-?X3DOS
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.SFOOTINV
+            Connection:    Connection #1
+            Used Columns:    {SFOOTINV.SFINUM_0} : Number
+                             {SFOOTINV.DACORD_0} : Number
+
+        Table:    x3famesa.FAMESA.SVCRFOOT
+            Connection:    Connection #1
+            Used Columns:    {SVCRFOOT.VCRTYP_0} : Number
+                             {SVCRFOOT.VCRNUM_0} : String[42]
+                             {SVCRFOOT.DTA_0} : Number
+                             {SVCRFOOT.AMTCOD_0} : Number
+                             {SVCRFOOT.DTAAMT_0} : Number
+                             {SVCRFOOT.DTANOT_0} : Number
+                             {SVCRFOOT.DTAVATAMT_0} : Number
+                             {SVCRFOOT.DTAVATAMT_1} : Number
+                             {SVCRFOOT.DTAVATAMT_2} : Number
+                             {SVCRFOOT.DTAVATAMT_3} : Number
+                             {SVCRFOOT.DTAVATAMT_4} : Number
+                             {SVCRFOOT.DTAVATAMT_5} : Number
+                             {SVCRFOOT.DTAVATAMT_6} : Number
+                             {SVCRFOOT.DTAVATAMT_7} : Number
+                             {SVCRFOOT.DTAVATAMT_8} : Number
+                             {SVCRFOOT.DTAVATAMT_9} : Number
+
+    Table Links
+        Joins:    x3famesa.FAMESA.SVCRFOOT LEFT OUTER JOIN x3famesa.FAMESA.SFOOTINV ON x3famesa.FAMESA.SVCRFOOT.DTA_0 = x3famesa.FAMESA.SFOOTINV.SFINUM_0
+
+    Record Selection Formulas
+        Formula:    // SVCRFOOT : Clé = VCRNUM_0 + VCRTYP_0 + DTA_0
+                        {SVCRFOOT.VCRNUM_0} = {?Pm-SORDER.SOHNUM_0}
+                    // VCRTYP_0 : Menu Local 432 / Prise en compte uniquement des commandes Normales (10) / Prêt (11) / Facture directe (12) / Ouverte (13) / Commande (20)
+                    and {SVCRFOOT.VCRTYP_0} in [10 , 11 , 12 , 13 , 20]
+                    
+
+    Record Sorting
+        Sort By:    SFOOTINV.DACORD_0 -- Ascending Order 
+
+    Formula Fields
+
+        Field:    Mt_sfoot
+            Formula:    // Si PRITYP = 2, on est en TTC !
+                        if {?Pm-SORDER.PRITYP_0} = 2 // and {SFOOTINV.CLCBAS_0} = 2
+                        then {SVCRFOOT.DTANOT_0} + {SVCRFOOT.DTAVATAMT_0}+{SVCRFOOT.DTAVATAMT_1}+{SVCRFOOT.DTAVATAMT_2}+{SVCRFOOT.DTAVATAMT_3}+{SVCRFOOT.DTAVATAMT_4}+{SVCRFOOT.DTAVATAMT_5}+{SVCRFOOT.DTAVATAMT_6}+{SVCRFOOT.DTAVATAMT_7}+{SVCRFOOT.DTAVATAMT_8}+{SVCRFOOT.DTAVATAMT_9}
+                        else {SVCRFOOT.DTANOT_0}
+                        
+
+        Field:    amtcod
+            Formula:    WhilePrintingRecords;
+                        if {SVCRFOOT.AMTCOD_0} = 1 then '%' else ' ';
+                        
+
+    Unused Formula Fields
+
+        Field:    Txt_sfoot
+            Formula:    WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?Pm-?X3DOS}, "SPA", X3TEX)
+                        
+
+        Field:    Txt_sfoot
+            Formula:    WhilePrintingRecords;
+                        stringVar X3TEX := "SFOOTINV~SHOAXX~"+{SFOOTINV.SFINUMCAR_0}+"~~";
+                        X3TranslatedText ({?Pm-?X3DOS}, "SPA", X3TEX)
+                        
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SVCRFOOT.DTANOT_0} = 0 then true else false ;
+                                
+
+            Fields
+
+                Field:    txtpfoot1
+                    Data Source:    {@Txt_sfoot}
+                    Data Type:    String
+
+                Field:    Mtsfoot1
+                    Data Source:    {@Mt_sfoot}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    DTAAMT01
+                    Data Source:    {SVCRFOOT.DTAAMT_0}
+                    Data Type:    Number
+                    Suppression Formula:    // Frais ou Remise de type Montant et pas %
+                                            {SVCRFOOT.AMTCOD_0} <> 1 or {SVCRFOOT.DTAAMT_0} = 0
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    amtcod1
+                    Data Source:    {@amtcod}
+                    Data Type:    String
+                    Suppression Formula:    {SVCRFOOT.DTAAMT_0} = 0
+
+Subreport:    SORDER_SUMTAX1.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-SORDER.SOHNUM_0
+            Data Type:    String
+            Description:    Pm-SORDER.SOHNUM_0
+            List Type:    Static
+
+        Parameter:    Pm-COMPANY.LEG_0
+            Data Type:    String
+            Description:    Pm-COMPANY.LEG_0
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.SVCRVAT
+            Connection:    Connection #1
+            Used Columns:    {SVCRVAT.VCRTYP_0} : Number
+                             {SVCRVAT.VCRNUM_0} : String[42]
+                             {SVCRVAT.VAT_0} : String[12]
+                             {SVCRVAT.AMTTAX_0} : Number
+
+        Table:    x3famesa.FAMESA.TABVAT
+            Connection:    Connection #1
+            Used Columns:    {TABVAT.VAT_0} : String[12]
+                             {TABVAT.LEG_0} : String[42]
+
+    Table Links
+        Joins:    x3famesa.FAMESA.SVCRVAT INNER JOIN x3famesa.FAMESA.TABVAT ON x3famesa.FAMESA.SVCRVAT.VAT_0 = x3famesa.FAMESA.TABVAT.VAT_0
+
+    Record Selection Formulas
+        Formula:    {SVCRVAT.VCRNUM_0} = {?Pm-SORDER.SOHNUM_0} and
+                    {SVCRVAT.VCRTYP_0} in [10, 11, 12, 13, 20]
+                    //71937 Adaptation multi-législation
+                    and 
+                    ({TABVAT.LEG_0}={?Pm-COMPANY.LEG_0} or {TABVAT.LEG_0}=' ')
+
+    Record Sorting
+        Sort By:    SVCRVAT.VAT_0 -- Ascending Order Group #1
+
+    Formula Fields
+
+        Field:    INIT_Etat
+            Formula:    Shared numbervar sumtax;
+                        // En début d'état, on met à 0 le total des taxes pour la pièce courante
+                        sumtax := 0
+
+        Field:    sumtax
+            Formula:    Shared numbervar sumtax;
+                        // On mémorise alors la somme des taxes dans sumtax pour l'état appelant
+                        // Cela permet de palier au BUG Crystal qui ne totalise pas tous les enregistrements possibles en sous-état Fixe
+                        sumtax := {#sumtax};
+
+        Field:    mttTaxes
+            Formula:    //71937 Adaptation multi-législation
+                        {SVCRVAT.AMTTAX_0}
+
+    Running Totals
+
+        Running Total:    sumtax
+            Field:    sumtax
+            Type:    sumtax
+            Evaluate:    sumtax
+            Evaluate Condition:    sumtax
+            Reset:    sumtax
+            Reset Condition:    sumtax
+
+    Report Header
+
+        Section:    Section a
+
+            Fields
+
+                Field:    INITEtat1
+                    Data Source:    {@INIT_Etat}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {SVCRVAT.VAT_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    GroupNameVAT01
+                            Data Source:    GroupName ({SVCRVAT.VAT_0})
+                            Data Type:    String
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SVCRVAT.AMTTAX_0} = 0 then true
+                                else 
+                                    //71937 Adaptation multi-législation
+                                    {TABVAT.LEG_0}<>maximum({TABVAT.LEG_0},{SVCRVAT.VAT_0});
+
+            Fields
+
+                Field:    VAT01
+                    Data Source:    {TABVAT.VAT_0}
+                    Data Type:    String
+
+                Field:    LEG01
+                    Data Source:    {TABVAT.LEG_0}
+                    Data Type:    String
+
+                Field:    AMTTAX01
+                    Data Source:    {SVCRVAT.AMTTAX_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    mttTaxes1
+                    Data Source:    {@mttTaxes}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+    Report Footer
+
+        Section:    Section a
+
+            Fields
+
+                Field:    sumtax2
+                    Data Source:    {@sumtax}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+Subreport:    SORDER_TAXE.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-SORDER.SOHNUM_0
+            Data Type:    String
+            Description:    Pm-SORDER.SOHNUM_0
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.LAN_0
+            Data Type:    String
+            Description:    Pm-SORDER.LAN_0
+            List Type:    Static
+
+        Parameter:    Pm-@decimald
+            Data Type:    Number
+            Description:    Pm-@decimald
+            List Type:    Static
+
+        Parameter:    Pm-COMPANY.LEG_0
+            Data Type:    String
+            Description:    Pm-COMPANY.LEG_0
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.SVCRVAT
+            Connection:    Connection #1
+            Used Columns:    {SVCRVAT.VCRTYP_0} : Number
+                             {SVCRVAT.VCRNUM_0} : String[42]
+                             {SVCRVAT.VAT_0} : String[12]
+                             {SVCRVAT.VATRAT_0} : Number
+                             {SVCRVAT.BASTAX_0} : Number
+                             {SVCRVAT.AMTTAX_0} : Number
+
+        Table:    x3famesa.FAMESA.AVWTEXTRA
+            Connection:    Connection #1
+            Used Columns:    {AVWTEXTRA.LAN_0} : String[8]
+                             {AVWTEXTRA.CODFIC_0} : String[26]
+                             {AVWTEXTRA.ZONE_0} : String[26]
+                             {AVWTEXTRA.IDENT1_0} : String[162]
+                             {AVWTEXTRA.IDENT2_0} : String[162]
+                             {AVWTEXTRA.TEXTE_0} : String[162]
+
+        Table:    x3famesa.FAMESA.TABVAT
+            Connection:    Connection #1
+            Used Columns:    {TABVAT.VAT_0} : String[12]
+                             {TABVAT.LEG_0} : String[42]
+
+    Table Links
+        Joins:    x3famesa.FAMESA.SVCRVAT INNER JOIN x3famesa.FAMESA.TABVAT ON x3famesa.FAMESA.SVCRVAT.VAT_0 = x3famesa.FAMESA.TABVAT.VAT_0
+                  x3famesa.FAMESA.TABVAT INNER JOIN x3famesa.FAMESA.AVWTEXTRA ON x3famesa.FAMESA.TABVAT.VAT_0,LEG_0 = x3famesa.FAMESA.AVWTEXTRA.IDENT1_0,IDENT2_0
+
+    Record Selection Formulas
+        Formula:    // SVCRVAT  : Clé = VCRNUM_0 + VCRTYP_0 + VAT_0
+                        {SVCRVAT.VCRNUM_0} = {?Pm-SORDER.SOHNUM_0}
+                    // VCRTYP_0 : Menu Local 432 / Prise en compte uniquement des commandes Normales (10) / Prêt (11) / Facture directe (12) / Ouverte (13) / Commande (20)
+                    and {SVCRVAT.VCRTYP_0} in [10 , 11 , 12 , 13 , 20]
+                    // Lecture de la désignation traduite du code Taxe par accès à la vue AVWTEXTRA
+                    and {AVWTEXTRA.CODFIC_0}="TABVAT" 
+                    and {AVWTEXTRA.ZONE_0}="DESAXX"
+                    and {AVWTEXTRA.LAN_0}="SPA"
+                    //71937 Adaptation multi-législation
+                    and  {SVCRVAT.VAT_0}={TABVAT.VAT_0}
+                    and ({TABVAT.LEG_0} ={?Pm-COMPANY.LEG_0} or {TABVAT.LEG_0}=' ')
+                    and ({AVWTEXTRA.IDENT2_0}={?Pm-COMPANY.LEG_0} or {AVWTEXTRA.IDENT2_0}=' ')
+                    
+
+    Record Sorting
+        Sort By:    SVCRVAT.VAT_0 -- Ascending Order Group #1
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {SVCRVAT.VAT_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    GroupNameVAT01
+                            Data Source:    GroupName ({SVCRVAT.VAT_0})
+                            Data Type:    String
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    if {SVCRVAT.AMTTAX_0} = 0 then true
+                                else 
+                                    //71937 Adaptation multi-législation
+                                    {TABVAT.LEG_0}<>maximum({TABVAT.LEG_0},{SVCRVAT.VAT_0});
+                                
+
+            Fields
+
+                Field:    VATRAT01
+                    Data Source:    {SVCRVAT.VATRAT_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    True
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    BASTAX01
+                    Data Source:    {SVCRVAT.BASTAX_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    AMTTAX01
+                    Data Source:    {SVCRVAT.AMTTAX_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    TEXTE01
+                    Data Source:    {AVWTEXTRA.TEXTE_0}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text1
+                    Text:    :
+
+Subreport:    TABDEPAGIO_multileg.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-COMPANY.LEG_0
+            Data Type:    String
+            Description:    Pm-COMPANY.LEG_0
+            List Type:    Static
+
+        Parameter:    Pm-@param_tauxagios
+            Data Type:    Number
+            Description:    Pm-@param_tauxagios
+            List Type:    Static
+
+        Parameter:    Pm-@param_tauxescompte
+            Data Type:    Number
+            Description:    Pm-@param_tauxescompte
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.DEP_0
+            Data Type:    String
+            Description:    Pm-SORDER.DEP_0
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.TABDEPAGIO
+            Connection:    Connection #1
+            Used Columns:    {TABDEPAGIO.DEP_0} : String[12]
+                             {TABDEPAGIO.DEPRAT_0} : Number
+                             {TABDEPAGIO.DEPRAT_1} : Number
+                             {TABDEPAGIO.DEPRAT_2} : Number
+                             {TABDEPAGIO.DEPRAT_3} : Number
+                             {TABDEPAGIO.DEPRAT_4} : Number
+                             {TABDEPAGIO.DEPRAT_5} : Number
+                             {TABDEPAGIO.DEPRAT_6} : Number
+                             {TABDEPAGIO.DEPRAT_7} : Number
+                             {TABDEPAGIO.DEPRAT_8} : Number
+                             {TABDEPAGIO.DEPRAT_9} : Number
+                             {TABDEPAGIO.DEPRAT_10} : Number
+                             {TABDEPAGIO.DEPRAT_11} : Number
+                             {TABDEPAGIO.LEG_0} : String[42]
+
+    Record Selection Formulas
+        Formula:    {TABDEPAGIO.DEP_0} = {?Pm-SORDER.DEP_0}
+                    and ({TABDEPAGIO.LEG_0} = {?Pm-COMPANY.LEG_0} or {TABDEPAGIO.LEG_0} = ' ')
+
+    Record Sorting
+        Sort By:    TABDEPAGIO.DEP_0 -- Ascending Order Group #1
+                    TABDEPAGIO.LEG_0 -- Descending Order 
+
+    Formula Fields
+
+        Field:    initTauxEscAgios
+            Formula:    //71937 Déclinaison multi-législation TABDEPAGIO (passage par sous-état)
+                        WhilePrintingRecords;
+                        shared stringVar txtcondiV2;
+                        shared stringVar txtcondiV3;
+                        shared stringVar noescompte;
+                        Local NumberVar i;
+                        Local NumberVar y;
+                        Local NumberVar tauxAgios := 0;
+                        Local NumberVar tauxEscompte := 0;
+                        
+                        Local NumberVar Array x := MakeArray ({TABDEPAGIO.DEPRAT_0}, {TABDEPAGIO.DEPRAT_1}, {TABDEPAGIO.DEPRAT_2}, {TABDEPAGIO.DEPRAT_3}, {TABDEPAGIO.DEPRAT_3}, {TABDEPAGIO.DEPRAT_4}, {TABDEPAGIO.DEPRAT_5}, {TABDEPAGIO.DEPRAT_6}, {TABDEPAGIO.DEPRAT_7}, {TABDEPAGIO.DEPRAT_8}, {TABDEPAGIO.DEPRAT_9}, {TABDEPAGIO.DEPRAT_10}, {TABDEPAGIO.DEPRAT_11});
+                        for i := 1 to 12 do
+                        (
+                            if x[i] > 0 and tauxAgios = 0 then
+                                   tauxAgios := x[i];
+                            if x[i] < 0 and tauxEscompte = 0 then
+                                   tauxEscompte := x[i]*-1;
+                        );
+                        if tauxAgios = 0 and {?Pm-@param_tauxagios} <> 0 then
+                        (
+                            tauxAgios := {?Pm-@param_tauxagios}; 
+                        );
+                        if tauxAgios <> 0 then
+                        (
+                            txtcondiV2 := replace(txtcondiV2,"~~",ToText(tauxAgios));
+                        )
+                        else
+                            txtcondiV2 := "";
+                        if tauxEscompte = 0 and {?Pm-@param_tauxescompte} <> 0 then
+                        (    
+                            tauxEscompte := {?Pm-@param_tauxescompte};    
+                        );
+                        if tauxEscompte <> 0 then
+                        (
+                           txtcondiV3 := replace(txtcondiV3,"~~",ToText(tauxEscompte));
+                        )
+                        else
+                           txtcondiV3 := noescompte;
+
+        Field:    lbl_condivente1
+            Formula:    WhilePrintingRecords;
+                        shared stringVar txtcondiV1;
+                        txtcondiV1;
+
+        Field:    lbl_condivente2
+            Formula:    WhilePrintingRecords;
+                        shared stringVar txtcondiV2;
+                        txtcondiV2;
+
+        Field:    lbl_condivente3
+            Formula:    WhilePrintingRecords;
+                        shared stringVar txtcondiV3;
+                        txtcondiV3;
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {TABDEPAGIO.DEP_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    GroupNameDEP01
+                            Data Source:    GroupName ({TABDEPAGIO.DEP_0})
+                            Data Type:    String
+
+                        Field:    initTauxEscAgios1
+                            Data Source:    {@initTauxEscAgios}
+                            Data Type:    String
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    //71937 Adaptation multi-législation
+                                {TABDEPAGIO.LEG_0}<>maximum({TABDEPAGIO.LEG_0},{TABDEPAGIO.DEP_0});
+
+            Fields
+
+                Field:    lblcondivente11
+                    Data Source:    {@lbl_condivente1}
+                    Data Type:    String
+
+                Field:    lblcondivente21
+                    Data Source:    {@lbl_condivente2}
+                    Data Type:    String
+
+                Field:    lblcondivente31
+                    Data Source:    {@lbl_condivente3}
+                    Data Type:    String
+
+Subreport:    TABPAYTERM_multileg.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    Pm-COMPANY.LEG_0
+            Data Type:    String
+            Description:    Pm-COMPANY.LEG_0
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.PTE_0
+            Data Type:    String
+            Description:    Pm-SORDER.PTE_0
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.LAN_0
+            Data Type:    String
+            Description:    Pm-SORDER.LAN_0
+            List Type:    Static
+
+        Parameter:    Pm-@param_X3DOS
+            Data Type:    String
+            Description:    Pm-@param_X3DOS
+            List Type:    Static
+
+        Parameter:    Pm-BPARTNER.LAN_0
+            Data Type:    String
+            Description:    Pm-BPARTNER.LAN_0
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.TABPAYTERM
+            Connection:    Connection #1
+            Used Columns:    {TABPAYTERM.PTE_0} : String[32]
+                             {TABPAYTERM.PTELIN_0} : Number
+                             {TABPAYTERM.LEG_0} : String[42]
+
+        Table:    x3famesa.FAMESA.AVWTEXTRA
+            Connection:    Connection #1
+            Used Columns:    {AVWTEXTRA.LAN_0} : String[8]
+                             {AVWTEXTRA.CODFIC_0} : String[26]
+                             {AVWTEXTRA.ZONE_0} : String[26]
+                             {AVWTEXTRA.IDENT1_0} : String[162]
+                             {AVWTEXTRA.IDENT2_0} : String[162]
+                             {AVWTEXTRA.TEXTE_0} : String[162]
+
+    Table Links
+        Joins:    x3famesa.FAMESA.TABPAYTERM LEFT OUTER JOIN x3famesa.FAMESA.AVWTEXTRA ON x3famesa.FAMESA.TABPAYTERM.PTE_0,LEG_0 = x3famesa.FAMESA.AVWTEXTRA.IDENT1_0,IDENT2_0
+
+    Record Selection Formulas
+        Formula:    //71937 Adaptation multi-législation
+                    {TABPAYTERM.PTE_0} = {?Pm-SORDER.PTE_0}
+                    and {TABPAYTERM.PTELIN_0}= 1
+                    and ({TABPAYTERM.LEG_0}  ={?Pm-COMPANY.LEG_0} or {TABPAYTERM.LEG_0}=' ')
+                    // Lecture de la désignation traduite du code Taxe par accès à la vue AVWTEXTRA
+                    and  {AVWTEXTRA.CODFIC_0}="TABPAYTERM" 
+                    and  {AVWTEXTRA.ZONE_0}  ="DESAXX"
+                    and  {AVWTEXTRA.LAN_0}   ="SPA"
+                    and ({AVWTEXTRA.IDENT2_0}={?Pm-COMPANY.LEG_0} or {AVWTEXTRA.IDENT2_0}=' ')
+
+    Record Sorting
+        Sort By:    TABPAYTERM.PTE_0 -- Ascending Order Group #1
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {TABPAYTERM.PTE_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    GroupNamePTE01
+                            Data Source:    GroupName ({TABPAYTERM.PTE_0})
+                            Data Type:    String
+
+    Detail
+
+        Section:    Section a
+
+            Conditional Formulas
+
+                Condition:    EnableSuppress
+                    Formula:    //71937 Adaptation multi-législation
+                                {TABPAYTERM.LEG_0}<>maximum({TABPAYTERM.LEG_0},{TABPAYTERM.PTE_0});
+
+            Fields
+
+                Field:    TEXTE01
+                    Data Source:    {AVWTEXTRA.TEXTE_0}
+                    Data Type:    String
+
+Subreport:    logo2.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    x3famesa.FAMESA.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[22]
+                             {ABLOB.IDENT1_0} : String[162]
+                             {ABLOB.IDENT2_0} : String[162]
+                             {ABLOB.IDENT3_0} : String[22]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.IDENT3_0} = "002" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    140x56
+
+Subreport:    logo3.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+    Tables
+
+        Table:    x3famesa.FAMESA.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[22]
+                             {ABLOB.IDENT1_0} : String[162]
+                             {ABLOB.IDENT2_0} : String[162]
+                             {ABLOB.IDENT3_0} : String[22]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.IDENT1_0} = Split ({?X3DOS},";")[1] and
+                    {ABLOB.CODBLB_0} = "PJ_ADS" and
+                    {ABLOB.IDENT3_0} = "003" and
+                    {ABLOB.IDENT2_0} = " "
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    151x128

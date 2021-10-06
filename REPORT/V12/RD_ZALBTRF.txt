@@ -1,0 +1,758 @@
+****************************************************************************
+Location : Local or Network Folders
+Host     : PORTATIL-INFORM
+Path     : C:\Código Fuente\Reporting SAGE\V12\ZALBTRF.rpt
+****************************************************************************
+
+
+Report Information
+    Version:    14.0
+    Author:    Oscar J. Martínez
+    Title:    Lista de entregas de venta por transportista
+    Printer:    No Printer
+
+Main Body
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3ETA
+            Data Type:    String
+            Description:    Code de l'état
+            List Type:    Static
+            List Values:    NONIMPUT
+            Default Values:    NONIMPUT
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04;15150;150;FRA
+
+        Parameter:    X3OPE
+            Data Type:    String
+            Description:    Nom & Prénom de l'opérateur
+            List Type:    Static
+
+        Parameter:    X3TIT
+            Data Type:    String
+            Description:    Titre de l'état
+            List Type:    Static
+
+        Parameter:    X3EDT
+            Data Type:    String
+            Description:    Information éditeur
+            List Type:    Static
+            List Values:    Adonix & Prodstar
+            Default Values:    Adonix & Prodstar
+
+        Parameter:    X3LAN
+            Data Type:    String
+            List Type:    Static
+
+        Parameter:    Livraisondeb
+            Data Type:    String
+            Description:    Piece début
+            List Type:    Static
+
+        Parameter:    Livraisonfin
+            Data Type:    String
+            Description:    Pièce fin
+            List Type:    Static
+
+        Parameter:    datedeb
+            Data Type:    Date
+            Description:    Date début
+            List Type:    Static
+
+        Parameter:    datefin
+            Data Type:    Date
+            Description:    Date fin
+            List Type:    Static
+
+        Parameter:    clientdeb
+            Data Type:    String
+            Description:    Client début
+            List Type:    Static
+
+        Parameter:    clientfin
+            Data Type:    String
+            Description:    Client fin
+            List Type:    Static
+
+        Parameter:    company
+            Data Type:    String
+            Description:    Especificar company:
+            List Type:    Static
+
+        Parameter:    dateexpdeb
+            Data Type:    Date
+            Description:    Especificar dateexpdeb:
+            List Type:    Static
+
+        Parameter:    dateexpfin
+            Data Type:    Date
+            Description:    Especificar dateexpfin:
+            List Type:    Static
+
+        Parameter:    Validado
+            Data Type:    String
+            Description:    Especificar Validado:
+            List Type:    Static
+
+        Parameter:    bptnumdeb
+            Data Type:    String
+            Description:    Especificar bptnumdeb:
+            List Type:    Static
+
+        Parameter:    bptnumfin
+            Data Type:    String
+            Description:    Especificar bptnumfin:
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESAOF.SDELIVERY
+            Connection:    Connection #1
+            Used Columns:    {SDELIVERY.SDHNUM_0} : String[42]
+                             {SDELIVERY.CPY_0} : String[12]
+                             {SDELIVERY.SALFCY_0} : String[12]
+                             {SDELIVERY.BPCORD_0} : String[32]
+                             {SDELIVERY.SHIDAT_0} : Date
+                             {SDELIVERY.DLVDAT_0} : Date
+                             {SDELIVERY.BPDNAM_0} : String[72]
+                             {SDELIVERY.BPDPOSCOD_0} : String[22]
+                             {SDELIVERY.BPDCTY_0} : String[82]
+                             {SDELIVERY.BPDSAT_0} : String[72]
+                             {SDELIVERY.BPTNUM_0} : String[32]
+                             {SDELIVERY.CFMFLG_0} : Number
+                             {SDELIVERY.DLVNOT_0} : Number
+                             {SDELIVERY.PACNBR_0} : Number
+                             {SDELIVERY.GROWEI_0} : Number
+                             {SDELIVERY.VOL_0} : Number
+                             {SDELIVERY.YVOLUMEN_0} : Number
+                             {SDELIVERY.YPACK_0} : Number
+
+        Table:    x3famesa.FAMESA.FACILITY
+            Connection:    Connection #1
+            Used Columns:    {FACILITY.FCY_0} : String[12]
+
+        Table:    x3famesa.FAMESA.BPARTNER
+            Connection:    Connection #1
+            Used Columns:    {BPARTNER.BPRNUM_0} : String[32]
+
+        Table:    x3famesa.FAMESA.AFCTFCY
+            Connection:    Connection #1
+            Used Columns:    {AFCTFCY.FCY_0} : String[12]
+
+        Table:    x3famesa.FAMESA.BPARTNER
+            Connection:    Connection #1
+            Report Alias:    BPARTNER_TRANSPORTISTA
+            Used Columns:    {BPARTNER_TRANSPORTISTA.BPRNAM_0} : String[72]
+
+    Table Links
+        Joins:    x3famesa.FAMESAOF.SDELIVERY INNER JOIN x3famesa.FAMESA.BPARTNER ON x3famesa.FAMESAOF.SDELIVERY.BPCORD_0 = x3famesa.FAMESA.BPARTNER.BPRNUM_0
+                  x3famesa.FAMESAOF.SDELIVERY INNER JOIN x3famesa.FAMESA.FACILITY ON x3famesa.FAMESAOF.SDELIVERY.SALFCY_0 = x3famesa.FAMESA.FACILITY.FCY_0
+                  x3famesa.FAMESAOF.SDELIVERY INNER JOIN x3famesa.FAMESA.AFCTFCY ON x3famesa.FAMESAOF.SDELIVERY.SALFCY_0 = x3famesa.FAMESA.AFCTFCY.FCY_0
+                  x3famesa.FAMESAOF.SDELIVERY LEFT OUTER JOIN x3famesa.FAMESA.BPARTNER BPARTNER_TRANSPORTISTA ON x3famesa.FAMESAOF.SDELIVERY.BPTNUM_0 = BPARTNER_TRANSPORTISTA.BPRNUM_0
+
+    Record Selection Formulas
+        Formula:    Select {?Validado}
+                        case "1": // No
+                            {SDELIVERY.CPY_0}={?company} and 
+                            {SDELIVERY.SDHNUM_0} in {?Livraisondeb} to {?Livraisonfin} and
+                            {SDELIVERY.BPCORD_0} in {?clientdeb} to {?clientfin} and
+                            {SDELIVERY.DLVDAT_0} in {?datedeb} to {?datefin}
+                            and {SDELIVERY.BPTNUM_0} in {?bptnumdeb} to {?bptnumfin}
+                            and ({SDELIVERY.SHIDAT_0} in {?dateexpdeb} to {?dateexpfin})
+                            and ({SDELIVERY.CFMFLG_0}=1)
+                        case "2": // Si
+                            {SDELIVERY.CPY_0}={?company} and 
+                            {SDELIVERY.SDHNUM_0} in {?Livraisondeb} to {?Livraisonfin} and
+                            {SDELIVERY.BPCORD_0} in {?clientdeb} to {?clientfin} and
+                            {SDELIVERY.DLVDAT_0} in {?datedeb} to {?datefin}
+                            and {SDELIVERY.BPTNUM_0} in {?bptnumdeb} to {?bptnumfin}
+                            and ({SDELIVERY.SHIDAT_0} in {?dateexpdeb} to {?dateexpfin})
+                            and ({SDELIVERY.CFMFLG_0}=2)
+                        Case "3": //Todos
+                            {SDELIVERY.CPY_0}={?company} and 
+                            {SDELIVERY.SDHNUM_0} in {?Livraisondeb} to {?Livraisonfin} and
+                            {SDELIVERY.BPCORD_0} in {?clientdeb} to {?clientfin} and
+                            {SDELIVERY.DLVDAT_0} in {?datedeb} to {?datefin}
+                            and {SDELIVERY.BPTNUM_0} in {?bptnumdeb} to {?bptnumfin}
+                            and ({SDELIVERY.SHIDAT_0} in {?dateexpdeb} to {?dateexpfin})
+                        default:
+                            {SDELIVERY.CPY_0}={?company} and 
+                            {SDELIVERY.SDHNUM_0} in {?Livraisondeb} to {?Livraisonfin} and
+                            {SDELIVERY.BPCORD_0} in {?clientdeb} to {?clientfin} and
+                            {SDELIVERY.DLVDAT_0} in {?datedeb} to {?datefin}
+                            and {SDELIVERY.BPTNUM_0} in {?bptnumdeb} to {?bptnumfin}
+                            and ({SDELIVERY.SHIDAT_0} in {?dateexpdeb} to {?dateexpfin})
+                    
+                    
+                    
+                    
+
+    Record Sorting
+        Sort By:    @Transportista -- Ascending Order Group #1
+                    SDELIVERY.SHIDAT_0 -- Ascending Order Group #2
+                    @triprincipal -- Ascending Order 
+
+    Formula Fields
+
+        Field:    triprincipal
+
+        Field:    mntreportingHT
+
+        Field:    mntreportingTTC
+
+        Field:    cumulgroupe
+            Formula:    shared numberVar resumeGroupeHT;
+                        shared numberVar resumeGroupeTTC;
+                        
+                        resumeGroupeHT  := resumeGroupeHT + {@mntreportingHT};
+                        resumeGroupeTTC := resumeGroupeTTC + {@mntreportingTTC};
+                        
+                        resumeGroupeHT;
+
+        Field:    Transportista
+            Formula:    {SDELIVERY.BPTNUM_0} & " - " & {BPARTNER_TRANSPORTISTA.BPRNAM_0}
+
+        Field:    contalbaran
+            Formula:    shared numberVar contalbaran;
+                        contalbaran := contalbaran+1;
+                        contalbaran
+
+    Unused Formula Fields
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar Non := TextOfChapter ({?X3DOS},{?X3LAN},1,1);
+                        global stringVar Oui := TextOfChapter ({?X3DOS},{?X3LAN},1,2);
+                        
+
+        Field:    site
+
+        Field:    inittauxreporting
+            Formula:    WhilePrintingRecords;
+                        Shared NumberVar tauxInverse;
+                        tauxInverse := 0;
+
+        Field:    datepiece
+            Formula:    ToText({SDELIVERY.SHIDAT_0}, "yyyyMMdd")
+
+        Field:    rechreporting
+
+        Field:    inittotaux
+            Formula:    shared numbervar resumeGroupeHT;
+                        shared numbervar resumeTotalHT;
+                        shared numbervar resumeGroupeTTC;
+                        shared numbervar resumeTotalTTC;
+                        shared numbervar albaran;
+                        
+                        
+                        resumeGroupeHT  := 0;
+                        resumeTotalHT   := 0;
+                        resumeGroupeTTC := 0;
+                        resumeTotalTTC  := 0;
+                        albaran := 0;
+
+        Field:    reinitgroupe
+            Formula:    Shared NumberVar resumeGroupeHT;
+                        Shared NumberVar resumeTotalHT;
+                        Shared NumberVar resumeGroupeTTC;
+                        Shared NumberVar resumeTotalTTC;
+                        Shared NumberVar albaran;
+                        
+                        resumeTotalHT := resumeTotalHT + resumeGroupeHT;
+                        resumeTotalTTC := resumeTotalTTC + resumeGroupeTTC;
+                        resumeGroupeHT := 0;
+                        resumeGroupeTTC := 0;
+                        albaran := 0;
+                        
+                        resumeTotalHT;
+
+        Field:    resumegroupeHT
+            Formula:    shared numbervar resumeGroupeHT;
+                        resumeGroupeHT;
+
+        Field:    resumegroupeTTC
+            Formula:    shared numbervar resumeGroupeTTC;
+                        resumeGroupeTTC;
+
+        Field:    resumetotalHT
+            Formula:    shared numbervar resumeTotalHT;
+                        resumeTotalHT;
+
+        Field:    resumetotalTTC
+            Formula:    shared numbervar resumeTotalTTC;
+                        resumeTotalTTC;
+
+        Field:    lblPortes
+            Formula:    WhilePrintingRecords;
+                        global stringvar txtPortes := TextOfChapter ({?X3DOS},{?X3LAN},6970,{SDELIVERY.ZPORTES_0});
+
+        Field:    textofchapter
+            Formula:    WhilePrintingRecords;
+                        global stringVar Non := TextOfChapter ({?X3DOS},{?X3LAN},1,1);
+                        global stringVar Oui := TextOfChapter ({?X3DOS},{?X3LAN},1,2);
+                        
+
+        Field:    lblPortes
+            Formula:    WhilePrintingRecords;
+                        global stringvar txtPortes := TextOfChapter ({?X3DOS},{?X3LAN},6970,{SDELIVERY.ZPORTES_0});
+
+    Summary Fields
+
+        Field:    PACNBR_0
+            Formula:    Sum ({SDELIVERY.PACNBR_0}, {@Transportista})
+
+        Field:    YPACK_0
+            Formula:    Sum ({SDELIVERY.YPACK_0}, {@Transportista})
+
+        Field:    VOL_0
+            Formula:    Sum ({SDELIVERY.VOL_0}, {@Transportista})
+
+        Field:    GROWEI_0
+            Formula:    Sum ({SDELIVERY.GROWEI_0}, {@Transportista})
+
+        Field:    DLVNOT_0
+            Formula:    Sum ({SDELIVERY.DLVNOT_0}, {@Transportista})
+
+    Report Header
+
+        Section:    Section a
+
+            Fields
+
+                Field:    textofchapter1
+                    Data Source:    {@textofchapter}
+                    Data Type:    String
+
+    Page Header
+
+        Section:    Section a
+
+            Fields
+
+                Field:    Champ26
+                    Data Source:    {?X3TIT}
+                    Data Type:    String
+
+            Text Fields
+
+                Text Field:    Text1
+                    Text:    Desde {?datedeb} Hasta {?datefin}
+
+                Text Field:    Text6
+                    Text:    Desde{?dateexpdeb}  Hasta {?dateexpfin}
+
+                Text Field:    Text8
+                    Text:    Rango fechas albaranes:
+
+                Text Field:    Text10
+                    Text:    Rango fechas expediciones:
+
+            Lines
+
+                Line:    Line2
+                    Ends in Section:    Section12
+                    Line Type:    Single
+                    Line Thickness:    20
+
+            SubReports
+
+                SubReport:    Logo_empresa.rpt
+                    Links:    {SDELIVERY.CPY_0} => {?Pm-SDELIVERY.CPY_0}
+
+        Section:    Section b
+
+            Text Fields
+
+                Text Field:    Text66
+                    Text:    N° asiento
+
+                Text Field:    Text68
+                    Text:    Cliente
+
+                Text Field:    Text69
+                    Text:    Razón social
+
+                Text Field:    Text75
+                    Text:    Importe AI
+
+                Text Field:    Text2
+                    Text:    Portes
+
+                Text Field:    Text5
+                    Text:    Bultos
+
+                Text Field:    Text7
+                    Text:    Volumen
+
+                Text Field:    Text9
+                    Text:    Dirección de entrega
+
+                Text Field:    Text13
+                    Text:    Peso Bruto
+                             
+
+                Text Field:    Text14
+                    Text:    Palets
+
+            Boxes
+
+                Box:    Box8
+                    Ends in Section:    PageHeaderSection13
+                    Size:    1075x19
+                    Line Type:    Single
+                    Line Thickness:    0
+
+    Groups
+
+        Group:    Group #1
+            Grouped By:    {@Transportista}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    Transportista1
+                            Data Source:    {@Transportista}
+                            Data Type:    String
+
+                    Text Fields
+
+                        Text Field:    Text4
+                            Text:    Transportista: 
+
+                    Lines
+
+                        Line:    Line3
+                            Ends in Section:    GroupHeaderSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+            Group Footer
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    SumadeDLVNOT02
+                            Data Source:    Sum ({SDELIVERY.DLVNOT_0}, {@Transportista})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5.555.555,
+
+                        Field:    SumadeDLVNOT01
+                            Data Source:    Sum ({SDELIVERY.GROWEI_0}, {@Transportista})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5,555,555.
+
+                        Field:    SumadeDLVNOT03
+                            Data Source:    Sum ({SDELIVERY.PACNBR_0}, {@Transportista})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5,555,555.
+
+                        Field:    SumadeDLVNOT04
+                            Data Source:    Sum ({SDELIVERY.VOL_0}, {@Transportista})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5,555,555.
+
+                        Field:    SumadeVOL01
+                            Data Source:    Sum ({SDELIVERY.YPACK_0}, {@Transportista})
+                            Data Type:    Number
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5,555,555.
+
+                        Field:    SumadeVOL02
+                            Data Source:    Sum ({SDELIVERY.VOL_0}, {@Transportista})
+                            Data Type:    Number
+                            Suppression Formula:    {SDELIVERY.YVOLUMEN_0}=0
+                            Format:    Number
+                                Currency Symbol:    None
+                                Suppress if Zero:    False
+                                Leading Zero:    True
+                                Reverse Sign:    False
+                                Number Style:    -5,555,555.
+
+                    Text Fields
+
+                        Text Field:    Text3
+                            Text:    Total
+
+                    Lines
+
+                        Line:    Line12
+                            Ends in Section:    GroupFooterSection1
+                            Line Type:    Single
+                            Line Thickness:    20
+
+        Group:    Group #2
+            Grouped By:    {SDELIVERY.SHIDAT_0}
+
+            Group Header
+
+                Section:    Section a
+
+                    Fields
+
+                        Field:    GroupNameSHIDAT0weekly1
+                            Data Source:    GroupName ({SDELIVERY.SHIDAT_0}, "daily")
+                            Data Type:    String
+
+    Detail
+
+        Section:    Section a
+
+            Fields
+
+                Field:    SDHNUM02
+                    Data Source:    {SDELIVERY.SDHNUM_0}
+                    Data Type:    String
+
+                Field:    BPCORD02
+                    Data Source:    {SDELIVERY.BPCORD_0}
+                    Data Type:    String
+
+                Field:    BPDNAM02
+                    Data Source:    {SDELIVERY.BPDNAM_0}
+                    Data Type:    String
+
+                Field:    DLVNOT02
+                    Data Source:    {SDELIVERY.DLVNOT_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    lblPortes1
+                    Data Source:    {@lblPortes}
+                    Data Type:    String
+
+                Field:    PACNBR01
+                    Data Source:    {SDELIVERY.PACNBR_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555
+
+                Field:    VOL01
+                    Data Source:    {SDELIVERY.VOL_0}
+                    Data Type:    Number
+                    Suppression Formula:    {SDELIVERY.VOL_0}=0
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    BPDPOSCOD01
+                    Data Source:    {SDELIVERY.BPDPOSCOD_0}
+                    Data Type:    String
+
+                Field:    BPDCTY01
+                    Data Source:    {SDELIVERY.BPDCTY_0}
+                    Data Type:    String
+
+                Field:    BPDSAT01
+                    Data Source:    {SDELIVERY.BPDSAT_0}
+                    Data Type:    String
+
+                Field:    contalbaran1
+                    Data Source:    {@contalbaran}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    (5555555)
+
+                Field:    GROWEI01
+                    Data Source:    {SDELIVERY.GROWEI_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+                Field:    YPACK01
+                    Data Source:    {SDELIVERY.YPACK_0}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555
+
+                Field:    YVOLUMEN01
+                    Data Source:    {SDELIVERY.YVOLUMEN_0}
+                    Data Type:    Number
+                    Suppression Formula:    {SDELIVERY.YVOLUMEN_0}=0
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+        Section:    Section b
+
+            Fields
+
+                Field:    cumulgroupe1
+                    Data Source:    {@cumulgroupe}
+                    Data Type:    Number
+                    Format:    Number
+                        Currency Symbol:    None
+                        Suppress if Zero:    False
+                        Leading Zero:    True
+                        Reverse Sign:    False
+                        Number Style:    -5.555.555,
+
+    Page Footer
+
+        Section:    Section a
+
+            Fields
+
+                Field:    PageNM1
+                    Data Source:    PageNofM
+                    Data Type:    String
+
+                Field:    Dateimpression1
+                    Data Source:    PrintDate
+                    Data Type:    Date
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Date Format:    DD/MM/YYYY hh:mm:ss  AM
+
+                Field:    Heureimpression1
+                    Data Source:    PrintTime
+                    Data Type:    Time
+                    Format:    Date and Time
+                        Order:    Date Time
+                        Date Type:    System Default
+                        Time Format:    MM/DD/YY h:mm:ss
+
+            Lines
+
+                Line:    Line1
+                    Ends in Section:    Section25
+                    Line Type:    Single
+                    Line Thickness:    20
+
+Subreport:    Logo_empresa.rpt
+
+    Data Sources
+
+        Source:    Connection #1
+            Database DLL:    crdb_odbc.dll
+            Database Name:    x3famesa
+            Server:    ADX_X3V7APP
+
+            Properties:    QE_LogonProperties
+                Database:    x3famesa
+                DSN:    ADX_X3V7APP
+                UseDSNProperties:    False
+            QE_SQLDB:    False
+            SSO Enabled:    False
+
+    Report Parameters
+
+        Parameter:    X3DOS
+            Data Type:    String
+            Description:    Dossier
+            List Type:    Static
+            List Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+            Default Values:    X3TESTV5;aydaix04.sagefr.adinternal.com;15150;150;FRA
+
+        Parameter:    Pm-SINVOICE.CPY_0
+            Data Type:    String
+            Description:    Pm-SINVOICE.CPY_0
+            List Type:    Static
+
+        Parameter:    Pm-SORDER.CPY_0
+            Data Type:    String
+            Description:    Pm-SORDER.CPY_0
+            List Type:    Static
+
+        Parameter:    Pm-SDELIVERY.CPY_0
+            Data Type:    String
+            Description:    Pm-SDELIVERY.CPY_0
+            List Type:    Static
+
+    Tables
+
+        Table:    x3famesa.FAMESA.ABLOB
+            Connection:    Connection #1
+            Used Columns:    {ABLOB.CODBLB_0} : String[22]
+                             {ABLOB.IDENT1_0} : String[162]
+                             {ABLOB.BLOB_0} : Unknown
+
+    Record Selection Formulas
+        Formula:    {ABLOB.CODBLB_0} = "LOGO" 
+                    and
+                    {ABLOB.IDENT1_0} = {?Pm-SDELIVERY.CPY_0}
+
+    Detail
+
+        Section:    Section a
+
+            Pictures (Blobs)
+
+                Picture (Blob):    BLOB01
+                    Data Source:    {ABLOB.BLOB_0}
+                    Size:    154x77
