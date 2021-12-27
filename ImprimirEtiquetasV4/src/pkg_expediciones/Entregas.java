@@ -279,6 +279,31 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
          
+           jComboBox_Stock.addItemListener(new ItemListener() {
+
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.SELECTED) {
+                    System.out.println("entrando listener Stock");
+                    String a;
+                    a = jComboBox_Stock.getSelectedItem().toString();
+                    System.out.println(a);
+                    //determino la posición del espacio para hacer el substring                    
+                    int pos = pos_espacio(a);
+                                      
+                    //jText_UbiDesde.setText(a.substring(0, a.length()));
+                    jTextStock_arti.setText(a.substring(0, pos));
+                    jTextStock_lote.setText(a.substring(pos + 1, a.length()));
+                    //jTextField_ElCorte_Color.setText(a.substring(pos + 1, a.length()));
+                    //consultar_StockLotes();
+                    //zpl(9,Integer.parseInt(jFormattedTextField_CantElCorte.getText()),0,"");
+                    
+
+                }
+                
+            }
+        });
+         
 //      
          //manejo del foco para la ventana jdialog1
          jDialog1.addWindowListener(new WindowAdapter() {
@@ -408,6 +433,7 @@ public class Entregas extends javax.swing.JFrame {
         jDialog6.setLocationRelativeTo(this);
         jDialog7.setLocationRelativeTo(this);
         jDialog8.setLocationRelativeTo(this);
+        jDialog9.setLocationRelativeTo(this);
         //pongo un título 
         jDialog1.setTitle("Impresión de referencias");
         //pinto pero no va
@@ -708,6 +734,7 @@ public class Entregas extends javax.swing.JFrame {
         jRadioButton_Pallet.setSelected(true);
         buttonGroup_Ubicaciones = new javax.swing.ButtonGroup();
         buttonGroup_ReferenciaSimple = new javax.swing.ButtonGroup();
+        buttonGroup_stocks = new javax.swing.ButtonGroup();
         jMenuItem2 = new javax.swing.JMenuItem();
         jDialog7 = new javax.swing.JDialog();
         jPanel38 = new javax.swing.JPanel();
@@ -772,6 +799,32 @@ public class Entregas extends javax.swing.JFrame {
         jScrollPane12 = new javax.swing.JScrollPane();
         jTextArea9 = new javax.swing.JTextArea();
         jLabel_logo7 = new javax.swing.JLabel();
+        jDialog9 = new javax.swing.JDialog();
+        jPanel50 = new javax.swing.JPanel();
+        jPanel51 = new javax.swing.JPanel();
+        jButton9 = new javax.swing.JButton();
+        jPanel52 = new javax.swing.JPanel();
+        jFormattedTextField_fontSize4 = new javax.swing.JFormattedTextField();
+        jLabel68 = new javax.swing.JLabel();
+        jPanel53 = new javax.swing.JPanel();
+        jRadioButton_PlantaF = new javax.swing.JRadioButton();
+        jRadioButton_PlantaT = new javax.swing.JRadioButton();
+        jComboBox_Stock = new javax.swing.JComboBox();
+        jButton_ItmLot = new javax.swing.JButton();
+        jTextStock_arti = new javax.swing.JTextField();
+        jTextStock_lote = new javax.swing.JTextField();
+        jPanel54 = new javax.swing.JPanel();
+        jText_StockHasta = new javax.swing.JTextField();
+        jText_StockDesde = new javax.swing.JTextField();
+        jLabel69 = new javax.swing.JLabel();
+        jLabel70 = new javax.swing.JLabel();
+        jFormattedTextField_cantidadUbi1 = new javax.swing.JFormattedTextField();
+        jLabel71 = new javax.swing.JLabel();
+        jPanel55 = new javax.swing.JPanel();
+        jLayeredPane9 = new javax.swing.JLayeredPane();
+        jLabel_logo8 = new javax.swing.JLabel();
+        jScrollPane13 = new javax.swing.JScrollPane();
+        jTextArea10 = new javax.swing.JTextArea();
         jPanel7 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jText_albaran = new javax.swing.JTextField();
@@ -800,6 +853,7 @@ public class Entregas extends javax.swing.JFrame {
         jMenuItem3 = new javax.swing.JMenuItem();
         jMenuItem4 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem_salir = new javax.swing.JMenuItem();
 
@@ -3606,11 +3660,11 @@ public class Entregas extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addGroup(jPanel46Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel46Layout.createSequentialGroup()
-                                .addComponent(jTextField_ElCorte_Depart, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(jPanel46Layout.createSequentialGroup()
                                 .addGap(7, 7, 7)
-                                .addComponent(jLabel67, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                .addComponent(jLabel67, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(jPanel46Layout.createSequentialGroup()
+                                .addComponent(jTextField_ElCorte_Depart, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         jPanel46Layout.setVerticalGroup(
@@ -3700,14 +3754,13 @@ public class Entregas extends javax.swing.JFrame {
                         .addComponent(jButton_ElCorte_Print)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jLabel49, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
-                            .addGap(0, 0, Short.MAX_VALUE)
-                            .addComponent(jText_ElCorte_Alb, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
-                            .addComponent(jLabel61)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jTextField_ElCorte_Art, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jText_ElCorte_Alb, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel47Layout.createSequentialGroup()
+                        .addComponent(jLabel61)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jTextField_ElCorte_Art, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         jPanel47Layout.setVerticalGroup(
@@ -3770,10 +3823,10 @@ public class Entregas extends javax.swing.JFrame {
 
         jTextField_ElCorte_Cte.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jTextField_ElCorte_Cte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jTextField_ElCorte_Cte.setText("280058");
+        jTextField_ElCorte_Cte.setText("600016");
 
         jLabel60.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel60.setText("Cliente");
+        jLabel60.setText("Grupo");
 
         javax.swing.GroupLayout jPanel48Layout = new javax.swing.GroupLayout(jPanel48);
         jPanel48.setLayout(jPanel48Layout);
@@ -3784,8 +3837,8 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jLabel59, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jFormattedTextField_CantElCorte, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(jLabel60, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addComponent(jLabel60, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jTextField_ElCorte_Cte, javax.swing.GroupLayout.PREFERRED_SIZE, 152, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38)
@@ -3914,6 +3967,345 @@ public class Entregas extends javax.swing.JFrame {
             .addGroup(jDialog8Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel44, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jDialog9.setTitle("Stocks");
+        jDialog9.setBackground(new java.awt.Color(240, 181, 81));
+        jDialog9.setBounds(new java.awt.Rectangle(500, 600, 800, 600));
+        jDialog9.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jDialog9.setForeground(java.awt.Color.gray);
+        jDialog9.setLocation(new java.awt.Point(0, 0));
+        jDialog9.setSize(new java.awt.Dimension(790, 620));
+        jDialog9.addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                jDialog9WindowClosed(evt);
+            }
+        });
+
+        jPanel50.setBackground(new java.awt.Color(240, 232, 150));
+
+        jPanel51.setBackground(new java.awt.Color(141, 191, 72));
+
+        jButton9.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        jButton9.setText("Imprimir");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
+        jPanel52.setBackground(new java.awt.Color(141, 191, 72));
+
+        jFormattedTextField_fontSize4.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextField_fontSize4.setText("128");
+        jFormattedTextField_fontSize4.setToolTipText("Introduce el número de etiquetas a imprimir");
+        jFormattedTextField_fontSize4.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jFormattedTextField_fontSize4FocusLost(evt);
+            }
+        });
+        jFormattedTextField_fontSize4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField_fontSize4ActionPerformed(evt);
+            }
+        });
+        jFormattedTextField_fontSize4.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                jFormattedTextField_fontSize4KeyTyped(evt);
+            }
+        });
+
+        jLabel68.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel68.setText("Tamaño fuente");
+
+        javax.swing.GroupLayout jPanel52Layout = new javax.swing.GroupLayout(jPanel52);
+        jPanel52.setLayout(jPanel52Layout);
+        jPanel52Layout.setHorizontalGroup(
+            jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel52Layout.createSequentialGroup()
+                .addGap(18, 18, 18)
+                .addComponent(jLabel68, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jFormattedTextField_fontSize4, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel52Layout.setVerticalGroup(
+            jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel52Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(jPanel52Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jFormattedTextField_fontSize4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel68))
+                .addGap(0, 79, Short.MAX_VALUE))
+        );
+
+        buttonGroup_stocks.add(jRadioButton_PlantaF);
+        jRadioButton_PlantaF.setText("Famesa");
+        jRadioButton_PlantaF.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jRadioButton_PlantaFItemStateChanged(evt);
+            }
+        });
+
+        buttonGroup_stocks.add(jRadioButton_PlantaT);
+        jRadioButton_PlantaT.setText("Trilla");
+        jRadioButton_PlantaT.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jRadioButton_PlantaTItemStateChanged(evt);
+            }
+        });
+
+        jComboBox_Stock.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Lotes" }));
+        jComboBox_Stock.setToolTipText("");
+        jComboBox_Stock.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jComboBox_StockMouseClicked(evt);
+            }
+        });
+
+        jButton_ItmLot.setText("Consulta");
+        jButton_ItmLot.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_ItmLotActionPerformed(evt);
+            }
+        });
+
+        jTextStock_arti.setText("ARTI");
+
+        jTextStock_lote.setText("LOTE");
+
+        javax.swing.GroupLayout jPanel53Layout = new javax.swing.GroupLayout(jPanel53);
+        jPanel53.setLayout(jPanel53Layout);
+        jPanel53Layout.setHorizontalGroup(
+            jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel53Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jButton_ItmLot)
+                    .addGroup(jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jRadioButton_PlantaF, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jRadioButton_PlantaT, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jComboBox_Stock, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextStock_arti, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextStock_lote, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(25, Short.MAX_VALUE))
+        );
+        jPanel53Layout.setVerticalGroup(
+            jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel53Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel53Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel53Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jTextStock_arti, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jTextStock_lote, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel53Layout.createSequentialGroup()
+                        .addComponent(jRadioButton_PlantaF)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jRadioButton_PlantaT, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jComboBox_Stock, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addComponent(jButton_ItmLot)))
+                .addContainerGap())
+        );
+
+        jText_StockHasta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jText_StockHastaActionPerformed(evt);
+            }
+        });
+
+        jLabel69.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel69.setText("Sublote hasta:");
+
+        jLabel70.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel70.setText("Sublote desde:");
+
+        jFormattedTextField_cantidadUbi1.setEditable(false);
+        jFormattedTextField_cantidadUbi1.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("#0"))));
+        jFormattedTextField_cantidadUbi1.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        jFormattedTextField_cantidadUbi1.setText("1");
+        jFormattedTextField_cantidadUbi1.setToolTipText("Introduce el número de etiquetas a imprimir");
+        jFormattedTextField_cantidadUbi1.setEnabled(false);
+        jFormattedTextField_cantidadUbi1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jFormattedTextField_cantidadUbi1.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                jFormattedTextField_cantidadUbi1FocusLost(evt);
+            }
+        });
+        jFormattedTextField_cantidadUbi1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFormattedTextField_cantidadUbi1ActionPerformed(evt);
+            }
+        });
+
+        jLabel71.setFont(new java.awt.Font("Tahoma", 1, 10)); // NOI18N
+        jLabel71.setText("Núm. etiquetas");
+
+        javax.swing.GroupLayout jPanel54Layout = new javax.swing.GroupLayout(jPanel54);
+        jPanel54.setLayout(jPanel54Layout);
+        jPanel54Layout.setHorizontalGroup(
+            jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel54Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel54Layout.createSequentialGroup()
+                        .addGroup(jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel70, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel69, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jText_StockHasta, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jText_StockDesde, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel54Layout.createSequentialGroup()
+                        .addComponent(jLabel71, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jFormattedTextField_cantidadUbi1, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel54Layout.setVerticalGroup(
+            jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel54Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText_StockDesde, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel70))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jText_StockHasta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel69))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel54Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jFormattedTextField_cantidadUbi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel71))
+                .addContainerGap(15, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel51Layout = new javax.swing.GroupLayout(jPanel51);
+        jPanel51.setLayout(jPanel51Layout);
+        jPanel51Layout.setHorizontalGroup(
+            jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel51Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel51Layout.createSequentialGroup()
+                        .addComponent(jButton9)
+                        .addGap(152, 152, 152))
+                    .addGroup(jPanel51Layout.createSequentialGroup()
+                        .addComponent(jPanel53, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jPanel54, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                .addComponent(jPanel52, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(156, Short.MAX_VALUE))
+        );
+        jPanel51Layout.setVerticalGroup(
+            jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel51Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel51Layout.createSequentialGroup()
+                        .addComponent(jPanel52, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel51Layout.createSequentialGroup()
+                        .addGroup(jPanel51Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel54, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jPanel53, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton9)))
+                .addContainerGap())
+        );
+
+        jPanel55.setBackground(new java.awt.Color(141, 191, 72));
+
+        javax.swing.GroupLayout jPanel55Layout = new javax.swing.GroupLayout(jPanel55);
+        jPanel55.setLayout(jPanel55Layout);
+        jPanel55Layout.setHorizontalGroup(
+            jPanel55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel55Layout.setVerticalGroup(
+            jPanel55Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jLayeredPane9.setBackground(new java.awt.Color(141, 191, 72));
+
+        javax.swing.GroupLayout jLayeredPane9Layout = new javax.swing.GroupLayout(jLayeredPane9);
+        jLayeredPane9.setLayout(jLayeredPane9Layout);
+        jLayeredPane9Layout.setHorizontalGroup(
+            jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jLayeredPane9Layout.setVerticalGroup(
+            jLayeredPane9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 260, Short.MAX_VALUE)
+        );
+
+        jLabel_logo8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
+
+        jTextArea10.setColumns(20);
+        jTextArea10.setRows(5);
+        jTextArea10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "ZPL", javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.TOP));
+        jTextArea10.setEnabled(false);
+        jScrollPane13.setViewportView(jTextArea10);
+
+        javax.swing.GroupLayout jPanel50Layout = new javax.swing.GroupLayout(jPanel50);
+        jPanel50.setLayout(jPanel50Layout);
+        jPanel50Layout.setHorizontalGroup(
+            jPanel50Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel50Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel50Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel50Layout.createSequentialGroup()
+                        .addComponent(jScrollPane13, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel_logo8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLayeredPane9))
+                    .addComponent(jPanel55, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel51, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel50Layout.setVerticalGroup(
+            jPanel50Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel50Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel51, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel50Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel50Layout.createSequentialGroup()
+                        .addGap(26, 26, 26)
+                        .addComponent(jLayeredPane9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel50Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel50Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel_logo8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jScrollPane13, javax.swing.GroupLayout.DEFAULT_SIZE, 281, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel55, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(13, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jDialog9Layout = new javax.swing.GroupLayout(jDialog9.getContentPane());
+        jDialog9.getContentPane().setLayout(jDialog9Layout);
+        jDialog9Layout.setHorizontalGroup(
+            jDialog9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel50, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jDialog9Layout.setVerticalGroup(
+            jDialog9Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jDialog9Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel50, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -4155,6 +4547,14 @@ public class Entregas extends javax.swing.JFrame {
             }
         });
         jMenu_ir.add(jMenuItem5);
+
+        jMenuItem6.setText("Etiqueta Stock");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu_ir.add(jMenuItem6);
         jMenu_ir.add(jSeparator2);
 
         jMenuItem_salir.setText("Salir");
@@ -4412,9 +4812,10 @@ public class Entregas extends javax.swing.JFrame {
                     + "INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
                     + "WHERE DEL.SOHNUM_0='" + jTextField_AlbNumAlb.getText() + "'";*/
              String query = "SELECT DEL.SOHNUM_0 AS PEDIDO_DENOX, DEL.BPCORD_0 AS CTE, DEL.SDHNUM_0 AS NUMALB, DEL.BPTNUM_0, TRA.BPRNAM_0 AS TRANSPORTISTA, DEL.BPCORD_0,\n"
-                    + " DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0 as DESTINO, ORD.CUSORDREF_0 AS NUMPED, DEL.YPACK_0 AS BULTOS,\n"
-                    + "ADR.BPAADDLIG_0 AS DIR1, ADR.BPAADDLIG_1 AS DIR2, ADR.POSCOD_0 AS CP, \n"
-                    + "ADR.CTY_0 AS CITY, ADR.SAT_0 AS PROVINCIA, ADR.CRYNAM_0 AS PAIS, VAL2.PREUSR_0 AS PREPARADOR\n"
+                    + " DEL.BPAADD_0, BP.BPRNAM_0, DIR.BPDNAM_0 as DESTINO, ORD.CUSORDREF_0 AS NUMPED, DEL.YPACK_0 AS BULTOS\n"
+                    //+ "ADR.BPAADDLIG_0 AS DIR1, ADR.BPAADDLIG_1 AS DIR2, ADR.POSCOD_0 AS CP, ADR.CTY_0 AS CITY, ADR.SAT_0 AS PROVINCIA, ADR.CRYNAM_0 AS PAIS\n"
+                    + ", DEL.BPDADDLIG_0 AS DIR1, DEL.BPDADDLIG_1 AS DIR2, DEL.BPDPOSCOD_0 AS CP, DEL.BPDCTY_0 AS CITY, DEL.BPDSAT_0 AS PROVINCIA, DEL.BPDCRYNAM_0 AS PAIS\n"
+                    + ", VAL2.PREUSR_0 AS PREPARADOR\n"
                     + "fROM FAMESAOF.SDELIVERY DEL\n"
                     + "INNER JOIN FAMESAOF.BPARTNER AS BP ON DEL.BPCORD_0= BP.BPRNUM_0\n"
                     + "INNER JOIN FAMESAOF.BPARTNER AS TRA ON DEL.BPTNUM_0 = TRA.BPRNUM_0\n"
@@ -4746,12 +5147,13 @@ public class Entregas extends javax.swing.JFrame {
                             "INNER JOIN FAMESAOF.YSORDEREDI EDI ON EDI.SOHNUM_0 = DET.SOHNUM_0\n" +
                             "INNER JOIN FAMESAOF.SORDER PED ON PED.SOHNUM_0 = DET.SOHNUM_0\n" +
                             "LEFT JOIN FAMESAOF.ITMBPC ACT ON ACT.ITMREF_0 = DET.ITMREF_0 AND ACT.BPCNUM_0 = CAB.BPCORD_0\n" +
-                            "INNER JOIN FAMESAOF.TABCTL COL ON COL.ALPCOD_0 = RIGHT(DET.ITMREF_0,3)\n" +
-                            "WHERE CAB.BPCORD_0 = '" + jTextField_ElCorte_Cte.getText()+ "'\n" +
-                            "AND COL.TCT_0 = 'COL'\n" +
+                            "LEFT OUTER JOIN FAMESAOF.TABCTL COL ON COL.ALPCOD_0 = RIGHT(DET.ITMREF_0,3)\n" +
+                            //"WHERE CAB.BPCORD_0 = '" + jTextField_ElCorte_Cte.getText()+ "'\n" +
+                            "WHERE CAB.BPCGRU_0 = '" + jTextField_ElCorte_Cte.getText() + "'\n" + //añado el grupo en lugar del cliente porque se expide a varios El Corte...
+                            //"AND COL.TCT_0 = 'COL'\n" +
                             "ORDER BY CAB.SDHNUM_0 DESC";
-                               
-             
+                                   
+           
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
             //zpl();
 
@@ -4787,11 +5189,11 @@ public class Entregas extends javax.swing.JFrame {
                             "INNER JOIN FAMESAOF.YSORDEREDI EDI ON EDI.SOHNUM_0 = DET.SOHNUM_0\n" +
                             "INNER JOIN FAMESAOF.SORDER PED ON PED.SOHNUM_0 = DET.SOHNUM_0\n" +
                             "LEFT JOIN FAMESAOF.ITMBPC ACT ON ACT.ITMREF_0 = DET.ITMREF_0 AND ACT.BPCNUM_0 = CAB.BPCORD_0\n" +
-                            "INNER JOIN FAMESAOF.TABCTL COL ON COL.ALPCOD_0 = RIGHT(DET.ITMREF_0,3)\n" +
+                            "LEFT OUTER JOIN FAMESAOF.TABCTL COL ON COL.ALPCOD_0 = RIGHT(DET.ITMREF_0,3)\n" +
 //                            "WHERE CAB.SDHNUM_0 = 'ALB-21-FAM-008071'\n" +
                             "WHERE CAB.SDHNUM_0 = '" + jText_ElCorte_Alb.getText() + "'\n" + 
-                            "AND DET.ITMREF_0 ='"+ jTextField_ElCorte_Art.getText() + "'\n" +
-                            "AND COL.TCT_0 = 'COL'";
+                            "AND DET.ITMREF_0 ='"+ jTextField_ElCorte_Art.getText() + "'";
+                            //"AND COL.TCT_0 = 'COL'";
              
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
             
@@ -4818,6 +5220,72 @@ public class Entregas extends javax.swing.JFrame {
         }
        
    } 
+        public void rellenar_StockLotes(String pPlanta){
+           try {
+            jComboBox_Stock.removeAllItems();
+            System.out.println("elementos del combo eliminados");
+            String query ="select ITMREF_0 AS ARTI, LOT_0 AS LOTE, MIN(SLO_0) AS MINLOT, MAX(SLO_0) AS MAXLOT FROM TEST.STOCK\n"
+                    + "WHERE OWNER_0 = '" + pPlanta + "'\n"
+                    + "GROUP BY ITMREF_0, LOT_0 ORDER BY ITMREF_0";
+            
+            
+           
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+            //zpl();
+
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                 jComboBox_Stock.addItem(rs.getString("ARTI")+ " " + rs.getString("LOTE"));
+                
+            }
+        
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        }   
+        }
+        
+        public void consultar_StockLotes(){
+        String vPlanta;
+        //busco las ubicaciones entre el mínimo y el máximo 
+        System.out.println("consultar Stocks Artículos");
+        if (jRadioButton_PlantaF.isSelected())
+              vPlanta = "FAM";
+        else
+            vPlanta ="TRI";
+        
+        try {
+
+            String query ="select ITMREF_0, LOT_0, MIN(SLO_0) AS MINLOT, MAX(SLO_0) AS MAXLOT FROM TEST.STOCK\n"
+                    + "WHERE ITMREF_0 = '" + jTextStock_arti.getText() + "' AND LOT_0 = '" + jTextStock_lote.getText() + "'\n"
+                    + " and OWNER_0 = '" + vPlanta + "'\n"
+                    + "GROUP BY ITMREF_0, LOT_0";
+             
+           
+            rs = stmt.executeQuery(query);//rs contendrá todos los registros
+          
+            while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
+                jText_StockDesde.setText(rs.getString("MINLOT"));
+                jText_StockHasta.setText(rs.getString("MAXLOT"));
+                
+            }
+
+        } catch (SQLException err) {
+            JOptionPane.showMessageDialog(this, err.getMessage());
+
+        } 
+        
+    }
+        public void check_radiobutton_stocks(){
+          //AL CAMBIAR DE RADIOBUTTON RELLENO EL COMBO CORRESPONDIENTE A LA PLANTA SELECCIONADA
+        jComboBox_Ubi.removeAllItems();
+         if (jRadioButton_PlantaF.isSelected()){
+            System.out.println("stock famesa...");
+            rellenar_StockLotes("FAM");
+        }else if(jRadioButton_PlantaT.isSelected()){
+            System.out.println("stocks trilla");
+            rellenar_StockLotes("TRI");
+        }
+    }
             
     private void jCombo_refMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jCombo_refMouseClicked
         // TODO add your handling code here:
@@ -5457,7 +5925,7 @@ public class Entregas extends javax.swing.JFrame {
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
         // TODO add your handling code here:
         jTextArea7.setText(null);
-        //le paso la cantidad de etiquetas a imprimir y el tamaño de la fuente
+        //Impresión de etiquetas de stock para materia prima
                 
         try {
            
@@ -5668,6 +6136,8 @@ public class Entregas extends javax.swing.JFrame {
 
     private void jDialog8WindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jDialog8WindowClosed
         // TODO add your handling code here:
+        System.out.println("Saliendo de jDialog8");
+        DoDesconnect();
     }//GEN-LAST:event_jDialog8WindowClosed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
@@ -5695,8 +6165,68 @@ public class Entregas extends javax.swing.JFrame {
 
     private void jTextField_ElCorte_UdCajaPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextField_ElCorte_UdCajaPropertyChange
         // TODO add your handling code here:
+        
       
     }//GEN-LAST:event_jTextField_ElCorte_UdCajaPropertyChange
+
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jFormattedTextField_fontSize4FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jFormattedTextField_fontSize4FocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_fontSize4FocusLost
+
+    private void jFormattedTextField_fontSize4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField_fontSize4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_fontSize4ActionPerformed
+
+    private void jFormattedTextField_fontSize4KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jFormattedTextField_fontSize4KeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_fontSize4KeyTyped
+
+    private void jRadioButton_PlantaFItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButton_PlantaFItemStateChanged
+        // TODO add your handling code here:
+        check_radiobutton_stocks();
+    }//GEN-LAST:event_jRadioButton_PlantaFItemStateChanged
+
+    private void jRadioButton_PlantaTItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jRadioButton_PlantaTItemStateChanged
+        // TODO add your handling code here:
+        check_radiobutton_stocks();
+    }//GEN-LAST:event_jRadioButton_PlantaTItemStateChanged
+
+    private void jComboBox_StockMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jComboBox_StockMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jComboBox_StockMouseClicked
+
+    private void jButton_ItmLotActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_ItmLotActionPerformed
+        // TODO add your handling code here:
+        consultar_StockLotes();
+    }//GEN-LAST:event_jButton_ItmLotActionPerformed
+
+    private void jText_StockHastaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jText_StockHastaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jText_StockHastaActionPerformed
+
+    private void jFormattedTextField_cantidadUbi1FocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_jFormattedTextField_cantidadUbi1FocusLost
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_cantidadUbi1FocusLost
+
+    private void jFormattedTextField_cantidadUbi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFormattedTextField_cantidadUbi1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jFormattedTextField_cantidadUbi1ActionPerformed
+
+    private void jDialog9WindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_jDialog9WindowClosed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jDialog9WindowClosed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        DoDesconnect();
+        DoConnect_MSSQLV12();
+        jDialog9.setVisible(true);
+        
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
     
     private void inicio_tabla(){ 
         //Método para configurar el DefaultTableModel de la tabla.
@@ -6536,8 +7066,7 @@ public class Entregas extends javax.swing.JFrame {
             while (rs.next()) { //muevo el cursor al primer registro y relleno el combobox
                 jFormattedTextField_cantidadUbi.setText(rs.getString("NUM_UBI"));
                 Integer.parseInt(jFormattedTextField_cantidadUbi.getText());
-                
-                
+                            
                 
             }
 
@@ -6547,6 +7076,8 @@ public class Entregas extends javax.swing.JFrame {
         } 
         return 0;
     }
+    
+    
 	
     
   /*  public void Imagen() {
@@ -6617,6 +7148,7 @@ super.paintComponent(grafico);
     private javax.swing.ButtonGroup buttonGroup_Ubicaciones;
     private javax.swing.ButtonGroup buttonGroup_idioma;
     private javax.swing.ButtonGroup buttonGroup_idioma_alb;
+    private javax.swing.ButtonGroup buttonGroup_stocks;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -6625,12 +7157,14 @@ super.paintComponent(grafico);
     private javax.swing.JButton jButton6;
     private javax.swing.JButton jButton7;
     private javax.swing.JButton jButton8;
+    private javax.swing.JButton jButton9;
     private javax.swing.JButton jButton_ConsultaAlbNormal;
     private javax.swing.JButton jButton_ConsultaOF;
     private javax.swing.JButton jButton_ElCorte_Generar;
     private javax.swing.JButton jButton_ElCorte_Print;
     private javax.swing.JButton jButton_EtqSimple_Generar;
     private javax.swing.JButton jButton_EtqSimple_Imprimir;
+    private javax.swing.JButton jButton_ItmLot;
     private javax.swing.JButton jButton_RefrescarAlb;
     private javax.swing.JButton jButton_RefrescarAlb1;
     private javax.swing.JButton jButton_UbiConsulta;
@@ -6639,6 +7173,7 @@ super.paintComponent(grafico);
     private javax.swing.JComboBox jComboBox_AlbNormal;
     private javax.swing.JComboBox jComboBox_OF;
     private javax.swing.JComboBox jComboBox_Padres;
+    private javax.swing.JComboBox jComboBox_Stock;
     private javax.swing.JComboBox jComboBox_Ubi;
     private javax.swing.JComboBox jCombo_ElCorte;
     private javax.swing.JComboBox jCombo_EtqSimple_ref;
@@ -6652,6 +7187,7 @@ super.paintComponent(grafico);
     private javax.swing.JDialog jDialog6;
     private javax.swing.JDialog jDialog7;
     private javax.swing.JDialog jDialog8;
+    private javax.swing.JDialog jDialog9;
     private javax.swing.JFormattedTextField jFormattedTextField_CantCaja;
     private javax.swing.JFormattedTextField jFormattedTextField_CantElCorte;
     private javax.swing.JFormattedTextField jFormattedTextField_CantOF;
@@ -6666,10 +7202,12 @@ super.paintComponent(grafico);
     private javax.swing.JFormattedTextField jFormattedTextField_cantidad;
     private javax.swing.JFormattedTextField jFormattedTextField_cantidad1;
     private javax.swing.JFormattedTextField jFormattedTextField_cantidadUbi;
+    private javax.swing.JFormattedTextField jFormattedTextField_cantidadUbi1;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize1;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize2;
     private javax.swing.JFormattedTextField jFormattedTextField_fontSize3;
+    private javax.swing.JFormattedTextField jFormattedTextField_fontSize4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -6734,7 +7272,11 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel65;
     private javax.swing.JLabel jLabel66;
     private javax.swing.JLabel jLabel67;
+    private javax.swing.JLabel jLabel68;
+    private javax.swing.JLabel jLabel69;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel70;
+    private javax.swing.JLabel jLabel71;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel jLabel_albaran;
@@ -6744,6 +7286,7 @@ super.paintComponent(grafico);
     private javax.swing.JLabel jLabel_logo5;
     private javax.swing.JLabel jLabel_logo6;
     private javax.swing.JLabel jLabel_logo7;
+    private javax.swing.JLabel jLabel_logo8;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JLayeredPane jLayeredPane2;
     private javax.swing.JLayeredPane jLayeredPane3;
@@ -6752,12 +7295,14 @@ super.paintComponent(grafico);
     private javax.swing.JLayeredPane jLayeredPane6;
     private javax.swing.JLayeredPane jLayeredPane7;
     private javax.swing.JLayeredPane jLayeredPane8;
+    private javax.swing.JLayeredPane jLayeredPane9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
     private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
     private javax.swing.JMenuItem jMenuItem_OF;
     private javax.swing.JMenuItem jMenuItem_albaranNormal;
     private javax.swing.JMenuItem jMenuItem_albaranes;
@@ -6810,6 +7355,12 @@ super.paintComponent(grafico);
     private javax.swing.JPanel jPanel48;
     private javax.swing.JPanel jPanel49;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel50;
+    private javax.swing.JPanel jPanel51;
+    private javax.swing.JPanel jPanel52;
+    private javax.swing.JPanel jPanel53;
+    private javax.swing.JPanel jPanel54;
+    private javax.swing.JPanel jPanel55;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
@@ -6827,6 +7378,8 @@ super.paintComponent(grafico);
     private javax.swing.JRadioButton jRadioButton_OF;
     private javax.swing.JRadioButton jRadioButton_Padre;
     private javax.swing.JRadioButton jRadioButton_Pallet;
+    private javax.swing.JRadioButton jRadioButton_PlantaF;
+    private javax.swing.JRadioButton jRadioButton_PlantaT;
     private javax.swing.JRadioButton jRadioButton_Producto;
     private javax.swing.JRadioButton jRadioButton_UbiFam;
     private javax.swing.JRadioButton jRadioButton_UbiTri;
@@ -6836,6 +7389,7 @@ super.paintComponent(grafico);
     private javax.swing.JScrollPane jScrollPane10;
     private javax.swing.JScrollPane jScrollPane11;
     private javax.swing.JScrollPane jScrollPane12;
+    private javax.swing.JScrollPane jScrollPane13;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -6848,6 +7402,7 @@ super.paintComponent(grafico);
     private javax.swing.JPopupMenu.Separator jSeparator2;
     private javax.swing.JTable jTb;
     private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JTextArea jTextArea10;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextArea jTextArea4;
@@ -6886,12 +7441,16 @@ super.paintComponent(grafico);
     private javax.swing.JTextField jTextField_PadreArti;
     private javax.swing.JTextField jTextField_PadreDesc;
     private javax.swing.JTextField jTextField_PadreEan;
+    private javax.swing.JTextField jTextStock_arti;
+    private javax.swing.JTextField jTextStock_lote;
     private javax.swing.JTextField jText_ElCorte_Alb;
     private javax.swing.JTextField jText_ElCorte_Descrip;
     private javax.swing.JTextField jText_ElCorte_RefCte;
     private javax.swing.JTextField jText_EtqSimple_Ean;
     private javax.swing.JTextField jText_EtqSimple_descrip;
     private javax.swing.JTextField jText_EtqSimple_ref;
+    private javax.swing.JTextField jText_StockDesde;
+    private javax.swing.JTextField jText_StockHasta;
     private javax.swing.JTextField jText_UbiDesde;
     private javax.swing.JTextField jText_UbiHasta;
     private javax.swing.JTextField jText_albaran;
