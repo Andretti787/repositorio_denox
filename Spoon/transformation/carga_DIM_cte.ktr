@@ -430,18 +430,18 @@
     <created_date>2019/10/07 13:07:27.096</created_date>
     <modified_user>-</modified_user>
     <modified_date>2019/10/07 13:07:27.096</modified_date>
-    <key_for_session_key/>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
     <name>MSSQL SAGE</name>
-    <server>217.116.8.58</server>
+    <server>192.168.28.100\X3V12</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>x3famesa</database>
-    <port>49412</port>
+    <database>x3</database>
+    <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
     <servername/>
@@ -470,7 +470,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>49412</attribute>
+        <attribute>51439</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -551,33 +551,53 @@
   </connection>
   <order>
     <hop>
-      <from>Entrada Tabla BPCUSTOMER &amp; BPADDRESS</from>
-      <to>Ordenar filas</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Ordenar filas</from>
-      <to>Selecciona/Renombra valores</to>
+      <from>Entrada Tabla BPCUSTOMER</from>
+      <to>Ordenar filas BPCUSTOMER</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Entrada Tabla BPCUSTOMER &amp; BPADDRESS</from>
-      <to>Añadir secuencia</to>
+      <from>Ordenar filas BPCUSTOMER</from>
+      <to>Selecciona/Renombra valores BPCUSTOMER</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Añadir secuencia</from>
-      <to>Ordenar filas</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Selecciona/Renombra valores</from>
+      <from>Selecciona/Renombra valores BPCUSTOMER</from>
       <to>Insertar / Actualizar DIM_CTE</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Entrada Tabla BPADDRESS</from>
+      <to>Ordenar filas BPADDRESS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas BPADDRESS</from>
+      <to>Selecciona/Renombra valores BPADDRESS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores BPADDRESS</from>
+      <to>Insertar / Actualizar DIM_DIR</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Entrada Tabla BPSUPPLIER</from>
+      <to>Ordenar filas BPSUPPLIER</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas BPSUPPLIER</from>
+      <to>Selecciona/Renombra valores BPSUPPLIER</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores BPSUPPLIER</from>
+      <to>Insertar / Actualizar DIM_PROV</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Entrada Tabla BPCUSTOMER &amp; BPADDRESS</name>
+    <name>Entrada Tabla BPCUSTOMER</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -588,10 +608,19 @@
       <schema_name/>
     </partitioning>
     <connection>MSSQL SAGE</connection>
-    <sql>select CUS.BPCNUM_0 AS COD_CTE, CUS.BPCNAM_0 AS NOM_CTE, CUS.REP_0 AS REPRESENTANTE, CUS.BPCSTA_0 AS ACTIVO, CUS.BPCPYR_0 AS PAGADOR, CUS.BPCINV_0 AS CTE_FAC,
-ADR.BPAADD_0 AS COD_ENVIO, ADR.CRY_0 AS PAIS, ADR.CTY_0 AS CIUDAD, ADR.POSCOD_0 AS CP, ADR.BPAADDFLG_0 AS ENV_DEFECTO,  ADR.BPAADDLIG_0 AS DIRECC
-From FAMESAOF.BPCUSTOMER CUS
-INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = CUS.BPCNUM_0 --AND ADR.BPAADD_0 = CUS.BPAADD_0
+    <sql>SELECT CUS.BPCNUM_0, CUS.BPCNAM_0, CUS.BPCGRU_0, CUS.BPCSTA_0
+, CUS.REP_0, CUS.REP_1, CUS.VACBPR_0, CUS.TSCCOD_0, CUS.TSCCOD_1, CUS.TSCCOD_2, CUS.TSCCOD_3, CUS.TSCCOD_4
+, PAR.CRY_0 
+, CASE WHEN ISNULL(V12F.CREDATTIM_0,'') = '' THEN  (CASE WHEN ISNULL(V12T.CREDATTIM_0,'') = '' THEN CUS.CREDATTIM_0
+															ELSE V12T.CREDATTIM_0
+															END)
+			ELSE V12F.CREDATTIM_0
+			END AS FEC_CREACION
+						
+FROM LIVE.BPCUSTOMER CUS
+LEFT JOIN LIVE.BPARTNER PAR ON PAR.BPRNUM_0 = CUS.BPCNUM_0
+LEFT JOIN [192.168.28.200\X3FAMESA].x3famesa.FAMESAOF.BPCUSTOMER V12F ON V12F.BPCNUM_0 = CUS.BPCNUM_0 COLLATE Latin1_General_BIN2
+LEFT JOIN [192.168.28.200\X3FAMESA].x3famesa.TRILLA.BPCUSTOMER V12T ON CONCAT('T', V12T.BPCNUM_0 ) = CUS.BPCNUM_0 COLLATE Latin1_General_BIN2
 </sql>
     <limit>0</limit>
     <lookup/>
@@ -607,226 +636,8 @@ INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = CUS.BPCNUM_0 --AND ADR.BPAAD
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Ordenar filas</name>
-    <type>SortRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory/>
-    <compress>N</compress>
-    <compress_variable/>
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>COD_CTE</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>NOM_CTE</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>REPRESENTANTE</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ACTIVO</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>PAGADOR</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>CTE_FAC</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>COD_ENVIO</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>PAIS</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>CIUDAD</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>CP</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ENV_DEFECTO</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>DIRECC</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>CTE_ID</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>400</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Selecciona/Renombra valores</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>COD_CTE</name>
-        <rename/>
-      </field>
-      <field>
-        <name>NOM_CTE</name>
-        <rename/>
-      </field>
-      <field>
-        <name>REPRESENTANTE</name>
-        <rename/>
-      </field>
-      <field>
-        <name>ACTIVO</name>
-        <rename/>
-      </field>
-      <field>
-        <name>PAGADOR</name>
-        <rename/>
-      </field>
-      <field>
-        <name>CTE_FAC</name>
-        <rename/>
-      </field>
-      <field>
-        <name>COD_ENVIO</name>
-        <rename/>
-      </field>
-      <field>
-        <name>PAIS</name>
-        <rename/>
-      </field>
-      <field>
-        <name>CIUDAD</name>
-        <rename/>
-      </field>
-      <field>
-        <name>CP</name>
-        <rename/>
-      </field>
-      <field>
-        <name>ENV_DEFECTO</name>
-        <rename/>
-      </field>
-      <field>
-        <name>DIRECC</name>
-        <rename/>
-      </field>
-      <field>
-        <name>CTE_ID</name>
-        <rename>DIM_CTE_ID</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>576</xloc>
-      <yloc>224</yloc>
+      <xloc>112</xloc>
+      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -846,82 +657,426 @@ INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = CUS.BPCNUM_0 --AND ADR.BPAAD
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
-      <table>dim_cte</table>
+      <table>DIM_CTE</table>
       <key>
-        <name>COD_CTE</name>
-        <field>COD_CTE</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <key>
-        <name>COD_ENVIO</name>
-        <field>COD_ENVIO</field>
+        <name>CTE_COD</name>
+        <field>CTE_COD</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>COD_CTE</name>
-        <rename>COD_CTE</rename>
+        <name>CTE_COD</name>
+        <rename>CTE_COD</rename>
         <update>N</update>
       </value>
       <value>
-        <name>NOM_CTE</name>
-        <rename>NOM_CTE</rename>
+        <name>CTE_RAZON_SOCIAL</name>
+        <rename>CTE_RAZON_SOCIAL</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>REPRESENTANTE</name>
-        <rename>REPRESENTANTE</rename>
+        <name>CTE_GRUPO</name>
+        <rename>CTE_GRUPO</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>ACTIVO</name>
-        <rename>ACTIVO</rename>
+        <name>CTE_ESTADO</name>
+        <rename>CTE_ESTADO</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>PAGADOR</name>
-        <rename>PAGADOR</rename>
+        <name>CTE_REP0</name>
+        <rename>CTE_REP0</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>CTE_FAC</name>
-        <rename>CTE_FAC</rename>
+        <name>CTE_REP1</name>
+        <rename>CTE_REP1</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>COD_ENVIO</name>
-        <rename>COD_ENVIO</rename>
+        <name>CTE_REG_IMPUESTO</name>
+        <rename>CTE_REG_IMPUESTO</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_TSCCOD</name>
+        <rename>CTE_TSCCOD</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_TSCCOD1</name>
+        <rename>CTE_TSCCOD1</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_TSCCOD2</name>
+        <rename>CTE_TSCCOD2</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_TSCCOD3</name>
+        <rename>CTE_TSCCOD3</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_TSCCOD4</name>
+        <rename>CTE_TSCCOD4</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_PAIS</name>
+        <rename>CTE_PAIS</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CTE_FECHA_CREACION</name>
+        <rename>CTE_FECHA_CREACION</rename>
+        <update>N</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar filas BPCUSTOMER</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>BPCNUM_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores BPCUSTOMER</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>BPCNUM_0</name>
+        <rename>CTE_COD</rename>
+      </field>
+      <field>
+        <name>BPCNAM_0</name>
+        <rename>CTE_RAZON_SOCIAL</rename>
+      </field>
+      <field>
+        <name>BPCGRU_0</name>
+        <rename>CTE_GRUPO</rename>
+      </field>
+      <field>
+        <name>BPCSTA_0</name>
+        <rename>CTE_ESTADO</rename>
+      </field>
+      <field>
+        <name>REP_0</name>
+        <rename>CTE_REP0</rename>
+      </field>
+      <field>
+        <name>REP_1</name>
+        <rename>CTE_REP1</rename>
+      </field>
+      <field>
+        <name>VACBPR_0</name>
+        <rename>CTE_REG_IMPUESTO</rename>
+      </field>
+      <field>
+        <name>TSCCOD_0</name>
+        <rename>CTE_TSCCOD</rename>
+      </field>
+      <field>
+        <name>TSCCOD_1</name>
+        <rename>CTE_TSCCOD1</rename>
+      </field>
+      <field>
+        <name>TSCCOD_2</name>
+        <rename>CTE_TSCCOD2</rename>
+      </field>
+      <field>
+        <name>TSCCOD_3</name>
+        <rename>CTE_TSCCOD3</rename>
+      </field>
+      <field>
+        <name>TSCCOD_4</name>
+        <rename>CTE_TSCCOD4</rename>
+      </field>
+      <field>
+        <name>CRY_0</name>
+        <rename>CTE_PAIS</rename>
+      </field>
+      <field>
+        <name>FEC_CREACION</name>
+        <rename>CTE_FECHA_CREACION</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla BPADDRESS</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL SAGE</connection>
+    <sql>SELECT ADR.BPANUM_0, ADR.BPAADD_0, ADR.BPADES_0, ADR.POSCOD_0, ADR.CTY_0, ADR.SAT_0, ADR.CRY_0  
+FROM LIVE.BPADDRESS ADR
+INNER JOIN LIVE.BPCUSTOMER CUS ON CUS.BPCNUM_0 = ADR.BPANUM_0</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>112</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar filas BPADDRESS</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>BPANUM_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>BPAADD_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores BPADDRESS</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>BPANUM_0</name>
+        <rename>DIR_COD_CTE</rename>
+      </field>
+      <field>
+        <name>BPAADD_0</name>
+        <rename>DIR_COD_ENVIO</rename>
+      </field>
+      <field>
+        <name>BPADES_0</name>
+        <rename>DIR_DESCRIP</rename>
+      </field>
+      <field>
+        <name>POSCOD_0</name>
+        <rename>DIR_CP</rename>
+      </field>
+      <field>
+        <name>CTY_0</name>
+        <rename>DIR_CIUDAD</rename>
+      </field>
+      <field>
+        <name>SAT_0</name>
+        <rename>DIR_ESTADO</rename>
+      </field>
+      <field>
+        <name>CRY_0</name>
+        <rename>DIR_PAIS</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insertar / Actualizar DIM_DIR</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MYSQL REPORT-SERVER</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>DIM_DIR</table>
+      <key>
+        <name>DIR_COD_CTE</name>
+        <field>DIR_COD_CTE</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>DIR_COD_ENVIO</name>
+        <field>DIR_COD_ENVIO</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>DIR_COD_CTE</name>
+        <rename>DIR_COD_CTE</rename>
         <update>N</update>
       </value>
       <value>
-        <name>PAIS</name>
-        <rename>PAIS</rename>
+        <name>DIR_COD_ENVIO</name>
+        <rename>DIR_COD_ENVIO</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>DIR_DESCRIP</name>
+        <rename>DIR_DESCRIP</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>CIUDAD</name>
-        <rename>CIUDAD</rename>
+        <name>DIR_CP</name>
+        <rename>DIR_CP</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>CP</name>
-        <rename>CP</rename>
+        <name>DIR_CIUDAD</name>
+        <rename>DIR_CIUDAD</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>DIRECC</name>
-        <rename>DIRECC</rename>
+        <name>DIR_ESTADO</name>
+        <rename>DIR_ESTADO</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>DIM_CTE_ID</name>
-        <rename>DIM_CTE_ID</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ENV_DEFECTO</name>
-        <rename>ENV_DEFECTO</rename>
+        <name>DIR_PAIS</name>
+        <rename>DIR_PAIS</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -934,14 +1089,14 @@ INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = CUS.BPCNUM_0 --AND ADR.BPAAD
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>224</yloc>
+      <xloc>880</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Añadir secuencia</name>
-    <type>Sequence</type>
+    <name>Entrada Tabla BPSUPPLIER</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -950,16 +1105,25 @@ INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = CUS.BPCNUM_0 --AND ADR.BPAAD
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <valuename>CTE_ID</valuename>
-    <use_database>N</use_database>
     <connection>MSSQL SAGE</connection>
-    <schema/>
-    <seqname>SEQ_</seqname>
-    <use_counter>Y</use_counter>
-    <counter_name>SECUENCIA_CTE</counter_name>
-    <start_at>1</start_at>
-    <increment_by>1</increment_by>
-    <max_value>999999999</max_value>
+    <sql>SELECT CUS.BPSNUM_0 , CUS.BPSNAM_0, CUS.BPSGRU_0
+, CUS.VACBPR_0, CUS.TSSCOD_0, CUS.TSSCOD_1, CUS.TSSCOD_2, CUS.TSSCOD_3, CUS.TSSCOD_4
+, PAR.CRY_0 
+, CASE WHEN ISNULL(V12F.CREDATTIM_0,'') = '' THEN  (CASE WHEN ISNULL(V12T.CREDATTIM_0,'') = '' THEN CUS.CREDATTIM_0
+															ELSE V12T.CREDATTIM_0
+															END)
+			ELSE V12F.CREDATTIM_0
+			END AS FEC_CREACION
+						
+FROM LIVE.BPSUPPLIER CUS
+LEFT JOIN LIVE.BPARTNER PAR ON PAR.BPRNUM_0 = CUS.BPCNUM_0
+LEFT JOIN [192.168.28.200\X3FAMESA].x3famesa.FAMESAOF.BPSUPPLIER V12F ON V12F.BPSNUM_0 = CUS.BPSNUM_0 COLLATE Latin1_General_BIN2
+LEFT JOIN [192.168.28.200\X3FAMESA].x3famesa.TRILLA.BPSUPPLIER V12T ON CONCAT('T', V12T.BPSNUM_0 ) = CUS.BPSNUM_0 COLLATE Latin1_General_BIN2</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -969,8 +1133,215 @@ INNER JOIN FAMESAOF.BPADDRESS ADR ON ADR.BPANUM_0 = CUS.BPCNUM_0 --AND ADR.BPAAD
       </output>
     </remotesteps>
     <GUI>
-      <xloc>240</xloc>
-      <yloc>176</yloc>
+      <xloc>112</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar filas BPSUPPLIER</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>BPSNUM_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>352</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores BPSUPPLIER</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>BPSNUM_0</name>
+        <rename>PROV_COD</rename>
+      </field>
+      <field>
+        <name>BPSNAM_0</name>
+        <rename>PROV_DESCRIP</rename>
+      </field>
+      <field>
+        <name>BPSGRU_0</name>
+        <rename>PROV_GRU</rename>
+      </field>
+      <field>
+        <name>VACBPR_0</name>
+        <rename>PROV_REG_IMPUESTO</rename>
+      </field>
+      <field>
+        <name>TSSCOD_0</name>
+        <rename>PROV_TSSCOD</rename>
+      </field>
+      <field>
+        <name>TSSCOD_1</name>
+        <rename>PROV_TSSCOD1</rename>
+      </field>
+      <field>
+        <name>TSSCOD_2</name>
+        <rename>PROV_TSSCOD2</rename>
+      </field>
+      <field>
+        <name>TSSCOD_3</name>
+        <rename>PROV_TSSCOD3</rename>
+      </field>
+      <field>
+        <name>TSSCOD_4</name>
+        <rename>PROV_TSSCOD4</rename>
+      </field>
+      <field>
+        <name>CRY_0</name>
+        <rename>PROV_PAIS</rename>
+      </field>
+      <field>
+        <name>FEC_CREACION</name>
+        <rename>PROV_FEC_CREACION</rename>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>592</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insertar / Actualizar DIM_PROV</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MYSQL REPORT-SERVER</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>DIM_PROV</table>
+      <key>
+        <name>PROV_COD</name>
+        <field>PROV_COD</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>PROV_COD</name>
+        <rename>PROV_COD</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>PROV_DESCRIP</name>
+        <rename>PROV_DESCRIP</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_GRU</name>
+        <rename>PROV_GRU</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_REG_IMPUESTO</name>
+        <rename>PROV_REG_IMPUESTO</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_TSSCOD</name>
+        <rename>PROV_TSSCOD</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_TSSCOD1</name>
+        <rename>PROV_TSSCOD1</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_TSSCOD2</name>
+        <rename>PROV_TSSCOD2</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_TSSCOD3</name>
+        <rename>PROV_TSSCOD3</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_TSSCOD4</name>
+        <rename>PROV_TSSCOD4</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_PAIS</name>
+        <rename>PROV_PAIS</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROV_FEC_CREACION</name>
+        <rename>PROV_FEC_CREACION</rename>
+        <update>N</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>880</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

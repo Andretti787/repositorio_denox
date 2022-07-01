@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>carga_detalles_entregas</name>
+  <name>actualizar_pedidos_masivamente</name>
   <description/>
   <extended_description/>
   <job_version/>
+  <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
-  <created_date>2019/08/05 09:37:29.084</created_date>
+  <created_date>2022/06/10 11:18:49.054</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2019/08/05 09:37:29.084</modified_date>
+  <modified_date>2022/06/10 11:18:49.054</modified_date>
   <parameters>
     </parameters>
   <slaveservers>
@@ -304,18 +305,18 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>144</xloc>
+      <xloc>64</xloc>
       <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>detalles_entrega_new</name>
+      <name>Transformation</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>C:\Pentaho\data-integration\samples\transformations\carga_detalles_entrega_new.ktr</filename>
+      <filename>${Internal.Entry.Current.Directory}/actualiza_PEDIDOS_precio_tarifa.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -323,8 +324,8 @@
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>Y</set_logfile>
-      <logfile>C:\intercambio\LOG\log_jobs</logfile>
-      <logext>txt</logext>
+      <logfile>carga_contenur_log</logfile>
+      <logext/>
       <add_date>Y</add_date>
       <add_time>Y</add_time>
       <loglevel>Basic</loglevel>
@@ -342,8 +343,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>288</xloc>
-      <yloc>192</yloc>
+      <xloc>368</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -351,27 +352,27 @@
       <description/>
       <type>MAIL</type>
       <attributes/>
-      <server>smtp.office365.es</server>
-      <port>587</port>
-      <destination>informatica@famesa.es</destination>
+      <server>smtp.famesa.es</server>
+      <port>25</port>
+      <destination>mmarco@denox.eu, agarcia@iptrilla.es</destination>
       <destinationCc/>
       <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>spoon</replytoname>
-      <subject>Carga de expediciones desatendido (job)</subject>
+      <replytoname>spoon </replytoname>
+      <subject>Actualización masiva de pedidos</subject>
       <include_date>Y</include_date>
       <contact_person/>
       <contact_phone/>
-      <comment>El proceso de carga semanal de DETALLES_ENTREGAS_NEW ha sido ejecutado</comment>
+      <comment>Actualizaciones de pedidos realizadas</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name/>
       <use_auth>Y</use_auth>
-      <use_secure_auth>Y</use_secure_auth>
-      <auth_user>mmarco@denox.eu</auth_user>
+      <use_secure_auth>N</use_secure_auth>
+      <auth_user>informatica@famesa.es</auth_user>
       <auth_password>Encrypted 2be98afc86aa7f2b7b20aba75d3c1fb8f</auth_password>
       <only_comment>N</only_comment>
-      <use_HTML>Y</use_HTML>
+      <use_HTML>N</use_HTML>
       <use_Priority>N</use_Priority>
       <encoding>UTF-8</encoding>
       <priority>normal</priority>
@@ -380,22 +381,24 @@
       <secureconnectiontype>TLS</secureconnectiontype>
       <replyToAddresses/>
       <filetypes>
+        <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
+        <filetype>ERROR</filetype>
       </filetypes>
       <embeddedimages>
       </embeddedimages>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>448</xloc>
-      <yloc>320</yloc>
+      <xloc>736</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>Start</from>
-      <to>detalles_entrega_new</to>
+      <to>Transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -403,7 +406,7 @@
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>detalles_entrega_new</from>
+      <from>Transformation</from>
       <to>Mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>

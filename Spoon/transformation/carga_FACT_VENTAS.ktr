@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>carga_DIM_pais</name>
+    <name>carga_FACT_VENTAS</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/09/24 08:50:36.135</created_date>
+    <created_date>2022/05/13 09:53:24.942</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/24 08:50:36.135</modified_date>
+    <modified_date>2022/05/13 09:53:24.942</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>MSSQL SAGE</name>
+    <name>MSSQL V12</name>
     <server>192.168.28.100\X3V12</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
@@ -496,14 +495,14 @@
     </attributes>
   </connection>
   <connection>
-    <name>MySQL_RS</name>
+    <name>MySQL</name>
     <server>192.168.35.25</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>mariodb</database>
+    <database>dwdb</database>
     <port>3306</port>
-    <username>famesa</username>
-    <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
+    <username>mmarco</username>
+    <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
     <servername/>
     <data_tablespace/>
     <index_tablespace/>
@@ -552,35 +551,104 @@
   </connection>
   <order>
     <hop>
-      <from>Ordenar filas</from>
-      <to>Selecciona/Renombra valores</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Selecciona/Renombra valores</from>
-      <to>Insertar / Actualizar </to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Entrada Tabla TABCOUNTRY</from>
+      <from>Entrada Tabla SINVOICED</from>
       <to>Ordenar filas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas</from>
+      <to>Búsqueda/actualización en FACT TABLE VENTAS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>DIM_CTE</from>
+      <to>SORT_DIM_CTE</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>SORT_DIM_CTE</from>
+      <to>Búsqueda/actualización en FACT TABLE VENTAS</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Entrada Tabla TABCOUNTRY</name>
-    <type>TableInput</type>
+    <name>Búsqueda/actualización en FACT TABLE VENTAS</name>
+    <type>DimensionLookup</type>
     <description/>
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MSSQL SAGE</connection>
-    <sql>SELECT CONTINENT_0 AS CONTINENTE, CRY_0 AS PAIS, ISONUM_0 AS NUM_ISO, CUR_0 AS DIVISA, LAN_0 AS IDIOMA, TELFMT_0 AS FORMAT_TFNO, CINSEE_0 AS COD_INSEE 
-fROM LIVE.TABCOUNTRY</sql>
+    <schema/>
+    <table>FACT_VENTAS</table>
+    <connection>MySQL</connection>
+    <commit>100</commit>
+    <update>N</update>
+    <fields>
+      <key>
+        <name>CTE_COD</name>
+        <lookup>ID_CTE</lookup>
+      </key>
+      <date>
+        <name/>
+        <from>date_from</from>
+        <to>date_to</to>
+      </date>
+      <return>
+        <name/>
+        <rename/>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+        <version>version</version>
+      </return>
+    </fields>
+    <sequence/>
+    <min_year>1900</min_year>
+    <max_year>2199</max_year>
+    <cache_size>5000</cache_size>
+    <preload_cache>N</preload_cache>
+    <use_start_date_alternative>N</use_start_date_alternative>
+    <start_date_alternative>none</start_date_alternative>
+    <start_date_field_name/>
+    <useBatch>N</useBatch>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla SINVOICED</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL V12</connection>
+    <sql>SELECT CAB.BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB.SNS_0, CAB.ACCDAT_0, DET.ITMREF_0, DET.NETPRI_0, DET.QTYSTU_0, DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
+, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, DET.CPRPRI_0 * QTYSTU_0 AS COSTE
+,  CASE (CAB.SNS_0) WHEN 1 THEN (DET.NETPRI_0 * QTYSTU_0) - (DET.CPRPRI_0 * QTYSTU_0)
+							ELSE 0 
+							END AS MARGEN
+--, LINTYP_0, LIVE.ZFUNCMENUITEM ('423', LINTYP_0, 'SPA')
+FROM LIVE.SINVOICED DET
+INNER JOIN LIVE.SINVOICE CAB ON CAB.NUM_0 = DET.NUM_0
+WHERE DET.LINTYP_0 NOT IN (2,7)</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -595,81 +663,8 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>128</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insertar / Actualizar </name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL_RS</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema>dwdb</schema>
-      <table>DIM_PAIS</table>
-      <key>
-        <name>PAIS_COD</name>
-        <field>PAIS_COD</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>PAIS_CONTINENTE</name>
-        <rename>PAIS_CONTINENTE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_COD</name>
-        <rename>PAIS_COD</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>PAIS_ISO</name>
-        <rename>PAIS_ISO</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_DIVISA</name>
-        <rename>PAIS_DIVISA</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_IDIOMA</name>
-        <rename>PAIS_IDIOMA</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_TFNO</name>
-        <rename>PAIS_TFNO</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_INSEE</name>
-        <rename>PAIS_INSEE</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>704</xloc>
-      <yloc>128</yloc>
+      <xloc>192</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -693,7 +688,7 @@ fROM LIVE.TABCOUNTRY</sql>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>PAIS</name>
+        <name>NUM_0</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -710,14 +705,14 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>128</yloc>
+      <xloc>368</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Selecciona/Renombra valores</name>
-    <type>SelectValues</type>
+    <name>DIM_CTE</name>
+    <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -726,36 +721,46 @@ fROM LIVE.TABCOUNTRY</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <connection>MySQL</connection>
+    <sql>SELECT * fROM DIM_CTE</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>288</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>SORT_DIM_CTE</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
     <fields>
-      <field>
-        <name>CONTINENTE</name>
-        <rename>PAIS_CONTINENTE</rename>
-      </field>
-      <field>
-        <name>PAIS</name>
-        <rename>PAIS_COD</rename>
-      </field>
-      <field>
-        <name>NUM_ISO</name>
-        <rename>PAIS_ISO</rename>
-      </field>
-      <field>
-        <name>DIVISA</name>
-        <rename>PAIS_DIVISA</rename>
-      </field>
-      <field>
-        <name>IDIOMA</name>
-        <rename>PAIS_IDIOMA</rename>
-      </field>
-      <field>
-        <name>FORMAT_TFNO</name>
-        <rename>PAIS_TFNO</rename>
-      </field>
-      <field>
-        <name>COD_INSEE</name>
-        <rename>PAIS_INSEE</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -766,8 +771,8 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>128</yloc>
+      <xloc>304</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

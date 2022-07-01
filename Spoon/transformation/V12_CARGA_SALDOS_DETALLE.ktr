@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>V12_carga_traspasos_YGS</name>
+    <name>V12_CARGA_SALDOS_DETALLE</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
+    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -437,8 +438,8 @@
     <notepad>
       <note>Ordeno las filas para que la estructura sea la correcta a la hora de la importación. Concateno los valores que necesito
 por cada tipo de línea en una sola y luego empleo la normalización para asignar el orden correcto.</note>
-      <xloc>160</xloc>
-      <yloc>352</yloc>
+      <xloc>192</xloc>
+      <yloc>384</yloc>
       <width>623</width>
       <heigth>42</heigth>
       <fontname>Segoe UI</fontname>
@@ -501,7 +502,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
   </notepads>
   <connection>
     <name>MSSQL v8</name>
-    <server>192.168.28.200</server>
+    <server>192.168.50.10</server>
     <type>MSSQL</type>
     <access>Native</access>
     <database>x3famesa</database>
@@ -561,31 +562,6 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Concatenar_CAB</from>
-      <to>Concatenar_LIN</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Concatenar_LIN</from>
-      <to>Normalización de fila</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Selecciona/Renombra valores</from>
-      <to>Filtrar filas CAB</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas CAB</from>
-      <to>Concatenar_CAB</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas CAB</from>
-      <to>Concatenar_LIN</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Normalización de fila</from>
       <to>Filtrar filas</to>
       <enabled>Y</enabled>
@@ -603,6 +579,36 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
     <hop>
       <from>Ordenar filas</from>
       <to>Salida Fichero_YGS</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concatenar_LIN</from>
+      <to>Concatenar_LIN 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concatenar_LIN 2</from>
+      <to>Normalización de fila</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filtrar filas  LIN</from>
+      <to>Concatenar_LIN</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filtrar filas  LIN</from>
+      <to>Concatenar_LIN 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores</from>
+      <to>Concatenar_CAB</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concatenar_CAB</from>
+      <to>Filtrar filas  LIN</to>
       <enabled>Y</enabled>
     </hop>
   </order>
@@ -649,7 +655,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
     </file>
     <fields>
       <field>
-        <name>TIPO_ASIENTO</name>
+        <name>TIPO</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -661,19 +667,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>NUMDOC</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>PLANTA</name>
+        <name>NUM_0</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -685,19 +679,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>FEC_CONTABLE</name>
-        <type>Date</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>DESCRIP_CAB</name>
+        <name>FCY_0</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -709,7 +691,31 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>DIVISA</name>
+        <name>FECHA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>OBS</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>CUR_0</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -735,8 +741,8 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>400</yloc>
+      <xloc>80</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -783,32 +789,8 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
     </file>
     <fields>
       <field>
-        <name>ROWNUM</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>TIPO_REFERENCIAL</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CUENTA</name>
-        <type>String</type>
+        <name>NLIN</name>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -819,8 +801,8 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>DECRIP_LIN</name>
-        <type>String</type>
+        <name>NUM_0</name>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -831,9 +813,21 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>SIGNO</name>
-        <type>Integer</type>
-        <format>0</format>
+        <name>SAC_0</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>OBS</name>
+        <type>None</type>
+        <format/>
         <currency/>
         <decimal/>
         <group/>
@@ -844,19 +838,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </field>
       <field>
         <name>IMPORTE</name>
-        <type>Number</type>
-        <format>0.#####</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>TASA_IMPUESTO</name>
-        <type>String</type>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -881,8 +863,130 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>272</yloc>
+      <xloc>272</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concatenar_LIN 2</name>
+    <type>ConcatFields</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>file</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>txt</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+      <field>
+        <name>NLIN</name>
+        <type>Integer</type>
+        <format>0</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>NUM_0_1</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SAC_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>OBS</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>IMPORTE</name>
+        <type>Number</type>
+        <format>0.#####</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <ConcatFields>
+      <targetFieldName>LIN2</targetFieldName>
+      <targetFieldLength>0</targetFieldLength>
+      <removeSelectedFields>N</removeSelectedFields>
+    </ConcatFields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>768</xloc>
+      <yloc>448</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -898,158 +1002,37 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       <schema_name/>
     </partitioning>
     <connection>MSSQL v8</connection>
-    <sql>SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'FAM' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
-																				THEN '400999' 
-																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																						ELSE FIN.CUENTA 
-																						END 
-																				END AS CUENTA
-																
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM FAMESAOF.GACCENTRYD
---		WHERE FIY_0 IN (4,5,6)
-		WHERE LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
+    <sql>WITH DETALLE AS
+(
+SELECT  'CAB' AS ID, 'TR' AS TIPO, NUM_0, FCY_0, '20211231' AS FECHA , 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, SAC_0 AS SAC_ORIGINAL
+, CASE SAC_0 WHEN 'C360' THEN '436000'
+			WHEN 'C380' THEN '438000'
+			WHEN 'C310' THEN '431000'
+			WHEN 'C311' THEN '431100'
+			END AS SAC_0
+, NUM_0, BPR_0,  CAST(SUM((AMTCUR_0-PAYCUR_0 -TMPCUR_0)* SNS_0) AS decimal(10,4))  AS IMPORTE, 1 AS NLIN 
+FROM FAMESAOF.GACCDUDATE
+WHERE SAC_0 IN ('C360','C380', 'C310','C311')
+AND  AMTCUR_0-PAYCUR_0 -TMPCUR_0 > 0
+AND TYP_0 NOT IN ('APG','CLO')
+--AND NUM_0 = 'ODG-FAM19120025'
+--AND FIY_0 IN (4,5,6)
+GROUP BY   NUM_0, FCY_0,  CUR_0, SAC_0, NUM_0, BPR_0
 UNION ALL
-/*
-SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'TRI' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') THEN '400999' 
-																					ELSE 
-																					CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																					ELSE 
-																					CASE WHEN FIN.CUENTA = '438002'THEN '438004' ELSE FIN.CUENTA END
-																					END
-																				END AS CUENTA
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM TRILLA.GACCENTRYD
-		WHERE FIY_0 = 6
-		AND LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-UNION ALL
-SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPT' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
-																				THEN '400999' 
-																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																						ELSE FIN.CUENTA 
-																						END 
-																				END AS CUENTA
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM IPTRILLA.GACCENTRYD
-		WHERE FIY_0 = 6
-		AND LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-
-UNION ALL*/
-SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPF' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
-																				THEN '400999' 
-																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																						ELSE FIN.CUENTA 
-																						END 
-																				END AS CUENTA
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM IPTFAM.GACCENTRYD
-		WHERE FIY_0 = 6
-		AND LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-</sql>
+SELECT  'LIN' AS ID,'TR' AS TIPO, NUM_0, FCY_0, '20211231' AS FECHA, 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, SAC_ORIGINAL
+, CASE SAC_ORIGINAL WHEN 'C360' THEN '436999'
+			WHEN 'C380' THEN '438999'
+			WHEN 'C310' THEN '431999'
+			WHEN 'C311' THEN '431199'
+			END AS SAC_0
+, NUM_0, BPR_0,  CAST ((IMPORTE * -1) AS DECIMAL (10,4)) AS IMPORTE, NLIN +1
+fROM DETALLE
+WHERE NLIN =1
+)
+SELECT * fROM DETALLE
+ORDER BY 2, NLIN</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -1064,7 +1047,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>112</xloc>
+      <xloc>80</xloc>
       <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1099,13 +1082,13 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>272</yloc>
+      <xloc>976</xloc>
+      <yloc>240</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Filtrar filas CAB</name>
+    <name>Filtrar filas  LIN</name>
     <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
@@ -1115,23 +1098,44 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Concatenar_CAB</send_true_to>
-    <send_false_to>Concatenar_LIN</send_false_to>
+    <send_true_to>Concatenar_LIN</send_true_to>
+    <send_false_to>Concatenar_LIN 2</send_false_to>
     <compare>
       <condition>
         <negated>N</negated>
-        <leftvalue>MARCA</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>CAB</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask/>
-        </value>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>NLIN</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>1</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>#</mask>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>ID</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>LIN</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+        </conditions>
       </condition>
     </compare>
     <attributes/>
@@ -1143,8 +1147,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>272</yloc>
+      <xloc>368</xloc>
+      <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1206,7 +1210,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>PLANTA</name>
+        <name>NUM_0</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -1214,7 +1218,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
         <presorted>N</presorted>
       </field>
       <field>
-        <name>ROWNUM</name>
+        <name>NLIN</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -1231,7 +1235,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
+      <xloc>1072</xloc>
       <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1261,7 +1265,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>C:/intercambio/V12_TRASPASO_YGS</name>
+      <name>C:/intercambio/V12_TRASPASO_DETALLE_YGS</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention/>
@@ -1286,12 +1290,36 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
       <field>
         <name>cabecera</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>linea</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>linea2</name>
         <type>None</type>
         <format/>
         <currency/>
@@ -1312,7 +1340,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1168</xloc>
+      <xloc>1376</xloc>
       <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1329,14 +1357,62 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       <schema_name/>
     </partitioning>
     <fields>
+      <field>
+        <name>ID</name>
+        <rename/>
+      </field>
+      <field>
+        <name>TIPO</name>
+        <rename/>
+      </field>
+      <field>
+        <name>NUM_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>FCY_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>FECHA</name>
+        <rename/>
+      </field>
+      <field>
+        <name>OBS</name>
+        <rename/>
+      </field>
+      <field>
+        <name>CUR_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>SAC_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>NUM_0_1</name>
+        <rename/>
+      </field>
+      <field>
+        <name>BPR_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>IMPORTE</name>
+        <rename/>
+      </field>
+      <field>
+        <name>NLIN</name>
+        <rename/>
+      </field>
       <select_unspecified>N</select_unspecified>
       <meta>
-        <name>FEC_CONTABLE</name>
-        <rename>FEC_CONTABLE</rename>
-        <type>String</type>
+        <name>FECHA</name>
+        <rename>FECHA</rename>
+        <type>Date</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask>yyyyMMdd</conversion_mask>
+        <conversion_mask>ddMMyyyy</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
         <date_format_locale/>
         <date_format_timezone/>
@@ -1357,8 +1433,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>144</yloc>
+      <xloc>80</xloc>
+      <yloc>208</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1382,8 +1458,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1072</xloc>
-      <yloc>368</yloc>
+      <xloc>1200</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

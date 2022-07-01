@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>V12_carga_traspasos_YGS</name>
+    <name>V12_CARGA_SALDOS_DETALLE_2</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,81 +427,17 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2021/07/07 12:57:04.235</created_date>
+    <created_date>2022/01/21 11:33:21.181</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2021/07/07 12:57:04.235</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <modified_date>2022/01/21 11:33:21.181</modified_date>
+    <key_for_session_key/>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
-    <notepad>
-      <note>Ordeno las filas para que la estructura sea la correcta a la hora de la importación. Concateno los valores que necesito
-por cada tipo de línea en una sola y luego empleo la normalización para asignar el orden correcto.</note>
-      <xloc>160</xloc>
-      <yloc>352</yloc>
-      <width>623</width>
-      <heigth>42</heigth>
-      <fontname>Segoe UI</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Ordeno las filas por planta y rownum para que la estructura sea la correcta CAB + LIN</note>
-      <xloc>656</xloc>
-      <yloc>32</yloc>
-      <width>458</width>
-      <heigth>26</heigth>
-      <fontname>Segoe UI</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Generación del modelo de datos de v8 a v12 YGAS </note>
-      <xloc>176</xloc>
-      <yloc>32</yloc>
-      <width>278</width>
-      <heigth>26</heigth>
-      <fontname>Segoe UI</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
   <connection>
-    <name>MSSQL v8</name>
-    <server>192.168.28.200</server>
+    <name>MSL V8</name>
+    <server>192.168.50.10</server>
     <type>MSSQL</type>
     <access>Native</access>
     <database>x3famesa</database>
@@ -561,8 +497,28 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Concatenar_CAB</from>
+      <from>Filtrar filas 2</from>
       <to>Concatenar_LIN</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores</from>
+      <to>Concatenar_CAB</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concatenar_CAB</from>
+      <to>Filtrar filas 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filtrar filas 2</from>
+      <to>Concatenar_LIN 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Concatenar_LIN 2</from>
+      <to>Normalización de fila</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -571,22 +527,12 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Selecciona/Renombra valores</from>
-      <to>Filtrar filas CAB</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas CAB</from>
-      <to>Concatenar_CAB</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas CAB</from>
-      <to>Concatenar_LIN</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Normalización de fila</from>
+      <to>Ordenar filas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas</from>
       <to>Filtrar filas</to>
       <enabled>Y</enabled>
     </hop>
@@ -597,15 +543,270 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
     </hop>
     <hop>
       <from>Filtrar filas</from>
-      <to>Ordenar filas</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Ordenar filas</from>
       <to>Salida Fichero_YGS</to>
       <enabled>Y</enabled>
     </hop>
   </order>
+  <step>
+    <name>Entrada MODELO YGAS</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSL V8</connection>
+    <sql>/*WITH DETALLE AS
+(
+SELECT  'TR' AS TIPO
+, NUM_0
+, FCY_0, '20211231' AS FECHA , 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, '' as SAC2, SAC_0 AS SAC_ORIGINAL
+, CASE SAC_0 WHEN 'C360' THEN '436000'
+			WHEN 'C380' THEN '438000'
+			WHEN 'C310' THEN '431000'
+			WHEN 'C311' THEN '431100'
+			END AS SAC_0
+, NUM_0, BPR_0, CAST(SNS_0 AS INTEGER) AS SIGNO, CAST(SUM(AMTCUR_0-PAYCUR_0 -TMPCUR_0) AS decimal(10,4)) AS IMPORTE, 1 AS NLIN 
+, DUDDAT_0, 1 as LEDTYP
+ , ROW_NUMBER() OVER (PARTITION BY NUM_0 ORDER BY NUM_0) AS LINEA  
+FROM FAMESAOF.GACCDUDATE
+WHERE SAC_0 IN ('C360','C380', 'C310','C311')
+AND  AMTCUR_0-PAYCUR_0 -TMPCUR_0 > 0
+AND TYP_0 NOT IN ('APG','CLO')
+GROUP BY   NUM_0, FCY_0,  CUR_0, SAC_0, NUM_0, BPR_0, DUDDAT_0, SNS_0
+UNION ALL
+SELECT  'TR' AS TIPO
+, NUM_0
+, FCY_0, '20211231' AS FECHA , 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, '' AS SAC2, SAC_0 AS SAC_ORIGINAL
+, CASE SAC_0 WHEN 'C360' THEN '436000'
+			WHEN 'C380' THEN '438000'
+			WHEN 'C310' THEN '431000'
+			WHEN 'C311' THEN '431100'
+			END AS SAC_0
+, NUM_0, CONCAT('T',BPR_0) AS BPR_0,  CAST(SNS_0 AS INTEGER)AS SIGNO, CAST(SUM(AMTCUR_0-PAYCUR_0 -TMPCUR_0) AS decimal(10,4)) AS IMPORTE, 1 AS NLIN 
+, DUDDAT_0, 1 AS LEDTYP
+, ROW_NUMBER() OVER (PARTITION BY NUM_0 ORDER BY NUM_0) AS LINEA  
+FROM TRILLA.GACCDUDATE
+WHERE SAC_0 IN ('C360','C380', 'C310','C311')
+AND  AMTCUR_0-PAYCUR_0 -TMPCUR_0 > 0
+AND TYP_0 NOT IN ('APG','CLO')
+GROUP BY   NUM_0, FCY_0,  CUR_0, SAC_0, NUM_0, BPR_0, DUDDAT_0, SNS_0
+UNION ALL
+SELECT  'TR' AS TIPO
+, NUM_0
+, FCY_0, '20211231' AS FECHA, 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, SAC2, SAC_ORIGINAL
+, CASE SAC_ORIGINAL WHEN 'C360' THEN '436999'
+			WHEN 'C380' THEN '438999'
+			WHEN 'C310' THEN '431999'
+			WHEN 'C311' THEN '431199'
+			END AS SAC_0
+, NUM_0, BPR_0,  CASE SIGNO WHEN 1 THEN -1 ELSE 1 END, CAST ((IMPORTE) AS DECIMAL (10,4)) AS IMPORTE, NLIN +1
+, DUDDAT_0, LEDTYP
+, LINEA
+fROM DETALLE
+WHERE NLIN =1
+)
+SELECT TIPO, CASE WHEN LINEA > 1 THEN CONCAT(NUM_0,' ', LINEA)
+				ELSE  NUM_0 END AS NUM_0
+				, FCY_0, FECHA, OBS, CUR_0, SAC2, SAC_ORIGINAL, SAC_0, NUM_0, BPR_0, SIGNO, IMPORTE, NLIN, DUDDAT_0, LEDTYP, LINEA fROM DETALLE
+--WHERE NUM_0 != 'ODG-TRI16120002'
+ORDER BY FCY_0, CONCAT(NUM_0, LINEA), NLIN*/
+
+WITH DETALLE
+AS
+(
+SELECT  'TR' AS TIPO
+, NUM_0
+, FCY_0, '20211231' AS FECHA , 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, '' AS SAC2, SAC_0 AS SAC_ORIGINAL
+, CASE SAC_0 WHEN 'P000' THEN '400000'
+			WHEN 'P030' THEN '403000'
+			WHEN 'C300' THEN '430000'
+			END AS SAC_0
+, NUM_0, CONCAT('T',BPR_0) AS BPR_0
+,  CAST(SNS_0 AS INTEGER)AS SIGNO
+, SUM(AMTCUR_0-PAYCUR_0 -TMPCUR_0) AS IMPORTE
+, 1 AS NLIN 
+, DUDDAT_0, 1 AS LEDTYP
+, ROW_NUMBER() OVER (PARTITION BY NUM_0 ORDER BY NUM_0) AS LINEA  
+FROM TRILLA.GACCDUDATE
+WHERE SAC_0  IN  ('P000', 'P030') --, 'C300')
+AND  AMTCUR_0-PAYCUR_0 -TMPCUR_0 > 0
+AND TYP_0 NOT IN ('ABP', 'FAP', 'ABC', 'FAC', 'FRC', 'APG', 'CLO','OVT')
+GROUP BY   NUM_0, FCY_0,  CUR_0, SAC_0, NUM_0, BPR_0, DUDDAT_0, SNS_0
+UNION ALL
+SELECT  'TR' AS TIPO
+, NUM_0
+, FCY_0, '20211231' AS FECHA, 'Movimientos acumulados DIC-2021' AS OBS, CUR_0
+, SAC2, SAC_ORIGINAL
+, CASE SAC_ORIGINAL WHEN 'P000' THEN '400999'
+			WHEN 'P030' THEN '400999'
+			WHEN 'C300' THEN '430999'
+			END AS SAC_0
+, NUM_0, BPR_0
+,  CASE SIGNO WHEN 1 THEN -1 ELSE 1 END
+, IMPORTE 
+, NLIN +1
+, DUDDAT_0, LEDTYP
+, LINEA
+fROM DETALLE
+WHERE NLIN =1
+)
+SELECT TIPO, CASE WHEN LINEA > 1 THEN CONCAT(NUM_0,' ', LINEA)
+				ELSE  NUM_0 END AS NUM_0
+				, FCY_0, FECHA, OBS, CUR_0, SAC2, SAC_ORIGINAL, SAC_0, NUM_0, BPR_0, SIGNO, IMPORTE, NLIN, DUDDAT_0, LEDTYP, LINEA fROM DETALLE
+ORDER BY FCY_0, CONCAT(NUM_0, LINEA), NLIN</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>224</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>TIPO</name>
+        <rename/>
+      </field>
+      <field>
+        <name>NUM_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>FCY_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>FECHA</name>
+        <rename/>
+      </field>
+      <field>
+        <name>OBS</name>
+        <rename/>
+      </field>
+      <field>
+        <name>CUR_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>SAC_ORIGINAL</name>
+        <rename/>
+      </field>
+      <field>
+        <name>SAC_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>NUM_0_1</name>
+        <rename/>
+      </field>
+      <field>
+        <name>BPR_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>IMPORTE</name>
+        <rename/>
+      </field>
+      <field>
+        <name>NLIN</name>
+        <rename/>
+      </field>
+      <field>
+        <name>DUDDAT_0</name>
+        <rename/>
+      </field>
+      <field>
+        <name>LEDTYP</name>
+        <rename/>
+      </field>
+      <field>
+        <name>SAC2</name>
+        <rename/>
+      </field>
+      <field>
+        <name>SIGNO</name>
+        <rename/>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>FECHA</name>
+        <rename>FECHA</rename>
+        <type>String</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>yyyyMMdd</conversion_mask>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>DUDDAT_0</name>
+        <rename>DUDDAT_0</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>yyyyMMdd</conversion_mask>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>128</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step>
     <name>Concatenar_CAB</name>
     <type>ConcatFields</type>
@@ -649,7 +850,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
     </file>
     <fields>
       <field>
-        <name>TIPO_ASIENTO</name>
+        <name>TIPO</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -661,19 +862,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>NUMDOC</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>PLANTA</name>
+        <name>NUM_0</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -685,19 +874,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>FEC_CONTABLE</name>
-        <type>Date</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>DESCRIP_CAB</name>
+        <name>FCY_0</name>
         <type>String</type>
         <format/>
         <currency/>
@@ -709,8 +886,44 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>DIVISA</name>
+        <name>FECHA</name>
         <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>OBS</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>CUR_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>DUDDAT_0</name>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -735,8 +948,52 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
-      <yloc>400</yloc>
+      <xloc>144</xloc>
+      <yloc>320</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filtrar filas 2</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Concatenar_LIN</send_true_to>
+    <send_false_to>Concatenar_LIN 2</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>NLIN</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>Integer</type>
+          <text>1</text>
+          <length>-1</length>
+          <precision>0</precision>
+          <isnull>N</isnull>
+          <mask>####0;-####0</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -783,32 +1040,8 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
     </file>
     <fields>
       <field>
-        <name>ROWNUM</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>TIPO_REFERENCIAL</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CUENTA</name>
-        <type>String</type>
+        <name>NLIN</name>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -819,8 +1052,68 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
         <precision>-1</precision>
       </field>
       <field>
-        <name>DECRIP_LIN</name>
-        <type>String</type>
+        <name>LEDTYP</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>NUM_0</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SAC_ORIGINAL</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SAC_0</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>BPR_0</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>OBS</name>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -832,8 +1125,8 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </field>
       <field>
         <name>SIGNO</name>
-        <type>Integer</type>
-        <format>0</format>
+        <type>None</type>
+        <format/>
         <currency/>
         <decimal/>
         <group/>
@@ -844,19 +1137,7 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </field>
       <field>
         <name>IMPORTE</name>
-        <type>Number</type>
-        <format>0.#####</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>TASA_IMPUESTO</name>
-        <type>String</type>
+        <type>None</type>
         <format/>
         <currency/>
         <decimal/>
@@ -881,270 +1162,178 @@ por cada tipo de línea en una sola y luego empleo la normalización para asigna
       </output>
     </remotesteps>
     <GUI>
+      <xloc>448</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concatenar_LIN 2</name>
+    <type>ConcatFields</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>file</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention>txt</extention>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery>0</splitevery>
+    </file>
+    <fields>
+      <field>
+        <name>NLIN</name>
+        <type>Integer</type>
+        <format>0</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>LEDTYP</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>NUM_0_1</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SAC2</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SAC_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SAC2</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>OBS</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SIGNO</name>
+        <type>None</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>IMPORTE</name>
+        <type>Number</type>
+        <format>0.#####</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <ConcatFields>
+      <targetFieldName>LIN</targetFieldName>
+      <targetFieldLength>0</targetFieldLength>
+      <removeSelectedFields>N</removeSelectedFields>
+    </ConcatFields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
       <xloc>560</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Entrada MODELO YGAS</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MSSQL v8</connection>
-    <sql>SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'FAM' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
-																				THEN '400999' 
-																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																						ELSE FIN.CUENTA 
-																						END 
-																				END AS CUENTA
-																
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM FAMESAOF.GACCENTRYD
---		WHERE FIY_0 IN (4,5,6)
-		WHERE LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-UNION ALL
-/*
-SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'TRI' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') THEN '400999' 
-																					ELSE 
-																					CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																					ELSE 
-																					CASE WHEN FIN.CUENTA = '438002'THEN '438004' ELSE FIN.CUENTA END
-																					END
-																				END AS CUENTA
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM TRILLA.GACCENTRYD
-		WHERE FIY_0 = 6
-		AND LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-UNION ALL
-SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPT' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
-																				THEN '400999' 
-																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																						ELSE FIN.CUENTA 
-																						END 
-																				END AS CUENTA
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM IPTRILLA.GACCENTRYD
-		WHERE FIY_0 = 6
-		AND LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-
-UNION ALL*/
-SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPF' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
-																				THEN '400999' 
-																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
-																						ELSE FIN.CUENTA 
-																						END 
-																				END AS CUENTA
-, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
-, CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
-		ELSE 1							
-		END AS SIGNO
-,  ABS(CAST(SUM(FIN.IMPORTE_ASIENTO) AS DECIMAL(10,2))) AS IMPORTE,  FIN.TASA_IMPUESTO
-, CASE (ROW_NUMBER() OVER (ORDER BY FIN.CUENTA)) WHEN 1 THEN 'CAB'
-	ELSE ''
-	END AS MARCA
-FROM 
-	(
-	SELECT --ROW_NUMBER() OVER (ORDER BY DATOS.ACC_0,SNS_0) AS ROWNUM
-	DATOS.ACC_0 AS CUENTA, DATOS.SNS_0 * SUM(DATOS.AMTCUR_0) AS IMPORTE_ASIENTO
-	, DATOS.TASA_IMPUESTO
-	FROM 
-		(
-		SELECT TYP_0, NUM_0, LIN_0, LEDTYP_0,	ACC_0,	DES_0,	SNS_0,	AMTCUR_0, AMTLED_0
-		, CASE WHEN SUBSTRING(ACC_0,1,1) IN ('6','7') THEN 'SP999'
-			WHEN SUBSTRING(ACC_0,1,2) IN ('20','21') THEN 'SP999'
-			WHEN ACC_0 IN('472000','477000') THEN 'SP999'
-			ELSE ''
-			END AS TASA_IMPUESTO
-		FROM IPTFAM.GACCENTRYD
-		WHERE FIY_0 = 6
-		AND LEDTYP_0 = 1
-		) AS DATOS
---WHERE TYP_0 IN ('FAC','ABC')
-	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
-	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>112</xloc>
-      <yloc>48</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filtrar filas</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Ordenar filas</send_true_to>
-    <send_false_to>Transformación simulada (no hace nada)</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>cabecera</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>816</xloc>
-      <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filtrar filas CAB</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Concatenar_CAB</send_true_to>
-    <send_false_to>Concatenar_LIN</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>MARCA</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>CAB</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask/>
-        </value>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>304</xloc>
-      <yloc>272</yloc>
+      <yloc>384</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1181,8 +1370,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>688</xloc>
-      <yloc>144</yloc>
+      <xloc>736</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1206,7 +1395,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>PLANTA</name>
+        <name>NUM_0</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -1214,7 +1403,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
         <presorted>N</presorted>
       </field>
       <field>
-        <name>ROWNUM</name>
+        <name>NLIN</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -1231,8 +1420,98 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
-      <yloc>64</yloc>
+      <xloc>976</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filtrar filas</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Transformación simulada (no hace nada)</send_true_to>
+    <send_false_to>Salida Fichero_YGS</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <conditions>
+          <condition>
+            <negated>N</negated>
+            <leftvalue>typefield</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>String</type>
+              <text>G</text>
+              <length>-1</length>
+              <precision>-1</precision>
+              <isnull>N</isnull>
+              <mask/>
+            </value>
+          </condition>
+          <condition>
+            <negated>N</negated>
+            <operator>AND</operator>
+            <leftvalue>NLIN</leftvalue>
+            <function>=</function>
+            <rightvalue/>
+            <value>
+              <name>constant</name>
+              <type>Integer</type>
+              <text>2</text>
+              <length>-1</length>
+              <precision>0</precision>
+              <isnull>N</isnull>
+              <mask>####0;-####0</mask>
+            </value>
+          </condition>
+        </conditions>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1136</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Transformación simulada (no hace nada)</name>
+    <type>Dummy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>976</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1261,7 +1540,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>C:/intercambio/V12_TRASPASO_YGS</name>
+      <name>C:/intercambio/V12_TRASPASO_DETALLE_YGS</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention/>
@@ -1286,7 +1565,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
         <decimal/>
         <group/>
         <nullif/>
-        <trim_type>none</trim_type>
+        <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
@@ -1312,78 +1591,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1168</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Selecciona/Renombra valores</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <select_unspecified>N</select_unspecified>
-      <meta>
-        <name>FEC_CONTABLE</name>
-        <rename>FEC_CONTABLE</rename>
-        <type>String</type>
-        <length>-2</length>
-        <precision>-2</precision>
-        <conversion_mask>yyyyMMdd</conversion_mask>
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale/>
-        <date_format_timezone/>
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding/>
-        <decimal_symbol/>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <storage_type/>
-      </meta>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>304</xloc>
-      <yloc>144</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Transformación simulada (no hace nada)</name>
-    <type>Dummy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1072</xloc>
-      <yloc>368</yloc>
+      <xloc>1344</xloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

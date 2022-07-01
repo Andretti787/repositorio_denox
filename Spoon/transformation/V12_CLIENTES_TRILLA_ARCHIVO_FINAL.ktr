@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>carga_DIM_pais</name>
+    <name>V12_CLIENTES_TRILLA_ARCHIVO_FINAL</name>
     <description/>
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
@@ -428,21 +427,21 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/09/24 08:50:36.135</created_date>
+    <created_date>2021/10/21 11:29:57.648</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/09/24 08:50:36.135</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <modified_date>2021/10/21 11:29:57.648</modified_date>
+    <key_for_session_key/>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>MSSQL SAGE</name>
-    <server>192.168.28.100\X3V12</server>
+    <name>MSSQL V8</name>
+    <server>192.168.50.10</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>x3</database>
-    <port>51439</port>
+    <database>x3famesa</database>
+    <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
     <servername/>
@@ -471,7 +470,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>51439</attribute>
+        <attribute>49412</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -480,61 +479,6 @@
       <attribute>
         <code>QUOTE_ALL_FIELDS</code>
         <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>MySQL_RS</name>
-    <server>192.168.35.25</server>
-    <type>MYSQL</type>
-    <access>Native</access>
-    <database>mariodb</database>
-    <port>3306</port>
-    <username>famesa</username>
-    <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>3306</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>STREAM_RESULTS</code>
-        <attribute>Y</attribute>
       </attribute>
       <attribute>
         <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
@@ -552,35 +496,34 @@
   </connection>
   <order>
     <hop>
-      <from>Ordenar filas</from>
-      <to>Selecciona/Renombra valores</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Selecciona/Renombra valores</from>
-      <to>Insertar / Actualizar </to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Entrada Tabla TABCOUNTRY</from>
+      <from>Entrada Tabla</from>
       <to>Ordenar filas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores 5</from>
+      <to>Salida Fichero de Texto TRILLA_CTE</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas</from>
+      <to>Selecciona/Renombra valores 5</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Entrada Tabla TABCOUNTRY</name>
+    <name>Entrada Tabla</name>
     <type>TableInput</type>
     <description/>
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MSSQL SAGE</connection>
-    <sql>SELECT CONTINENT_0 AS CONTINENTE, CRY_0 AS PAIS, ISONUM_0 AS NUM_ISO, CUR_0 AS DIVISA, LAN_0 AS IDIOMA, TELFMT_0 AS FORMAT_TFNO, CINSEE_0 AS COD_INSEE 
-fROM LIVE.TABCOUNTRY</sql>
+    <connection>MSSQL V8</connection>
+    <sql>SELECT ID_FILA, LINB FROM TRILLA.ZCLIENTESV12</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -595,14 +538,14 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>128</yloc>
+      <xloc>273</xloc>
+      <yloc>118</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Insertar / Actualizar </name>
-    <type>InsertUpdate</type>
+    <name>Selecciona/Renombra valores 5</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -611,54 +554,12 @@ fROM LIVE.TABCOUNTRY</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MySQL_RS</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema>dwdb</schema>
-      <table>DIM_PAIS</table>
-      <key>
-        <name>PAIS_COD</name>
-        <field>PAIS_COD</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>PAIS_CONTINENTE</name>
-        <rename>PAIS_CONTINENTE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_COD</name>
-        <rename>PAIS_COD</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>PAIS_ISO</name>
-        <rename>PAIS_ISO</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_DIVISA</name>
-        <rename>PAIS_DIVISA</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_IDIOMA</name>
-        <rename>PAIS_IDIOMA</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_TFNO</name>
-        <rename>PAIS_TFNO</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>PAIS_INSEE</name>
-        <rename>PAIS_INSEE</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
+    <fields>
+      <field>
+        <name>LINB</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -668,8 +569,8 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>128</yloc>
+      <xloc>593</xloc>
+      <yloc>294</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -693,7 +594,7 @@ fROM LIVE.TABCOUNTRY</sql>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>PAIS</name>
+        <name>ID_FILA</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -710,14 +611,14 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>128</yloc>
+      <xloc>417</xloc>
+      <yloc>214</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Selecciona/Renombra valores</name>
-    <type>SelectValues</type>
+    <name>Salida Fichero de Texto TRILLA_CTE</name>
+    <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -726,36 +627,49 @@ fROM LIVE.TABCOUNTRY</sql>
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <separator>;</separator>
+    <enclosure/>
+    <enclosure_forced>Y</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding>ISO-8859-1</encoding>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>C:/Users/mmarco/Documents/Alive/migracion/TRASPASO DATOS/IMPORTS/TRILLA_CTE2</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention/>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
     <fields>
       <field>
-        <name>CONTINENTE</name>
-        <rename>PAIS_CONTINENTE</rename>
+        <name>LINB</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
       </field>
-      <field>
-        <name>PAIS</name>
-        <rename>PAIS_COD</rename>
-      </field>
-      <field>
-        <name>NUM_ISO</name>
-        <rename>PAIS_ISO</rename>
-      </field>
-      <field>
-        <name>DIVISA</name>
-        <rename>PAIS_DIVISA</rename>
-      </field>
-      <field>
-        <name>IDIOMA</name>
-        <rename>PAIS_IDIOMA</rename>
-      </field>
-      <field>
-        <name>FORMAT_TFNO</name>
-        <rename>PAIS_TFNO</rename>
-      </field>
-      <field>
-        <name>COD_INSEE</name>
-        <rename>PAIS_INSEE</rename>
-      </field>
-      <select_unspecified>N</select_unspecified>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -766,8 +680,8 @@ fROM LIVE.TABCOUNTRY</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>496</xloc>
-      <yloc>128</yloc>
+      <xloc>817</xloc>
+      <yloc>406</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

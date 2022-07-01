@@ -437,11 +437,11 @@
   </notepads>
   <connection>
     <name>MSSQL SAGE</name>
-    <server>217.116.8.58</server>
+    <server>192.168.28.100\X3V12</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>x3famesa</database>
-    <port>49412</port>
+    <database>x3</database>
+    <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
     <servername/>
@@ -470,7 +470,7 @@
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>49412</attribute>
+        <attribute>51439</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -551,16 +551,6 @@
   </connection>
   <order>
     <hop>
-      <from>Entrada Tabla SALESREP</from>
-      <to>Añadir secuencia</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Añadir secuencia</from>
-      <to>Ordenar filas</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Ordenar filas</from>
       <to>Selecciona/Renombra valores</to>
       <enabled>Y</enabled>
@@ -568,11 +558,6 @@
     <hop>
       <from>Selecciona/Renombra valores</from>
       <to>Insertar / Actualizar DIM_REP</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Añadir secuencia</from>
-      <to>FECHA_DESDE (SYSDATE)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -591,51 +576,16 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Selecciona/Renombra valores</from>
+      <from>Entrada Tabla</from>
       <to>Búsqueda/actualización en dimensión SCD</to>
       <enabled>N</enabled>
     </hop>
     <hop>
-      <from>Entrada Tabla</from>
-      <to>Búsqueda/actualización en dimensión SCD</to>
+      <from>Entrada Tabla SALESREP</from>
+      <to>FECHA_DESDE (SYSDATE)</to>
       <enabled>Y</enabled>
     </hop>
   </order>
-  <step>
-    <name>Añadir secuencia</name>
-    <type>Sequence</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <valuename>DIM_REP_ID</valuename>
-    <use_database>N</use_database>
-    <connection>MSSQL SAGE</connection>
-    <schema/>
-    <seqname>SEQ_</seqname>
-    <use_counter>Y</use_counter>
-    <counter_name/>
-    <start_at>1</start_at>
-    <increment_by>1</increment_by>
-    <max_value>999999999</max_value>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>192</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Búsqueda/actualización en dimensión SCD</name>
     <type>DimensionLookup</type>
@@ -648,26 +598,47 @@
       <schema_name/>
     </partitioning>
     <schema/>
-    <table>DIM_REP</table>
+    <table>DIM_REP2</table>
     <connection>MySQL REPORT_SERVER</connection>
     <commit>100</commit>
-    <update>N</update>
+    <update>Y</update>
     <fields>
       <key>
         <name>COD_REP</name>
-        <lookup>COD_REP</lookup>
-      </key>
-      <key>
-        <name>ZONA</name>
-        <lookup>ZONA</lookup>
+        <lookup>REP_COD</lookup>
       </key>
       <date>
         <name/>
-        <from>FECHA_DESDE</from>
-        <to>FECHA_HASTA</to>
+        <from>REP_FEC_DESDE</from>
+        <to>REP_FEC_HASTA</to>
       </date>
+      <field>
+        <name>NOM_REP</name>
+        <lookup>REP_NOM</lookup>
+        <update>Update</update>
+      </field>
+      <field>
+        <name>TASA_COM1</name>
+        <lookup>REP_TASA_COM1</lookup>
+        <update>Update</update>
+      </field>
+      <field>
+        <name>TASA_COM2</name>
+        <lookup>REP_TASA_COM2</lookup>
+        <update>Update</update>
+      </field>
+      <field>
+        <name>TASA_COM3</name>
+        <lookup>REP_TASA_COM3</lookup>
+        <update>Update</update>
+      </field>
+      <field>
+        <name>ZONA</name>
+        <lookup>REP_ZONA</lookup>
+        <update>Update</update>
+      </field>
       <return>
-        <name>DIM_REP_ID</name>
+        <name>REP_ID</name>
         <rename/>
         <creation_method>tablemax</creation_method>
         <use_autoinc>N</use_autoinc>
@@ -677,7 +648,7 @@
     <sequence/>
     <min_year>1900</min_year>
     <max_year>2199</max_year>
-    <cache_size>5000</cache_size>
+    <cache_size>-1</cache_size>
     <preload_cache>N</preload_cache>
     <use_start_date_alternative>Y</use_start_date_alternative>
     <start_date_alternative>sysdate</start_date_alternative>
@@ -698,6 +669,180 @@
     </GUI>
   </step>
   <step>
+    <name>Entrada Tabla</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL SAGE</connection>
+    <sql>SELECT REPNUM_0 AS COD_REP, REPNAM_0 AS NOM_REP, COMRAT1_0 AS TASA_COM1, COMRAT1_1 AS TASA_COM2, COMRAT1_2 AS TASA_COM3, ZZONA_0 AS ZONA 
+fROM LIVE.SALESREP</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>COD_REP</name>
+        <length>15</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>COD_REP</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>NOM_REP</name>
+        <length>35</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>NOM_REP</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>TASA_COM1</name>
+        <length>8</length>
+        <precision>3</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>TASA_COM1</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>TASA_COM2</name>
+        <length>8</length>
+        <precision>3</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>TASA_COM2</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>TASA_COM3</name>
+        <length>8</length>
+        <precision>3</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>TASA_COM3</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ZONA</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>ZONA</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>256</xloc>
+      <yloc>576</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Entrada Tabla SALESREP</name>
     <type>TableInput</type>
     <description/>
@@ -710,12 +855,153 @@
     </partitioning>
     <connection>MSSQL SAGE</connection>
     <sql>SELECT REPNUM_0 AS COD_REP, REPNAM_0 AS NOM_REP, COMRAT1_0 AS TASA_COM1, COMRAT1_1 AS TASA_COM2, COMRAT1_2 AS TASA_COM3, ZZONA_0 AS ZONA 
-fROM FAMESAOF.SALESREP</sql>
+fROM LIVE.SALESREP</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>COD_REP</name>
+        <length>15</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SALESREP</origin>
+        <comments>COD_REP</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>NOM_REP</name>
+        <length>35</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SALESREP</origin>
+        <comments>NOM_REP</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>TASA_COM1</name>
+        <length>8</length>
+        <precision>3</precision>
+        <origin>Entrada Tabla SALESREP</origin>
+        <comments>TASA_COM1</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>TASA_COM2</name>
+        <length>8</length>
+        <precision>3</precision>
+        <origin>Entrada Tabla SALESREP</origin>
+        <comments>TASA_COM2</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>TASA_COM3</name>
+        <length>8</length>
+        <precision>3</precision>
+        <origin>Entrada Tabla SALESREP</origin>
+        <comments>TASA_COM3</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ZONA</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SALESREP</origin>
+        <comments>ZONA</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -756,7 +1042,7 @@ fROM FAMESAOF.SALESREP</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>256</xloc>
+      <xloc>176</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -795,7 +1081,7 @@ fROM FAMESAOF.SALESREP</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>432</xloc>
+      <xloc>464</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -816,56 +1102,51 @@ fROM FAMESAOF.SALESREP</sql>
     <update_bypassed>N</update_bypassed>
     <lookup>
       <schema/>
-      <table>dim_rep</table>
+      <table>DIM_REP</table>
       <key>
-        <name>COD_REP</name>
-        <field>COD_REP</field>
+        <name>REP_COD</name>
+        <field>REP_COD</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>COD_REP</name>
-        <rename>COD_REP</rename>
+        <name>REP_COD</name>
+        <rename>REP_COD</rename>
         <update>N</update>
       </value>
       <value>
-        <name>NOM_REP</name>
-        <rename>NOM_REP</rename>
+        <name>REP_NOM</name>
+        <rename>REP_NOM</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>TASA_COM1</name>
-        <rename>TASA_COM1</rename>
+        <name>REP_TASA_COM1</name>
+        <rename>REP_TASA_COM1</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>TASA_COM2</name>
-        <rename>TASA_COM2</rename>
+        <name>REP_TASA_COM2</name>
+        <rename>REP_TASA_COM2</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>TASA_COM3</name>
-        <rename>TASA_COM3</rename>
+        <name>REP_TASA_COM3</name>
+        <rename>REP_TASA_COM3</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>ZONA</name>
-        <rename>ZONA</rename>
+        <name>REP_ZONA</name>
+        <rename>REP_ZONA</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>DIM_REP_ID</name>
-        <rename>DIM_REP_ID</rename>
+        <name>REP_FEC_DESDE</name>
+        <rename>REP_FEC_DESDE</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>FECHA_DESDE</name>
-        <rename>FECHA_DESDE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>FECHA_HASTA</name>
-        <rename>FECHA_HASTA</rename>
+        <name>REP_FEC_HASTA</name>
+        <rename>REP_FEC_HASTA</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -878,7 +1159,7 @@ fROM FAMESAOF.SALESREP</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>912</xloc>
+      <xloc>1040</xloc>
       <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
@@ -911,56 +1192,8 @@ fROM FAMESAOF.SALESREP</sql>
         <presorted>N</presorted>
       </field>
       <field>
-        <name>NOM_REP</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>TASA_COM1</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>TASA_COM2</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>TASA_COM3</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ZONA</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>DIM_REP_ID</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
         <name>FECHA_DESDE</name>
-        <ascending>N</ascending>
+        <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
         <collator_strength>0</collator_strength>
@@ -968,7 +1201,7 @@ fROM FAMESAOF.SALESREP</sql>
       </field>
       <field>
         <name>FECHA_HASTA</name>
-        <ascending>N</ascending>
+        <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
         <collator_strength>0</collator_strength>
@@ -1003,30 +1236,35 @@ fROM FAMESAOF.SALESREP</sql>
     <fields>
       <field>
         <name>COD_REP</name>
+        <rename>REP_COD</rename>
       </field>
       <field>
         <name>NOM_REP</name>
+        <rename>REP_NOM</rename>
       </field>
       <field>
         <name>TASA_COM1</name>
+        <rename>REP_TASA_COM1</rename>
       </field>
       <field>
         <name>TASA_COM2</name>
+        <rename>REP_TASA_COM2</rename>
       </field>
       <field>
         <name>TASA_COM3</name>
+        <rename>REP_TASA_COM3</rename>
       </field>
       <field>
         <name>ZONA</name>
-      </field>
-      <field>
-        <name>DIM_REP_ID</name>
+        <rename>REP_ZONA</rename>
       </field>
       <field>
         <name>FECHA_DESDE</name>
+        <rename>REP_FEC_DESDE</rename>
       </field>
       <field>
         <name>FECHA_HASTA</name>
+        <rename>REP_FEC_HASTA</rename>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -1039,41 +1277,8 @@ fROM FAMESAOF.SALESREP</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>640</xloc>
+      <xloc>704</xloc>
       <yloc>256</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Entrada Tabla</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MSSQL SAGE</connection>
-    <sql>SELECT REPNUM_0 AS COD_REP, REPNAM_0 AS NOM_REP, COMRAT1_0 AS TASA_COM1, COMRAT1_1 AS TASA_COM2, COMRAT1_2 AS TASA_COM3, ZZONA_0 AS ZONA 
-fROM FAMESAOF.SALESREP</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>256</xloc>
-      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
