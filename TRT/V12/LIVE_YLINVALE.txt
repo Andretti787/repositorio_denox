@@ -1,0 +1,443 @@
+# Ejecución código pantalla PREPARACIÓN Cód. Actividad Y0016 - FAMESA--#
+#----------------------------------------------------------------------#
+# Y0051(MAA) --> Se ha creado un nuevo campo YKIT y aquí lo relleno
+# según esté relleno el campo LINTYP
+#----------------------------------------------------------------------#
+#Y0062 - Compuestos KIT en empaquetado
+#----------------------------------------------------------------------#
+$ACTION
+  Case ACTION
+    When "DEBUT"       : Gosub DEBUT
+    When "OUVRE"       : Gosub OUVRE
+    When "OK"          : Gosub OK
+    When "END"         : Gosub FIN From YREVALE
+    When "SETBOUT"     : Gosub SETBOUT
+    When "APRES_MODIF" : Gosub APRES_MODIF
+    When "BOUTON"      : Gosub BOUTON
+  Endcase
+Return
+
+$BOUTON
+  If BOUT = 'Z'
+    #Buscar en el vale de preparación si se ha pasado a empaquetado
+    Read[F:YPRH]PRH0 = [M:YLV2]YVALE
+    If !fstat
+      If [F:YPRH]PACFLG = 2
+        FIN = 1
+      Endif
+    Endif
+  Endif
+
+Return
+
+$SETBOUT
+  # Y0051
+  For [F:YPRE]PRE0 Where [F:YPRE]ITMREF = [M:YLV]YITMF and [F:YPRE]PRHNUM = VALEPREPA
+    If [F:YPRE]LINTYP= 2
+      [M:YLV]YKIT = 2
+    Else
+      [M:YLV]YKIT = 1
+    Endif
+  Next
+  Affzo[M:YLV]
+  # FIN Y0051
+
+  If[M:YLV]YCANTIDADF = [M:YLV]YCANTPREF
+    Chgstl [M:YLV]YCANTPREF With "BACKGREEN"
+  Else
+    Chgstl [M:YLV]YCANTPREF With ""
+  Endif
+
+
+
+Return
+
+$APRES_MODIF
+#If GUSER="ZZD01"
+#Infbox COUZON
+#Endif
+Return
+
+$OUVRE
+  #Tablas
+  If !clalev([F:YPRH])    Local File STOPREH    [YPRH]  Endif #Vales Cab
+  If !clalev([F:YPRE])    Local File STOPRED    [YPRE]  Endif #Vales Lin
+  If !clalev([F:YVC])     Local File YVALECAB   [YVC]  Endif #Temporal Cab
+  If !clalev([F:YVL])     Local File YVALELIN   [YVL]  Endif #Temporal Lin
+  If !clalev([F:YVS])     Local File YVALEST    [YVS]  Endif #Temporal Stock
+  If !clalev([F:YITF])    Local File ITMFACILIT [YITF]  Endif #Artículo - Planta
+  If !clalev([F:YSTC])    Local File STOLOC     [YSTC]  Endif #Ubicaciones
+  If !clalev([F:YITU])    Local File ITMBPC     [YITU]  Endif #Artículo - Cliente
+  If !clalev([F:YITM])    Local File ITMMASTER  [YITM]  Endif #Artículo
+  If !clalev([F:YSTO])    Local File STOCK      [YSTO]  Endif #STOCK #JPL
+  If !clalev([F:YPRE2])    Local File STOPRED    [YPRE2]  Endif #Vales Lin 2 #Y0062
+
+  #Variables
+  Local Integer WRESP, I, YYLIN, COUNTLIN
+
+  Local Decimal YQTYPRE
+
+  Raz YQTYPRE
+Return
+
+$DEBUT
+
+  If[M:YSELVAL]YEMPAQUETADO = 1
+    Diszo [M:YLV]YPALLETF
+  Endif
+
+  #Si no existen registros con este vale, creo en tablas temporales los datos necesarios
+  Read [F:YVC]YVC0 = [M:YSELVAL]PRHNUM
+  If fstat
+    [F:YVC]YPRHNUM = [M:YSELVAL]PRHNUM
+    [F:YVC]YUSER = [M:YSELVAL]YPREPARADOR
+    [F:YVC]YEMPAQUETADO = [M:YSELVAL]YEMPAQUETADO
+    Write [F:YVC]
+    If fstat
+     Call FSTA("YVC") From GLOCK
+    Endif
+    For[F:YPRE] Where [F:YPRE]PRHNUM = [M:YSELVAL]PRHNUM and [F:YPRE]STOMGTCOD = 2 #JPL - Sólo líneas de vale con gestión de stock
+      [F:YVL]YPRHNUM = [F:YPRE]PRHNUM
+      [F:YVL]YLIN = [F:YPRE]PRELIN
+      [F:YVL]YITM = [F:YPRE]ITMREF
+      [F:YVL]YCANTIDAD = [F:YPRE]QTYSTU
+      # -- Packs -- #
+      Read[F:YPRH]PRH0 = [M:YSELVAL]PRHNUM
+      If !fstat
+        Read[F:YITU]ITU0 = [F:YPRE]ITMREF;[F:YPRH]BPCORD
+        If !fstat and [F:YITU]PCUSAUCOE1 <> 0
+          [F:YVL]YPACKS = [F:YPRE]QTYSTU / [F:YITU]PCUSAUCOE1
+        Else
+          Read[F:YITM]ITM0 = [F:YPRE]ITMREF
+          If !fstat
+            If [F:YITM]PCUSTUCOE(0) = 0
+              [F:YVL]YPACKS =  0
+            Else
+              [F:YVL]YPACKS = [F:YPRE]QTYSTU / [F:YITM]PCUSTUCOE(0)
+            Endif
+          Endif
+        Endif
+      Else
+        [F:YVL]YPACKS = 0
+      Endif
+      # ------- Ubic ------- #Comentado JPL - Quito la carga de ubicación asignada al artículo. Ahora la coge del lote
+#      Filter [F:YITF] Where [F:YITF]ITMREF = [F:YPRE]ITMREF and [F:YITF]STOFCY = [F:YPRH]STOFCY
+#      Read [F:YITF]ITF0 First
+#      If !fstat
+#        #control sobre tabla STOLOC
+#        Filter [F:YSTC] Where [F:YSTC]LOC = [F:YITF]DEFLOC(1)
+#        Read [F:YSTC]STC0 First
+#        If !fstat
+#          [F:YVL]YUBIC = [F:YITF]DEFLOC(1)
+#        Else
+#          [F:YVL]YUBIC = ''
+#        Endif
+#      Endif
+#
+#      Filter [F:YITF]
+#      Filter [F:YSTC]
+      Filter[F:YSTO] Where [F:YSTO]ITMREF = [F:YPRE]ITMREF and [F:YSTO]STA = 'A' Order By [F:YSTO]LOC Desc
+      If rowcount([F:YSTO]) > 0
+        Read [F:YSTO] First
+        If !fstat
+#          Infbox([F:YSTO]LOC)
+          [F:YVL]YUBIC = [F:YSTO]LOC
+        Endif
+      Endif
+      Filter[F:YSTO]
+      # -------------------- #
+      Write [F:YVL]
+      If fstat
+       Call FSTA("YVL") From GLOCK
+      Endif
+    Next
+    Gosub CARGA_REJILLA_ORDEN
+    Gosub PRESENTA_LINEA
+    Read [F:YITM]ITM0 = [M:YLV]YITMF
+    If !fstat : Infbox ('Preparar' - [M:YLV]YITMF - '-' - [F:YITM]ITMDES1 - 'Ubicación Propuesta:'-[M:YLV]YUBICACIONF) : Endif
+  Else
+    Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM Order By [F:YVL]YUBIC Desc
+    For[F:YVL]
+      If [F:YVL]YCANTIDADPRE = [F:YVL]YCANTIDAD
+        COUNTLIN += 1
+      Endif
+    Next
+    Filter[F:YVL]
+    [M:YLV2]YNUMREG = COUNTLIN
+    Gosub CARGA_REJILLA
+    Gosub PRESENTA_LINEA
+  Endif
+#Infbox([F:YVL]YUBIC)
+
+Return
+
+$CARGA_REJILLA_ORDEN
+  I=0
+  [M:YLV2]YVALE = [M:YSELVAL]PRHNUM
+#  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM Order By [F:YVL]YUBIC Desc
+  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM Order By [F:YVL]YLIN #JPL - 1/01/22 - Quito el orden por ubicación
+  For[F:YVL]
+    [M:YLV2]YITM(I) = [F:YVL]YITM
+#    If GUSER = 'ZZF01'  : Infbox "I="+num$(I)-"ITM:"-[M:YLV2]YITM(I) :  Endif
+    [M:YLV2]YCANTIDADV(I) = [F:YVL]YCANTIDAD
+    [M:YLV2]YCANTIDADPRE(I) = [F:YVL]YCANTIDADPRE
+    [M:YLV2]YLIN(I)  = [F:YVL]YLIN
+    [M:YLV2]YUBIC(I) = [F:YVL]YUBIC
+    [M:YLV2]YPACKS(I) = [F:YVL]YPACKS
+    [F:YVL]YORDEN = I
+    Rewrite [F:YVL]
+    I+=1
+  Next
+  Filter[F:YVL]
+  If I = 0
+    Errbox "Sin líneas (1)"
+  Endif
+  Affzo [M:YLV]
+  Affzo [M:YLV2]
+  [M:YLV2]NBLIG = I
+Return
+
+$CARGA_REJILLA
+  I=0
+  [M:YLV2]YVALE = [M:YSELVAL]PRHNUM
+#  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM Order By [F:YVL]YORDEN Asc
+  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM Order By [F:YVL]YLIN #JPL - 1/01/22 - Quito el orden por ubicación
+  For[F:YVL]
+    [M:YLV2]YITM(I) = [F:YVL]YITM
+#    If GUSER = 'ZZF01'  : Infbox "I="+num$(I)-"ITM:"-[M:YLV2]YITM(I) :  Endif
+    [M:YLV2]YCANTIDADV(I) = [F:YVL]YCANTIDAD
+    [M:YLV2]YCANTIDADPRE(I) = [F:YVL]YCANTIDADPRE
+    [M:YLV2]YLIN(I)  = [F:YVL]YLIN
+    [M:YLV2]YUBIC(I) = [F:YVL]YUBIC
+    [M:YLV2]YPACKS(I) = [F:YVL]YPACKS
+    I+=1
+  Next
+  Filter[F:YVL]
+  If I = 0
+    Errbox "Sin líneas (2)"
+  Endif
+  Affzo [M:YLV]
+  Affzo [M:YLV2]
+  [M:YLV2]NBLIG = I
+Return
+
+$CARGA_REJILLA_OLD
+#JPL - Finalmente no utilizamos este CARGA_REJILLA_OLD
+  I=0
+  [M:YLV2]YVALE = [M:YSELVAL]PRHNUM
+  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM and [F:YVL]YLIN = YYLIN  #Order By [F:YVL]YUBIC Desc
+#  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM Order By [F:YVL]YLIN #JPL - Los artículos no suelen tener ubic asociada, le quito el orden por ubica
+  For[F:YVL]
+    [M:YLV2]YITM(I) = [F:YVL]YITM
+    [M:YLV2]YCANTIDADV(I) = [F:YVL]YCANTIDAD
+    [M:YLV2]YCANTIDADPRE(I) = [F:YVL]YCANTIDADPRE
+    [M:YLV2]YLIN(I)  = [F:YVL]YLIN
+    [M:YLV2]YUBIC(I) = [F:YVL]YUBIC
+    [M:YLV2]YPACKS(I) = [F:YVL]YPACKS
+#    Infbox num$(I)
+#    Infbox num$([F:YVL]YCANTIDADPRE)
+#    Infbox num$([M:YLV2]YCANTIDADPRE(I))
+  Next
+  Filter[F:YVL]
+
+  Filter[F:YVL] Where [F:YVL]YPRHNUM = [M:YSELVAL]PRHNUM and [F:YVL]YLIN = YYLIN
+  For[F:YVL]
+    I+=1
+  Next
+  Filter[F:YVL]
+
+  If I = 0
+    Errbox "Sin líneas (3)"
+  Endif
+  Affzo [M:YLV]
+  Affzo [M:YLV2]
+  [M:YLV2]NBLIG = I
+Return
+
+$PRESENTA_LINEA
+#If GUSER = '40'
+#  Infbox 'NUMREG'-num$([M:YLV2]YNUMREG)
+#  Infbox 'CANT'-num$([M:YLV2]YCANTIDADPRE([M:YLV2]YNUMREG))
+#Endif
+  [M:YLV]YITMF = [M:YLV2]YITM([M:YLV2]YNUMREG)
+  [M:YLV]YCANTIDADF = [M:YLV2]YCANTIDADV([M:YLV2]YNUMREG)
+  [M:YLV]YCANTPREF = [M:YLV2]YCANTIDADPRE([M:YLV2]YNUMREG)
+  [M:YLV2]YLINF = [M:YLV2]YLIN([M:YLV2]YNUMREG)
+  [M:YLV]YUBICACIONF = [M:YLV2]YUBIC([M:YLV2]YNUMREG)
+  Read [F:YPRH]PRH0 = [M:YSELVAL]PRHNUM
+  If !fstat
+    If [F:YPRH]STOFCY = 'TRI'
+      Chgfmt [M:YLV]YPACKSF With "-K:10"
+      Chgfmt [M:YLV]YKIT With "-K:10"
+    Else
+      [M:YLV]YPACKSF = [M:YLV2]YPACKS([M:YLV2]YNUMREG)
+    Endif
+  Endif
+  # ---------- Estilos ---------- #
+  If[M:YLV]YCANTIDADF = [M:YLV]YCANTPREF
+    Chgstl [M:YLV]YCANTPREF With "BACKGREEN"
+  Else
+    Chgstl [M:YLV]YCANTPREF With ""
+  Endif
+  # ----------------------------- #
+  If [M:YLV]YCANTIDADF <= [M:YLV]YCANTPREF
+    Diszo [M:YLV]YCANPRELINF
+    Diszo [M:YLV]YLOTEF
+    Diszo [M:YLV]YPALLETF
+    Diszo [M:YLV]YUBICACIONF
+    Diszo [M:YLV]YPACKSF
+  Else
+    Actzo [M:YLV]YCANPRELINF
+    Actzo [M:YLV]YLOTEF
+    Actzo [M:YLV]YUBICACIONF
+    If[M:YSELVAL]YEMPAQUETADO <> 1
+      Actzo [M:YLV]YPALLETF
+    Endif
+    [M:YLV]YCHECK = 1
+    Actzo[M:YLV]YPACKSF
+  Endif
+
+   If [M:YLV2]YNUMREG = 0
+    Diszo [M:YLV]YANT
+  Else
+    Actzo [M:YLV]YANT
+  Endif
+  If [M:YLV2]YNUMREG = [M:YLV2]NBLIG - 1
+    Diszo [M:YLV]YSIG
+  Else
+    Actzo [M:YLV]YSIG
+  Endif
+
+
+  Affzo [M:YLV]
+  Affzo [M:YLV2]
+Return
+
+$OK
+  #Como ya tenemos líneas guardadas -> Si cantidad <> 0 significa que hay un registro y creamos uno nuevo, si = 0 reescribimos y presentamos línea y borramos
+#  Infbox num$([M:YLV]YCANTIDADF)-num$([M:YLV]YCANTPREF)-num$([M:YLV]YCANPRELINF)
+#If GUSER = 'ZZF01' : Infbox "LOTE"-[M:YLV]YLOTEF-"SIN LOTE"- num$([M:YLV]YCHECK) : Endif
+
+#If [M:YLV]YLOTEF = '' and [M:YLV]YCHECK < 2
+#  Errbox 'Artículo no leído. Debe leer el artículo'
+#Endif
+If [M:YSELVAL]YEMPAQUETADO = 1 or [M:YLV]YPALLETF <> 0 #Si hay empaquetado y no se introduce pallet
+#  If [M:YLV]YCANPRELINF <> 0 #Si se ha introducido una cantidad
+    If ([M:YLV]YCANTIDADF - [M:YLV]YCANTPREF) > [M:YLV]YCANPRELINF #Si queda cantidad de la línea por preparar
+
+      Read[F:YVL]YVL0 = [M:YLV2]YVALE;[M:YLV2]YLINF
+      If !fstat
+      For [F:YVS] Where YPRHNUM = [F:YVL]YPRHNUM and YLIN = [F:YVL]YLIN
+        YQTYPRE += [F:YVS]YCANPRELIN
+      Next
+#        Infbox('Quedan'-num$([M:YLV]YCANTIDADF-[M:YLV]YCANPRELINF)-'UN por preparar del artículo'-[F:YVL]YITM )
+        Infbox('Quedan'-num$([M:YLV]YCANTIDADF-(YQTYPRE+[M:YLV]YCANPRELINF))-'UN por preparar del artículo'-[F:YVL]YITM )
+#        Infbox 'CANTPREP'-num$([M:YLV]YCANPRELINF)
+        [F:YVL]YCANTIDADPRE += [M:YLV]YCANPRELINF #Guardo cantidad preparada en la tabla de la línea
+        [F:YVL]YPACKS = [M:YLV]YPACKSF #Guardo nº packs en la tabla de la línea
+        [F:YVL]YUBIC = [M:YLV]YUBICACIONF #Guardo Ubicación real en la tabla de la línea
+        Rewrite [F:YVL]
+#        Infbox 'CANTPREP'-num$([F:YVL]YCANTIDADPRE)
+        If fstat :  Call FSTA("YVL") From GLOCK : Endif
+        Gosub REGISTRA_STOCK #Guardo el detale de stock preparado
+        [M:YLV]YCANPRELINF = 0 #Inicializo la cantidad a preparar de la pantalla
+        [M:YLV]YLOTEF = '' #Inicializo le lote de la pantalla
+        #[M:YLV]YPALLETF = 0
+        YYLIN = [F:YVL]YLIN #Me guardo el nº de línea actual del vale
+#        Infbox num$(YYLIN)
+        Affzo [M:YLV]
+        Affzo [M:YLV2]
+      Endif
+      Gosub CARGA_REJILLA #Cargo en la rejilla sólo el nº de línea actual (YYLIN)
+      Gosub PRESENTA_LINEA #Cargo en la pantalla el registro de la rejilla de la línea actual
+
+    Elsif ([M:YLV]YCANTIDADF - [M:YLV]YCANTPREF) = [M:YLV]YCANPRELINF #Si no queda cantidad de la línea por preparar
+#    Infbox('NO QUEDA CANTIDAD EN LA LÍNEA')
+      Read[F:YVL]YVL0 = [M:YLV2]YVALE;[M:YLV2]YLINF
+      If !fstat
+        [F:YVL]YCANTIDADPRE += [M:YLV]YCANPRELINF #Guardo cantidad preparada en la tabla de la línea
+        [F:YVL]YPACKS = [M:YLV]YPACKSF #Guardo nº packs en la tabla de la línea
+        [F:YVL]YUBIC = [M:YLV]YUBICACIONF #Guardo Ubicación real en la tabla de la línea
+        Rewrite [F:YVL]
+        If fstat  : Call FSTA("YVL") From GLOCK : Endif
+        Gosub REGISTRA_STOCK #Guardo el detale de stock preparado
+        [M:YLV]YCANPRELINF = 0 #Inicializo la cantidad a preparar de la pantalla
+        [M:YLV]YLOTEF = '' #Inicializo le lote de la pantalla
+        Affzo [M:YLV]
+        Affzo [M:YLV2]
+        If [M:YLV2]YNUMREG >= [M:YLV2]NBLIG -1 #Si es la última línea
+#          YYLIN = [F:YVL]YLIN #Me guardo el nº de línea actual del vale
+          Gosub CARGA_REJILLA #Cargo en la rejilla sólo el nº de línea actual (YYLIN)
+          Gosub PRESENTA_LINEA #Cargo en la pantalla el registro de la rejilla de la línea actua
+          Infbox ('Última línea Completada')
+        Else  #Si no es la última línea
+          Gosub CARGA_REJILLA ##Cargo en la rejilla todas las líneas por orden de ubicación
+          [M:YLV2]YNUMREG += 1 #Paso a la siguiente línea
+          Gosub PRESENTA_LINEA #Cargo en la pantalla el registro de la rejilla de la siguiente línea
+          Read [F:YITM]ITM0 = [M:YLV]YITMF
+          If !fstat : Infbox ('Línea Completada'-chr$(10)-chr$(10)-'Preparar' - [M:YLV]YITMF - '-' - [F:YITM]ITMDES1 - chr$(10)-chr$(10)
+&         - 'Ubicación Propuesta:'-[M:YLV]YUBICACIONF) : Endif #Mensaje: Muestro el siguiente artículo a preparar
+        Endif
+      Endif
+    Else
+      Errbox mess(3,6104,1) #Error: Cantidad preparada superior a la del vale
+    Endif
+#  Else
+#    Errbox mess(1,6104,1) #Error: Cantidad 0
+#  Endif
+Else
+  Errbox mess(2,6104,1)  #Error: Obligatorio Pallet
+Endif
+FIN=0
+
+Return
+
+$REGISTRA_STOCK
+  #Cargamos en la tabla YVALEST -> Nº de vale, Ylin, ylinstock, Cantidad a guardar, ubic, lote, pallet
+  Local Integer COD, LO
+  Local Integer WYQTYHIJO, WYLINPADRE, WYQTYPADREORI #Y0062
+  Raz WYQTYHIJO, WYLINPADRE, WYQTYPADREORI #Y0062
+
+
+
+  Filter [F:YVS] Where [F:YVS]YPRHNUM = [M:YLV2]YVALE and [F:YVS]YLIN = [M:YLV2]YLINF
+  Read [F:YVS]YVS0 Last
+  If !fstat
+    COD = [F:YVS]YLINSTOCK + 1
+  Else
+    COD = 0
+  Endif
+  Filter [F:YVS]
+
+  [F:YVS]YPRHNUM = [M:YLV2]YVALE
+  [F:YVS]YLIN = [M:YLV2]YLINF
+  [F:YVS]YLINSTOCK = COD
+  [F:YVS]YCANPRELIN = [M:YLV]YCANPRELINF
+  [F:YVS]YUBICACION = [M:YLV]YUBICACIONF
+  LO = len([M:YLV]YITMF)
+  [F:YVS]YLOTE =  right$([M:YLV]YLOTEF,LO+4)
+  [F:YVS]YPALLET = [M:YLV]YPALLETF
+  #<Y0062>
+  Read [F:YPRE]PRE0 = [M:YLV2]YVALE;[M:YLV2]YLINF
+  If !fstat
+    If [F:YPRE]YLINPADRE <> 0
+      WYQTYHIJO = [F:YPRE]QTYSTU
+      WYLINPADRE = [F:YPRE]YLINPADRE
+      Filter [F:YPRE2] Where [F:YPRE2]PRHNUM = [M:YLV2]YVALE and [F:YPRE2]ORILIN = WYLINPADRE
+      Read First
+      If !fstat
+        WYQTYPADREORI = [F:YPRE2]QTYSTU
+      Endif
+      Filter [F:YPRE2]
+    Endif
+  Endif
+  [F:YVS]YLINPADRE = WYLINPADRE
+  If WYQTYHIJO <> 0
+    [F:YVS]YQTYPADRE = [M:YLV]YCANPRELINF*WYQTYPADREORI/WYQTYHIJO
+  Endif
+  #</Y0062>
+  Write [F:YVS]
+  If fstat
+   Call FSTA("YVS") From GLOCK
+  Endif
+Return
