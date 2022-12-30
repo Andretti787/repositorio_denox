@@ -1,0 +1,94 @@
+$ACTION
+Return
+
+$APRES_CRE
+If GOK < 1 : Return : Endif
+If !clalev([F:YCTRE]) : Local File YCTRETQ [YCTRE] : Endif
+If !clalev([F:YITF]) : Local File ITMFACILIT [YITF] : Endif
+Local Integer CONTADOR : Raz CONTADOR
+Local Integer YPCKCAP : Raz YPCKCAP
+For WI = 0 To [M:MFG1]NBLIG-1
+  Read [F:YITF]ITF0=[M:MFG1]ITMREF(WI);[M:MFG0]MFGFCY
+  If fstat = 0
+    Local Integer ETIQUETAS : Raz ETIQUETAS
+    Local Integer PICO : Raz PICO
+    Local Integer LST_ETIQ : Raz LST_ETIQ
+#    If GUSER = 'ZZD02' : Infbox("1") : Endif
+    If [F:YITF]PCKCAP <> 0
+      ETIQUETAS = [M:MFG1]UOMEXTQTY(WI)/[F:YITF]PCKCAP
+      If mod([M:MFG1]UOMEXTQTY,[F:YITF]PCKCAP) <> 0 : PICO = mod([M:MFG1]UOMEXTQTY,[F:YITF]PCKCAP) : Endif
+#      If GUSER = 'ZZD02' : Infbox("2") : Endif
+      For WII = 0 To ETIQUETAS-1
+        #CREACION ETIQUETA
+        Raz [F:YCTRE]
+        [F:YCTRE]YNUMETI = [M:MFG0]MFGNUM+"-"+num$(WII+1)
+        LST_ETIQ = WII+1
+        [F:YCTRE]YCONTADOR = WII+1
+        [F:YCTRE]YTIPETI = 1
+        [F:YCTRE]YORIETI = ""
+        [F:YCTRE]YDOCETI = [M:MFG0]MFGNUM
+        [F:YCTRE]YARTETI = [M:MFG1]ITMREF(WI)
+#        [F:YCTRE]YLOTETI = [M:MFG1]LOT(WI)
+#        [F:YCTRE]YLOTETI = "LOT"+"-"+[M:MFG0]MFGNUM
+        If [M:MFG1]LOT<> ''
+          [F:YCTRE]YLOTETI = [M:MFG1]LOT
+        Else
+          [F:YCTRE]YLOTETI = "LOT"+"-"+[M:MFG0]MFGNUM
+        Endif
+        [F:YCTRE]YENVETI = ""
+        [F:YCTRE]YCANETI = [F:YITF]PCKCAP
+        [F:YCTRE]YFCREAETI = date$
+        [F:YCTRE]YHCREAETI = time$
+        [F:YCTRE]YFIMPETI = date$
+        [F:YCTRE]YHIMPETI = time$
+#        [F:YCTRE]YHLECETI =
+#        [F:YCTRE]YFLECETI =
+#        [F:YCTRE]YFINTETI =
+#        [F:YCTRE]YHINTETI =
+        [F:YCTRE]YPICOETI = 1
+        Write [F:YCTRE]
+#        If GUSER = 'ZZD02' : Infbox("3") : Endif
+      Next
+      If PICO
+        #CREACION PICO
+        Raz [F:YCTRE]
+        [F:YCTRE]YNUMETI = [M:MFG0]MFGNUM+"-"+num$(LST_ETIQ+1)
+        [F:YCTRE]YCONTADOR = LST_ETIQ+1
+        [F:YCTRE]YTIPETI  = 1
+        [F:YCTRE]YORIETI = ""
+        [F:YCTRE]YDOCETI = [M:MFG0]MFGNUM
+        [F:YCTRE]YARTETI = [M:MFG1]ITMREF(WI)
+        [F:YCTRE]YLOTETI = [M:MFG1]LOT(WI)
+        [F:YCTRE]YENVETI = ""
+        [F:YCTRE]YCANETI = PICO
+        [F:YCTRE]YFCREAETI = date$
+        [F:YCTRE]YHCREAETI = time$
+        [F:YCTRE]YFIMPETI = date$
+        [F:YCTRE]YHIMPETI = time$
+#        [F:YCTRE]YHLECETI =
+#        [F:YCTRE]YFLECETI =
+#        [F:YCTRE]YFINTETI =
+#        [F:YCTRE]YHINTETI =
+        [F:YCTRE]YPICOETI = 2
+        Write [F:YCTRE]
+#        If GUSER = 'ZZD02' : Infbox("fstat"-num$(fstat)) : Endif
+      Endif
+    Else
+      #ERROR AMPAQUETADO = 0
+    Endif
+  Endif
+
+Next WI
+
+Gosub YIMPRIMIR
+
+
+Return
+#######################################################################################
+$YIMPRIMIR
+
+Return
+#######################################################################################
+$SETBOUT
+CHMEN += 'y'
+Return
