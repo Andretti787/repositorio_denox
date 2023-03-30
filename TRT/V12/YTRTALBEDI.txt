@@ -1,0 +1,896 @@
+#########################################################################################
+#Y0061 - Guardar emisor en pedido EDI (Para utilizarlo en la entrega)
+##################################################################################
+#Y0062 - Compuestos KIT en empaquetado
+##################################################################################
+
+#<AdxTL>@(#)9.0.0.0 $Revision$
+
+# Variables utilizadas en la parametrizacin de ficheros:
+#
+# Cabecera:
+#     EMISOR: Cdigo EDI del emisor del albaran, quien Factura
+#     ERSOCIAL: Razn social del emisor de la factura
+#     ECALLE: Domicilio del emisor de la factura
+#     EPOBLAC: Poblacin del emisor de la factura
+#     ECP: Cdigo Postal del emisor de la factura
+#     ENIF: NIF del emisor de la factura
+#     COMPRADOR: Cdigo EDI de Quien hace el pedido
+#     RECEPTOR: Cdigo EDI del Receptor de la mercanca
+#     CLIENTE Cdigo EDI del destinatario de la Factura (A quien se factura)
+#     PAGADOR: Cdigo EDI de Quien Paga
+#     DEPTO: Departamento
+#     NODO: Tipo de Factura
+#     SUMBRUTO: Suma de los Importes Brutos de las lneas (Precio_unitario * Cantidad)
+#     SUMNETO: Suma de los Importes Netos de las lneas (Precio_unitario * Cantidad)
+#     CARGOS: Suma de los importes de los cargos GLOBALES (elementos de facturacin)
+#     DESCUEN: Suma de los importes de los descuentos GLOBALES (elementos de facturacin)
+#     VTO: Fecha vencimiento (1..3)
+#     IMPVTO: Importe vencimiento (1..3)
+#
+# Detalle:
+#     NUMLINEA: Nmero de línea
+#     BRUTO: Precio_Bruto * Cantidad
+#     NETO: Precio_Neto * Cantidad
+#
+# Dto/Cargo Cabecera/Lneas:
+#     NUMDTO: Nmero Dto/Cargo
+#     NUMSECUEN: Secuencia de aplicacin de Dto/Cargo (cascada o paralelo)
+#     CALIF: Calificador de cargo o descuento | A=Descuento  C=Cargos.
+#     TIPODES: Tipo de descuento o cargo
+#     PORCEN: Porcentaje del descuento o cargo
+#     IMPDES: Importe del descuento o cargo
+#
+#     IDEMB: Contador de embalajes
+#     CPS: Contador de bultos de entregas
+#     CPSPADRE: Identificador de la jerarquia de bultos en entregas
+#     CANTEMB: Cantidad de embalajes en bultos de entregas.
+#     TIPEMB: Tipo de embalaje de bultos (201 = Palet, CT = Caja)
+#     DESCEMB: Descripcion tipo embalaje
+#     TIPO2: Tipo de embalaje de bultos (201 = Palet, CT = Caja)
+#     SSCC1: Identificador de los bultos en entregas. Calculado en tabla SPACKD
+
+$ACTION
+    Case ACTION
+        When "INIT"     : Gosub INIT
+        When "INIT_DIA" : Gosub INIT_DIA
+        When "CONTROLE" : Gosub CONTROLE
+        When "EXEC"     : Gosub EXEC
+    Endcase
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIT
+    If GSERVEUR : Onerrgo ERRBATCH : Endif
+
+    # Declaración de tablas
+    If clalev([F:YFE])=0  : Local File YEDIFMTSDH [YFE] : Endif
+    If clalev([F:YEE])=0  : Local File YEDISDHFIC [YEE] : Endif
+    If clalev([F:SDH])=0  : Local File SDELIVERY  [SDH] : Endif
+    If clalev([F:SDHX])=0 : Local File SDELIVERY [SDHX] : Endif
+    If clalev([F:SDH2])=0 : Local File SDELIVERY [SDH2] : Endif
+    If clalev([F:SDD])=0  : Local File SDELIVERYD [SDD] : Endif
+    If clalev([F:SOH])=0  : Local File SORDER     [SOH] : Endif
+    If clalev([F:YSE])=0  : Local File YSORDEREDI [YSE] : Endif
+    If clalev([F:BPR])=0  : Local File BPARTNER   [BPR] : Endif
+    If clalev([F:BPC])=0  : Local File BPCUSTOMER [BPC] : Endif
+    If clalev([F:CPY])=0  : Local File COMPANY    [CPY] : Endif
+    If clalev([F:FCY])=0  : Local File FACILITY   [FCY] : Endif
+    If clalev([F:BPA])=0  : Local File BPADDRESS  [BPA] : Endif
+    If clalev([F:ITM])=0  : Local File ITMMASTER  [ITM] : Endif
+    If clalev([F:TVT])=0  : Local File TABVAT     [TVT] : Endif
+    If clalev([F:TRA])=0  : Local File TABRATVAT  [TRA] : Endif
+    If clalev([F:PRS])=0  : Local File PRICSTRUCT [PRS] : Endif
+    If clalev([F:TPT])=0  : Local File TABPAYTERM [TPT] : Endif
+    If clalev([F:ADI])=0  : Local File ATABDIV    [ADI] : Endif
+    If clalev([F:ITU])=0  : Local File ITMBPC     [ITU] : Endif
+    If clalev([F:SPH])=0  : Local File SPACK      [SPH] : Endif
+    If clalev([F:SPD])=0  : Local File SPACKD     [SPD] : Endif
+
+    # Declaracin de varibles
+    Local Char    AUXCHAR(255), YEDISDHDIR(255), YEDISDHFRM(10), MENSAJE(255),
+&                 CRITERE(255), NOMFIC(255), WHORA(8), RESULT(255), CALIF(1),
+&                 TIPODES(GLONADI), EMISOR(20), ERSOCIAL(70), ECALLE(35), EPOBLAC(35), EPROVIN(35),
+&                 ECP(5), ENIF(17), COMPRADOR(17), RECEPTOR(17), CLIENTE(17),
+&                 PAGADOR(17), DEPTO(15), NODO(3), IDEMB(12), CPS(12), CPSPADRE(12), TIPEMB(3), DESCEMB(35), TIPO2(3), SSCC1(35)
+    Local Char EMIPED(20) #<Y0061>
+    Local Integer OKK, NBFAC, NUMLINEA, WTIPOFIC, STAT, NUMDTO, NUMSECUEN, CANTEMB, HAYBULTOS
+
+    Local Decimal RESULTDEC, ENT, DEC, NUMENT, NUMDEC, BRUTO, NETO, SUMBRUTO, SUMNETO,
+&                 PORCEN, IMPDES, CARGOS, DESCUEN, IMPVTO(1..3), YQTYPACK
+
+    Local Decimal CENVFAC
+
+
+    Local Date    WFECHA, VTO(1..3)
+
+    # Directorio de exportación de Albaranes de venta EDI
+    Call PARAM("","YEDISDHDI1",AUXCHAR) From ADOVAL
+    YEDISDHDIR += vireblc(AUXCHAR,2)
+    Call PARAM("","YEDISDHDI2",AUXCHAR) From ADOVAL
+    YEDISDHDIR += vireblc(AUXCHAR,2)
+
+    If YEDISDHDIR = ""
+        GERR=1 : OK=0
+        GMESSAGE ="Parmetro YEDISDHDI1/ YEDISDHDI2 no definido"
+    Else
+        Call EXISTE(YEDISDHDIR,OKK) From ORDSYS
+        If OKK<>2
+            GMESSAGE ="|" + YEDISDHDIR + "|\"
+            GMESSAGE+="Directorio de exportacin de albaranes no encontrado"
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+
+    # Formato ficheros albaranes EDI
+    Call PARAM("","YEDISDHFRM",YEDISDHFRM) From ADOVAL
+    If YEDISDHFRM=""
+        GMESSAGE ="No se ha definido formato de ficheros de albaranes EDI"
+        GERR=1 : FIN=1
+        Return
+    Else
+        Read [F:YFE]YFE0=YEDISDHFRM
+        If fstat
+            GMESSAGE ='Formato de fichero "' + YEDISDHFRM + '":'
+            GMESSAGE-="registro inexistente"
+            GERR=1 : FIN=1
+            Return
+        Endif
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$INIT_DIA
+    Raz [M:YDAL]
+    [M]SALFCY=GFCYDEF(5)
+    [M]TIPOENVIO=1
+    [M]WINVSTA=2
+Return
+
+#------------------------------------------------------------------------------#
+
+$CONTROLE
+    TMP=1
+    TIT="Generando mensajes EDI"
+Return
+
+#------------------------------------------------------------------------------#
+
+$EXEC
+    MENSAJE="Mensajes EDI - Albaranes"
+
+    If !GSERVEUR : Call OUVRE_TRACE(MENSAJE) From LECFIC :  Endif
+
+    Call ECR_TRACE(MENSAJE,0) From GESECRAN
+    Call ECR_TRACE(" ",0) From GESECRAN
+    Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+    Call PRTSCR("YALBEDI","YDAL","",0,1) From ATRTX3
+    Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+    Call ECR_TRACE(" ",0) From GESECRAN
+
+    Gosub LOAD_CRIT
+    Gosub PRINCIPAL
+
+    If !GSERVEUR : Call FERME_TRACE From LECFIC : Endif
+    TRA=1
+Return
+
+#------------------------------------------------------------------------------#
+
+$LOAD_CRIT
+    CRITERE='YEDIFLG=2'
+
+    If [M]SALFCY<>"" : CRITERE-='& SALFCY="' + [M]SALFCY + '"' : Endif
+
+#    If [M]WINVSTA=2 : CRITERE-='& CFMFLG=2' : Endif
+
+    If vireblc([M]VCRDEB,2)<>""
+        If [M]VCRDEB=[M]VCRFIN
+            CRITERE-='& SDHNUM="' + [M]VCRDEB + '"'
+        Else
+            CRITERE-='& SDHNUM>="' + [M]VCRDEB + '"'
+            CRITERE-='& SDHNUM<="' + [M]VCRFIN + '"'
+        Endif
+    Else
+        If vireblc([M]VCRFIN,2)<>"" : CRITERE-='& SDHNUM<="' + [M]VCRFIN + '"' : Endif
+    Endif
+
+    If vireblc([M]BPCINVDEB,2)<>""
+        If [M]BPCINVDEB=[M]BPCINVFIN
+            CRITERE-='& BPCINV="' + [M]BPCINVDEB + '"'
+        Else
+            CRITERE-='& BPCINV>="' + [M]BPCINVDEB + '"'
+            CRITERE-='& BPCINV<="' + [M]BPCINVFIN + '"'
+        Endif
+    Else
+        If vireblc([M]BPCINVFIN,2)<>"" : CRITERE-='& BPCINV<="' + [M]BPCINVFIN + '"' : Endif
+    Endif
+
+    If [M]STRDAT<>[0/0/0]
+        If [M]STRDAT=[M]ENDDAT
+            CRITERE-='& DLVDAT=[' + format$(GFMD,[M]STRDAT) + ']'
+        Else
+            CRITERE-='& DLVDAT>=[' + format$(GFMD,[M]STRDAT) + ']'
+            CRITERE-='& DLVDAT<=[' + format$(GFMD,[M]ENDDAT) + ']'
+        Endif
+    Else
+        If [M]ENDDAT<>[0/0/0] : CRITERE-='& DLVDAT<=[' + format$(GFMD,[M]ENDDAT) + ']' : Endif
+    Endif
+
+    Case [M]TIPOENVIO
+        When 1 : CRITERE-='& YEDIENVFLG<2'
+        When 2 : CRITERE-='& YEDIENVFLG=2'
+    Endcase
+Return
+
+#------------------------------------------------------------------------------#
+
+$PRINCIPAL
+    If [F:YFE]FMTTYP<>YEDISDHFRM
+        Read [F:YFE]YFE0=YEDISDHFRM
+        If fstat
+            MENSAJE ='Formato de fichero "' + YEDISDHFRM + '":'
+            MENSAJE-="registro inexistente"
+            Call ECR_TRACE(MENSAJE,1) From GESECRAN
+            Return
+        Endif
+    Endif
+
+    Gosub CTL_FCY
+    If OKK=0
+        Call ECR_TRACE(MENSAJE,1) From GESECRAN
+        Return
+    Endif
+
+    SAVIFS = adxifs
+    SAVIRS = adxirs
+    If [F:YFE]TYPFIL=3
+        adxifs = [F:YFE]SEPFLD
+    Else
+        adxifs = ""
+    Endif
+    adxirs = chr$(13)+chr$(10)
+
+#    Gosub DEL_FIC_EDI #Comentado por JEL
+
+    WFECHA = date$
+    WHORA  = time$
+
+    Raz NBFAC
+
+    For [F:SDH]SDH0 Where evalue(CRITERE)
+        Gosub VERIF_SDH
+        If OKK
+            If NBFAC=0
+                Call ECR_TRACE("Entregas tratadas:",0) From GESECRAN
+                Call ECR_TRACE(" ",0) From GESECRAN
+            Endif
+
+            NBFAC+=1
+            Call ECR_TRACE([F:SDH]SDHNUM,0) From GESECRAN
+            Gosub UPD_FLG
+            If GOK=1
+                Gosub WR_FICHERO
+            Endif
+        Else
+            If MENSAJE<>"" : Call ECR_TRACE(MENSAJE,1) From GESECRAN : Endif
+        Endif
+    Next
+
+    adxifs = SAVIFS
+    adxirs = SAVIRS
+Return
+
+#------------------------------------------------------------------------------#
+
+$CTL_FCY
+    Raz MENSAJE, EMISOR, ERSOCIAL, ECALLE, EPOBLAC, ECP, ENIF
+    OKK=1
+
+    # Cdigo EDI Emisor
+    If [F:FCY]FCY<>[M:YDAL]SALFCY
+        Read [F:FCY]FCY0=[M:YDAL]SALFCY
+        If fstat
+            MENSAJE = "Planta" - [M:YDAL]SALFCY - "no existe"
+            OKK = 0 : Return
+        Endif
+    Endif
+
+    If [F:CPY]CPY<>[F:FCY]LEGCPY
+        Read [F:CPY]CPY0=[F:FCY]LEGCPY
+        If fstat
+            MENSAJE = "Sociedad" - [F:FCY]LEGCPY - "no existe"
+            OKK = 0 : Return
+        Endif
+    Endif
+
+    EMISOR=vireblc([F:FCY]YEANCOD,2)
+
+    If EMISOR=""
+        MENSAJE = "No existe cdigo EDI para el emisor de la factura (" + [F:FCY]FCY + ")"
+        OKK = 0 : Return
+    Endif
+
+    Read [F:BPA]BPA0=2;[F:CPY]CPY;[F:CPY]BPAADD
+    If fstat
+        MENSAJE = "No existe direccin por defecto para la sociedad" - [F:CPY]CPY
+        OKK = 0 : Return
+    Else
+        ERSOCIAL=[F:CPY]CPYNAM
+        ECALLE=[F:BPA]BPAADDLIG(0)
+        EPOBLAC=[F:BPA]CTY
+        ECP=[F:BPA]POSCOD
+        ENIF=[F:CPY]CRN
+        EPROVIN = [F:BPA]SAT
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$DEL_FIC_EDI
+    # 1.- Fichero cabecera de la entrega (CABALB.TXT)
+    NOMFIC=filpath(YEDISDHDIR,[F:YFE]NOMFICCAB,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 5.- Fichero líneas de la entrega (LINALB.TXT)
+    NOMFIC=filpath(YEDISDHDIR,[F:YFE]NOMFICLIN,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+
+    # 7.- Fichero Embalajes por entrega (EMBALB.TXT)
+    NOMFIC=filpath(YEDISDHDIR,[F:YFE]NOMFICDTOL,"txt")
+    If filinfo(NOMFIC,0) > 0 : Call EFFACE(NOMFIC,OKK) From ORDSYS : Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$VERIF_SDH
+    Raz MENSAJE, COMPRADOR, RECEPTOR, CLIENTE, PAGADOR, DEPTO, NODO, CARGOS, DESCUEN,
+&       VTO, IMPVTO
+    Raz EMIPED #<Y0061>
+
+    # Se comprueba que la entrega tenga bultos. Si no es así, no se procesa la entrega.
+    Filter [F:SPH] Where VCRTYP = 4 & VCRNUM = [F:SDH]SDHNUM
+    OKK = rowcount([F:SPH])
+    Filter [F:SPH]
+#    If OKK = 0
+#        MENSAJE = [F:SDH2]SDHNUM
+#        MENSAJE+= ": Entrega sin bultos, no se procesa"
+#        Return
+#    Endif
+
+    OKK=1
+
+    If [F:BPC]BPCNUM<>[F:SDH]BPCORD
+        Read [F:BPC]BPC0=[F:SDH]BPCORD
+        If fstat
+            MENSAJE = "Cliente" - [F:SDH]BPCORD - "no existe"
+            OKK=0 : Return
+        Endif
+    Endif
+
+    If [F:BPR]BPRNUM<>[F:SDH]BPCORD
+        Read [F:BPR]BPR0=[F:SDH]BPCORD
+        If fstat
+            MENSAJE = "Tercero" - [F:SDH]BPCORD - "no existe"
+            OKK=0 : Return
+        Endif
+    Endif
+
+    Raz [F:SOH]
+    If [F:SDH]SOHNUM <> ""
+        Read [F:SOH]SOH0=[F:SDH]SOHNUM
+        If fstat : Raz [F:SOH] : Endif
+    Else #JPL - Si tiene varios pedidos leo el de la primera línea
+      Filter [F:SDD] Where SDHNUM = [F:SDH]SDHNUM
+      Read [F:SDD]SDD0 First
+      If fstat = 0
+        Read [F:SOH]SOH0=[F:SDD]SOHNUM
+        If fstat : Raz [F:SOH] : Endif
+      Endif
+      Filter [F:SDD]
+    Endif
+
+    If [F:SOH]SOHNUM <> ""
+        Read [F:YSE]YSE0=[F:SOH]SOHNUM
+        If fstat : Raz [F:YSE] : Endif
+    Endif
+    COMPRADOR = [F:YSE]YEANPIDE
+    RECEPTOR  = [F:YSE]YEANRECEPT
+    CLIENTE   = [F:YSE]YEANFACTUR
+    PAGADOR   = [F:YSE]YEANPAGA
+    DEPTO     = [F:YSE]YSECCION
+    EMIPED    = [F:YSE]YEMISOR #<Y0061>
+
+    If COMPRADOR = ""
+        COMPRADOR = func GET_EANCOD([F:SDH]BPCORD,[F:SDH]BPAADD)
+        If COMPRADOR = ""
+            MENSAJE = [F:SDH2]SDHNUM
+            MENSAJE+= ': Cdigo EAN de "Quién pide" no encontrado'
+            OKK=0 : Return
+        Endif
+    Endif
+
+    If RECEPTOR = ""
+        RECEPTOR = func GET_EANCOD([F:SDH]BPCORD,[F:SDH]BPAADD)
+        If RECEPTOR = ""
+            MENSAJE = [F:SDH2]SDHNUM
+            MENSAJE+= ': Cdigo EAN de "Quién recibe" no encontrado'
+            OKK=0 : Return
+        Endif
+    Endif
+
+    If CLIENTE = ""
+        CLIENTE = func GET_EANCOD([F:SDH]BPCORD,[F:SDH]BPAADD)
+        If CLIENTE = "" : CLIENTE = COMPRADOR : Endif
+    Endif
+
+    If PAGADOR = ""
+        # Ojo: En la propuesta de interfaz de EDICOM, pagador no es obligatorio,
+        #      pero si lo es para CARREFOUR
+
+        PAGADOR = func GET_EANCOD([F:SDH]BPCORD,[F:SDH]BPAADD)
+        If CLIENTE = "" : CLIENTE = COMPRADOR : Endif
+    Endif
+
+    Read [F:BPA]BPA0=1;[F:SDH]BPCORD;[F:SDH]BPAADD
+    If fstat
+        Read [F:BPA]BPA0=1;[F:BPR]BPRNUM;[F:BPR]BPAADD
+        If fstat : Raz [F:BPA] : Endif
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$UPD_FLG
+    Call DEBTRANS From GLOCK
+    Gosub TRT1
+Return
+
+#------------------------------------------------------------------------------#
+
+$TRT1
+    GOK=1
+    Trbegin [SDH]
+
+    Readlock [F:SDH]SDH0 Curr
+    If fstat=1
+        GOK=-1 : GLOCK="$SDELIVERY"+[F:SDH]SDHNUM          : Goto ROL_TRT1
+    Elsif fstat
+        GOK=0  : Call RSTA("SDH",[F:SDH]SDHNUM) From GLOCK : Goto AB_TRT1
+    Endif
+
+    [F:SDH]YEDIENVFLG=2
+    [F:SDH]YEDIDATE=WFECHA
+    [F:SDH]YEDITIME=WHORA
+    Rewrite [F:SDH]
+
+    If fstat : GOK=0 : Call FSTA("SDH") From GLOCK : Goto AB_TRT1 : Endif
+
+    Commit
+Return
+
+#-- Bloqueo
+$ROL_TRT1
+    Rollback
+    Call ROLL From GLOCK
+    If GROLL
+        If GTRACE <> ""
+            Call ECR_TRACE([F:SDH]SDHNUM-mess(17,107,1),1) From GESECRAN
+        Else
+            If GMESSAGE <> "" : GMESSAGE += "\" : Endif
+            GERR=1 : GMESSAGE += [F:SDH]SDHNUM-mess(17,107,1)
+        Endif
+    Else
+        Goto TRT1
+    Endif
+Return
+
+#-- Rollback
+$AB_TRT1
+    Rollback
+    If GTRACE <> ""
+        Call ECR_TRACE([F:SDH]SDHNUM-mess(17,107,1),1) From GESECRAN
+    Else
+        If GMESSAGE <> "" GMESSAGE += "\" Endif
+        GERR=1 : GMESSAGE += [F:SDH]SDHNUM-mess(17,107,1)
+    Endif
+Return
+
+#------------------------------------------------------------------------------#
+
+$WR_FICHERO_OLD #Cambiado por JEL. Se usa la versión que tiene Trilla/Famesa en V8.
+    Raz NUMLINEA, SUMBRUTO, SUMNETO, CPS, CPSPADRE, CANTEMB, TIPEMB, SSCC1
+
+    # 3.- Fichero Embalajes por Entrega (EMBALB.TXT)
+    Gosub DTOLFAC
+    For [F:SPD]SPD0 Where VCRTYP=4 & VCRNUM=[F:SDH]SDHNUM
+        If [F:SDD]SDHNUM <> [F:SPD]VCRNUM or [F:SDD]SDDLIN <> [F:SPD]VCRLIN
+            Read [F:SDD]SDD0=[F:SPD]VCRNUM;[F:SPD]VCRLIN
+            If fstat : Raz [F:SDD] : Endif
+        Endif
+
+        If [F:ITM]ITMREF<>[F:SDD]ITMREF
+            Read [F:ITM]ITM0=[F:SDD]ITMREF
+            If fstat : Raz [F:ITM] : Endif
+        Endif
+
+        If [F:ITU]ITMREF<>[F:SDD]ITMREF or [F:ITU]BPCNUM<>[F:SDH]BPCORD
+            Read [F:ITU]ITU0=[F:SDD]ITMREF;[F:SDH]BPCORD
+            If fstat : Raz [F:ITU] : Endif
+        Endif
+
+        NUMLINEA+=1
+        SUMBRUTO+=arr([F:SDD]GROPRI*[F:SDD]QTY,0.001)
+        SUMNETO+=arr([F:SDD]NETPRI*[F:SDD]QTY,0.001)
+
+        # 1.- Fichero lneas de la factura (LINFAC.TXT)
+        Gosub LINFAC
+    Next
+
+    # 2.- Fichero cabecera de la factura (CABFAC.TXT)
+    Gosub CABFAC
+
+Return
+#------------------------------------------------------------------------------#
+$WR_FICHERO
+    Raz NUMLINEA, SUMBRUTO, SUMNETO, CPS, CPSPADRE, CANTEMB, TIPEMB, SSCC1
+
+    # 3.- Fichero Embalajes por Entrega (EMBALB.TXT)
+    Gosub DTOLFAC
+  #YMLGA - Ini
+    # Juanma. Cambiamos el orden para que salgan todas las líneas del mismo embalage juntas
+    # sino EDI no las reconoce
+    #For [F:SPD]SPD0 Where VCRTYP=4 & VCRNUM=[F:SDH]SDHNUM
+
+    If [F:SDH]PACFLG=2 Then # HAY EMPAQUETADO
+
+        For [F:SPD]SPD3 Where VCRTYP=4 & VCRNUM=[F:SDH]SDHNUM
+
+
+            If [F:SDD]SDHNUM <> [F:SPD]VCRNUM or [F:SDD]SDDLIN <> [F:SPD]VCRLIN
+                Read [F:SDD]SDD0=[F:SPD]VCRNUM;[F:SPD]VCRLIN
+                If fstat : Raz [F:SDD] : Endif
+            Endif
+
+            If [F:ITM]ITMREF<>[F:SDD]ITMREF
+                Read [F:ITM]ITM0=[F:SDD]ITMREF
+                If fstat : Raz [F:ITM] : Endif
+            Endif
+
+            If [F:ITU]ITMREF<>[F:SDD]ITMREF or [F:ITU]BPCNUM<>[F:SDH]BPCORD
+                Read [F:ITU]ITU0=[F:SDD]ITMREF;[F:SDH]BPCORD
+                If fstat : Raz [F:ITU] : Endif
+            Endif
+            If find([F:SDD]LINTYP,3,7)=0 #Y0062
+              NUMLINEA+=1
+              SUMBRUTO+=arr([F:SDD]GROPRI*[F:SDD]QTY,0.001)
+              SUMNETO+=arr([F:SDD]NETPRI*[F:SDD]QTY,0.001)
+
+              CENVFAC = [F:SPD]QTY #JMME
+
+              # 1.- Fichero lneas de la factura (LINFAC.TXT)
+              Gosub LINFAC
+            Endif #Y0062
+        Next
+    Else # NO HAY EMPAQUETADO
+
+        ## JMME PARA QUE NO MUESTRE LAS LINEAS DE KITS
+        ## For [F:SDD]SDD0 Where SDHNUM=[F:SDH]SDHNUM
+        For [F:SDD]SDD0 Where SDHNUM=[F:SDH]SDHNUM and find([F:SDD]LINTYP,1,2,6,10,13) <> 0
+
+            If [F:ITM]ITMREF<>[F:SDD]ITMREF
+                Read [F:ITM]ITM0=[F:SDD]ITMREF
+                If fstat : Raz [F:ITM] : Endif
+            Endif
+
+            If [F:ITU]ITMREF<>[F:SDD]ITMREF or [F:ITU]BPCNUM<>[F:SDH]BPCORD
+                Read [F:ITU]ITU0=[F:SDD]ITMREF;[F:SDH]BPCORD
+                If fstat : Raz [F:ITU] : Endif
+            Endif
+
+            NUMLINEA+=1
+            SUMBRUTO+=arr([F:SDD]GROPRI*[F:SDD]QTY,0.001)
+            SUMNETO+=arr([F:SDD]NETPRI*[F:SDD]QTY,0.001)
+
+            CENVFAC = [F:SDD]QTY
+            # 1.- Fichero lneas de la factura (LINFAC.TXT)
+            Gosub LINFAC
+        Next
+
+    Endif
+    #YMLGA - fin
+
+    # 2.- Fichero cabecera de la factura (CABFAC.TXT)
+    Gosub CABFAC
+
+Return
+
+#------------------------------------------------------------------------------#
+
+$DTOLFAC
+    Local Char VALOR(18)
+    Local Integer LRET(20)
+
+    WTIPOFIC=7
+    Raz CPSPADRE
+
+    NOMFIC=filpath(YEDISDHDIR,[F:YFE]NOMFICDTOL,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    # Se Genera el primer registro de embalajes, único para cada entrega
+    # utilizando las variables CPS, CPSPADRE, CANTEMB, TIPEMB, SSCC1
+
+#    IDEMB = "1"
+#    CPS = "1"
+#    NUMSECUEN = 1
+#    CANTEMB = 1
+#    TIPEMB = "201"
+#    DESCEMB = "Palet ISO"
+#    TIPO2 = ""
+#    SSCC1 = ""
+#    Gosub ENREG
+#
+#    # Se genera el 2 registro de embalajes
+#    IDEMB = "2"
+#    CPS = "2"
+#    CPSPADRE = "1"
+#    NUMSECUEN = 2
+#    CANTEMB = 1
+#    TIPEMB = "201"
+#    DESCEMB = "Palet ISO"
+#    TIPO2 = "CT"
+#    SSCC1=""
+#    Gosub ENREG
+
+    # Para cada bulto de la entrega generamos un registro utilizando
+    # las variables CPS, CPSPADRE, CANTEMB, TIPEMB, SSCC1, etc.
+
+        #JPL - (FAMESA) Genero una línea de empaquetado ficticio del que depende el resto de bultos
+        IDEMB = "1"
+        CPS = "1"
+        CPSPADRE = ""
+        CANTEMB = [F:SDH]PACNBR
+        TIPEMB = ""
+        DESCEMB = ""
+        TIPO2 = ""
+        If [F:SDH]BPCORD = "550272"
+          Call NUMERO_SSCC([F:FCY]FCY,"",VALOR,LRET) From FUNPKD #Para el cliente Metro genero un SSCC en este bulto ficticio
+          SSCC1 = VALOR
+        Else
+          SSCC1 = ""
+        Endif
+
+        Gosub ENREG
+
+    Raz NUMSECUEN
+    For [F:SPH]SPH0 Where VCRTYP = 4 and VCRNUM = [F:SDH]SDHNUM
+        NUMSECUEN += 1
+#        IDEMB = num$(NUMSECUEN+1)
+        IDEMB = num$(func DIMEPACSEC([F:SDH]SDHNUM, [F:SPH]PACNUM))
+        CPS = num$(NUMSECUEN+1)
+        CPSPADRE = "1"
+        CANTEMB = 1
+        TIPEMB = [F:SPH]PCK
+        TIPEMB = ""  #JPL - Fuerzo a blanco el tipo embalaje (FAMESA)
+        DESCEMB = ""
+        TIPO2 = ""
+        SSCC1 = [F:SPH]SCCCOD
+        Gosub ENREG
+    Next
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$LINFAC
+    WTIPOFIC=5
+    NOMFIC=filpath(YEDISDHDIR,[F:YFE]NOMFICLIN,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    IDEMB = num$(func DIMEPACSEC([F:SDH]SDHNUM, [F:SPD]PACNUM)) #Cálculo nº bulto
+    YQTYPACK = [F:SPD]QTY
+
+    Gosub ENREG
+
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$OBSLFAC
+
+Return
+
+#------------------------------------------------------------------------------#
+
+$CABFAC
+    WTIPOFIC=1
+    NOMFIC=filpath(YEDISDHDIR,[F:YFE]NOMFICCAB,"txt")
+    If filinfo(NOMFIC,0) > 0
+        Openo NOMFIC Using [YEDI]
+    Else
+        Openo NOMFIC, 0 Using [YEDI]
+    Endif
+
+    Gosub ENREG
+
+    Openo Using [YEDI]
+Return
+
+#------------------------------------------------------------------------------#
+
+$OBSFAC
+Return
+
+#------------------------------------------------------------------------------#
+
+$DTOFAC
+Return
+
+#------------------------------------------------------------------------------#
+
+$IMPFAC
+Return
+
+#------------------------------------------------------------------------------#
+
+$ENREG
+    For [F:YEE]YEE0 Where TIPOFIC=WTIPOFIC and FMTTYP=YEDISDHFRM
+        Raz RESULT, AUXCHAR
+
+        If [F:YEE]FRM<>""
+            Onerrgo ERREUR
+            RESULT = num$(evalue([F:YEE]FRM))
+            Onerrgo
+        Endif
+
+        Call PARTE_DEC([F:YEE]LONGITUD,ENT,DEC,STAT)
+        LONG = ENT
+        If DEC>0
+            If [F:YFE]SEPDEC<>"" : LONG += 1 : Endif
+            LONG += DEC
+        Endif
+
+        Case [F:YEE]TIPO
+            When 1 : # Alfanumrico
+                RESULT = toupper(ctrans(left$(RESULT+space$(LONG),LONG)))
+            When 2 : # Numrico
+                # 1- Redondeo
+                RESULTDEC=val(RESULT)
+                RESULTDEC=arr(RESULTDEC,10^-DEC)
+
+                # 2- Parte entera / Parte decimal
+                NUMENT = int(RESULTDEC)
+                NUMDEC = RESULTDEC-NUMENT
+
+                # 3- Construir cadena
+                If NUMDEC<>0
+                    AUXCHAR = mid$(num$(NUMDEC),3,len(num$(NUMDEC))-2)
+                    AUXCHAR+= string$(DEC-len(AUXCHAR),"0")
+                Else
+                    AUXCHAR = num$(NUMDEC)
+                Endif
+
+                RESULT = num$(NUMENT)
+                If DEC>0
+                    If [F:YFE]SEPDEC<>"" : RESULT+= vireblc([F:YFE]SEPDEC,2) : Endif
+                    RESULT+= AUXCHAR
+                Endif
+
+                RESULT = right$(string$(LONG,"0")+RESULT,len(RESULT)+1)
+            When 3 : # Fecha (AAAAMMDD)
+                RESULT = mid$(RESULT,7,4)+mid$(RESULT,4,2)+mid$(RESULT,1,2)
+            When 4 : # Fecha (AAAAMMDDhhmm)
+                RESULT = mid$(RESULT,7,4)+mid$(RESULT,4,2)+mid$(RESULT,1,2)   #+"0000"
+        Endcase
+        RESULT = left$(RESULT+space$(LONG),LONG)
+
+        Wrseq RESULT; Using [YEDI]
+    Next
+    Wrseq "" Using [YEDI]
+Return
+
+$ERREUR
+Resume
+
+#------------------------------------------------------------------------------#
+
+Subprog AM_SALFCY(VALEUR)
+Variable Char    VALEUR()
+    Call GETDEV(VALEUR) From DEVSUB
+End
+
+#------------------------------------------------------------------------------#
+
+Subprog AM_STRDAT(VALEUR)
+Variable Date    VALEUR
+    If VALEUR <> [0/0/0] : [M]ENDDAT = VALEUR : Endif
+End
+
+#------------------------------------------------------------------------------#
+
+Subprog AM_VCRDEB(VALEUR)
+Variable Char    VALEUR()
+    If VALEUR <> "" : [M]VCRFIN = VALEUR : Endif
+End
+
+#------------------------------------------------------------------------------#
+
+Subprog AM_BPCINVDEB(VALEUR)
+Variable Char    VALEUR()
+    If VALEUR <> "" : [M]BPCINVFIN = VALEUR : Endif
+End
+
+#------------------------------------------------------------------------------#
+
+Subprog PARTE_DEC(NUM,ENT,DEC,STAT)
+Value    Decimal NUM
+Variable Decimal ENT, DEC
+Variable Integer STAT
+
+    STAT=1 : DEC=0
+
+    ENT = int(NUM)
+    DEC  = NUM-ENT
+
+    If ENT=0   : STAT=0 : End : Endif
+    If DEC=0   : End    : Endif
+    If DEC<0.1 : STAT=0 : End : Endif
+
+    While DEC<>int(DEC)
+        DEC *= 10
+    Wend
+End
+
+#------------------------------------------------------------------------------#
+
+Funprog GET_EANCOD(CLIENTE, DIRECCION)
+Value Char CLIENTE()
+Value Char DIRECCION()
+Local Char EANCOD(20)
+
+  If clalev([F:BPA])=0 : Local File BPADDRESS [BPA] : Endif
+
+  Raz EANCOD
+  Read [F:BPA]BPA0 = 1; CLIENTE; DIRECCION
+  If fstat : Raz [F:BPA] : Endif
+  EANCOD = [F:BPA]YEANCOD
+
+End EANCOD
+
+
+#------------------------------------------------------------------------------#
+
+$ERRBATCH
+    Call ECR_TRACE(errmes$(errn)-num$(errl)-errm,1) From GESECRAN
+End
+
+#------------------------------------------------------------------------------#
+Funprog DIMEPACSEC(CVCRNUM, CPACNUM) #Cálculo nº bulto
+Variable Char CVCRNUM
+Variable Char CPACNUM
+
+
+If clalev([F:YSPH])=0 : Local File SPACK    [YSPH] : Endif
+I=1
+Filter [YSPH] Where VCRNUM=CVCRNUM
+#Order By SPH0
+  For [YSPH]SPH0
+    I+=1
+    If PACNUM=CPACNUM
+      Break
+    Endif
+Next
+Close File [YSPH]
+End I
