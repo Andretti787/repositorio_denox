@@ -4535,7 +4535,7 @@ public class Entregas extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        jDialog10.setTitle("Etiquetas Dascher");
+        jDialog10.setTitle("Etiquetas Dascher/XPO/MRW");
         jDialog10.setBackground(new java.awt.Color(204, 255, 51));
         jDialog10.setBounds(new java.awt.Rectangle(500, 600, 800, 600));
         jDialog10.setLocation(new java.awt.Point(0, 0));
@@ -7387,7 +7387,18 @@ public class Entregas extends javax.swing.JFrame {
             
                
                 if (jTb_dascher.getValueAt(i, 13)==null) { //si no hay anterior envío lo ejecuto
-                    generar_fichero_dascher(i);
+                    
+                     if (jRadioButton_DASCHER.isSelected()){
+                               generar_fichero_dascher(i);
+                          }
+                     else if   (jRadioButton_XPO.isSelected()){
+                                generar_fichero_xpo(i); 
+                                ejecutar_sendftp("CMD /C C:\\XPO\\send.bat");
+                          }
+                     else if   (jRadioButton_MRW.isSelected()){
+                                generar_fichero_mrw(i); 
+                                //ejecutar_sendftp("CMD /C C:\\MRW\\send.bat");
+                          }
                 } else {//si ya ha sido enviado pregunto para volver a enviar
                     int opcion = 0;
                     opcion = JOptionPane.showConfirmDialog(this, "Albarán: " + jTb_dascher.getValueAt(i, 1) + " ya enviado, ¿reenviar?");
@@ -7528,11 +7539,8 @@ public class Entregas extends javax.swing.JFrame {
                 newFec = String.format("%-3s",' ') + newFec;
                 jTextArea11.append (newFec);
                 System.out.println("11");
-                
-                
-               
-                
-                                
+                                            
+                               
                 String sMailConsig = (String) model.getValueAt(pLinea, 10);
                 if (sMailConsig == null){
                     sMailConsig = "" + String.format("%80s", ' ');
@@ -7902,7 +7910,12 @@ public class Entregas extends javax.swing.JFrame {
                     sAdicional = "#TipoServicio=0370#";
                 }
                 
-                sAdicional = v_quote + sAdicional + v_quote + v_separador;
+                if (model.getValueAt(pLinea, 6).equals("PT")){
+                    sAdicional = "#TipoServicio=0220#"; //para envíos a Portugal es 0220
+                }
+                                
+                
+                sAdicional = v_quote + sAdicional + v_quote;
                 jTextArea11.append (sAdicional + "\n"); //añado el fin de línea en el último campo
                 
                                 

@@ -5438,7 +5438,7 @@
     </Component>
     <Container class="javax.swing.JDialog" name="jDialog10">
       <Properties>
-        <Property name="title" type="java.lang.String" value="Etiquetas Dascher"/>
+        <Property name="title" type="java.lang.String" value="Etiquetas Dascher/XPO/MRW"/>
         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
           <Color blue="33" green="ff" red="cc" type="rgb"/>
         </Property>
