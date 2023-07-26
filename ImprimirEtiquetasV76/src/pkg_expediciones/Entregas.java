@@ -6212,7 +6212,7 @@ public class Entregas extends javax.swing.JFrame {
                 "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND ADR.BPAADD_0 = DEL.BPAADD_0\n" +
                 "LEFT JOIN LIVE.ZSDELIVERY_PRINT_LOG ZLOG ON ZLOG.CODIGO = DEL.SDHNUM_0 AND  TIPO = 'DASCHER'\n" +   
                 "WHERE DEL.BPTNUM_0 IN ('025','20','036') AND DEL.SALFCY_0 = 'FAM'\n" +
-                "ORDER BY SDHNUM_0 DESC";
+                "ORDER BY SUBSTRING(SDHNUM_0,1,3), SDHNUM_0 DESC";
             }
             else{
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
@@ -6232,7 +6232,8 @@ public class Entregas extends javax.swing.JFrame {
                 "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND ADR.BPAADD_0 = DEL.BPAADD_0\n" +
                 "LEFT JOIN LIVE.ZSDELIVERY_PRINT_LOG ZLOG ON ZLOG.CODIGO = DEL.SDHNUM_0 AND  TIPO = 'DASCHER'\n" +   
                 "WHERE DEL.BPTNUM_0 IN ('025','20', '036') AND DEL.SALFCY_0 = 'FAM'\n" +
-                "AND SDHNUM_0 LIKE '" + jText_alb_dascher.getText() + "'\n";
+                "AND SDHNUM_0 LIKE '" + jText_alb_dascher.getText() + "'\n" +
+                "ORDER BY SDHNUM_0 DESC";
                  }
             
             rs = stmt.executeQuery(query);//rs contendrá todos los registros
