@@ -1,0 +1,507 @@
+#################################
+# Y0053 Ajuste peso lote-sublote
+# Fecha: 13/12/2021
+# Desarrollador: JEL
+#################################
+$DEBUT
+#BUSCAMOS LA PLANTA ASOCIADA AL USUARIO
+Local Char WFCY : Raz WFCY
+If !clalev([F:YSTO]) : Local File STOCK [YSTO] : Endif
+If !clalev([F:YSTL]) : Local File STOLOT [YSTL] : Endif
+If !clalev([F:YTUN]) : Local File TABUNIT [YTUN] : Endif
+If !clalev([F:YITM]) : Local File ITMMASTER [YITM] : Endif
+If !clalev([F:YAUS]) : Local File AUTILIS [YAUS] : Endif
+If !clalev([F:YAFT]) : Local File AFCTFCT [YAFT] : Endif
+Read[F:YAUS]CODUSR=GUSER
+If fstat = 0
+  Read[F:YAFT]AFT0=[F:YAUS]PRFFCT
+  If fstat = 0
+    WFCY = [F:YAFT]FCYDEF(7) #PLANTA POR DEFECTO PRODUCCION
+  Endif
+Endif
+[M:YAJP0]YFCY = WFCY
+Return
+
+##############################################################
+$OK
+Local Char WSTA : Raz WSTA
+Local Char WPCU : Raz WPCU
+Local Char WLOT : Raz WLOT
+Local Char WSLO : Raz WSLO
+Local Char WSERNUM : Raz WSERNUM
+Local Char WUBICACION : Raz WUBICACION
+Local Char WBPSLOT : Raz WBPSLOT
+
+Local Decimal WQTY_STOCK  : Raz WQTY_STOCK
+Local Decimal WQTY_STOCK2 : Raz WQTY_STOCK2
+Local Decimal WQTY_TRATAR : Raz WQTY_TRATAR
+
+Local Char TIT(50)
+WFCY = [M:YAJP0]YFCY
+#DESGLOSAR DATOS
+If WFCY <> ''
+  Local Integer INI_LOT : INI_LOT = instr(1,[M:YAJP0]YDATOS,'LOT')
+  Local Integer FIN_LOT : FIN_LOT = INI_LOT + 3
+  Local Integer LOT_LEN
+  WITMREF = mid$([M:YAJP0]YDATOS,1,INI_LOT-1)
+#  LOT_LEN = len([M:YCNPAR]YDATOS)-len(WITMREF)-6 #antiguo
+  #modificación formato etiqueta. Añaden S antes del sublote
+  LOT_LEN = instr(FIN_LOT,[M:YAJP0]YDATOS,'S')-instr(1,[M:YAJP0]YDATOS,'LOT')-3
+  WLOT = mid$([M:YAJP0]YDATOS,FIN_LOT,LOT_LEN)
+  #  WSLOT = mid$([M:YCHGU]YDATOS,21,5)
+  WSLOT = right$([M:YAJP0]YDATOS,FIN_LOT+LOT_LEN+1)
+  Case len(WSLOT)
+    When 1
+      WSLOT = "0000"+WSLOT
+    When 2
+      WSLOT = "000"+WSLOT
+    When 3
+      WSLOT = "00"+WSLOT
+    When 4
+      WSLOT = "0"+WSLOT
+  Endcase
+Endif
+
+Filter [F:YSTO] Where ITMREF = WITMREF and LOT = WLOT and SLO = WSLOT and STOFCY = WFCY
+If rowcount([F:YSTO])<1
+      Errbox("Stock no encontrado")
+      Return
+Else
+  For [F:YSTO]
+    #control stock bloqueado
+    If [F:YSTO]CUMWIPQTY <> 0 or [F:YSTO]CUMWIPQTA <> 0
+      Errbox("Stock bloqueado, consulte con su administrador")
+      Return
+    Endif
+    WQTY_STOCK += [F:YSTO]QTYSTU
+    WQTY_STOCK2 += [F:YSTO]QTYSTU
+    WSTA = [F:YSTO]STA
+    WPCU = [F:YSTO]PCU
+    WLOT = [F:YSTO]LOT
+    WSLO = [F:YSTO]SLO
+    WSERNUM = [F:YSTO]SERNUM
+    WUBICACION = [F:YSTO]LOC
+    WBPSLOT = [F:YSTO]BPSLOT
+  Next
+  Filter [F:YSTO]
+
+  #DECIMALES DE LA CANTIDAD
+  Local Decimal DECIMALES : Raz DECIMALES
+  Read [F:YTUN]TUN0=WPCU
+  If fstat <> 0 : Raz [F:YTUN] : Endif
+  DECIMALES = [F:YTUN]UOMDEC
+  If [F:YTUN]UOMDEC <> 0
+    DECIMALES = 1/10^DECIMALES
+  Else
+    DECIMALES = 1
+  Endif
+
+  Read [F:YSTL]STL0=WITMREF;WLOT;WSLOT
+  If fstat <> 0
+    Errbox("ERROR LOTE/Sublote incorrecto")
+    Return
+  Endif
+
+  WQTY_TRATAR = WQTY_STOCK - [M:YAJP0]YPESO
+  Local Char WDIR3 : WDIR3 = "IMPORT\VARIO\"
+  Local Char WFIC3(250) : WFIC3 = "AJUSTE-"+GUSER#+"-"+format$("DD[]MM[]YYYY",date$)+"-"+[M:YCHGU]YDATOS+"-"+[M:YCHGU]YUBICDEST
+  Local Char WEXT3 : WEXT3 = "TXT"
+
+  Read [F:YITM]ITM0=WITMREF
+  If fstat <> 0 : Raz [F:YITM] : Endif
+  Openo filpath(WDIR3,WFIC3,WEXT3),0 Using [FI5]
+  If WQTY_TRATAR < 0
+    Gosub ENTRADA_STOCK
+  Else
+    Gosub SALIDA_STOCK
+  Endif
+Endif
+Return
+##########################################################################################
+$ENTRADA_STOCK
+
+TIT = "Importar Entrada varia"
+
+If GSERVEUR
+    Onerrgo ERRBATCH
+Endif
+
+###Traza
+If !GSERVEUR
+  Call OUVRE_TRACE("Entrada varia") From LECFIC
+  Call ECR_TRACE(" ",0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE("Entrada varia",0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE(" ",0) From GESECRAN
+Endif
+If GSERVEUR
+  Call ECR_TRACE(" ",0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE(TIT + " " + date$ + " " + time$,0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE(" ",0) From GESECRAN
+Endif
+Gosub ESCRIBIR_YSMO_E
+Gosub ESCRIBIR_YSMR_L
+Gosub ESCRIBIR_YSMR_S
+Openo Using [FI5]
+Call IMPORTSIL("YSMR",filpath(WDIR3,WFIC3,WEXT3))  From GIMPOBJ
+
+Call ECR_TRACE("Fin de la traza.",0) From GESECRAN
+###Fin traza
+If !GSERVEUR
+  Call FERME_TRACE From LECFIC
+  TRA=1
+Endif
+If GERRTRACE <> 0
+  Errbox("Error, avise administrador:"-GMESSAGE)
+Endif
+Return
+##########################################################################################
+$SALIDA_STOCK
+#salida stock
+TIT = "Importar Salida varia"
+
+If GSERVEUR
+    Onerrgo ERRBATCH
+Endif
+
+###Traza
+If !GSERVEUR
+  Call OUVRE_TRACE("Salida varia") From LECFIC
+  Call ECR_TRACE(" ",0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE("Salida varia",0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE(" ",0) From GESECRAN
+Endif
+If GSERVEUR
+  Call ECR_TRACE(" ",0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE(TIT + " " + date$ + " " + time$,0) From GESECRAN
+  Call ECR_TRACE(string$(70,"-"),0) From GESECRAN
+  Call ECR_TRACE(" ",0) From GESECRAN
+Endif
+Gosub ESCRIBIR_YSMR_E
+Gosub ESCRIBIR_YSMO_L
+Gosub ESCRIBIR_YSMO_S
+Openo Using [FI5]
+Call IMPORTSIL("YSMO",filpath(WDIR3,WFIC3,WEXT3))  From GIMPOBJ
+
+Call ECR_TRACE("Fin de la traza.",0) From GESECRAN
+###Fin traza
+If !GSERVEUR
+  Call FERME_TRACE From LECFIC
+  TRA=1
+Endif
+If GERRTRACE <> 0
+  Errbox("Error, avise administrador:"-GMESSAGE)
+Endif
+Return
+
+#################################################################
+$ESCRIBIR_YSMR_E
+Gosub PON_SALTO
+##
+Wrseq "E";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRTYP
+Wrseq "19";                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRNUM
+Wrseq '';                                                 Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##STOFCY
+Wrseq WFCY;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##IPTDAT
+Wrseq date$;                                              Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRDES
+Wrseq 'Ajuste peso entrada';                             Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PJT
+Wrseq "";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##TRSCOD
+Wrseq "";                                                Using [FI5]
+Wrseq ";"                                                 Using [FI5]
+Gosub QUITA_SALTO
+Return
+#################################################################
+$ESCRIBIR_YSMR_L
+Gosub PON_SALTO
+Wrseq "L";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRLIN
+Wrseq "";                                                 Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##ITMREF
+Wrseq WITMREF;                                            Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##ITMDES1
+Wrseq [F:YITM]ITMDES1;                                    Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PCU
+Wrseq WPCU;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##QTYPCU
+Wrseq WQTY_TRATAR*(-1);                                        Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##STU
+Wrseq WPCU;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##QTYSTU
+Wrseq WQTY_TRATAR*(-1);                                        Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PRIORD
+Wrseq "";                                                 Using [FI5]
+Wrseq ";"                                                 Using [FI5]
+Gosub QUITA_SALTO
+Return
+#################################################################
+$ESCRIBIR_YSMR_S
+Gosub PON_SALTO
+Wrseq "S";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PCU
+Wrseq WPCU;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##QTYPCU
+Wrseq WQTY_TRATAR*(-1);                                        Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##BPSLOT
+Wrseq WBPSLOT;                                            Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##LOT
+Wrseq WLOT;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##SLO
+Wrseq WSLO;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+
+##LOC
+Wrseq WUBICACION;                                         Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##STA
+Wrseq WSTA;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##SERNUM
+Wrseq WSERNUM;                                            Using [FI5]
+Wrseq ";"                                                 Using [FI5]
+Gosub QUITA_SALTO
+Return
+#################################################################
+#################################################################
+$ESCRIBIR_YSMO_E
+Gosub PON_SALTO
+##
+Wrseq "E";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRTYP
+Wrseq "20";                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRNUM
+Wrseq '';                                                 Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##STOFCY
+Wrseq WFCY;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##IPTDAT
+Wrseq date$;                                              Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRDES
+Wrseq 'Ajuste peso salida';                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PJT
+Wrseq "E";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##TRSCOD
+Wrseq "E";                                                Using [FI5]
+Wrseq ";"                                                 Using [FI5]
+Gosub QUITA_SALTO
+Return
+#################################################################
+$ESCRIBIR_YSMO_L
+Gosub PON_SALTO
+Wrseq "L";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##VCRLIN
+Wrseq "";                                                 Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##ITMREF
+Wrseq WITMREF;                                            Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##ITMDES1
+Wrseq [F:YITM]ITMDES1;                                    Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PCU
+Wrseq WPCU;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##QTYPCU
+Wrseq WQTY_TRATAR;                                        Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##STU
+Wrseq WPCU;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##QTYSTU
+Wrseq WQTY_TRATAR;                                        Using [FI5]
+Wrseq ";"                                                 Using [FI5]
+
+Gosub QUITA_SALTO
+Return
+#################################################################
+$ESCRIBIR_YSMO_S
+Gosub PON_SALTO
+Wrseq "S";                                                Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##PCU
+Wrseq WPCU;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##QTYPCU
+Wrseq WQTY_TRATAR;                                        Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##LOT
+Wrseq WBPSLOT;                                            Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##LOT
+Wrseq WLOT;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##SLO
+Wrseq WSLO;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+
+##LOC
+Wrseq WUBICACION;                                         Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##STA
+Wrseq WSTA;                                               Using [FI5]
+Wrseq ";";                                                Using [FI5]
+
+##SERNUM
+Wrseq WSERNUM;                                            Using [FI5]
+Wrseq ";"                                                 Using [FI5]
+Gosub QUITA_SALTO
+Return
+#################################################################
+$ERRBATCH
+Call ECR_TRACE(errmes$(errn)-num$(errl)-ERR,1) From GESECRAN
+End
+######################################################################################
+$PON_SALTO
+SAVIFS=adxifs
+SAVIRS=adxirs
+adxifs=""
+adxirs=chr$(13)+chr$(10)
+Return
+######################################################################################
+$QUITA_SALTO
+adxifs = SAVIFS
+adxirs = SAVIRS
+Return
+##########################################################################################
+##########################################################################################
+Subprog AM_YDATOS(VALEUR)
+Variable Char    VALEUR()
+Local Char WITMREF : Raz WITMREF
+Local Char WLOT : Raz WLOT
+Local Char WSLOT : Raz WSLOT
+Local Decimal WSTOCK : Raz WSTOCK
+Local Char WFCY : Raz WFCY
+
+WFCY = [M:YAJP0]YFCY
+#DESGLOSAR DATOS
+If WFCY <> ''
+
+  Local Integer INI_LOT : INI_LOT = instr(1,VALEUR,'LOT')
+  Local Integer FIN_LOT : FIN_LOT = INI_LOT + 3
+  Local Integer LOT_LEN
+  WITMREF = mid$(VALEUR,1,INI_LOT-1)
+#  LOT_LEN = len([M:YCNPAR]YDATOS)-len(WITMREF)-6 #antiguo
+  #modificación formato etiqueta. Añaden S antes del sublote
+  LOT_LEN = instr(FIN_LOT,VALEUR,'S')-instr(1,VALEUR,'LOT')-3
+  WLOT = mid$(VALEUR,FIN_LOT,LOT_LEN)
+  #  WSLOT = mid$([M:YCHGU]YDATOS,21,5)
+  WSLOT = right$(VALEUR,FIN_LOT+LOT_LEN+1)
+  Case len(WSLOT)
+    When 1
+      WSLOT = "0000"+WSLOT
+    When 2
+      WSLOT = "000"+WSLOT
+    When 3
+      WSLOT = "00"+WSLOT
+    When 4
+      WSLOT = "0"+WSLOT
+  Endcase
+Endif
+
+
+Filter [F:YSTO] Where ITMREF = WITMREF and LOT = WLOT and SLO = WSLOT and STOFCY = WFCY
+If rowcount([F:YSTO])<1
+      Errbox("Stock no encontrado")
+      mkstat = 4
+      End
+Else
+    For [F:YSTO]
+    #control stock bloqueado
+    If [F:YSTO]CUMWIPQTY <> 0 or [F:YSTO]CUMWIPQTA <> 0
+      Errbox("Stock bloqueado, consulte con su administrador")
+      mkstat = 4
+      End
+    Endif
+    WSTOCK += [F:YSTO]QTYSTU
+  Next
+  Filter [F:YSTO]
+Endif
+
+[M:YAJP0]YITMREF = WITMREF
+Affzo [M:YAJP0]YITMREF
+[M:YAJP0]YPESO2 = WSTOCK
+Affzo [M:YAJP0]YPESO2
+
+End
