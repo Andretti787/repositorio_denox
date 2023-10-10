@@ -6204,8 +6204,8 @@ public class Entregas extends javax.swing.JFrame {
 
             if (pModo == 1) { 
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
-                ", SUBSTRING(ADR.BPADES_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.BPAADDLIG_2),1,32) AS DIR_CONSIG\n" +
-                ", SUBSTRING(CONCAT(ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.BPAADDLIG_2),33,62) AS DIR_2\n" +    
+                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
+                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
                 ", ADR.POSCOD_0 AS CP_CONSIG, ADR.CTY_0 AS POB_CONSIG, ADR.CRY_0 AS PAIS_CONSIG\n" +
                 ", CONCAT(REPLICATE('0', 3 - LEN(PACNBR_0)), PACNBR_0) AS BULTOS\n" +
                 ", CONCAT(REPLICATE('0', 5 - LEN(CAST(GROWEI_0 AS INTEGER))), CAST(GROWEI_0 AS INTEGER)) AS PESO\n" +
@@ -6223,8 +6223,8 @@ public class Entregas extends javax.swing.JFrame {
             }
             else{
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
-                ", SUBSTRING(ADR.BPADES_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.BPAADDLIG_2),1,32) AS DIR_CONSIG\n" +
-                ", SUBSTRING(CONCAT(ADR.BPAADDLIG_0, ADR.BPAADDLIG_1, ADR.BPAADDLIG_2),33,62) AS DIR_2\n" +    
+                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
+                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
                 ", ADR.POSCOD_0 AS CP_CONSIG, ADR.CTY_0 AS POB_CONSIG, ADR.CRY_0 AS PAIS_CONSIG\n" +
                 ", CONCAT(REPLICATE('0', 3 - LEN(PACNBR_0)), PACNBR_0) AS BULTOS\n" +
                 ", CONCAT(REPLICATE('0', 5 - LEN(CAST(GROWEI_0 AS INTEGER))), CAST(GROWEI_0 AS INTEGER)) AS PESO\n" +
@@ -7432,11 +7432,12 @@ public class Entregas extends javax.swing.JFrame {
             }
 
         }
+       
+        generar_fichero(11);
         if (send_xpo){ //para no realizar el envío tantas veces como líneas de albarán generadas
           ejecutar_sendftp("CMD /C C:\\XPO\\send.bat");  
             //System.out.println("Ejecutando send.bat para xpo");
         }
-        generar_fichero(11);
         consultar_alb_dascher(1);//relleno de nuevo la tabla para tener datos actualizados del último envío
         //ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
         
@@ -7895,7 +7896,9 @@ public class Entregas extends javax.swing.JFrame {
                 jTextArea11.append(sNomConsig);
                                 
                 String sDirConsig = (String) model.getValueAt(pLinea, 3);
-                sDirConsig = v_quote + sDirConsig + v_quote + v_separador;
+                String sDirConsig2 = (String) model.getValueAt (pLinea, 17);
+                System.out.println("dir2: " + sDirConsig2);
+                sDirConsig = v_quote + sDirConsig + sDirConsig2 + v_quote + v_separador;
                 jTextArea11.append(sDirConsig);
                                                
                 String sCP = (String) model.getValueAt(pLinea, 4);
