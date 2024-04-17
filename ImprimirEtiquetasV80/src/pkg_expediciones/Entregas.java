@@ -1000,6 +1000,8 @@ public class Entregas extends javax.swing.JFrame {
         jScrollPane17 = new javax.swing.JScrollPane();
         jTextArea12 = new javax.swing.JTextArea();
         jLabel83 = new javax.swing.JLabel();
+        jScrollPane18 = new javax.swing.JScrollPane();
+        jTextArea_ftpXPO = new javax.swing.JTextArea();
         buttonGroup_SSCC = new javax.swing.ButtonGroup();
         jPanel7 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -5071,6 +5073,13 @@ public class Entregas extends javax.swing.JFrame {
 
         jLabel83.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
 
+        jTextArea_ftpXPO.setBackground(new java.awt.Color(0, 0, 0));
+        jTextArea_ftpXPO.setColumns(20);
+        jTextArea_ftpXPO.setForeground(new java.awt.Color(255, 255, 255));
+        jTextArea_ftpXPO.setRows(5);
+        jTextArea_ftpXPO.setToolTipText("");
+        jScrollPane18.setViewportView(jTextArea_ftpXPO);
+
         javax.swing.GroupLayout jLayeredPane11Layout = new javax.swing.GroupLayout(jLayeredPane11);
         jLayeredPane11.setLayout(jLayeredPane11Layout);
         jLayeredPane11Layout.setHorizontalGroup(
@@ -5078,24 +5087,27 @@ public class Entregas extends javax.swing.JFrame {
             .addGroup(jLayeredPane11Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel83, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
+                .addGroup(jLayeredPane11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 329, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(710, Short.MAX_VALUE))
         );
         jLayeredPane11Layout.setVerticalGroup(
             jLayeredPane11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jLayeredPane11Layout.createSequentialGroup()
-                .addGroup(jLayeredPane11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(jLayeredPane11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jLayeredPane11Layout.createSequentialGroup()
-                        .addGap(45, 45, 45)
-                        .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jLayeredPane11Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane18, javax.swing.GroupLayout.PREFERRED_SIZE, 158, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel83, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
         jLayeredPane11.setLayer(jScrollPane17, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane11.setLayer(jLabel83, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane11.setLayer(jScrollPane18, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel59Layout = new javax.swing.GroupLayout(jPanel59);
         jPanel59.setLayout(jPanel59Layout);
@@ -5106,7 +5118,7 @@ public class Entregas extends javax.swing.JFrame {
                 .addGroup(jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel60, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLayeredPane11))
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel59Layout.setVerticalGroup(
             jPanel59Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -5124,7 +5136,7 @@ public class Entregas extends javax.swing.JFrame {
             jDialog11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jDialog11Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel59, javax.swing.GroupLayout.PREFERRED_SIZE, 821, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jDialog11Layout.setVerticalGroup(
@@ -6222,10 +6234,14 @@ public class Entregas extends javax.swing.JFrame {
                 "				   WHEN  2 THEN 'D'\n" +
                 "				   ELSE 'X' END AS PORTES\n" +
                 ", ADR.WEB_0 AS MAIL_CONSIG, ADR.TEL_0 AS TFNO_CONSIG, ZLOG.FECHA, DEL.DLVDAT_0 AS FEC_ENTREGA, DEL.YPACK_0 AS BULTOS2\n" +
+                ", CASE (SUBSTRING(TEX.TEXTE_0,1,1)) WHEN '{' THEN ''    \n" +
+                "                                ELSE SUBSTRING(REPLACE(REPLACE(TEX.TEXTE_0 ,CHAR(13),' '), CHAR(10),' '),1,149) END AS TEXTO\n" +  
                 "fROM LIVE.SDELIVERY DEL\n" +
                 "INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n" + 
                 "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND ADR.BPAADD_0 = DEL.BPAADD_0\n" +
                 "LEFT JOIN LIVE.ZSDELIVERY_PRINT_LOG ZLOG ON ZLOG.CODIGO = DEL.SDHNUM_0 AND  TIPO = 'DASCHER'\n" +   
+                "LEFT JOIN LIVE.BPDLVCUST BPD ON BPD.BPCNUM_0 = DEL.BPCORD_0 AND BPD.BPAADD_0 = DEL.BPAADD_0\n" +
+                "LEFT JOIN LIVE.TEXCLOB TEX ON TEX.CODE_0 = BPD.DLVTEX_0\n"    +
                 "WHERE DEL.BPTNUM_0 IN ('025','20','036') AND DEL.SALFCY_0 = 'FAM'\n" +
                 "ORDER BY SUBSTRING(SDHNUM_0,1,3), SDHNUM_0 DESC";
             }
@@ -6241,10 +6257,14 @@ public class Entregas extends javax.swing.JFrame {
                 "				   WHEN  2 THEN 'D'\n" +
                 "				   ELSE 'X' END AS PORTES\n" +
                 ", ADR.WEB_0 AS MAIL_CONSIG, ADR.TEL_0 AS TFNO_CONSIG, ZLOG.FECHA, DEL.DLVDAT_0 AS FEC_ENTREGA, DEL.YPACK_0 AS BULTOS2\n" +
+               ", CASE (SUBSTRING(TEX.TEXTE_0,1,1)) WHEN '{' THEN ''    \n" +
+                "                                ELSE SUBSTRING(REPLACE(REPLACE(TEX.TEXTE_0 ,CHAR(13),' '), CHAR(10),' '),1,149) END AS TEXTO\n" +
                 "fROM LIVE.SDELIVERY DEL\n" +
                 "INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n" +   
                 "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND ADR.BPAADD_0 = DEL.BPAADD_0\n" +
                 "LEFT JOIN LIVE.ZSDELIVERY_PRINT_LOG ZLOG ON ZLOG.CODIGO = DEL.SDHNUM_0 AND  TIPO = 'DASCHER'\n" +   
+                "LEFT JOIN LIVE.BPDLVCUST BPD ON BPD.BPCNUM_0 = DEL.BPCORD_0 AND BPD.BPAADD_0 = DEL.BPAADD_0\n" +
+                "LEFT JOIN LIVE.TEXCLOB TEX ON TEX.CODE_0 = BPD.DLVTEX_0\n"    +
                 "WHERE DEL.BPTNUM_0 IN ('025','20', '036') AND DEL.SALFCY_0 = 'FAM'\n" +
                 "AND SDHNUM_0 LIKE '" + jText_alb_dascher.getText() + "'\n" +
                 "ORDER BY SDHNUM_0 DESC";
@@ -6285,6 +6305,8 @@ public class Entregas extends javax.swing.JFrame {
                     String sVolumen = rs.getString("VOLUMEN");
                     String pdCte = rs.getString("PD_CTE");
                     String sBultos2 = rs.getString("BULTOS2");
+                    String sObs = rs.getString("TEXTO");
+                    
                     
                     //jText_pedproProv.setText(rs.getString("PEDPRO_PROV") + " " + rs.getString("PEDPRO_RAZON_SOCIAL"));
                     //rellenaTextArea(2, cod_art, sCant, dun14, sCap_dun, cod_ean);
@@ -6294,7 +6316,7 @@ public class Entregas extends javax.swing.JFrame {
                     //jCombo_alb_dasch.addItem(rs.getString("NUMALB")+ " " + rs.getString("NOM_CONSIG"));
 //                    System.out.println("Relleno tabla dascher");
                     model.addRow(new Object[]
-                    {cod_remite, num_alb, nom_consig,dir_consig, cp_consig, pob_consig, pais_consig, sBultos, sPeso, portes, mail_consig, tfno_consig ,false, fecha_log, fecha_entrega,"","", dir2, "", sVolumen, pdCte, sBultos2, false}); 
+                    {cod_remite, num_alb, nom_consig,dir_consig, cp_consig, pob_consig, pais_consig, sBultos, sPeso, portes, mail_consig, tfno_consig ,false, fecha_log, fecha_entrega, sObs,"", dir2, "", sVolumen, pdCte, sBultos2, false}); 
                
                                    
                 }
@@ -8874,6 +8896,7 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea12.append("ªXA\n");
                     jTextArea12.append("ªPQ2\n");
                     //jTextArea12.append("ªPON\n"); en las impresoras de XPO genera un caracter extraño, por eso lo quito.
+                    jTextArea12.append("ªCI0,00,194\n"); //Codifico los caraceres así porque se veía un ┬ al final de cada texto
                     jTextArea12.append("ªLH120,50\n");
                     jTextArea12.append("ªA0,48,34\n");
                     jTextArea12.append("ªFB800,1,,L\n");
@@ -8960,6 +8983,8 @@ public class Entregas extends javax.swing.JFrame {
       while ((line = reader.readLine())!= null) {
           if(jDialog10.isVisible())
               jTextArea_xpo.append(line + "\n");
+          if(jDialog11.isVisible())
+              jTextArea_ftpXPO.append(line + "\n");
           
           System.out.println(line);
       }
@@ -9551,6 +9576,7 @@ super.paintComponent(grafico);
     private javax.swing.JScrollPane jScrollPane15;
     private javax.swing.JScrollPane jScrollPane16;
     private javax.swing.JScrollPane jScrollPane17;
+    private javax.swing.JScrollPane jScrollPane18;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
@@ -9576,6 +9602,7 @@ super.paintComponent(grafico);
     private javax.swing.JTextArea jTextArea8;
     private javax.swing.JTextArea jTextArea9;
     private javax.swing.JTextArea jTextArea_NetUse;
+    private javax.swing.JTextArea jTextArea_ftpXPO;
     private javax.swing.JTextArea jTextArea_log;
     private javax.swing.JTextArea jTextArea_xpo;
     private javax.swing.JTextField jTextField_AlbBultos;
