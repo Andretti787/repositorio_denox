@@ -5751,7 +5751,7 @@ public class Entregas extends javax.swing.JFrame {
                     + "INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
                     + "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
                     //+ "INNER JOIN LIVE.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
-                    + "INNER JOIN LIVE.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
+                    + "LEFT JOIN LIVE.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
                     + "WHERE DEL.SDHNUM_0='" + jTextField_AlbNumAlb.getText() + "'" + "\n"
                     + "AND DEL.STOFCY_0 = '" + buttonGroup_alb.getSelection().getActionCommand() + "'"
                     + "ORDER BY ORDEN, DEL.SDHNUM_0 DESC";
@@ -6349,7 +6349,7 @@ public class Entregas extends javax.swing.JFrame {
                     + "INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n"
                     + "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND DEL.BPAADD_0 = ADR.BPAADD_0\n"
                     //+ "INNER JOIN LIVE.STOPRED VAL1 ON VAL1.ORINUM_0 = DEL.SOHNUM_0 AND VAL1.ORISEQ_0 = 1000\n"
-                    + "INNER JOIN LIVE.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
+                    + "LEFT JOIN LIVE.STOPREH VAL2 ON VAL2.SDHNUM_0 = DEL.SDHNUM_0\n"
                     + "INNER JOIN LIVE.SPACK PAC ON PAC.VCRNUM_0 = DEL.SDHNUM_0\n" 
                     + "WHERE DEL.SDHNUM_0='" + jTextField_AlbNumAlb1.getText() + "'" + "\n"
                     + "AND DEL.STOFCY_0 = '" + buttonGroup_SSCC.getSelection().getActionCommand() + "'"
@@ -7504,6 +7504,11 @@ public class Entregas extends javax.swing.JFrame {
                 jTextArea11.append(sDirConsig);
                                                
                 String sCP = (String) model.getValueAt(pLinea, 4);
+                if (sCP.indexOf("-") > 1){ //Dascher no es capaz de leer un CP portugues con "-" (que es como debe de ser) así que me los percuto.
+                    sCP = sCP.substring(0, sCP.indexOf("-"));
+                }
+                System.out.println("cp---> " + sCP);
+                
                 vCad = 12 - sCP.length();
                 if (vCad > 0){
                     sCP =  sCP + String.format("%"+vCad+"s",' ');
@@ -8162,7 +8167,7 @@ public class Entregas extends javax.swing.JFrame {
         if (p_TextArea == 11){
              if (jRadioButton_DASCHER.isSelected()){
                                //file_name = "C:/DACHSER/dach.txt";
-                                file_name = "\\\\192.168.35.10/public/DACHSER/dach.txt";
+                                file_name = "\\\\192.168.35.13/public/DACHSER/dach.txt";
                           }
              else if (jRadioButton_XPO.isSelected()){
                                 file_name = "C:/XPO/XPO_FILE.txt";                                      
