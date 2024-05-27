@@ -6224,8 +6224,8 @@ public class Entregas extends javax.swing.JFrame {
 
             if (pModo == 1) { 
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
-                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
-                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
+                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0,' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
+                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0,' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
                 ", DEL.BPDPOSCOD_0 AS CP_CONSIG, DEL.BPDCTY_0 AS POB_CONSIG, DEL.BPDCRY_0 AS PAIS_CONSIG\n" +
                 ", CONCAT(REPLICATE('0', 3 - LEN(PACNBR_0)), PACNBR_0) AS BULTOS\n" +
                 ", CONCAT(REPLICATE('0', 5 - LEN(CAST(GROWEI_0 AS INTEGER))), CAST(GROWEI_0 AS INTEGER)) AS PESO\n" +
@@ -6247,8 +6247,8 @@ public class Entregas extends javax.swing.JFrame {
             }
             else{
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
-                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
-                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
+                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, ' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
+                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, ' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
                 ", DEL.BPDPOSCOD_0 AS CP_CONSIG, DEL.BPDCTY_0 AS POB_CONSIG, DEL.BPDCRY_0 AS PAIS_CONSIG\n" +
                 ", CONCAT(REPLICATE('0', 3 - LEN(PACNBR_0)), PACNBR_0) AS BULTOS\n" +
                 ", CONCAT(REPLICATE('0', 5 - LEN(CAST(GROWEI_0 AS INTEGER))), CAST(GROWEI_0 AS INTEGER)) AS PESO\n" +
@@ -6397,7 +6397,8 @@ public class Entregas extends javax.swing.JFrame {
          // AQUÍ PARA RELLENAR SSCC 
         try {
                 String query = "SELECT DEL.SDHNUM_0 AS NUM_ALB, CAB.CPY_0 AS PLANTA, CAB.SCCCOD_0 AS COD_SSCC\n" +
-                            ", JOU.LOT_0 AS LOTE\n" +
+                            //", JOU.LOT_0 AS LOTE\n" +
+                            ", PAC.LOT_0 AS LOTE\n" +
                             ", ITM.ITMREF_0, ITM.ITMDES1_0 AS ITM_DESC, ITM.YEANCOD14_0 AS GTIN\n" +
                             ", DEL.YPACK_0 / DEL.PACNBR_0 AS CAJAS\n" +
                             "FROM LIVE.SDELIVERY DEL\n" +
@@ -6406,7 +6407,8 @@ public class Entregas extends javax.swing.JFrame {
                             "INNER JOIN LIVE.STOJOU JOU ON JOU.VCRNUM_0 = DEL.SDHNUM_0 AND JOU.VCRLIN_0 = PAC.VCRLIN_0\n" +
                             "INNER JOIN LIVE.ITMMASTER ITM ON ITM.ITMREF_0 = JOU.ITMREF_0 \n" +
                             "WHERE DEL.SDHNUM_0='" + jTextField_AlbNumAlb1.getText() + "'" + "\n" +
-                            "GROUP BY DEL.SDHNUM_0, CAB.CPY_0, CAB.SCCCOD_0, JOU.LOT_0, ITM.ITMREF_0, ITM.ITMDES1_0, ITM.YEANCOD14_0, DEL.YPACK_0 / DEL.PACNBR_0, CAB.PACNUM_0\n" +
+                            //"GROUP BY DEL.SDHNUM_0, CAB.CPY_0, CAB.SCCCOD_0, JOU.LOT_0, ITM.ITMREF_0, ITM.ITMDES1_0, ITM.YEANCOD14_0, DEL.YPACK_0 / DEL.PACNBR_0, CAB.PACNUM_0\n" +
+                            "GROUP BY DEL.SDHNUM_0, CAB.CPY_0, CAB.SCCCOD_0, PAC.LOT_0, ITM.ITMREF_0, ITM.ITMDES1_0, ITM.YEANCOD14_0, DEL.YPACK_0 / DEL.PACNBR_0, CAB.PACNUM_0\n" +
                             "ORDER BY CAB.PACNUM_0" ;
                     
               
@@ -7955,7 +7957,7 @@ public class Entregas extends javax.swing.JFrame {
                 String sDirConsig = (String) model.getValueAt(pLinea, 3);
                 String sDirConsig2 = (String) model.getValueAt (pLinea, 17);
                 System.out.println("dir2: " + sDirConsig2);
-                sDirConsig = v_quote + sDirConsig + sDirConsig2 + v_quote + v_separador;
+                sDirConsig = v_quote + sDirConsig + " " + sDirConsig2 + v_quote + v_separador;
                 jTextArea11.append(sDirConsig);
                                                
                 String sCP = (String) model.getValueAt(pLinea, 4);
@@ -8179,7 +8181,7 @@ public class Entregas extends javax.swing.JFrame {
             //file_name = "C:/tmp/dach.txt";
         }
         else if (p_TextArea == 12){
-            file_name = "C:/XPO/etiqueta.txt";
+           file_name = "C:/XPO/" + jTextField_AlbNumAlb1.getText() + ".txt";
         }
         else{
           file_name = "C:/tmp/etiqueta.txt";
@@ -8903,38 +8905,38 @@ public class Entregas extends javax.swing.JFrame {
                     //jTextArea12.append("ªPON\n"); en las impresoras de XPO genera un caracter extraño, por eso lo quito.
                     jTextArea12.append("ªCI0,00,194\n"); //Codifico los caraceres así porque se veía un ┬ al final de cada texto
                     jTextArea12.append("ªLH120,50\n");
-                    jTextArea12.append("ªA0,48,34\n");
+                    jTextArea12.append("ªA0N,48,34\n");
                     jTextArea12.append("ªFB800,1,,L\n");
                     jTextArea12.append("ªFDFABRICANTES DE MENAJE, S.A (FAMESA)ªFS\n");
                     jTextArea12.append("ªFO00,40\n");
                     jTextArea12.append("ªFB800,2,,L\n");
-                    jTextArea12.append("ªA0,24,20\n");
+                    jTextArea12.append("ªA0N,24,20\n");
                     jTextArea12.append("ªFDCtra. Nacional 330 Km. 486 Pol. Ind. AGRINASA, Nave 30-35\\& 50420 CADRETE (Zaragoza)ªFS\n");
                     jTextArea12.append("ªFO00,100\n");
                     jTextArea12.append("ªFB800,2,,L\n");
-                    jTextArea12.append("ªA0,24,20\n");
+                    jTextArea12.append("ªA0N,24,20\n");
                     jTextArea12.append("ªFDARTICULOªFS\n");
                     jTextArea12.append("ªFO00,95\n");
                     jTextArea12.append("ªGB600,0,2ªFS\n");
                     jTextArea12.append("ªFO00,120\n");
                     jTextArea12.append("ªFB800,2,,L\n");
-                    jTextArea12.append("ªA0,48,34\n");
+                    jTextArea12.append("ªA0N,48,34\n");
                     jTextArea12.append("ªFD" + rs.getString("ITM_DESC") + "ªFS\n");
                     jTextArea12.append("ªFO00,160\n");
                     jTextArea12.append("ªGB600,0,2ªFS\n");
                     jTextArea12.append("ªFO00,180\n");
                     jTextArea12.append("ªFB800,2,,L\n");
-                    jTextArea12.append("ªA0,24,20\n");
+                    jTextArea12.append("ªA0N,24,20\n");
                     jTextArea12.append("ªFDGTIN:   " + rs.getString("GTIN") + "\\&CAJAS:" + rs.getString("CAJAS") + "ªFS\n");  
                     jTextArea12.append("ªFO00,240\n");
                     jTextArea12.append("ªFB800,1,,L\n");
-                    jTextArea12.append("ªA0,48,34\n");
+                    jTextArea12.append("ªA0N,48,34\n");
                     jTextArea12.append("ªFDLOTE: " + rs.getString("LOTE") + "ªFS\n");
                     jTextArea12.append("ªFO00,280\n");
                     jTextArea12.append("ªGB600,0,2ªFS\n");
                     jTextArea12.append("ªFO00,320\n");
                     jTextArea12.append("ªFB800,1,,L\n");
-                    jTextArea12.append("ªA0,56,40\n");
+                    jTextArea12.append("ªA0N,56,40\n");
                     jTextArea12.append("ªFDSSCC:       " + rs.getString("COD_SSCC") + "ªFS\n");
                     jTextArea12.append("ªFO00,360\n");
                     jTextArea12.append("ªGB600,0,2ªFS\n");
