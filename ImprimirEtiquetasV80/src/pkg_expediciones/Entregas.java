@@ -1308,6 +1308,9 @@ public class Entregas extends javax.swing.JFrame {
 
         jLabel_logo2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
 
+        jLayeredPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jLabel_logo2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
@@ -1325,8 +1328,6 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jLayeredPane1.setLayer(jScrollPane2, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane1.setLayer(jLabel_logo2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -1537,6 +1538,10 @@ public class Entregas extends javax.swing.JFrame {
             .addGap(0, 16, Short.MAX_VALUE)
         );
 
+        jLayeredPane2.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jLabel_logo3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane2.setLayer(jPanel9, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
         jLayeredPane2.setLayout(jLayeredPane2Layout);
         jLayeredPane2Layout.setHorizontalGroup(
@@ -1560,9 +1565,6 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jPanel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(148, 148, 148))
         );
-        jLayeredPane2.setLayer(jScrollPane3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jLabel_logo3, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane2.setLayer(jPanel9, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -1834,6 +1836,9 @@ public class Entregas extends javax.swing.JFrame {
 
         jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
 
+        jLayeredPane3.setLayer(jScrollPane6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane3.setLayer(jLabel14, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane3Layout = new javax.swing.GroupLayout(jLayeredPane3);
         jLayeredPane3.setLayout(jLayeredPane3Layout);
         jLayeredPane3Layout.setHorizontalGroup(
@@ -1857,8 +1862,6 @@ public class Entregas extends javax.swing.JFrame {
                         .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
-        jLayeredPane3.setLayer(jScrollPane6, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane3.setLayer(jLabel14, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -2659,6 +2662,10 @@ public class Entregas extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        jLayeredPane5.setLayer(jLabel40, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane5.setLayer(jPanel23, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane5.setLayer(jPanel31, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane5Layout = new javax.swing.GroupLayout(jLayeredPane5);
         jLayeredPane5.setLayout(jLayeredPane5Layout);
         jLayeredPane5Layout.setHorizontalGroup(
@@ -2686,9 +2693,6 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jPanel31, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(59, Short.MAX_VALUE))
         );
-        jLayeredPane5.setLayer(jLabel40, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane5.setLayer(jPanel23, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane5.setLayer(jPanel31, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel17Layout = new javax.swing.GroupLayout(jPanel17);
         jPanel17.setLayout(jPanel17Layout);
@@ -3700,6 +3704,9 @@ public class Entregas extends javax.swing.JFrame {
 
         jLabel_logo6.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
 
+        jLayeredPane7.setLayer(jScrollPane11, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane7.setLayer(jLabel_logo6, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane7Layout = new javax.swing.GroupLayout(jLayeredPane7);
         jLayeredPane7.setLayout(jLayeredPane7Layout);
         jLayeredPane7Layout.setHorizontalGroup(
@@ -3717,8 +3724,6 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jScrollPane11, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jLayeredPane7.setLayer(jScrollPane11, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane7.setLayer(jLabel_logo6, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel38Layout = new javax.swing.GroupLayout(jPanel38);
         jPanel38.setLayout(jPanel38Layout);
@@ -4152,6 +4157,9 @@ public class Entregas extends javax.swing.JFrame {
 
         jLabel_logo7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pkg_expediciones/logo_denox.png"))); // NOI18N
 
+        jLayeredPane8.setLayer(jScrollPane12, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane8.setLayer(jLabel_logo7, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane8Layout = new javax.swing.GroupLayout(jLayeredPane8);
         jLayeredPane8.setLayout(jLayeredPane8Layout);
         jLayeredPane8Layout.setHorizontalGroup(
@@ -4169,8 +4177,6 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jScrollPane12, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
-        jLayeredPane8.setLayer(jScrollPane12, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane8.setLayer(jLabel_logo7, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel44Layout = new javax.swing.GroupLayout(jPanel44);
         jPanel44.setLayout(jPanel44Layout);
@@ -4592,20 +4598,20 @@ public class Entregas extends javax.swing.JFrame {
 
         jTb_dascher.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "Cod_Remitente", "NumAlb", "Nom_Consig", "Dir_Consig", "CP_Consig", "Pob_Consig", "Pais_Consig", "Bultos", "Peso", "Portes", "Mail_Consig", "Tfno_Consig", "Seleccionado", "fecha_carga", "Fecha_entrega", "Obs1", "Obs2", "Dir2", "Obs_etiqueta", "Volumen", "Ped_Cliente", "Bultos2", "TargoFIX"
+                "Cod_Remitente", "NumAlb", "Nom_Consig", "Dir_Consig", "CP_Consig", "Pob_Consig", "Pais_Consig", "Bultos", "Peso", "Portes", "Mail_Consig", "Tfno_Consig", "Seleccionado", "fecha_carga", "Fecha_entrega", "Obs1", "Obs2", "Dir2", "Obs_etiqueta", "Volumen", "Ped_Cliente", "Bultos2", "TargoFIX", "Contacto"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true, false, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true
+                false, false, false, false, true, true, false, true, true, true, true, true, true, false, true, true, true, true, true, true, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -4750,6 +4756,11 @@ public class Entregas extends javax.swing.JFrame {
         jTextArea_xpo.setRows(5);
         jScrollPane16.setViewportView(jTextArea_xpo);
 
+        jLayeredPane10.setLayer(jScrollPane15, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane10.setLayer(jLabel_logo9, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane10.setLayer(jPanel58, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane10.setLayer(jScrollPane16, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane10Layout = new javax.swing.GroupLayout(jLayeredPane10);
         jLayeredPane10.setLayout(jLayeredPane10Layout);
         jLayeredPane10Layout.setHorizontalGroup(
@@ -4780,10 +4791,6 @@ public class Entregas extends javax.swing.JFrame {
                 .addComponent(jPanel58, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(148, 148, 148))
         );
-        jLayeredPane10.setLayer(jScrollPane15, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane10.setLayer(jLabel_logo9, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane10.setLayer(jPanel58, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane10.setLayer(jScrollPane16, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel56Layout = new javax.swing.GroupLayout(jPanel56);
         jPanel56.setLayout(jPanel56Layout);
@@ -5080,6 +5087,10 @@ public class Entregas extends javax.swing.JFrame {
         jTextArea_ftpXPO.setToolTipText("");
         jScrollPane18.setViewportView(jTextArea_ftpXPO);
 
+        jLayeredPane11.setLayer(jScrollPane17, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane11.setLayer(jLabel83, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane11.setLayer(jScrollPane18, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         javax.swing.GroupLayout jLayeredPane11Layout = new javax.swing.GroupLayout(jLayeredPane11);
         jLayeredPane11.setLayout(jLayeredPane11Layout);
         jLayeredPane11Layout.setHorizontalGroup(
@@ -5105,9 +5116,6 @@ public class Entregas extends javax.swing.JFrame {
                     .addComponent(jScrollPane17, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(13, Short.MAX_VALUE))
         );
-        jLayeredPane11.setLayer(jScrollPane17, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane11.setLayer(jLabel83, javax.swing.JLayeredPane.DEFAULT_LAYER);
-        jLayeredPane11.setLayer(jScrollPane18, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout jPanel59Layout = new javax.swing.GroupLayout(jPanel59);
         jPanel59.setLayout(jPanel59Layout);
@@ -6224,8 +6232,8 @@ public class Entregas extends javax.swing.JFrame {
 
             if (pModo == 1) { 
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
-                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0,' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
-                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0,' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
+                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG, SUBSTRING(CONCAT(DEL.BPDADDLIG_0,' ', DEL.BPDADDLIG_1),1,50) AS DIR_CONSIG\n" + 
+                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0,' ', DEL.BPDADDLIG_1),51,81) AS DIR_2\n" +    
                 ", DEL.BPDPOSCOD_0 AS CP_CONSIG, DEL.BPDCTY_0 AS POB_CONSIG, DEL.BPDCRY_0 AS PAIS_CONSIG\n" +
                 ", CONCAT(REPLICATE('0', 3 - LEN(PACNBR_0)), PACNBR_0) AS BULTOS\n" +
                 ", CONCAT(REPLICATE('0', 5 - LEN(CAST(GROWEI_0 AS INTEGER))), CAST(GROWEI_0 AS INTEGER)) AS PESO\n" +
@@ -6233,9 +6241,10 @@ public class Entregas extends javax.swing.JFrame {
                 ", CASE  DEL.YGPORTES_0 WHEN  1 THEN 'P'\n" +
                 "				   WHEN  2 THEN 'D'\n" +
                 "				   ELSE 'X' END AS PORTES\n" +
-                ", ADR.WEB_0 AS MAIL_CONSIG, ADR.TEL_0 AS TFNO_CONSIG, ZLOG.FECHA, DEL.DLVDAT_0 AS FEC_ENTREGA, DEL.YPACK_0 AS BULTOS2\n" +
+                ", ADR.WEB_0 AS MAIL_CONSIG, RIGHT(ADR.TEL_0,9) AS TFNO_CONSIG, MAX(ZLOG.FECHA) AS FECHA, DEL.DLVDAT_0 AS FEC_ENTREGA, DEL.YPACK_0 AS BULTOS2\n" +
                 ", CASE (SUBSTRING(TEX.TEXTE_0,1,1)) WHEN '{' THEN ''    \n" +
                 "                                ELSE SUBSTRING(REPLACE(REPLACE(TEX.TEXTE_0 ,CHAR(13),' '), CHAR(10),' '),1,149) END AS TEXTO\n" +  
+                ", DEL.BPDADDLIG_2 AS CONTACTO\n"    +
                 "fROM LIVE.SDELIVERY DEL\n" +
                 "INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n" + 
                 "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND ADR.BPAADD_0 = DEL.BPAADD_0\n" +
@@ -6243,12 +6252,14 @@ public class Entregas extends javax.swing.JFrame {
                 "LEFT JOIN LIVE.BPDLVCUST BPD ON BPD.BPCNUM_0 = DEL.BPCORD_0 AND BPD.BPAADD_0 = DEL.BPAADD_0\n" +
                 "LEFT JOIN LIVE.TEXCLOB TEX ON TEX.CODE_0 = BPD.DLVTEX_0\n"    +
                 "WHERE DEL.BPTNUM_0 IN ('025','20','036') AND DEL.SALFCY_0 = 'FAM'\n" +
+                "GROUP BY SDHNUM_0, SDHNUM_0, ORD.CUSORDREF_0, DEL.BPDNAM_0, DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDPOSCOD_0, DEL.BPDCTY_0\n" +
+                ", DEL.BPDCRY_0, PACNBR_0, GROWEI_0, VOL_0, DEL.YGPORTES_0, ADR.WEB_0, ADR.TEL_0, DEL.DLVDAT_0, DEL.YPACK_0, TEX.TEXTE_0, DEL.BPDADDLIG_2\n"    +
                 "ORDER BY SUBSTRING(SDHNUM_0,1,3), SDHNUM_0 DESC";
             }
             else{
             query = "SELECT TOP 100  SDHNUM_0 AS NUMALB, '430841156' as COD_REMITE, SDHNUM_0, ORD.CUSORDREF_0 AS PD_CTE\n" +
-                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, ' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),1,32) AS DIR_CONSIG\n" +
-                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, ' ', DEL.BPDADDLIG_1, ' ', DEL.BPDADDLIG_2),33,62) AS DIR_2\n" +    
+                ", SUBSTRING(DEL.BPDNAM_0,1,32) AS NOM_CONSIG,  SUBSTRING(CONCAT(DEL.BPDADDLIG_0, ' ', DEL.BPDADDLIG_1),1,50) AS DIR_CONSIG\n" +
+                ", SUBSTRING(CONCAT(DEL.BPDADDLIG_0, ' ', DEL.BPDADDLIG_1),51,81) AS DIR_2\n" +    
                 ", DEL.BPDPOSCOD_0 AS CP_CONSIG, DEL.BPDCTY_0 AS POB_CONSIG, DEL.BPDCRY_0 AS PAIS_CONSIG\n" +
                 ", CONCAT(REPLICATE('0', 3 - LEN(PACNBR_0)), PACNBR_0) AS BULTOS\n" +
                 ", CONCAT(REPLICATE('0', 5 - LEN(CAST(GROWEI_0 AS INTEGER))), CAST(GROWEI_0 AS INTEGER)) AS PESO\n" +
@@ -6256,9 +6267,10 @@ public class Entregas extends javax.swing.JFrame {
                 ", CASE  DEL.YGPORTES_0 WHEN  1 THEN 'P'\n" +
                 "				   WHEN  2 THEN 'D'\n" +
                 "				   ELSE 'X' END AS PORTES\n" +
-                ", ADR.WEB_0 AS MAIL_CONSIG, ADR.TEL_0 AS TFNO_CONSIG, ZLOG.FECHA, DEL.DLVDAT_0 AS FEC_ENTREGA, DEL.YPACK_0 AS BULTOS2\n" +
-               ", CASE (SUBSTRING(TEX.TEXTE_0,1,1)) WHEN '{' THEN ''    \n" +
+                ", ADR.WEB_0 AS MAIL_CONSIG, RIGHT(ADR.TEL_0,9) AS TFNO_CONSIG, MAX(ZLOG.FECHA) AS FECHA, DEL.DLVDAT_0 AS FEC_ENTREGA, DEL.YPACK_0 AS BULTOS2\n" +
+                ", CASE (SUBSTRING(TEX.TEXTE_0,1,1)) WHEN '{' THEN ''    \n" +
                 "                                ELSE SUBSTRING(REPLACE(REPLACE(TEX.TEXTE_0 ,CHAR(13),' '), CHAR(10),' '),1,149) END AS TEXTO\n" +
+                ", DEL.BPDADDLIG_2 AS CONTACTO\n"    +
                 "fROM LIVE.SDELIVERY DEL\n" +
                 "INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = DEL.SOHNUM_0\n" +   
                 "INNER JOIN LIVE.BPADDRESS ADR ON ADR.BPANUM_0 = DEL.BPCORD_0 AND ADR.BPAADD_0 = DEL.BPAADD_0\n" +
@@ -6267,6 +6279,8 @@ public class Entregas extends javax.swing.JFrame {
                 "LEFT JOIN LIVE.TEXCLOB TEX ON TEX.CODE_0 = BPD.DLVTEX_0\n"    +
                 "WHERE DEL.BPTNUM_0 IN ('025','20', '036') AND DEL.SALFCY_0 = 'FAM'\n" +
                 "AND SDHNUM_0 LIKE '" + jText_alb_dascher.getText() + "'\n" +
+                "GROUP BY SDHNUM_0, SDHNUM_0, ORD.CUSORDREF_0, DEL.BPDNAM_0, DEL.BPDADDLIG_0, DEL.BPDADDLIG_1, DEL.BPDPOSCOD_0, DEL.BPDCTY_0\n" +
+                ", DEL.BPDCRY_0, PACNBR_0, GROWEI_0, VOL_0, DEL.YGPORTES_0, ADR.WEB_0, ADR.TEL_0, DEL.DLVDAT_0, DEL.YPACK_0, TEX.TEXTE_0, DEL.BPDADDLIG_2\n"    +
                 "ORDER BY SDHNUM_0 DESC";
                  }
             
@@ -6306,7 +6320,8 @@ public class Entregas extends javax.swing.JFrame {
                     String pdCte = rs.getString("PD_CTE");
                     String sBultos2 = rs.getString("BULTOS2");
                     String sObs = rs.getString("TEXTO");
-                    
+                    String sContacto = rs.getString("CONTACTO");
+                                      
                     
                     //jText_pedproProv.setText(rs.getString("PEDPRO_PROV") + " " + rs.getString("PEDPRO_RAZON_SOCIAL"));
                     //rellenaTextArea(2, cod_art, sCant, dun14, sCap_dun, cod_ean);
@@ -6316,7 +6331,7 @@ public class Entregas extends javax.swing.JFrame {
                     //jCombo_alb_dasch.addItem(rs.getString("NUMALB")+ " " + rs.getString("NOM_CONSIG"));
 //                    System.out.println("Relleno tabla dascher");
                     model.addRow(new Object[]
-                    {cod_remite, num_alb, nom_consig,dir_consig, cp_consig, pob_consig, pais_consig, sBultos, sPeso, portes, mail_consig, tfno_consig ,false, fecha_log, fecha_entrega, sObs,"", dir2, "", sVolumen, pdCte, sBultos2, false}); 
+                    {cod_remite, num_alb, nom_consig,dir_consig, cp_consig, pob_consig, pais_consig, sBultos, sPeso, portes, mail_consig, tfno_consig ,false, fecha_log, fecha_entrega, sObs,"", dir2, "", sVolumen, pdCte, sBultos2, false, sContacto}); 
                
                                    
                 }
@@ -7503,7 +7518,8 @@ public class Entregas extends javax.swing.JFrame {
                     sDirConsig =  sDirConsig + String.format("%"+vCad+"s",' ');
                     System.out.println('3');
                 }
-                jTextArea11.append(sDirConsig);
+                System.out.println("dir consig dascher: " +  sDirConsig.substring(0, 32));
+                jTextArea11.append(sDirConsig.substring(0, 32));  //hago substring porque para originalmente cojo 50 caracteres en la query principal
                                                
                 String sCP = (String) model.getValueAt(pLinea, 4);
                 if (sCP.indexOf("-") > 1){ //Dascher no es capaz de leer un CP portugues con "-" (que es como debe de ser) así que me los percuto.
@@ -7640,7 +7656,9 @@ public class Entregas extends javax.swing.JFrame {
                     dir2 = dir2 + String.format("%"+vCad+"s",' ');
                     }
                 }
-                jTextArea11.append(dir2);
+                System.out.println("dascher dir 2");
+                System.out.println("dir_consig_sbstr: " + dir2.substring(0,30));
+                jTextArea11.append(dir2.substring(0, 30)); //hago substring porque para originalmente cojo 50 caracteres en la query principal
                 
                 String obsEtq = (String) model.getValueAt (pLinea, 18);
                 if (obsEtq == null){ //si no hay texto relleno con caracteres blancos
@@ -7993,6 +8011,12 @@ public class Entregas extends javax.swing.JFrame {
                     //sAdicional = "#TipoServicio=0220#"; //para envíos a Portugal es 0220
                     sAdicional = "#TipoServicio=0205#"; //según mrw hay q enviar este.. no lo entiendo pero lo pongo
                 }
+                
+                String sContacto = (String) model.getValueAt (pLinea, 23);//saco este campo de la dirección de envío para añadirlo como campo informativo
+                sContacto = "#PersonaContacto=" + sContacto + "#";
+                if (sContacto != ""){
+                    sAdicional = sAdicional + sContacto;
+                }
                                 
                 
                 sAdicional = v_quote + sAdicional + v_quote;
@@ -8114,15 +8138,16 @@ public class Entregas extends javax.swing.JFrame {
 //        TableColumnModel columnModel = jTb_dascher.getColumnModel();
 //        columnModel.getColumn(22).setCellEditor(new DateCellEditor());
         
-        jTb_dascher.getColumnModel().getColumn(0).setPreferredWidth(10);
+        jTb_dascher.getColumnModel().getColumn(0).setPreferredWidth(5);
         jTb_dascher.getColumnModel().getColumn(1).setPreferredWidth(80);
         jTb_dascher.getColumnModel().getColumn(2).setPreferredWidth(75);
         jTb_dascher.getColumnModel().getColumn(3).setPreferredWidth(100);
         jTb_dascher.getColumnModel().getColumn(4).setPreferredWidth(30);
         jTb_dascher.getColumnModel().getColumn(5).setPreferredWidth(30);
-        jTb_dascher.getColumnModel().getColumn(6).setPreferredWidth(30);
-        jTb_dascher.getColumnModel().getColumn(8).setPreferredWidth(20);
-        jTb_dascher.getColumnModel().getColumn(9).setPreferredWidth(20);
+        jTb_dascher.getColumnModel().getColumn(6).setPreferredWidth(10);
+        jTb_dascher.getColumnModel().getColumn(7).setPreferredWidth(10);
+        jTb_dascher.getColumnModel().getColumn(8).setPreferredWidth(10);
+        jTb_dascher.getColumnModel().getColumn(9).setPreferredWidth(10);
         jTb_dascher.getColumnModel().getColumn(10).setPreferredWidth(50);
         jTb_dascher.getColumnModel().getColumn(11).setPreferredWidth(50);
         jTb_dascher.getColumnModel().getColumn(12).setPreferredWidth(30);
@@ -8136,6 +8161,7 @@ public class Entregas extends javax.swing.JFrame {
         jTb_dascher.getColumnModel().getColumn(20).setPreferredWidth(30);
         jTb_dascher.getColumnModel().getColumn(21).setPreferredWidth(30);
         jTb_dascher.getColumnModel().getColumn(22).setPreferredWidth(10);
+        jTb_dascher.getColumnModel().getColumn(23).setPreferredWidth(10);
         
                 
         //Indicamos el DefaultTableModel de nuestra tabla
@@ -8169,7 +8195,7 @@ public class Entregas extends javax.swing.JFrame {
         if (p_TextArea == 11){
              if (jRadioButton_DASCHER.isSelected()){
                                //file_name = "C:/DACHSER/dach.txt";
-                                file_name = "\\\\192.168.35.13/public/DACHSER/dach.txt";
+                               file_name = "\\\\192.168.35.13/public/DACHSER/dach.txt"; //lo cuelgo en red para que la app de dascher lo recoja de ahí
                           }
              else if (jRadioButton_XPO.isSelected()){
                                 file_name = "C:/XPO/XPO_FILE.txt";                                      
