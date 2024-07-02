@@ -8058,6 +8058,7 @@ public class Entregas extends javax.swing.JFrame {
         // TODO add your handling code here:
         System.out.println("generando fichero SSCC");
         generar_fichero (12);
+        log_impresion ("XPO_ZPL", jTextField_AlbNumAlb1.getText());
         ejecutar_sendftp("CMD /C C:\\XPO\\send_zpl.bat");
         //ejecutarCMD("CMD /C type C:\\tmp\\etiqueta.txt > lpt1");
     }//GEN-LAST:event_jButton11ActionPerformed
