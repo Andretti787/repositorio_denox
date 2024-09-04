@@ -2,7 +2,7 @@
 ^DFR:PIC.ZPL^LRN
 ^XZ
 ^XA
-^CI28
+^CI31
 ^PW832
 ^PON
 ^LH0,0
