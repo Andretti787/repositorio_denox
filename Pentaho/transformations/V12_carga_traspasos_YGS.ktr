@@ -2,21 +2,21 @@
 <transformation>
   <info>
     <name>V12_carga_traspasos_YGS</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <directory>/</directory>
     <parameters>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -41,37 +41,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -125,11 +125,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -207,10 +207,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -273,10 +273,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -349,10 +349,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -401,9 +401,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -414,7 +414,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -434,19 +434,83 @@
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
+    <notepad>
+      <note>Ordeno las filas para que la estructura sea la correcta a la hora de la importación. Concateno los valores que necesito
+por cada tipo de línea en una sola y luego empleo la normalización para asignar el orden correcto.</note>
+      <xloc>160</xloc>
+      <yloc>352</yloc>
+      <width>623</width>
+      <heigth>42</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Ordeno las filas por planta y rownum para que la estructura sea la correcta CAB + LIN</note>
+      <xloc>656</xloc>
+      <yloc>32</yloc>
+      <width>458</width>
+      <heigth>26</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Generación del modelo de datos de v8 a v12 YGAS </note>
+      <xloc>176</xloc>
+      <yloc>32</yloc>
+      <width>278</width>
+      <heigth>26</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
     <name>MSSQL v8</name>
-    <server>192.168.50.10</server>
+    <server>192.168.28.200</server>
     <type>MSSQL</type>
     <access>Native</access>
     <database>x3famesa</database>
     <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -497,11 +561,6 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Selecciona/Renombra valores</from>
-      <to>Concatenar_CAB</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Concatenar_CAB</from>
       <to>Concatenar_LIN</to>
       <enabled>Y</enabled>
@@ -533,11 +592,6 @@
     </hop>
     <hop>
       <from>Filtrar filas</from>
-      <to>Salida Fichero_YGS</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas</from>
       <to>Transformación simulada (no hace nada)</to>
       <enabled>Y</enabled>
     </hop>
@@ -555,26 +609,26 @@
   <step>
     <name>Concatenar_CAB</name>
     <type>ConcatFields</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -587,7 +641,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -597,11 +651,11 @@
       <field>
         <name>TIPO_ASIENTO</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -610,10 +664,10 @@
         <name>NUMDOC</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -621,11 +675,11 @@
       <field>
         <name>PLANTA</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -633,11 +687,11 @@
       <field>
         <name>FEC_CONTABLE</name>
         <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -645,11 +699,11 @@
       <field>
         <name>DESCRIP_CAB</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -657,11 +711,11 @@
       <field>
         <name>DIVISA</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -672,8 +726,8 @@
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -681,34 +735,34 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>464</xloc>
-      <yloc>432</yloc>
+      <xloc>432</xloc>
+      <yloc>400</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Concatenar_LIN</name>
     <type>ConcatFields</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -721,7 +775,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -732,10 +786,10 @@
         <name>ROWNUM</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -744,10 +798,10 @@
         <name>TIPO_REFERENCIAL</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -755,11 +809,11 @@
       <field>
         <name>CUENTA</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -767,11 +821,11 @@
       <field>
         <name>DECRIP_LIN</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -780,10 +834,10 @@
         <name>SIGNO</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -792,10 +846,10 @@
         <name>IMPORTE</name>
         <type>Number</type>
         <format>0.#####</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -803,11 +857,11 @@
       <field>
         <name>TASA_IMPUESTO</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -818,8 +872,8 @@
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -827,25 +881,32 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>576</xloc>
-      <yloc>320</yloc>
+      <xloc>560</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Entrada MODELO YGAS</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL v8</connection>
-    <sql>SELECT 'TR' AS TIPO_ASIENTO, NULL AS NUMDOC, 'FAM' AS PLANTA, '31/12/2021' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, FIN.CUENTA, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
+    <sql>SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'FAM' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
+, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
+																				THEN '400999' 
+																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
+																						ELSE FIN.CUENTA 
+																						END 
+																				END AS CUENTA
+																
+, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
 , CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
 		ELSE 1							
 		END AS SIGNO
@@ -867,15 +928,24 @@ FROM
 			ELSE ''
 			END AS TASA_IMPUESTO
 		FROM FAMESAOF.GACCENTRYD
-		WHERE FIY_0 = 6
+--		WHERE FIY_0 IN (4,5,6)
+		WHERE LEDTYP_0 = 1
 		) AS DATOS
 --WHERE TYP_0 IN ('FAC','ABC')
 	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
 	) AS FIN
 GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
 UNION ALL
-SELECT 'TR' AS TIPO_ASIENTO, NULL AS NUMDOC, 'TRI' AS PLANTA, '31/12/2021' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, FIN.CUENTA, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
+/*
+SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'TRI' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
+, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') THEN '400999' 
+																					ELSE 
+																					CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
+																					ELSE 
+																					CASE WHEN FIN.CUENTA = '438002'THEN '438004' ELSE FIN.CUENTA END
+																					END
+																				END AS CUENTA
+, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
 , CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
 		ELSE 1							
 		END AS SIGNO
@@ -898,14 +968,21 @@ FROM
 			END AS TASA_IMPUESTO
 		FROM TRILLA.GACCENTRYD
 		WHERE FIY_0 = 6
+		AND LEDTYP_0 = 1
 		) AS DATOS
 --WHERE TYP_0 IN ('FAC','ABC')
 	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
 	) AS FIN
 GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
 UNION ALL
-SELECT 'TR' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPT' AS PLANTA, '31/12/2021' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, FIN.CUENTA, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
+SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPT' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
+, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
+																				THEN '400999' 
+																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
+																						ELSE FIN.CUENTA 
+																						END 
+																				END AS CUENTA
+, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
 , CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
 		ELSE 1							
 		END AS SIGNO
@@ -928,14 +1005,22 @@ FROM
 			END AS TASA_IMPUESTO
 		FROM IPTRILLA.GACCENTRYD
 		WHERE FIY_0 = 6
+		AND LEDTYP_0 = 1
 		) AS DATOS
 --WHERE TYP_0 IN ('FAC','ABC')
 	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
 	) AS FIN
 GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
-UNION ALL
-SELECT 'TR' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPF' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
-, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, FIN.CUENTA, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
+
+UNION ALL*/
+SELECT 'TRA' AS TIPO_ASIENTO, NULL AS NUMDOC, 'IPF' AS PLANTA, '20211231' AS FEC_CONTABLE, 'Movimientos acumulados Dic-2021' AS DESCRIP_CAB, 'EUR' AS DIVISA
+, ROW_NUMBER() OVER (ORDER BY FIN.CUENTA) AS ROWNUM , 1 AS TIPO_REFERENCIAL, CASE WHEN FIN.CUENTA IN ('400000','403000') 
+																				THEN '400999' 
+																				ELSE  CASE WHEN (FIN.CUENTA) IN ('430000','433000') THEN '430999' 
+																						ELSE FIN.CUENTA 
+																						END 
+																				END AS CUENTA
+, 'Movimientos acumulados Dic-2021' AS DECRIP_LIN
 , CASE WHEN (SUM(FIN.IMPORTE_ASIENTO)) &lt; 0 THEN -1
 		ELSE 1							
 		END AS SIGNO
@@ -958,18 +1043,20 @@ FROM
 			END AS TASA_IMPUESTO
 		FROM IPTFAM.GACCENTRYD
 		WHERE FIY_0 = 6
+		AND LEDTYP_0 = 1
 		) AS DATOS
 --WHERE TYP_0 IN ('FAC','ABC')
 	GROUP BY DATOS.ACC_0, DATOS.SNS_0, DATOS.TASA_IMPUESTO
 	) AS FIN
-GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
+GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO
+</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -977,21 +1064,21 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>64</yloc>
+      <xloc>112</xloc>
+      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Filtrar filas</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <send_true_to>Ordenar filas</send_true_to>
     <send_false_to>Transformación simulada (no hace nada)</send_false_to>
@@ -1000,11 +1087,11 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
         <negated>N</negated>
         <leftvalue>cabecera</leftvalue>
         <function>IS NOT NULL</function>
-        <rightvalue />
+        <rightvalue/>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1012,21 +1099,21 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>864</xloc>
-      <yloc>336</yloc>
+      <xloc>816</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Filtrar filas CAB</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <send_true_to>Concatenar_CAB</send_true_to>
     <send_false_to>Concatenar_LIN</send_false_to>
@@ -1035,7 +1122,7 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
         <negated>N</negated>
         <leftvalue>MARCA</leftvalue>
         <function>=</function>
-        <rightvalue />
+        <rightvalue/>
         <value>
           <name>constant</name>
           <type>String</type>
@@ -1043,12 +1130,12 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
           <length>-1</length>
           <precision>-1</precision>
           <isnull>N</isnull>
-          <mask />
+          <mask/>
         </value>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1056,21 +1143,21 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>320</yloc>
+      <xloc>304</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Normalización de fila</name>
     <type>Normaliser</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <typefield>typefield</typefield>
     <fields>
@@ -1085,8 +1172,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
         <norm>linea</norm>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1094,28 +1181,28 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>704</xloc>
-      <yloc>224</yloc>
+      <xloc>688</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Ordenar filas</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -1135,8 +1222,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1144,24 +1231,24 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>928</xloc>
-      <yloc>128</yloc>
+      <xloc>912</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Salida Fichero_YGS</name>
     <type>TextFileOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>Y</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
@@ -1169,36 +1256,36 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
     <format>DOS</format>
     <compression>None</compression>
     <encoding>ISO-8859-1</encoding>
-    <endedLine />
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>/home/mmarco/Documentos/traspasos v12/V12_TRASPASO_YGS</name>
+      <name>C:/intercambio/V12_TRASPASO_YGS</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention />
+      <extention/>
       <append>N</append>
       <split>N</split>
       <haspartno>N</haspartno>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
-      <splitevery />
+      <splitevery/>
     </file>
     <fields>
       <field>
         <name>typefield</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1206,18 +1293,18 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       <field>
         <name>cabecera</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1233,13 +1320,13 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
   <step>
     <name>Selecciona/Renombra valores</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <select_unspecified>N</select_unspecified>
@@ -1249,20 +1336,20 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
         <type>String</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask>ddMMyyyy</conversion_mask>
+        <conversion_mask>yyyyMMdd</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1270,24 +1357,24 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>320</xloc>
-      <yloc>208</yloc>
+      <xloc>304</xloc>
+      <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Transformación simulada (no hace nada)</name>
     <type>Dummy</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1295,8 +1382,8 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1088</xloc>
-      <yloc>416</yloc>
+      <xloc>1072</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1305,5 +1392,5 @@ GROUP BY FIN.CUENTA, FIN.TASA_IMPUESTO</sql>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

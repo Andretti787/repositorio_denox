@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>carga_pedidos_proveedor_job</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2019/06/24 09:27:16.270</created_date>
@@ -11,53 +11,15 @@
   <modified_date>2019/06/24 09:27:16.270</modified_date>
   <parameters>
     </parameters>
-  <connection>
-    <name>MarioDb</name>
-    <server>localhost</server>
-    <type>MYSQL</type>
-    <access>Native</access>
-    <database>mariodb</database>
-    <port>3306</port>
-    <username>famesa</username>
-    <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>3306</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>SAGE</name>
-    <server>217.116.8.58</server>
-    <type>MSSQLNATIVE</type>
-    <access>Native</access>
-    <database>x3famesa</database>
-    <port>49412</port>
-    <username>it</username>
-    <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>49412</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -165,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -256,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -322,13 +284,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -344,30 +306,30 @@
       <nr>0</nr>
       <xloc>192</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Carga de pedidos a proveedor</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_pedidos_proveedor_new.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\carga_pedidos_proveedor_new.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
+      <logfile/>
+      <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -382,28 +344,28 @@
       <nr>0</nr>
       <xloc>368</xloc>
       <yloc>256</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
+      <attributes/>
       <server>smtp.famesa.es</server>
       <port>25</port>
-      <destination>mmarco@denox.eu</destination>
-      <destinationCc />
-      <destinationBCc />
+      <destination>informatica@famesa.es</destination>
+      <destinationCc/>
+      <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>spoon (rserver)</replytoname>
-      <subject>Carga de pedidos a proveedor desatendido (job-rserver)</subject>
+      <replytoname>spoon</replytoname>
+      <subject>Carga de expediciones desatendido (job)</subject>
       <include_date>Y</include_date>
-      <contact_person />
-      <contact_phone />
-      <comment>El proceso de carga diaria de pedidos a proveedor ha sido ejecutado.</comment>
+      <contact_person/>
+      <contact_phone/>
+      <comment>El proceso de carga diaria de expeciones ha sido ejecutado.</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
       <use_secure_auth>N</use_secure_auth>
       <auth_user>informatica@famesa.es</auth_user>
@@ -415,8 +377,8 @@
       <priority>normal</priority>
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
-      <secureconnectiontype>TLS</secureconnectiontype>
-      <replyToAddresses />
+      <secureconnectiontype>SSL</secureconnectiontype>
+      <replyToAddresses/>
       <filetypes>
         <filetype>LOG</filetype>
       </filetypes>
@@ -427,21 +389,21 @@
       <nr>0</nr>
       <xloc>368</xloc>
       <yloc>448</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Check DB connections MMSQL (sage)  MySQL (mariodb)</name>
-      <description />
+      <description/>
       <type>CHECK_DB_CONNECTIONS</type>
-      <attributes />
+      <attributes/>
       <connections>
         <connection>
-          <name>MarioDb</name>
+          <name/>
           <waitfor>0</waitfor>
           <waittime>millisecond</waittime>
         </connection>
         <connection>
-          <name>SAGE</name>
+          <name/>
           <waitfor>0</waitfor>
           <waittime>millisecond</waittime>
         </connection>
@@ -451,14 +413,14 @@
       <nr>0</nr>
       <xloc>656</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Create file LOG DE ERROR</name>
-      <description />
+      <description/>
       <type>CREATE_FILE</type>
-      <attributes />
-      <filename>/home/mmarco/Pentaho/LOG_ERR.txt</filename>
+      <attributes/>
+      <filename>C:\intercambio\LOG\LOG_ERR.txt</filename>
       <fail_if_file_exists>Y</fail_if_file_exists>
       <add_filename_result>N</add_filename_result>
       <parallel>N</parallel>
@@ -466,14 +428,14 @@
       <nr>0</nr>
       <xloc>928</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Write to file</name>
-      <description />
+      <description/>
       <type>WRITE_TO_FILE</type>
-      <attributes />
-      <filename>/home/mmarco/Pentaho/LOG_ERR.txt</filename>
+      <attributes/>
+      <filename>C:\intercambio\LOG\LOG_ERR.txt</filename>
       <createParentFolder>N</createParentFolder>
       <appendFile>Y</appendFile>
       <content>Error de conexión a las bbdd</content>
@@ -483,14 +445,14 @@
       <nr>0</nr>
       <xloc>1120</xloc>
       <yloc>144</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Write to file 2</name>
-      <description />
+      <description/>
       <type>WRITE_TO_FILE</type>
-      <attributes />
-      <filename>/home/mmarco/Pentaho/LOG_ERR.txt</filename>
+      <attributes/>
+      <filename>C:\intercambio\LOG\LOG_ERR.txt</filename>
       <createParentFolder>N</createParentFolder>
       <appendFile>Y</appendFile>
       <content>Error de conexión con las bbdd</content>
@@ -500,7 +462,7 @@
       <nr>0</nr>
       <xloc>1136</xloc>
       <yloc>320</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>

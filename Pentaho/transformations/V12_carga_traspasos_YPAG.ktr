@@ -2,21 +2,21 @@
 <transformation>
   <info>
     <name>V12_carga_traspasos_YPAG</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <directory>/</directory>
     <parameters>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -41,37 +41,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -125,11 +125,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -207,10 +207,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -273,10 +273,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -349,10 +349,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -401,9 +401,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -414,7 +414,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -439,7 +439,7 @@
 crear la estructura CAB + LIN (en este casso P y D)</note>
       <xloc>224</xloc>
       <yloc>384</yloc>
-      <width>647</width>
+      <width>557</width>
       <heigth>42</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -460,7 +460,7 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <note>Generación del modelo de importación desde v8 a V12 (YPAY) Pagos y Cobros.</note>
       <xloc>320</xloc>
       <yloc>16</yloc>
-      <width>480</width>
+      <width>423</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -487,9 +487,9 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
     <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -581,33 +581,33 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
     </hop>
     <hop>
       <from>Ordenar filas</from>
-      <to>Salida Fichero SALDOS PAGOS/COBROS</to>
+      <to>Salida Fichero SALDOS CTE</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
     <name>Concatenar_CAB</name>
     <type>ConcatFields</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -620,7 +620,7 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -630,11 +630,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>NUM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -642,11 +642,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>PAYTYP_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -654,11 +654,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>UMRNUM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -666,11 +666,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>BPR_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -678,11 +678,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CODIGO_PLAN_CAB</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -690,11 +690,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CUENTA_CAB</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -702,11 +702,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CHQNUM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -714,11 +714,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CHQBAN_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -726,11 +726,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>PAM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -738,11 +738,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>FCY_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -750,11 +750,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>BAN_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -763,10 +763,10 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
         <name>SNS_0</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -774,11 +774,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CUR_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -786,11 +786,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>AMTCUR_0</name>
         <type>BigNumber</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -798,11 +798,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>AMTBAN_0</name>
         <type>BigNumber</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -811,10 +811,10 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
         <name>CAMBIO DIVISA</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -822,11 +822,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>ACCDAT_0</name>
         <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -834,11 +834,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>DUDDAT_0</name>
         <type>Timestamp</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -847,10 +847,10 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
         <name>STA_0</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -861,8 +861,8 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -878,26 +878,26 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
   <step>
     <name>Concatenar_LIN</name>
     <type>ConcatFields</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -910,7 +910,7 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -920,11 +920,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>DENCOD_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -932,11 +932,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CODIGO_PLAN_LIN</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -944,11 +944,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CUENTA_LIN</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -956,11 +956,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>BPRLIN_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -968,11 +968,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>VCRTYP_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -980,11 +980,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>VCRNUM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -992,11 +992,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>CURLIN_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1004,11 +1004,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>AMTLIN_0</name>
         <type>BigNumber</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1016,11 +1016,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>VATLIN_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1028,11 +1028,11 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <field>
         <name>LIN_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1043,8 +1043,8 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1060,13 +1060,13 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
   <step>
     <name>Entrada Tabla YPAY</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL v8</connection>
     <sql>SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CAB.BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
@@ -1078,7 +1078,7 @@ INNER JOIN FAMESAOF.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
 WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
 --AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO
 UNION ALL
-SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CAB.BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
+SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CONCAT('T',CAB.BPR_0) AS BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
 , CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
 , DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
 , DET.LIN_0
@@ -1087,7 +1087,7 @@ INNER JOIN TRILLA.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
 WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
 --AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO
 UNION ALL
-SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CAB.BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
+SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CONCAT('I', CAB.BPR_0) AS BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
 , CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
 , DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
 , DET.LIN_0
@@ -1096,7 +1096,7 @@ INNER JOIN IPTFAM.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
 WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
 --AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO
 UNION ALL
-SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CAB.BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
+SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CONCAT('P',CAB.BPR_0) AS BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
 , CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
 , DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
 , DET.LIN_0
@@ -1105,12 +1105,12 @@ INNER JOIN IPTRILLA.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
 WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
 --AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1126,13 +1126,13 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <step>
     <name>Filtrar filas</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <send_true_to>Concatenar_CAB</send_true_to>
     <send_false_to>Concatenar_LIN</send_false_to>
@@ -1141,7 +1141,7 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <negated>N</negated>
         <leftvalue>LIN_0</leftvalue>
         <function>=</function>
-        <rightvalue />
+        <rightvalue/>
         <value>
           <name>constant</name>
           <type>Integer</type>
@@ -1153,8 +1153,8 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         </value>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1170,13 +1170,13 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <step>
     <name>Filtro cabeceras NULL</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <send_true_to>Ordenar filas</send_true_to>
     <send_false_to>Transformación simulada (no hace nada)</send_false_to>
@@ -1185,11 +1185,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <negated>N</negated>
         <leftvalue>cabecera</leftvalue>
         <function>IS NOT NULL</function>
-        <rightvalue />
+        <rightvalue/>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1205,13 +1205,13 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <step>
     <name>Normalización de fila</name>
     <type>Normaliser</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <typefield>typefield</typefield>
     <fields>
@@ -1226,8 +1226,8 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <norm>linea</norm>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1243,20 +1243,20 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <step>
     <name>Ordenar filas</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -1276,8 +1276,8 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1291,18 +1291,18 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
     </GUI>
   </step>
   <step>
-    <name>Salida Fichero SALDOS PAGOS/COBROS</name>
+    <name>Salida Fichero SALDOS CTE</name>
     <type>TextFileOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>Y</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
@@ -1310,36 +1310,36 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
     <format>DOS</format>
     <compression>None</compression>
     <encoding>ISO-8859-1</encoding>
-    <endedLine />
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>/home/mmarco/Documentos/traspasos v12//V12_traspasos_YPAG</name>
+      <name>C:/intercambio/V12_traspasos_YPAG</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention />
+      <extention/>
       <append>N</append>
       <split>N</split>
       <haspartno>N</haspartno>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
-      <splitevery />
+      <splitevery/>
     </file>
     <fields>
       <field>
         <name>typefield</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1347,18 +1347,18 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <field>
         <name>cabecera</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1374,13 +1374,13 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <step>
     <name>Selecciona/Renombra valores</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <select_unspecified>N</select_unspecified>
@@ -1392,14 +1392,14 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <precision>-2</precision>
         <conversion_mask>ddMMyyyy</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>DUDDAT_0</name>
@@ -1409,18 +1409,18 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <precision>-2</precision>
         <conversion_mask>ddMMyyyy</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1436,16 +1436,16 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <step>
     <name>Transformación simulada (no hace nada)</name>
     <type>Dummy</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1463,5 +1463,5 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

@@ -6,7 +6,7 @@
     <extended_description/>
     <trans_version/>
     <trans_type>Normal</trans_type>
-    <directory>/</directory>
+    <directory>&#x2f;</directory>
     <parameters>
     </parameters>
     <log>
@@ -427,10 +427,10 @@
     <clusterschemas>
     </clusterschemas>
     <created_user/>
-    <created_date>2014/03/03 20:38:59.234</created_date>
+    <created_date>2014&#x2f;03&#x2f;03 20&#x3a;38&#x3a;59.234</created_date>
     <modified_user/>
-    <modified_date>2014/03/03 20:38:59.234</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <modified_date>2014&#x2f;03&#x2f;03 20&#x3a;38&#x3a;59.234</modified_date>
+    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA&#x3d;</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
@@ -453,7 +453,6 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <failIfNoFile>N</failIfNoFile>
     <calculation>
       <field_name>newfield</field_name>
       <calc_type>SUBTRACT</calc_type>
@@ -464,12 +463,11 @@
       <value_length>7</value_length>
       <value_precision>0</value_precision>
       <remove>N</remove>
-      <conversion_mask>0.00</conversion_mask>
+      <conversion_mask>0.0</conversion_mask>
       <decimal_symbol>.</decimal_symbol>
       <grouping_symbol>,</grouping_symbol>
       <currency_symbol/>
     </calculation>
-    <attributes/>
     <cluster_schema/>
     <remotesteps>
       <input>
@@ -482,7 +480,8 @@
       <yloc>166</yloc>
       <draw>Y</draw>
     </GUI>
-  </step>
+    </step>
+
   <step>
     <name>Generate Rows</name>
     <type>RowGenerator</type>
@@ -525,7 +524,6 @@
     <interval_in_ms/>
     <row_time_field/>
     <last_time_field/>
-    <attributes/>
     <cluster_schema/>
     <remotesteps>
       <input>
@@ -538,11 +536,11 @@
       <yloc>166</yloc>
       <draw>Y</draw>
     </GUI>
-  </step>
+    </step>
+
   <step_error_handling>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes/>
 </transformation>

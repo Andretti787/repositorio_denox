@@ -2,21 +2,21 @@
 <transformation>
   <info>
     <name>carga_FACT_VENTAS</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <directory>/</directory>
     <parameters>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -41,37 +41,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -125,11 +125,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -207,10 +207,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -273,10 +273,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -349,10 +349,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -401,9 +401,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -414,7 +414,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -444,9 +444,9 @@
     <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -503,9 +503,9 @@
     <port>3306</port>
     <username>mmarco</username>
     <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -592,22 +592,52 @@
     </hop>
     <hop>
       <from>Combination lookup/update DIM_DIR</from>
-      <to>LIVE.FACT_VENTAS</to>
+      <to>FACT_VENTAS MSSQL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas</from>
+      <to>Combination lookup/update DIM_CTE MSSQL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Combination lookup/update DIM_CTE</from>
+      <to>Combination lookup/update DIM_ITMMASTER MSSQL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Combination lookup/update DIM_ITMMASTER</from>
+      <to>Combination lookup/update DIM_FACILITY MSSQL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Combination lookup/update DIM_FACILITY</from>
+      <to>Combination lookup/update DIM_FECHA MSSQL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Combination lookup/update DIM_FECHA</from>
+      <to>Combination lookup/update DIM_REP MMSQL</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Combination lookup/update DIM_REP</from>
+      <to>Combination lookup/update DIM_DIR MSSQL</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
     <name>Combination lookup/update DIM_CTE</name>
     <type>CombinationLookup</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <schema />
+    <schema/>
     <table>DIM_CTE</table>
     <connection>MySQL</connection>
     <commit>100</commit>
@@ -627,10 +657,10 @@
         <use_autoinc>N</use_autoinc>
       </return>
     </fields>
-    <sequence />
-    <last_update_field />
-    <attributes />
-    <cluster_schema />
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -644,17 +674,64 @@
     </GUI>
   </step>
   <step>
-    <name>Combination lookup/update DIM_DIR</name>
+    <name>Combination lookup/update DIM_CTE MSSQL</name>
     <type>CombinationLookup</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <schema />
+    <schema>LIVE</schema>
+    <table>DIM_CTE</table>
+    <connection>MSSQL V12</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>BPR_0</name>
+        <lookup>CTE_COD</lookup>
+      </key>
+      <return>
+        <name>CTE_ID</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Combination lookup/update DIM_DIR</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
     <table>DIM_DIR</table>
     <connection>MySQL</connection>
     <commit>100</commit>
@@ -678,10 +755,10 @@
         <use_autoinc>N</use_autoinc>
       </return>
     </fields>
-    <sequence />
-    <last_update_field />
-    <attributes />
-    <cluster_schema />
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -695,17 +772,68 @@
     </GUI>
   </step>
   <step>
-    <name>Combination lookup/update DIM_FACILITY</name>
+    <name>Combination lookup/update DIM_DIR MSSQL</name>
     <type>CombinationLookup</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <schema />
+    <schema>LIVE</schema>
+    <table>DIM_DIR</table>
+    <connection>MSSQL V12</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>BPR_0</name>
+        <lookup>DIR_COD_CTE</lookup>
+      </key>
+      <key>
+        <name>BPAINV_0</name>
+        <lookup>DIR_COD_ENVIO</lookup>
+      </key>
+      <return>
+        <name>DIR_ID</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>848</xloc>
+      <yloc>448</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Combination lookup/update DIM_FACILITY</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
     <table>DIM_FACILITY</table>
     <connection>MySQL</connection>
     <commit>100</commit>
@@ -725,10 +853,10 @@
         <use_autoinc>N</use_autoinc>
       </return>
     </fields>
-    <sequence />
-    <last_update_field />
-    <attributes />
-    <cluster_schema />
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -742,17 +870,64 @@
     </GUI>
   </step>
   <step>
-    <name>Combination lookup/update DIM_FECHA</name>
+    <name>Combination lookup/update DIM_FACILITY MSSQL</name>
     <type>CombinationLookup</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <schema />
+    <schema>LIVE</schema>
+    <table>DIM_FACILITY</table>
+    <connection>MSSQL V12</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>FCY_0</name>
+        <lookup>FCY_0</lookup>
+      </key>
+      <return>
+        <name>FAC_ID</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>736</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Combination lookup/update DIM_FECHA</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
     <table>dim_fecha</table>
     <connection>MySQL</connection>
     <commit>100</commit>
@@ -772,10 +947,10 @@
         <use_autoinc>N</use_autoinc>
       </return>
     </fields>
-    <sequence />
-    <last_update_field />
-    <attributes />
-    <cluster_schema />
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -789,17 +964,64 @@
     </GUI>
   </step>
   <step>
-    <name>Combination lookup/update DIM_ITMMASTER</name>
+    <name>Combination lookup/update DIM_FECHA MSSQL</name>
     <type>CombinationLookup</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <schema />
+    <schema>LIVE</schema>
+    <table>dim_fecha</table>
+    <connection>MSSQL V12</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>ACCDAT</name>
+        <lookup>date_num</lookup>
+      </key>
+      <return>
+        <name>dim_date_id</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1104</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Combination lookup/update DIM_ITMMASTER</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
     <table>DIM_ITMMASTER</table>
     <connection>MySQL</connection>
     <commit>100</commit>
@@ -819,10 +1041,10 @@
         <use_autoinc>N</use_autoinc>
       </return>
     </fields>
-    <sequence />
-    <last_update_field />
-    <attributes />
-    <cluster_schema />
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -836,17 +1058,64 @@
     </GUI>
   </step>
   <step>
-    <name>Combination lookup/update DIM_REP</name>
+    <name>Combination lookup/update DIM_ITMMASTER MSSQL</name>
     <type>CombinationLookup</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <schema />
+    <schema>LIVE</schema>
+    <table>DIM_ITMMASTER</table>
+    <connection>MSSQL V12</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>ITMREF_0</name>
+        <lookup>ITM_COD</lookup>
+      </key>
+      <return>
+        <name>ITM_ID</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Combination lookup/update DIM_REP</name>
+    <type>CombinationLookup</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <schema/>
     <table>DIM_REP</table>
     <connection>MySQL</connection>
     <commit>100</commit>
@@ -866,10 +1135,10 @@
         <use_autoinc>N</use_autoinc>
       </return>
     </fields>
-    <sequence />
-    <last_update_field />
-    <attributes />
-    <cluster_schema />
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -883,21 +1152,68 @@
     </GUI>
   </step>
   <step>
-    <name>Entrada Tabla SINVOICED</name>
-    <type>TableInput</type>
-    <description />
+    <name>Combination lookup/update DIM_REP MMSQL</name>
+    <type>CombinationLookup</type>
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
+    </partitioning>
+    <schema>LIVE</schema>
+    <table>DIM_REP</table>
+    <connection>MSSQL V12</connection>
+    <commit>100</commit>
+    <cache_size>9999</cache_size>
+    <replace>N</replace>
+    <preloadCache>N</preloadCache>
+    <crc>N</crc>
+    <crcfield>hashcode</crcfield>
+    <fields>
+      <key>
+        <name>REP1_0</name>
+        <lookup>REP_COD</lookup>
+      </key>
+      <return>
+        <name>REP_ID</name>
+        <creation_method>tablemax</creation_method>
+        <use_autoinc>N</use_autoinc>
+      </return>
+    </fields>
+    <sequence/>
+    <last_update_field/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1328</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla SINVOICED</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
     </partitioning>
     <connection>MSSQL V12</connection>
     <sql>--V8 FAMESA
 SELECT  CAB.BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') as ACCDAT, DET.ITMREF_0, DET.NETPRI_0, DET.QTYSTU_0, DET.REP1_0
 , DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
-, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, CASE (CAB.SNS_0) WHEN 1 THEN DET.CPRPRI_0 * QTYSTU_0 ELSE 0 END AS COSTE
+, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, DET.CPRPRI_0 * QTYSTU_0 AS COSTE
 ,  CASE (CAB.SNS_0) WHEN 1 THEN (DET.NETPRI_0 * QTYSTU_0) - (DET.CPRPRI_0 * QTYSTU_0)
 							ELSE 0 
 							END AS MARGEN
@@ -911,7 +1227,7 @@ SELECT  CONCAT('T', CAB.BPR_0) AS BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB
 		ELSE DET.REP1_0
 		END AS REP1_0
 , DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
-, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, CASE (CAB.SNS_0) WHEN 1 THEN DET.CPRPRI_0 * QTYSTU_0 ELSE 0 END AS COSTE
+, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, DET.CPRPRI_0 * QTYSTU_0 AS COSTE
 ,  CASE (CAB.SNS_0) WHEN 1 THEN (DET.NETPRI_0 * QTYSTU_0) - (DET.CPRPRI_0 * QTYSTU_0)
 							ELSE 0 
 							END AS MARGEN
@@ -923,7 +1239,7 @@ UNION ALL
 --V12
 SELECT  CAB.BPR_0 COLLATE Latin1_General_BIN, CAB.FCY_0 COLLATE Latin1_General_BIN, CAB.NUM_0 COLLATE Latin1_General_BIN, CAB.BPAINV_0 COLLATE Latin1_General_BIN, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') COLLATE Latin1_General_BIN as ACCDAT, DET.ITMREF_0 COLLATE Latin1_General_BIN, DET.NETPRI_0, DET.QTYSTU_0, DET.REP1_0 COLLATE Latin1_General_BIN
 , DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
-, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, CASE (CAB.SNS_0) WHEN 1 THEN DET.CPRPRI_0 * QTYSTU_0 ELSE 0 END AS COSTE
+, CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, DET.CPRPRI_0 * QTYSTU_0 AS COSTE
 ,  CASE (CAB.SNS_0) WHEN 1 THEN (DET.NETPRI_0 * QTYSTU_0) - (DET.CPRPRI_0 * QTYSTU_0)
 							ELSE 0 
 							END AS MARGEN
@@ -932,12 +1248,12 @@ FROM LIVE.SINVOICED DET
 INNER JOIN LIVE.SINVOICE CAB ON CAB.NUM_0 = DET.NUM_0
 WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -953,16 +1269,16 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
   <step>
     <name>FACT_VENTAS</name>
     <type>TableOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MySQL</connection>
-    <schema />
+    <schema/>
     <table>FACT_VENTAS</table>
     <commit>1000</commit>
     <truncate>Y</truncate>
@@ -970,14 +1286,14 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
     <use_batch>Y</use_batch>
     <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
+    <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
     <partitioning_monthly>Y</partitioning_monthly>
     <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
+    <tablename_field/>
     <tablename_in_table>Y</tablename_in_table>
     <return_keys>N</return_keys>
-    <return_field />
+    <return_field/>
     <fields>
       <field>
         <column_name>FAC_VTA_UNIDADES</column_name>
@@ -1044,8 +1360,8 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
         <stream_name>DIR_ID</stream_name>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1053,21 +1369,21 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>384</xloc>
+      <xloc>400</xloc>
       <yloc>320</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>LIVE.FACT_VENTAS</name>
+    <name>FACT_VENTAS MSSQL</name>
     <type>TableOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL V12</connection>
     <schema>LIVE</schema>
@@ -1078,14 +1394,14 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
     <use_batch>Y</use_batch>
     <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
+    <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
     <partitioning_monthly>Y</partitioning_monthly>
     <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
+    <tablename_field/>
     <tablename_in_table>Y</tablename_in_table>
     <return_keys>N</return_keys>
-    <return_field />
+    <return_field/>
     <fields>
       <field>
         <column_name>FAC_VTA_UNIDADES</column_name>
@@ -1152,8 +1468,8 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
         <stream_name>DIR_ID</stream_name>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1161,28 +1477,28 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
-      <yloc>496</yloc>
+      <xloc>496</xloc>
+      <yloc>624</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Ordenar filas</name>
     <type>SortRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -1194,8 +1510,8 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1213,5 +1529,5 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

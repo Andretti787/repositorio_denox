@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>envio_FICHERO_PEDIDO_XPO</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2023/02/15 09:29:26.299</created_date>
@@ -14,12 +14,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -127,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -218,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -284,35 +284,35 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Put a file with SFTP</name>
-      <description />
+      <description/>
       <type>SFTPPUT</type>
-      <attributes />
+      <attributes/>
       <servername>web.edicomipaas.cloud</servername>
       <serverport>9032</serverport>
       <username>sftp.fabricantesdemenaje@120111</username>
       <password>Encrypted 2be98afc81ed2c6889b11ab54cc97fcc8</password>
-      <sftpdirectory>/120111T/CUSTOMER_INTEGRATION/out/FABRICANTESDEMENAJE_INBOUND/CUSTOMER_INTEGRATION/</sftpdirectory>
-      <localdirectory>/home/mmarco/Público/XPO</localdirectory>
+      <sftpdirectory>/120111/CUSTOMER_INTEGRATION/out/FABRICANTESDEMENAJE_INBOUND/CUSTOMER_INTEGRATION/</sftpdirectory>
+      <localdirectory>C:\intercambio\XPO</localdirectory>
       <wildcard>.*\.txt</wildcard>
       <copyprevious>N</copyprevious>
       <copypreviousfiles>N</copypreviousfiles>
       <addFilenameResut>N</addFilenameResut>
       <usekeyfilename>N</usekeyfilename>
-      <keyfilename />
+      <keyfilename/>
       <keyfilepass>Encrypted </keyfilepass>
       <compression>none</compression>
-      <proxyType />
-      <proxyHost />
-      <proxyPort />
-      <proxyUsername />
+      <proxyType/>
+      <proxyHost/>
+      <proxyPort/>
+      <proxyUsername/>
       <proxyPassword>Encrypted </proxyPassword>
       <createRemoteFolder>N</createRemoteFolder>
       <aftersftpput>move</aftersftpput>
-      <destinationfolder>/home/mmarco/Público/XPO/ENVIADOS</destinationfolder>
+      <destinationfolder>C:\intercambio\XPO\ENVIADOS</destinationfolder>
       <createdestinationfolder>N</createdestinationfolder>
       <successWhenNoFile>N</successWhenNoFile>
       <parallel>N</parallel>
@@ -320,13 +320,13 @@
       <nr>0</nr>
       <xloc>368</xloc>
       <yloc>336</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -342,40 +342,40 @@
       <nr>0</nr>
       <xloc>128</xloc>
       <yloc>80</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>720</xloc>
       <yloc>336</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
+      <attributes/>
       <server>smtp.famesa.es</server>
       <port>25</port>
-      <destination>mmarco@denox.eu, jsanchez@denox.eu, bparacuellos@denox.eu, dilies@denox.eu</destination>
-      <destinationCc />
-      <destinationBCc />
+      <destination>mmarco@denox.eu</destination>
+      <destinationCc/>
+      <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>spoon (rserver)</replytoname>
+      <replytoname>spoon (local)</replytoname>
       <subject>Envío fichero XPO </subject>
       <include_date>Y</include_date>
-      <contact_person />
-      <contact_phone />
+      <contact_person/>
+      <contact_phone/>
       <comment>Proceso de envío de ficheros de pedido a XPO completado</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
       <use_secure_auth>N</use_secure_auth>
       <auth_user>informatica@famesa.es</auth_user>
@@ -388,13 +388,12 @@
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>SSL</secureconnectiontype>
-      <replyToAddresses />
+      <replyToAddresses/>
       <filetypes>
         <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
         <filetype>ERRORLINE</filetype>
         <filetype>ERROR</filetype>
-        <filetype>WARNING</filetype>
       </filetypes>
       <embeddedimages>
       </embeddedimages>
@@ -403,30 +402,30 @@
       <nr>0</nr>
       <xloc>928</xloc>
       <yloc>160</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>envio_FICHERO_PEDIDO_XPO</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/genera_pedido_XPO.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\genera_pedido_XPO.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
+      <logfile/>
+      <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -441,7 +440,44 @@
       <nr>0</nr>
       <xloc>368</xloc>
       <yloc>80</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Write to log</name>
+      <description/>
+      <type>WRITE_TO_LOG</type>
+      <attributes/>
+      <logmessage>LOG GENERADO EL ENVÍO DEL SFTP A XPO</logmessage>
+      <loglevel>Detailed</loglevel>
+      <logsubject/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>560</xloc>
+      <yloc>448</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Dummy</name>
+      <description/>
+      <type>SPECIAL</type>
+      <attributes/>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>208</xloc>
+      <yloc>448</yloc>
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>
@@ -459,7 +495,7 @@
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
@@ -484,6 +520,33 @@
     <hop>
       <from>envio_FICHERO_PEDIDO_XPO</from>
       <to>Put a file with SFTP</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Put a file with SFTP</from>
+      <to>Dummy</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Put a file with SFTP</from>
+      <to>Write to log</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Write to log</from>
+      <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>

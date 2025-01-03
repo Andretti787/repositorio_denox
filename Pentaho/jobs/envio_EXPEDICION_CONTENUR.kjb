@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>envio_EXPEDICION_CONTENUR</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2022/09/16 10:25:07.407</created_date>
@@ -14,12 +14,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -127,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -218,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -284,13 +284,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -306,30 +306,30 @@
       <nr>0</nr>
       <xloc>112</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Transformation</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/genera_aviso_exp_CONTENUR.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\genera_aviso_exp_CONTENUR.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
+      <logfile/>
+      <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -344,40 +344,40 @@
       <nr>0</nr>
       <xloc>336</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>592</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
+      <attributes/>
       <server>smtp.famesa.es</server>
       <port>25</port>
       <destination>mmarco@denox.eu</destination>
-      <destinationCc />
-      <destinationBCc />
+      <destinationCc/>
+      <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
       <replytoname>spoon </replytoname>
       <subject>Aviso expedición Contenur</subject>
       <include_date>Y</include_date>
-      <contact_person />
-      <contact_phone />
+      <contact_person/>
+      <contact_phone/>
       <comment>Albaranes generados </comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
       <use_secure_auth>N</use_secure_auth>
       <auth_user>informatica@famesa.es</auth_user>
@@ -390,9 +390,11 @@
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>TLS</secureconnectiontype>
-      <replyToAddresses />
+      <replyToAddresses/>
       <filetypes>
         <filetype>GENERAL</filetype>
+        <filetype>LOG</filetype>
+        <filetype>ERROR</filetype>
       </filetypes>
       <embeddedimages>
       </embeddedimages>
@@ -401,22 +403,22 @@
       <nr>0</nr>
       <xloc>832</xloc>
       <yloc>96</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
-      <name>Evaluate files metrics / Si el fichero viene vacío no se envía por mail</name>
-      <description />
+      <name>Evaluate files metrics / Si el fichero va vacío no se envía mail</name>
+      <description/>
       <type>EVAL_FILES_METRICS</type>
-      <attributes />
-      <result_filenames_wildcard />
-      <Result_field_file />
-      <Result_field_wildcard />
-      <Result_field_includesubfolders />
+      <attributes/>
+      <result_filenames_wildcard/>
+      <Result_field_file/>
+      <Result_field_wildcard/>
+      <Result_field_includesubfolders/>
       <fields>
       </fields>
       <comparevalue>0</comparevalue>
-      <minvalue />
-      <maxvalue />
+      <minvalue/>
+      <maxvalue/>
       <successnumbercondition>greater</successnumbercondition>
       <source_files>filenamesresult</source_files>
       <evaluation_type>size</evaluation_type>
@@ -424,35 +426,35 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>256</yloc>
-      <attributes_kjc />
+      <xloc>464</xloc>
+      <yloc>240</yloc>
+      <attributes_kjc/>
     </entry>
     <entry>
-      <name>Delete files</name>
-      <description />
+      <name>Delete files 2</name>
+      <description/>
       <type>DELETE_FILES</type>
-      <attributes />
+      <attributes/>
       <arg_from_previous>N</arg_from_previous>
       <include_subfolders>N</include_subfolders>
       <fields>
         <field>
-          <name>/home/mmarco/Intercambio</name>
+          <name>C:\intercambio\CONTENUR\AVISOS_EXP</name>
           <filemask>AVISO_*.*</filemask>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>480</xloc>
-      <yloc>464</yloc>
-      <attributes_kjc />
+      <xloc>464</xloc>
+      <yloc>416</yloc>
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Move files</name>
-      <description />
+      <description/>
       <type>MOVE_FILES</type>
-      <attributes />
+      <attributes/>
       <move_empty_folders>N</move_empty_folders>
       <arg_from_previous>N</arg_from_previous>
       <include_subfolders>N</include_subfolders>
@@ -462,15 +464,15 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <nr_errors_less_than>10</nr_errors_less_than>
       <success_condition>success_if_no_errors</success_condition>
       <AddDateBeforeExtension>N</AddDateBeforeExtension>
       <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
       <iffileexists>do_nothing</iffileexists>
-      <destinationFolder />
+      <destinationFolder/>
       <ifmovedfileexists>do_nothing</ifmovedfileexists>
-      <moved_date_time_format />
+      <moved_date_time_format/>
       <create_move_to_folder>N</create_move_to_folder>
       <add_moved_date>N</add_moved_date>
       <add_moved_time>N</add_moved_time>
@@ -479,17 +481,17 @@
       <simulate>N</simulate>
       <fields>
         <field>
-          <source_filefolder>/home/mmarco/Intercambio/</source_filefolder>
-          <destination_filefolder>/home/mmarco/Intercambio/LOG</destination_filefolder>
+          <source_filefolder>C:\intercambio\CONTENUR\AVISOS_EXP\</source_filefolder>
+          <destination_filefolder>C:\intercambio\CONTENUR\AVISOS_EXP\LOG</destination_filefolder>
           <wildcard>AVISO_.*\.txt</wildcard>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1008</xloc>
-      <yloc>320</yloc>
-      <attributes_kjc />
+      <xloc>960</xloc>
+      <yloc>352</yloc>
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>
@@ -513,7 +515,7 @@
     </hop>
     <hop>
       <from>Transformation</from>
-      <to>Evaluate files metrics / Si el fichero viene vacío no se envía por mail</to>
+      <to>Evaluate files metrics / Si el fichero va vacío no se envía mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -521,7 +523,7 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Evaluate files metrics / Si el fichero viene vacío no se envía por mail</from>
+      <from>Evaluate files metrics / Si el fichero va vacío no se envía mail</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -530,8 +532,8 @@
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Evaluate files metrics / Si el fichero viene vacío no se envía por mail</from>
-      <to>Delete files</to>
+      <from>Evaluate files metrics / Si el fichero va vacío no se envía mail</from>
+      <to>Delete files 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>

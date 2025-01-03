@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>inventario_TRILLA_23</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
   <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
@@ -21,9 +21,9 @@
     <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -74,12 +74,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -187,10 +187,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -278,10 +278,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -344,13 +344,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -366,36 +366,37 @@
       <nr>0</nr>
       <xloc>80</xloc>
       <yloc>16</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>CARGA_FICHEROS</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_inventario_TRILLA_2023.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:/Pentaho9.2/data-integration/samples/transformations/carga_inventario_TRILLA_2023.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
+      <logfile/>
+      <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
       <run_configuration>Pentaho local</run_configuration>
+      <suppress_result_data>N</suppress_result_data>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -409,40 +410,40 @@
       <nr>0</nr>
       <xloc>304</xloc>
       <yloc>112</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>496</xloc>
       <yloc>112</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
+      <attributes/>
       <server>smtp.famesa.es</server>
       <port>25</port>
       <destination>informatica@famesa.es</destination>
-      <destinationCc />
-      <destinationBCc />
+      <destinationCc/>
+      <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
       <replytoname>spoon (local)</replytoname>
       <subject>Carga inventario</subject>
       <include_date>Y</include_date>
-      <contact_person />
-      <contact_phone />
+      <contact_person/>
+      <contact_phone/>
       <comment>Proceso de carga de inventario finalizado</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
       <use_secure_auth>N</use_secure_auth>
       <auth_user>informatica@famesa.es</auth_user>
@@ -455,7 +456,7 @@
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>SSL</secureconnectiontype>
-      <replyToAddresses />
+      <replyToAddresses/>
       <filetypes>
         <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
@@ -470,46 +471,46 @@
       <nr>0</nr>
       <xloc>928</xloc>
       <yloc>112</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success 2</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>80</xloc>
       <yloc>112</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>SQL</name>
-      <description />
+      <description/>
       <type>SQL</type>
-      <attributes />
+      <attributes/>
       <sql>DELETE FROM LIVE.ZINVENTARIO_LECTURAS WHERE PLANTA = 'TRILLA';
 </sql>
       <useVariableSubstitution>F</useVariableSubstitution>
       <sqlfromfile>F</sqlfromfile>
-      <sqlfilename />
+      <sqlfilename/>
       <sendOneStatement>F</sendOneStatement>
       <connection>V12</connection>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>432</xloc>
+      <xloc>400</xloc>
       <yloc>16</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Set variables</name>
-      <description />
+      <description/>
       <type>SET_VARIABLES</type>
-      <attributes />
+      <attributes/>
       <replacevars>Y</replacevars>
-      <filename />
+      <filename/>
       <file_variable_type>JVM</file_variable_type>
       <fields>
         <field>
@@ -523,36 +524,37 @@
       <nr>0</nr>
       <xloc>192</xloc>
       <yloc>240</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>COMPARATIVA_INVENTARIO23</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/compara_inventario_TRILLA_2023.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:/Pentaho9.2/data-integration/samples/transformations/compara_inventario_TRILLA_2023.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
+      <logfile/>
+      <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
       <run_configuration>Pentaho local</run_configuration>
+      <suppress_result_data>N</suppress_result_data>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
         <parameter>
@@ -566,7 +568,7 @@
       <nr>0</nr>
       <xloc>688</xloc>
       <yloc>112</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>
@@ -655,10 +657,6 @@
     </group>
     <group>
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
-      <attribute>
-        <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
-      </attribute>
     </group>
   </attributes>
 </job>

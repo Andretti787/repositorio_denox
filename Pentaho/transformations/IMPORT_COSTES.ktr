@@ -524,11 +524,11 @@
     </partitioning>
     <connection>MSSQL_V12</connection>
     <sql>SELECT 'I' AS ID, A.STOFCY_0, A.ITMREF_0, A.CSTTYP_0, A.ITCSEQ_0, A.UID_0, A.ITCDAT_0, A.ITCSTRDAT_0, A.ITCENDDAT_0, A.FIYNUM_0, A.MATCST_0, A.MATLEV0_0, A.MATLEVCST_0
-fROM TEST.ITMCOST A
---WHERE ITMREF_0 IN ('1101030','1101030A')
-INNER JOIN TEST.ITMMASTER ITM ON ITM.ITMREF_0 = A.ITMREF_0
-WHERE ITM.TCLCOD_0 = '20MAP'
-AND A.ITCSEQ_0 = (SELECT MAX(ITCSEQ_0) FROM TEST.ITMCOST B WHERE B.ITMREF_0 = A.ITMREF_0 AND B.STOFCY_0 = A.STOFCY_0 AND B.CSTTYP_0 = A.CSTTYP_0)</sql>
+fROM LIVE.ITMCOST A
+INNER JOIN LIVE.ITMMASTER ITM ON ITM.ITMREF_0 = A.ITMREF_0
+--WHERE ITM.TCLCOD_0 = '20MAP'
+WHERE TSICOD_1 IN ('20','22','28','29','17','18') AND A.STOFCY_0 = 'FAM'
+AND A.ITCSEQ_0 = (SELECT MAX(ITCSEQ_0) FROM LIVE.ITMCOST B WHERE B.ITMREF_0 = A.ITMREF_0 AND B.STOFCY_0 = A.STOFCY_0 AND B.CSTTYP_0 = A.CSTTYP_0)</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -903,7 +903,7 @@ AND A.ITCSEQ_0 = (SELECT MAX(ITCSEQ_0) FROM TEST.ITMCOST B WHERE B.ITMREF_0 = A.
       <field>
         <name>MATCST_0</name>
         <type>BigNumber</type>
-        <format/>
+        <format>0.0000</format>
         <title>MATCST_0</title>
         <titleStyleCell/>
         <styleCell/>
@@ -915,7 +915,7 @@ AND A.ITCSEQ_0 = (SELECT MAX(ITCSEQ_0) FROM TEST.ITMCOST B WHERE B.ITMREF_0 = A.
       <field>
         <name>MATLEV0_0</name>
         <type>BigNumber</type>
-        <format/>
+        <format>0.0000</format>
         <title>MATLEV0_0</title>
         <titleStyleCell/>
         <styleCell/>
@@ -927,7 +927,7 @@ AND A.ITCSEQ_0 = (SELECT MAX(ITCSEQ_0) FROM TEST.ITMCOST B WHERE B.ITMREF_0 = A.
       <field>
         <name>MATLEVCST_0</name>
         <type>BigNumber</type>
-        <format/>
+        <format>0.0000</format>
         <title>MATLEVCST_0</title>
         <titleStyleCell/>
         <styleCell/>

@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>carga_inventario_TRILLA_2023</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <name>compara_inventario_TRILLA_2023</name>
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
-    <trans_status>0</trans_status>
     <directory>/</directory>
     <parameters>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -42,37 +41,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -126,11 +125,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -208,10 +207,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -274,10 +273,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -350,10 +349,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -402,9 +401,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -415,7 +414,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -428,71 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2019/12/12 12:04:52.991</created_date>
+    <created_date>2022/12/20 13:49:16.478</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2019/12/12 12:04:52.991</modified_date>
+    <modified_date>2022/12/20 13:49:16.478</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>MySQL</name>
-    <server>192.168.35.25</server>
-    <type>MYSQL</type>
-    <access>Native</access>
-    <database>mariodb</database>
-    <port>3306</port>
-    <username>mmarco</username>
-    <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
-    <attributes>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>3306</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>STREAM_RESULTS</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
-  <connection>
-    <name>V12</name>
+    <name>v12</name>
     <server>192.168.28.100</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
@@ -500,9 +444,9 @@
     <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -552,88 +496,156 @@
   </connection>
   <order>
     <hop>
-      <from>If field value is null</from>
-      <to>Insertar / Actualizar INVENTARIO_LECTURAS</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Eliminar filas null</from>
-      <to>If field value is null</to>
+      <from>LIVE.ZINVENTARIO_LECTURAS_PROC</from>
+      <to>Select values</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Eliminar filas null</from>
-      <to>dummy</to>
+      <from>Select values</from>
+      <to>Microsoft Excel writer</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>FICHERO_CONTEO</from>
-      <to>Añadir secuencia</to>
+      <from>LIVE.ZINVENTARIO_LECTURAS</from>
+      <to>Data validator</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>If field value is null</from>
-      <to>Data validator (Existe arti?)</to>
+      <from>Select values</from>
+      <to>Data validator</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Data validator (Existe arti?)</from>
-      <to>Insertar / Actualizar INVENTARIO_LECTURAS</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Data validator (Existe arti?)</from>
-      <to>dummy_ERR</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>dummy_ERR</from>
-      <to>Salida Fichero de Texto</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Añadir secuencia</from>
-      <to>Añadir constantes</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Añadir constantes</from>
-      <to>Eliminar filas null</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>LIVE.ITMMASTER</from>
-      <to>Data validator (Existe arti?)</to>
+      <from>Data validator</from>
+      <to>ARTICULOS_LEIDOS_SIN_STOCK</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Añadir constantes</name>
-    <type>Constant</type>
-    <description />
+    <name>ARTICULOS_LEIDOS_SIN_STOCK</name>
+    <type>TypeExitExcelWriterStep</type>
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
+    <header>Y</header>
+    <footer>N</footer>
+    <makeSheetActive>Y</makeSheetActive>
+    <startingCell>A1</startingCell>
+    <appendOmitHeader>N</appendOmitHeader>
+    <appendOffset>0</appendOffset>
+    <appendEmpty>0</appendEmpty>
+    <rowWritingMethod>overwrite</rowWritingMethod>
+    <forceFormulaRecalculation>N</forceFormulaRecalculation>
+    <leaveExistingStylesUnchanged>N</leaveExistingStylesUnchanged>
+    <appendLines>N</appendLines>
+    <add_to_result_filenames>Y</add_to_result_filenames>
+    <file>
+      <name>C:\Inventario\2024\TRILLA\RESULTADO_INVENTARIO_ERR</name>
+      <extention>xls</extention>
+      <do_not_open_newfile_init>N</do_not_open_newfile_init>
+      <split>N</split>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <sheetname>Sheet1</sheetname>
+      <autosizecolums>Y</autosizecolums>
+      <stream_data>N</stream_data>
+      <protect_sheet>N</protect_sheet>
+      <password>Encrypted </password>
+      <protected_by/>
+      <splitevery>0</splitevery>
+      <if_file_exists>new</if_file_exists>
+      <if_sheet_exists>new</if_sheet_exists>
+    </file>
+    <template>
+      <enabled>N</enabled>
+      <sheet_enabled>N</sheet_enabled>
+      <filename>template.xls</filename>
+      <sheetname/>
+      <hidden>N</hidden>
+    </template>
     <fields>
+      <field>
+        <name>ID</name>
+        <type>Integer</type>
+        <format>0</format>
+        <title>ID</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>ARTICULO</name>
+        <type>String</type>
+        <format/>
+        <title>ARTICULO</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>CANTIDAD</name>
+        <type>Number</type>
+        <format/>
+        <title>CANTIDAD</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>UBICACION</name>
+        <type>String</type>
+        <format/>
+        <title>UBICACION</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
       <field>
         <name>PLANTA</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif>TRILLA</nullif>
-        <length>20</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
+        <format/>
+        <title>PLANTA</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>FECHA</name>
+        <type>Timestamp</type>
+        <format>h:mm:ss</format>
+        <title>FECHA</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -641,90 +653,55 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>336</xloc>
-      <yloc>16</yloc>
+      <xloc>864</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Añadir secuencia</name>
-    <type>Sequence</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <valuename>ID</valuename>
-    <use_database>N</use_database>
-    <connection>MySQL</connection>
-    <schema />
-    <seqname>SEQ_</seqname>
-    <use_counter>Y</use_counter>
-    <counter_name>ID</counter_name>
-    <start_at>1</start_at>
-    <increment_by>1</increment_by>
-    <max_value>999999999</max_value>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>192</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Data validator (Existe arti?)</name>
+    <name>Data validator</name>
     <type>Validator</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <validate_all>Y</validate_all>
     <concat_errors>N</concat_errors>
     <concat_separator>|</concat_separator>
     <validator_field>
       <name>ARTICULO</name>
-      <validation_name>ARTI_EXISTE</validation_name>
-      <max_length />
-      <min_length />
-      <null_allowed>N</null_allowed>
+      <validation_name>comprueba_arti</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>Y</null_allowed>
       <only_null_allowed>N</only_null_allowed>
       <only_numeric_allowed>N</only_numeric_allowed>
       <data_type>None</data_type>
       <data_type_verified>N</data_type_verified>
-      <conversion_mask />
-      <decimal_symbol />
-      <grouping_symbol />
-      <max_value />
-      <min_value />
-      <start_string />
-      <end_string />
-      <start_string_not_allowed />
-      <end_string_not_allowed />
-      <regular_expression />
-      <regular_expression_not_allowed />
-      <error_code>001</error_code>
-      <error_description>EL ARTÍCULO NO EXISTE EN LA SESIÓN DE INVENTARIO</error_description>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed/>
+      <error_code>ERR01</error_code>
+      <error_description>ARTICULO NO ENCONTRADO EN FICHERO LECTURAS</error_description>
       <is_sourcing_values>Y</is_sourcing_values>
-      <sourcing_step>LIVE.ITMMASTER</sourcing_step>
-      <sourcing_field>ITMREF_0</sourcing_field>
-      <allowed_value />
+      <sourcing_step>Select values</sourcing_step>
+      <sourcing_field>ARTICULO</sourcing_field>
+      <allowed_value/>
     </validator_field>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -732,266 +709,173 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
-      <yloc>16</yloc>
+      <xloc>464</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Eliminar filas null</name>
-    <type>FilterRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <send_true_to>If field value is null</send_true_to>
-    <send_false_to>dummy</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>ARTICULO</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue />
-      </condition>
-    </compare>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>416</xloc>
-      <yloc>80</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>FICHERO_CONTEO</name>
-    <type>CsvInput</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <filename>/home/dcolas/inventario/INVENTARIO_TRI_22.csv</filename>
-    <filename_field />
-    <rownum_field />
-    <include_filename>N</include_filename>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <header>N</header>
-    <buffer_size>50000</buffer_size>
-    <lazy_conversion>Y</lazy_conversion>
-    <add_filename_result>N</add_filename_result>
-    <parallel>N</parallel>
-    <newline_possible>N</newline_possible>
-    <encoding />
-    <fields>
-      <field>
-        <name>ARTICULO</name>
-        <type>String</type>
-        <format />
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>15</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>CANTIDAD</name>
-        <type>Number</type>
-        <format>#.#</format>
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>6</length>
-        <precision>2</precision>
-        <trim_type>none</trim_type>
-      </field>
-      <field>
-        <name>UBICACION</name>
-        <type>String</type>
-        <format />
-        <currency>€</currency>
-        <decimal>,</decimal>
-        <group>.</group>
-        <length>10</length>
-        <precision>-1</precision>
-        <trim_type>none</trim_type>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>64</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>If field value is null</name>
-    <type>IfNull</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <replaceAllByValue />
-    <replaceAllMask />
-    <selectFields>Y</selectFields>
-    <selectValuesType>N</selectValuesType>
-    <setEmptyStringAll>Y</setEmptyStringAll>
-    <valuetypes>
-      </valuetypes>
-    <fields>
-      <field>
-        <name>ARTICULO</name>
-        <value />
-        <mask />
-        <set_empty_string>Y</set_empty_string>
-      </field>
-      <field>
-        <name>CANTIDAD</name>
-        <value />
-        <mask />
-        <set_empty_string>Y</set_empty_string>
-      </field>
-      <field>
-        <name>UBICACION</name>
-        <value />
-        <mask />
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID</name>
-        <value />
-        <mask />
-        <set_empty_string>Y</set_empty_string>
-      </field>
-      <field>
-        <name>PLANTA</name>
-        <value />
-        <mask />
-        <set_empty_string>Y</set_empty_string>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>592</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insertar / Actualizar INVENTARIO_LECTURAS</name>
-    <type>InsertUpdate</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>V12</connection>
-    <commit>100</commit>
-    <update_bypassed>Y</update_bypassed>
-    <lookup>
-      <schema>LIVE</schema>
-      <table>ZINVENTARIO_LECTURAS</table>
-      <key>
-        <name>ID</name>
-        <field>ID</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>ID</name>
-        <rename>ID</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>ARTICULO</name>
-        <rename>ARTICULO</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>CANTIDAD</name>
-        <rename>CANTIDAD</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>UBICACION</name>
-        <rename>UBICACION</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>PLANTA</name>
-        <rename>PLANTA</rename>
-        <update>N</update>
-      </value>
-    </lookup>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1264</xloc>
-      <yloc>16</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>LIVE.ITMMASTER</name>
+    <name>LIVE.ZINVENTARIO_LECTURAS</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <connection>V12</connection>
-    <sql>SELECT ITMREF_0 FROM LIVE.ITMMASTER</sql>
+    <connection>v12</connection>
+    <sql>SELECT * fROM LIVE.ZINVENTARIO_LECTURAS
+WHERE PLANTA = 'TRILLA'</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>ID</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>LIVE.ZINVENTARIO_LECTURAS</origin>
+        <comments>ID</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ARTICULO</name>
+        <length>15</length>
+        <precision>-1</precision>
+        <origin>LIVE.ZINVENTARIO_LECTURAS</origin>
+        <comments>ARTICULO</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Number</type>
+        <storagetype>normal</storagetype>
+        <name>CANTIDAD</name>
+        <length>10</length>
+        <precision>2</precision>
+        <origin>LIVE.ZINVENTARIO_LECTURAS</origin>
+        <comments>CANTIDAD</comments>
+        <conversion_Mask>####0.0#########;-####0.0#########</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>UBICACION</name>
+        <length>10</length>
+        <precision>-1</precision>
+        <origin>LIVE.ZINVENTARIO_LECTURAS</origin>
+        <comments>UBICACION</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>PLANTA</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>LIVE.ZINVENTARIO_LECTURAS</origin>
+        <comments>PLANTA</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Timestamp</type>
+        <storagetype>normal</storagetype>
+        <name>FECHA</name>
+        <length>3</length>
+        <precision>-1</precision>
+        <origin>LIVE.ZINVENTARIO_LECTURAS</origin>
+        <comments>FECHA</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -999,56 +883,217 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>384</yloc>
+      <xloc>96</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Salida Fichero de Texto</name>
-    <type>TextFileOutput</type>
-    <description />
+    <name>LIVE.ZINVENTARIO_LECTURAS_PROC</name>
+    <type>TableInput</type>
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <separator>;</separator>
-    <enclosure>"</enclosure>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <connection>v12</connection>
+    <sql>DECLARE @RC int
+DECLARE @planta varchar(20)
+DECLARE @fecha_inv date
+DECLARE @fecha_valor date
+
+-- TODO: Set parameter values here.
+
+EXECUTE @RC = [LIVE].[ZINVENTARIO_LECTURAS_PROC] 
+   @planta = 'TRI'
+  ,@fecha_inv = '20241226'
+  ,@fecha_valor = '20241226'
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta/>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Microsoft Excel writer</name>
+    <type>TypeExitExcelWriterStep</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
     <header>Y</header>
     <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding />
-    <endedLine />
-    <fileNameInField>N</fileNameInField>
-    <fileNameField />
-    <create_parent_folder>Y</create_parent_folder>
+    <makeSheetActive>Y</makeSheetActive>
+    <startingCell>A1</startingCell>
+    <appendOmitHeader>N</appendOmitHeader>
+    <appendOffset>0</appendOffset>
+    <appendEmpty>0</appendEmpty>
+    <rowWritingMethod>overwrite</rowWritingMethod>
+    <forceFormulaRecalculation>N</forceFormulaRecalculation>
+    <leaveExistingStylesUnchanged>N</leaveExistingStylesUnchanged>
+    <appendLines>N</appendLines>
+    <add_to_result_filenames>Y</add_to_result_filenames>
     <file>
-      <name>C:/tmp/Inventario/2022/ERR_LOG</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>txt</extention>
-      <append>N</append>
+      <name>C:\Inventario\2024\TRILLA\RESULTADO_INVENTARIO</name>
+      <extention>xlsx</extention>
+      <do_not_open_newfile_init>N</do_not_open_newfile_init>
       <split>N</split>
-      <haspartno>N</haspartno>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery />
+      <date_time_format/>
+      <sheetname>Sheet1</sheetname>
+      <autosizecolums>Y</autosizecolums>
+      <stream_data>N</stream_data>
+      <protect_sheet>N</protect_sheet>
+      <password>Encrypted </password>
+      <protected_by/>
+      <splitevery>0</splitevery>
+      <if_file_exists>new</if_file_exists>
+      <if_sheet_exists>new</if_sheet_exists>
     </file>
+    <template>
+      <enabled>N</enabled>
+      <sheet_enabled>N</sheet_enabled>
+      <filename>template.xls</filename>
+      <sheetname/>
+      <hidden>N</hidden>
+    </template>
     <fields>
+      <field>
+        <name>PLANTA</name>
+        <type>String</type>
+        <format/>
+        <title>PLANTA</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>ARTICULO</name>
+        <type>String</type>
+        <format/>
+        <title>ARTICULO</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>DESCRIP</name>
+        <type>String</type>
+        <format/>
+        <title>DESCRIP</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>UBICACION</name>
+        <type>String</type>
+        <format/>
+        <title>UBICACION</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>STOCK</name>
+        <type>Integer</type>
+        <format>0</format>
+        <title>STOCK</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>LECTURAS_GENERAL</name>
+        <type>Integer</type>
+        <format>0</format>
+        <title>LECTURAS_GENERAL</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>LECTURAS_FABRICA</name>
+        <type>Integer</type>
+        <format>0</format>
+        <title>LECTURAS_FABRICA</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>LECTURAS_CLIENTE</name>
+        <type>Integer</type>
+        <format>0</format>
+        <title>LECTURAS_CLIENTE</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
+      <field>
+        <name>LECTURAS_MOLINO</name>
+        <type>Integer</type>
+        <format>0</format>
+        <title>LECTURAS_MOLINO</title>
+        <titleStyleCell/>
+        <styleCell/>
+        <commentField/>
+        <commentAuthorField/>
+        <formula>N</formula>
+        <hyperlinkField/>
+      </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1056,24 +1101,207 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1200</xloc>
-      <yloc>112</yloc>
+      <xloc>848</xloc>
+      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>dummy</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
+    <name>Select values</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <attributes />
-    <cluster_schema />
+    <fields>
+      <field>
+        <name>STOFCY_0</name>
+      </field>
+      <field>
+        <name>ITMREF_0</name>
+      </field>
+      <field>
+        <name>ITMDES1_0</name>
+      </field>
+      <field>
+        <name>LOCALIZA</name>
+      </field>
+      <field>
+        <name>STOCK</name>
+      </field>
+      <field>
+        <name>LECTURAS_GENERAL</name>
+      </field>
+      <field>
+        <name>LECTURAS_FABRICA</name>
+      </field>
+      <field>
+        <name>LECTURAS_CLIENTE</name>
+      </field>
+      <field>
+        <name>LECTURAS_MOLINO</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>STOFCY_0</name>
+        <rename>PLANTA</rename>
+        <type>None</type>
+        <length>5</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>ITMREF_0</name>
+        <rename>ARTICULO</rename>
+        <type>String</type>
+        <length>20</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>ITMDES1_0</name>
+        <rename>DESCRIP</rename>
+        <type>String</type>
+        <length>30</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>LOCALIZA</name>
+        <rename>UBICACION</rename>
+        <type>String</type>
+        <length>10</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>STOCK</name>
+        <rename>STOCK</rename>
+        <type>Integer</type>
+        <length>10</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>LECTURAS_GENERAL</name>
+        <rename>LECTURAS_GENERAL</rename>
+        <type>Integer</type>
+        <length>38</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>LECTURAS_FABRICA</name>
+        <rename>LECTURAS_FABRICA</rename>
+        <type>Integer</type>
+        <length>38</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>LECTURAS_CLIENTE</name>
+        <rename>LECTURAS_CLIENTE</rename>
+        <type>Integer</type>
+        <length>38</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>LECTURAS_MOLINO</name>
+        <rename>LECTURAS_MOLINO</rename>
+        <type>Integer</type>
+        <length>38</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1081,52 +1309,27 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>160</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>dummy_ERR</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1024</xloc>
-      <yloc>112</yloc>
+      <xloc>464</xloc>
+      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step_error_handling>
     <error>
-      <source_step>Data validator (Existe arti?)</source_step>
-      <target_step>dummy_ERR</target_step>
+      <source_step>Data validator</source_step>
+      <target_step>ARTICULOS_LEIDOS_SIN_STOCK</target_step>
       <is_enabled>Y</is_enabled>
-      <nr_valuename>NUM. ERRORES EN CAMPO</nr_valuename>
-      <descriptions_valuename>DESCRIPCION DEL ERROR</descriptions_valuename>
-      <fields_valuename>ERROR EN COLUMNA</fields_valuename>
-      <codes_valuename>CODIGO DE ERROR</codes_valuename>
-      <max_errors />
-      <max_pct_errors />
-      <min_pct_rows />
+      <nr_valuename/>
+      <descriptions_valuename/>
+      <fields_valuename/>
+      <codes_valuename/>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
     </error>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

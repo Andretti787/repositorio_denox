@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>creacion_ficheros_traspasos_saldos_v12</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
+  <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2021/07/12 08:08:30.998</created_date>
@@ -14,12 +15,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -127,10 +128,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -218,10 +219,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -284,13 +285,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -306,17 +307,17 @@
       <nr>0</nr>
       <xloc>64</xloc>
       <yloc>176</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Traspasos saldos clientes YBIC</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/V12_carga_traspasos_SALDOS_CTE.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\V12_carga_traspasos_SALDOS_CTE.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -329,7 +330,7 @@
       <add_time>Y</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>Y</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -344,29 +345,29 @@
       <nr>0</nr>
       <xloc>224</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
+      <attributes/>
       <server>smtp.office365.com</server>
       <port>587</port>
       <destination>mmarco@denox.eu</destination>
-      <destinationCc />
-      <destinationBCc />
+      <destinationCc/>
+      <destinationBCc/>
       <replyto>mmarco@denox.eu</replyto>
-      <replytoname>Spoon (rserver)</replytoname>
+      <replytoname>Spoon (local)</replytoname>
       <subject>Carga de Traspasos de saldos </subject>
       <include_date>Y</include_date>
-      <contact_person />
-      <contact_phone />
+      <contact_person/>
+      <contact_phone/>
       <comment>La generación de los fichero de carga de traspasos ha sido ejecutada.
 </comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
       <use_secure_auth>Y</use_secure_auth>
       <auth_user>mmarco@denox.eu</auth_user>
@@ -394,17 +395,17 @@
       <nr>0</nr>
       <xloc>1232</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Traspasos saldos proveedores YBIS</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/V12_carga_traspasos_SALDOS_PROV.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\V12_carga_traspasos_SALDOS_PROV.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -412,12 +413,12 @@
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile>C:\intercambio\LOG\LOG_TRASPASOS_V12</logfile>
-      <logext />
+      <logext/>
       <add_date>Y</add_date>
       <add_time>Y</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>Y</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -432,41 +433,41 @@
       <nr>0</nr>
       <xloc>448</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>320</xloc>
       <yloc>304</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success 2</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
       <yloc>304</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Traspasos saldos contables YGAS</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/V12_carga_traspasos_YGS.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\V12_carga_traspasos_YPAG.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -474,12 +475,12 @@
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile>C:\intercambio\LOG\LOG_TRASPASOS_V12</logfile>
-      <logext />
+      <logext/>
       <add_date>Y</add_date>
       <add_time>Y</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>Y</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -494,29 +495,29 @@
       <nr>0</nr>
       <xloc>688</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success 3</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>688</xloc>
       <yloc>304</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Traspasos saldos pagos/cobros YPAY</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/V12_carga_traspasos_YPAG.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\V12_carga_traspasos_YPAG.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
@@ -524,12 +525,12 @@
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
       <logfile>C:\intercambio\LOG\LOG_TRASPASOS_V12</logfile>
-      <logext />
+      <logext/>
       <add_date>Y</add_date>
       <add_time>Y</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>Y</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -542,27 +543,27 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>976</xloc>
+      <xloc>896</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success 4</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>880</xloc>
       <yloc>304</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Copy files to public\informatica\itercambio</name>
-      <description />
+      <description/>
       <type>COPY_FILES</type>
-      <attributes />
+      <attributes/>
       <copy_empty_folders>Y</copy_empty_folders>
       <arg_from_previous>N</arg_from_previous>
       <overwrite_files>Y</overwrite_files>
@@ -573,39 +574,39 @@
       <create_destination_folder>N</create_destination_folder>
       <fields>
         <field>
-          <source_filefolder>EMPTY_SOURCE_URL-0-file:///home/mmarco/Documentos/traspasos v12/V12_TRASPASO_SALDOS_CTE</source_filefolder>
+          <source_filefolder>EMPTY_SOURCE_URL-0-file:///C:/intercambio/V12_TRASPASO_SALDOS_CTE</source_filefolder>
           <source_configuration_name>LOCAL-SOURCE-FILE-0</source_configuration_name>
-          <destination_filefolder>EMPTY_DEST_URL-0-file:///home/mmarco/Público/TraspasosV12</destination_filefolder>
+          <destination_filefolder>EMPTY_DEST_URL-0-\\192.168.35.10\public\informatica\intercambio</destination_filefolder>
           <destination_configuration_name>STATIC-DEST-FILE-0</destination_configuration_name>
-          <wildcard />
+          <wildcard/>
         </field>
         <field>
-          <source_filefolder>EMPTY_SOURCE_URL-1-file:///home/mmarco/Documentos/traspasos v12/V12_TRASPASO_SALDOS_PROV</source_filefolder>
+          <source_filefolder>EMPTY_SOURCE_URL-1-file:///C:/intercambio/V12_TRASPASO_SALDOS_PROV</source_filefolder>
           <source_configuration_name>LOCAL-SOURCE-FILE-1</source_configuration_name>
-          <destination_filefolder>EMPTY_DEST_URL-1-file:///home/mmarco/Público/TraspasosV12</destination_filefolder>
+          <destination_filefolder>EMPTY_DEST_URL-1-\\192.168.35.10\public\informatica\intercambio</destination_filefolder>
           <destination_configuration_name>STATIC-DEST-FILE-1</destination_configuration_name>
-          <wildcard />
+          <wildcard/>
         </field>
         <field>
-          <source_filefolder>EMPTY_SOURCE_URL-2-file:///home/mmarco/Documentos/traspasos v12/V12_TRASPASO_YGS</source_filefolder>
+          <source_filefolder>EMPTY_SOURCE_URL-2-file:///C:/intercambio/V12_TRASPASO_YGS</source_filefolder>
           <source_configuration_name>LOCAL-SOURCE-FILE-2</source_configuration_name>
-          <destination_filefolder>EMPTY_DEST_URL-2-file:///home/mmarco/Público/TraspasosV12</destination_filefolder>
+          <destination_filefolder>EMPTY_DEST_URL-2-\\192.168.35.10\public\informatica\intercambio</destination_filefolder>
           <destination_configuration_name>STATIC-DEST-FILE-2</destination_configuration_name>
-          <wildcard />
+          <wildcard/>
         </field>
         <field>
-          <source_filefolder>EMPTY_SOURCE_URL-3-file:///home/mmarco/Documentos/traspasos v12/V12_traspasos_YPAG</source_filefolder>
+          <source_filefolder>EMPTY_SOURCE_URL-3-file:///C:/intercambio/V12_traspasos_YPAG</source_filefolder>
           <source_configuration_name>LOCAL-SOURCE-FILE-3</source_configuration_name>
-          <destination_filefolder>EMPTY_DEST_URL-3-file:///home/mmarco/Público/TraspasosV12</destination_filefolder>
+          <destination_filefolder>EMPTY_DEST_URL-3-\\192.168.35.10\public\informatica\intercambio</destination_filefolder>
           <destination_configuration_name>STATIC-DEST-FILE-3</destination_configuration_name>
-          <wildcard />
+          <wildcard/>
         </field>
         <field>
           <source_filefolder>EMPTY_SOURCE_URL-4-</source_filefolder>
-          <source_configuration_name />
-          <destination_filefolder>EMPTY_DEST_URL-4-file:///home/mmarco/Público/TraspasosV12</destination_filefolder>
-          <destination_configuration_name />
-          <wildcard />
+          <source_configuration_name/>
+          <destination_filefolder>EMPTY_DEST_URL-4-\\192.168.35.10\public\informatica\intercambio</destination_filefolder>
+          <destination_configuration_name/>
+          <wildcard/>
         </field>
       </fields>
       <parallel>N</parallel>
@@ -613,7 +614,7 @@
       <nr>0</nr>
       <xloc>1088</xloc>
       <yloc>304</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>

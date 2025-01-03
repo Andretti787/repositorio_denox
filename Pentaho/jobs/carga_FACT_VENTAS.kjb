@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>carga_FACT_VENTAS</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
   <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
@@ -15,12 +15,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -128,10 +128,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -219,10 +219,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -285,13 +285,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -307,30 +307,30 @@
       <nr>0</nr>
       <xloc>144</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>carga_FACT_VENTAS</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_FACT_VENTAS.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>C:\Pentaho\data-integration\samples\transformations\carga_FACT_VENTAS.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>Y</set_logfile>
-      <logfile>/home/mmarco/Pentaho/data-integration/logs/FACT_VENTAS_LO</logfile>
-      <logext />
+      <logfile>C:\Pentaho\data-integration\logs\fac_ventas_log</logfile>
+      <logext>txt</logext>
       <add_date>Y</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>Y</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
@@ -345,28 +345,28 @@
       <nr>0</nr>
       <xloc>336</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
+      <attributes/>
       <server>smtp.famesa.es</server>
       <port>25</port>
       <destination>mmarco@denox.eu</destination>
-      <destinationCc />
-      <destinationBCc />
+      <destinationCc/>
+      <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>spoon (rserver)</replytoname>
+      <replytoname>spoon </replytoname>
       <subject>Carga FACT_VENTAS</subject>
       <include_date>Y</include_date>
-      <contact_person />
-      <contact_phone />
+      <contact_person/>
+      <contact_phone/>
       <comment>Carga de tabla de hechos de ventas </comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
       <use_secure_auth>N</use_secure_auth>
       <auth_user>informatica@famesa.es</auth_user>
@@ -379,7 +379,7 @@
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
       <secureconnectiontype>TLS</secureconnectiontype>
-      <replyToAddresses />
+      <replyToAddresses/>
       <filetypes>
         <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
@@ -392,7 +392,7 @@
       <nr>0</nr>
       <xloc>688</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>

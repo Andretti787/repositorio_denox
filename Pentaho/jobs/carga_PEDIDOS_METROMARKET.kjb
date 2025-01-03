@@ -304,8 +304,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>64</xloc>
-      <yloc>64</yloc>
+      <xloc>112</xloc>
+      <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -315,7 +315,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_METROMARKET_pedido_V3.ktr</filename>
+      <filename>C:\Pentaho\data-integration\samples\transformations\carga_METROMARKET_pedido_V3.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -336,15 +336,14 @@
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
       <run_configuration>Pentaho local</run_configuration>
-      <suppress_result_data>N</suppress_result_data>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>336</xloc>
-      <yloc>64</yloc>
+      <xloc>352</xloc>
+      <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -355,8 +354,8 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>560</xloc>
-      <yloc>64</yloc>
+      <xloc>544</xloc>
+      <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -366,11 +365,11 @@
       <attributes/>
       <server>smtp.famesa.es</server>
       <port>25</port>
-      <destination>mmarco@denox.eu mnaudin@denox.eu dilies@denox.eu e-commerce@denox.eu</destination>
+      <destination>mmarco@denox.eu</destination>
       <destinationCc/>
       <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>Spoon (rserver)</replytoname>
+      <replytoname>Spoon (local)</replytoname>
       <subject>Carga pedido MetroMarket</subject>
       <include_date>N</include_date>
       <contact_person/>
@@ -379,11 +378,7 @@
 
 Se han generado los ficheros necesarios para la importación de los pedidos de MetroMarket.
 
-El orden de importación de los ficheros es:
- 1- IMPORT_ZBPC
- 2- IMPORT_ZSOH
-
-- Fichero (IMPORT_ZBPC): dirección de entrega de cliente. Importar mediante modelo: ZBPCMM
+- Fichero (IMPORT_ZBPCMM): dirección de entrega de cliente. Importar mediante modelo: ZBPC
 - Fichero (IMPORT_ZSOH): pedidos. Importar mediante modelo: ZSOH
 
 </comment>
@@ -414,129 +409,57 @@ El orden de importación de los ficheros es:
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>48</yloc>
+      <xloc>1008</xloc>
+      <yloc>96</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Move files</name>
+      <name>Copy files</name>
       <description/>
-      <type>MOVE_FILES</type>
+      <type>COPY_FILES</type>
       <attributes/>
-      <move_empty_folders>N</move_empty_folders>
+      <copy_empty_folders>N</copy_empty_folders>
       <arg_from_previous>N</arg_from_previous>
+      <overwrite_files>Y</overwrite_files>
       <include_subfolders>N</include_subfolders>
-      <add_result_filesname>Y</add_result_filesname>
+      <remove_source_files>N</remove_source_files>
+      <add_result_filesname>N</add_result_filesname>
       <destination_is_a_file>N</destination_is_a_file>
-      <create_destination_folder>N</create_destination_folder>
-      <add_date>Y</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <nr_errors_less_than>10</nr_errors_less_than>
-      <success_condition>success_if_no_errors</success_condition>
-      <AddDateBeforeExtension>Y</AddDateBeforeExtension>
-      <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
-      <iffileexists>overwrite_file</iffileexists>
-      <destinationFolder/>
-      <ifmovedfileexists>do_nothing</ifmovedfileexists>
-      <moved_date_time_format/>
-      <create_move_to_folder>N</create_move_to_folder>
-      <add_moved_date>N</add_moved_date>
-      <add_moved_time>N</add_moved_time>
-      <SpecifyMoveFormat>N</SpecifyMoveFormat>
-      <AddMovedDateBeforeExtension>N</AddMovedDateBeforeExtension>
-      <simulate>N</simulate>
+      <create_destination_folder>Y</create_destination_folder>
       <fields>
         <field>
-          <source_filefolder>/home/mnaudin/metroMarket/pedidos</source_filefolder>
-          <destination_filefolder>/home/mnaudin/metroMarket/cargados</destination_filefolder>
-          <wildcard>.*\.csv</wildcard>
+          <source_filefolder>EMPTY_SOURCE_URL-0-file:///C:/tmp/MetroMarket/</source_filefolder>
+          <source_configuration_name/>
+          <destination_filefolder>EMPTY_DEST_URL-0-file:///C:/tmp/MetroMarket/copias</destination_filefolder>
+          <destination_configuration_name/>
+          <wildcard>IMPORT*.*</wildcard>
+        </field>
+        <field>
+          <source_filefolder>EMPTY_SOURCE_URL-1-file:///C:/tmp/MetroMarket/</source_filefolder>
+          <source_configuration_name/>
+          <destination_filefolder>EMPTY_DEST_URL-1-file:////192.168.28.100/d$/Sage/X3V12/folders/TEST/IMPORT/CARGA_AUTO</destination_filefolder>
+          <destination_configuration_name/>
+          <wildcard>IMPORT*.*</wildcard>
         </field>
       </fields>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>720</xloc>
-      <yloc>224</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Evaluate files metrics</name>
-      <description/>
-      <type>EVAL_FILES_METRICS</type>
-      <attributes/>
-      <result_filenames_wildcard/>
-      <Result_field_file/>
-      <Result_field_wildcard/>
-      <Result_field_includesubfolders/>
-      <fields>
-        <field>
-          <source_filefolder>/home/mnaudin/metroMarket/pedidos</source_filefolder>
-          <wildcard>.*\.csv</wildcard>
-          <include_subFolders>N</include_subFolders>
-        </field>
-      </fields>
-      <comparevalue>0</comparevalue>
-      <minvalue/>
-      <maxvalue/>
-      <successnumbercondition>greater</successnumbercondition>
-      <source_files>files</source_files>
-      <evaluation_type>count</evaluation_type>
-      <scale>bytes</scale>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>224</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Get a file with SFTP</name>
-      <description/>
-      <type>SFTP</type>
-      <attributes/>
-      <servername>sftp.metro-vendoroffice.com</servername>
-      <serverport>40222</serverport>
-      <username>mnaudin@famesa.es</username>
-      <password>Encrypted 2be98afc82fc49d97b20aba75d3defd8b</password>
-      <sftpdirectory>/Orders</sftpdirectory>
-      <targetdirectory>/home/mnaudin/metroMarket/pedidos</targetdirectory>
-      <wildcard>.*\.csv</wildcard>
-      <remove>Y</remove>
-      <isaddresult>Y</isaddresult>
-      <createtargetfolder>N</createtargetfolder>
-      <copyprevious>N</copyprevious>
-      <usekeyfilename>N</usekeyfilename>
-      <keyfilename/>
-      <keyfilepass>Encrypted </keyfilepass>
-      <compression>none</compression>
-      <proxyType/>
-      <proxyHost/>
-      <proxyPort/>
-      <proxyUsername/>
-      <proxyPassword>Encrypted </proxyPassword>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>432</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Success 2</name>
-      <description/>
-      <type>SUCCESS</type>
-      <attributes/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>432</yloc>
+      <xloc>704</xloc>
+      <yloc>288</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
+    <hop>
+      <from>Start</from>
+      <to>Transformation</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
     <hop>
       <from>Transformation</from>
       <to>Success</to>
@@ -548,43 +471,16 @@ El orden de importación de los ficheros es:
     </hop>
     <hop>
       <from>Success</from>
-      <to>Move files</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Move files</from>
       <to>Mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Evaluate files metrics</from>
-      <to>Transformation</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Start</from>
-      <to>Get a file with SFTP</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Get a file with SFTP</from>
-      <to>Success 2</to>
+      <from>Success</from>
+      <to>Copy files</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -592,11 +488,11 @@ El orden de importación de los ficheros es:
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Success 2</from>
-      <to>Evaluate files metrics</to>
+      <from>Copy files</from>
+      <to>Mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>

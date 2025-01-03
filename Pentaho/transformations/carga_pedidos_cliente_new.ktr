@@ -440,7 +440,7 @@
     <server>217.116.8.58</server>
     <type>MSSQL</type>
     <access>Native</access>
-    <database>X3FAMESA</database>
+    <database>x3famesa</database>
     <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>

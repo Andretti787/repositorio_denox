@@ -2,9 +2,9 @@
 <transformation>
   <info>
     <name>V12_carga_traspasos_SALDOS_CTE</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <trans_status>0</trans_status>
     <directory>/</directory>
@@ -12,12 +12,12 @@
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -42,37 +42,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -126,11 +126,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -208,10 +208,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -274,10 +274,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -350,10 +350,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -402,9 +402,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -415,7 +415,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -435,6 +435,28 @@
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
+    <notepad>
+      <note>Ordeno las filas para que la estructura sea la correcta a la hora de la importación. Concateno los valores que necesito
+por cada tipo de línea en una sola y luego empleo la normalización para asignar el orden correcto.</note>
+      <xloc>528</xloc>
+      <yloc>480</yloc>
+      <width>623</width>
+      <heigth>42</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
     <name>MSSQL v8</name>
@@ -445,9 +467,9 @@
     <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -497,6 +519,21 @@
   </connection>
   <order>
     <hop>
+      <from>Selecciona/Renombra valores</from>
+      <to>Salida Fichero de Texto</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Entrada Tabla</from>
+      <to>Filtrar filas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Split field to rows</from>
+      <to>Selecciona/Renombra valores</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
       <from>Entrada Tabla 2</from>
       <to>Filtrar filas 2</to>
       <enabled>Y</enabled>
@@ -504,6 +541,16 @@
     <hop>
       <from>Filtrar filas 2</from>
       <to>Selecciona/Renombra valores 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Filtrar filas</from>
+      <to>Añadir constantes</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Añadir constantes</from>
+      <to>Selecciona/Renombra valores</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -533,28 +580,67 @@
     </hop>
   </order>
   <step>
-    <name>Concatenar_CAB</name>
-    <type>ConcatFields</type>
-    <description />
+    <name>Añadir constantes</name>
+    <type>Constant</type>
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>ID</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>T</nullif>
+        <length>1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>448</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Concatenar_CAB</name>
+    <type>ConcatFields</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -567,7 +653,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -577,11 +663,11 @@
       <field>
         <name>SIVTYP_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -589,11 +675,11 @@
       <field>
         <name>NUM_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -601,11 +687,11 @@
       <field>
         <name>BPR_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -613,11 +699,11 @@
       <field>
         <name>BPRSAC_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -625,11 +711,11 @@
       <field>
         <name>FCY_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -637,11 +723,11 @@
       <field>
         <name>ACCDAT_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -649,11 +735,11 @@
       <field>
         <name>CUR_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -661,11 +747,11 @@
       <field>
         <name>PTE_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -673,23 +759,23 @@
       <field>
         <name>VAC_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
       <field>
-        <name>BPRVCR_0</name>
+        <name>BPRDAT_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -697,11 +783,11 @@
       <field>
         <name>NUM_0</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -712,8 +798,8 @@
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -729,26 +815,26 @@
   <step>
     <name>Concatenar_DET</name>
     <type>ConcatFields</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -761,7 +847,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -772,10 +858,10 @@
         <name>DUDLIG_0</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -783,11 +869,11 @@
       <field>
         <name>DUDDAT_0</name>
         <type>Date</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -795,11 +881,11 @@
       <field>
         <name>PAM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -808,10 +894,10 @@
         <name>AMTCUR</name>
         <type>Number</type>
         <format>0.#####</format>
-        <currency />
+        <currency/>
         <decimal>.</decimal>
-        <group />
-        <nullif />
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -822,8 +908,8 @@
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -839,26 +925,26 @@
   <step>
     <name>Concatenar_LIN</name>
     <type>ConcatFields</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>N</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
       <name>file</name>
@@ -871,7 +957,7 @@
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
@@ -882,10 +968,10 @@
         <name>NUM_LIN</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -894,10 +980,10 @@
         <name>ACCNUM_0</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -906,10 +992,10 @@
         <name>PDTE</name>
         <type>Number</type>
         <format>0.#####</format>
-        <currency />
+        <currency/>
         <decimal>.</decimal>
-        <group />
-        <nullif />
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -920,8 +1006,8 @@
       <targetFieldLength>0</targetFieldLength>
       <removeSelectedFields>N</removeSelectedFields>
     </ConcatFields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -935,20 +1021,20 @@
     </GUI>
   </step>
   <step>
-    <name>Entrada Tabla 2</name>
+    <name>Entrada Tabla</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>N</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL v8</connection>
     <sql>SELECT CAB.SIVTYP_0, CAB.NUM_0, CAB.BPR_0, CAB.BPRSAC_0, CAB.FCY_0, CAB.ACCDAT_0, CAB.CUR_0, CAB.PTE_0, CAB.VAC_0, CAB.BPRVCR_0  
 , GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, CAST(GAC.AMTCUR_0 AS DECIMAL(10,2)) AS AMTCUR
-, COUNT(*) AS NUM_LIN, GAC.ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
+, GAC.ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
 , GROUPING (CAB.NUM_0) AS GRUPING_NUM
 FROM FAMESAOF.GACCDUDATE GAC
 INNER JOIN FAMESAOF.SINVOICE CAB ON CAB.NUM_0 = GAC.NUM_0
@@ -960,28 +1046,105 @@ GROUP BY
 						(CAB.SIVTYP_0,	CAB.NUM_0,	CAB.BPR_0,	CAB.BPRSAC_0, 	CAB.FCY_0,	CAB.ACCDAT_0,	CAB.CUR_0,	CAB.PTE_0,	CAB.VAC_0,	CAB.BPRVCR_0,	CAB.BPRVCR_0, GAC.ACCNUM_0,GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, GAC.AMTCUR_0),
 						()
 						)
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>96</xloc>
+      <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla 2</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL v8</connection>
+    <sql>/*SELECT CAB.SIVTYP_0, CAB.NUM_0, CAB.BPR_0, CAB.BPRSAC_0, CAB.FCY_0, '31122021' AS ACCDAT_0, CAB.CUR_0, CAB.PTE_0, CAB.VAC_0, CAB.BPRDAT_0 --CAB.BPRVCR_0  
+, GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2)) AS AMTCUR--CAST(GAC.AMTCUR_0 AS DECIMAL(10,2)) AS AMTCUR
+, COUNT(*) AS NUM_LIN, '430999' as ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
+, GROUPING (CAB.NUM_0) AS GRUPING_NUM
+FROM FAMESAOF.GACCDUDATE GAC
+INNER JOIN FAMESAOF.SINVOICE CAB ON CAB.NUM_0 = GAC.NUM_0
+WHERE AMTCUR_0 - PAYCUR_0 - TMPCUR_0 > 0
+--AND DUDDAT_0 >= '20210625'
+AND DUDDAT_0 &lt; '20210625'
+AND SIVTYP_0 IN ('FAC','ABC','FRC')
+GROUP BY 
+		GROUPING SETS (
+						(CAB.SIVTYP_0,	CAB.NUM_0,	CAB.BPR_0,	CAB.BPRSAC_0, 	CAB.FCY_0,	CAB.ACCDAT_0,	CAB.CUR_0,	CAB.PTE_0,	CAB.VAC_0,	CAB.BPRVCR_0, CAB.BPRDAT_0, CAB.BPRVCR_0, GAC.ACCNUM_0,GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, GAC.AMTCUR_0),
+						()
+						)
 UNION ALL
-SELECT CAB.SIVTYP_0, CAB.NUM_0, CAB.BPR_0, CAB.BPRSAC_0, CAB.FCY_0, CAB.ACCDAT_0, CAB.CUR_0, CAB.PTE_0, CAB.VAC_0, CAB.BPRVCR_0  
-, GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, CAST(GAC.AMTCUR_0 AS DECIMAL(10,2)) AS AMTCUR
-, COUNT(*) AS NUM_LIN, GAC.ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
+SELECT CAB.SIVTYP_0, CAB.NUM_0, CONCAT('T',CAB.BPR_0) AS BPR_0, CAB.BPRSAC_0, CAB.FCY_0, '31122021' AS ACCDAT_0, CAB.CUR_0, CAB.PTE_0, CAB.VAC_0, CAB.BPRDAT_0--CAB.BPRVCR_0  
+, GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2)) AS AMTCUR--CAST(GAC.AMTCUR_0 AS DECIMAL(10,2)) AS AMTCUR
+, COUNT(*) AS NUM_LIN,'430999' AS ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
 , GROUPING (CAB.NUM_0) AS GRUPING_NUM
 FROM TRILLA.GACCDUDATE GAC
 INNER JOIN TRILLA.SINVOICE CAB ON CAB.NUM_0 = GAC.NUM_0
 WHERE AMTCUR_0 - PAYCUR_0 - TMPCUR_0 > 0
-AND DUDDAT_0 >= '20210625'
-AND SIVTYP_0 IN ('FAC','ABC')
+--AND DUDDAT_0 >= '20210625'
+AND DUDDAT_0 &lt; '20210625'
+AND SIVTYP_0 IN ('FAC','ABC','FRC')
 GROUP BY 
 		GROUPING SETS (
-						(CAB.SIVTYP_0,	CAB.NUM_0,	CAB.BPR_0,	CAB.BPRSAC_0, 	CAB.FCY_0,	CAB.ACCDAT_0,	CAB.CUR_0,	CAB.PTE_0,	CAB.VAC_0,	CAB.BPRVCR_0, GAC.ACCNUM_0,GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, GAC.AMTCUR_0),
+						(CAB.SIVTYP_0,	CAB.NUM_0,	CAB.BPR_0,	CAB.BPRSAC_0, 	CAB.FCY_0,	CAB.ACCDAT_0,	CAB.CUR_0,	CAB.PTE_0,	CAB.VAC_0,	CAB.BPRDAT_0, CAB.BPRVCR_0, GAC.ACCNUM_0,GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, GAC.AMTCUR_0),
 						(CAB.FCY_0)
-						)</sql>
+						)
+UNION ALL*/
+SELECT CAB.SIVTYP_0, CAB.NUM_0, CONCAT('IFA',CAB.BPR_0) AS BPR_0, CAB.BPRSAC_0, CAB.FCY_0, '31122021' AS ACCDAT_0, CAB.CUR_0, CAB.PTE_0, CAB.VAC_0, CAB.BPRDAT_0 --CAB.BPRVCR_0  
+, GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2)) AS AMTCUR--CAST(GAC.AMTCUR_0 AS DECIMAL(10,2)) AS AMTCUR
+, COUNT(*) AS NUM_LIN, '430999' as ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
+, GROUPING (CAB.NUM_0) AS GRUPING_NUM
+FROM IPTFAM.GACCDUDATE GAC
+INNER JOIN IPTFAM.SINVOICE CAB ON CAB.NUM_0 = GAC.NUM_0
+WHERE AMTCUR_0 - PAYCUR_0 - TMPCUR_0 > 0
+AND SIVTYP_0 IN ('FAC','ABC','FRC')
+GROUP BY 
+		GROUPING SETS (
+						(CAB.SIVTYP_0,	CAB.NUM_0,	CAB.BPR_0,	CAB.BPRSAC_0, 	CAB.FCY_0,	CAB.ACCDAT_0,	CAB.CUR_0,	CAB.PTE_0,	CAB.VAC_0,	CAB.BPRVCR_0, CAB.BPRDAT_0, CAB.BPRVCR_0, GAC.ACCNUM_0,GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, GAC.AMTCUR_0),
+						()
+						)
+/*UNION ALL
+SELECT CAB.SIVTYP_0, CAB.NUM_0, CONCAT('IPT', CAB.BPR_0) AS BPR_0, CAB.BPRSAC_0, CAB.FCY_0, '31122021' AS ACCDAT_0, CAB.CUR_0, CAB.PTE_0, CAB.VAC_0, CAB.BPRDAT_0 --CAB.BPRVCR_0  
+, GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2)) AS AMTCUR--CAST(GAC.AMTCUR_0 AS DECIMAL(10,2)) AS AMTCUR
+, COUNT(*) AS NUM_LIN, '430999' as ACCNUM_0, CAST((SUM(GAC.AMTCUR_0) - SUM(GAC.PAYCUR_0) -SUM(GAC.TMPCUR_0)) AS DECIMAL(10,2))AS PDTE
+, GROUPING (CAB.NUM_0) AS GRUPING_NUM
+FROM IPTRILLA.GACCDUDATE GAC
+INNER JOIN IPTRILLA.SINVOICE CAB ON CAB.NUM_0 = GAC.NUM_0
+WHERE AMTCUR_0 - PAYCUR_0 - TMPCUR_0 > 0
+AND SIVTYP_0 IN ('FAC','ABC','FRC')
+GROUP BY 
+		GROUPING SETS (
+						(CAB.SIVTYP_0,	CAB.NUM_0,	CAB.BPR_0,	CAB.BPRSAC_0, 	CAB.FCY_0,	CAB.ACCDAT_0,	CAB.CUR_0,	CAB.PTE_0,	CAB.VAC_0,	CAB.BPRVCR_0, CAB.BPRDAT_0, CAB.BPRVCR_0, GAC.ACCNUM_0,GAC.DUDLIG_0, GAC.DUDDAT_0, GAC.PAM_0, GAC.AMTCUR_0),
+						()
+						)
+*/</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -995,24 +1158,24 @@ GROUP BY
     </GUI>
   </step>
   <step>
-    <name>Filtrar filas 2</name>
+    <name>Filtrar filas</name>
     <type>FilterRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
-    <send_true_to>Añadir constantes 2</send_true_to>
-    <send_false_to />
+    <send_true_to>Añadir constantes</send_true_to>
+    <send_false_to/>
     <compare>
       <condition>
         <negated>N</negated>
         <leftvalue>GRUPING_NUM</leftvalue>
         <function>=</function>
-        <rightvalue />
+        <rightvalue/>
         <value>
           <name>constant</name>
           <type>Integer</type>
@@ -1024,8 +1187,52 @@ GROUP BY
         </value>
       </condition>
     </compare>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>272</xloc>
+      <yloc>240</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filtrar filas 2</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Añadir constantes 2</send_true_to>
+    <send_false_to/>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>GRUPING_NUM</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>Integer</type>
+          <text>0</text>
+          <length>-1</length>
+          <precision>0</precision>
+          <isnull>N</isnull>
+          <mask>####0;-####0</mask>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1041,13 +1248,13 @@ GROUP BY
   <step>
     <name>Normalización de fila</name>
     <type>Normaliser</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <typefield>typefield</typefield>
     <fields>
@@ -1067,8 +1274,8 @@ GROUP BY
         <norm>detalle</norm>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1084,16 +1291,16 @@ GROUP BY
   <step>
     <name>Salida Fichero SALDOS CTE</name>
     <type>TextFileOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
-    <enclosure />
+    <enclosure/>
     <enclosure_forced>Y</enclosure_forced>
     <enclosure_fix_disabled>N</enclosure_fix_disabled>
     <header>N</header>
@@ -1101,36 +1308,36 @@ GROUP BY
     <format>DOS</format>
     <compression>None</compression>
     <encoding>ISO-8859-1</encoding>
-    <endedLine />
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>/home/mmarco/Documentos/traspasos v12/V12_TRASPASO_SALDOS_CTE</name>
+      <name>C:/intercambio/V12_TRASPASO_SALDOS_CTE</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention />
+      <extention/>
       <append>N</append>
       <split>N</split>
       <haspartno>N</haspartno>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
-      <splitevery />
+      <splitevery/>
     </file>
     <fields>
       <field>
         <name>typefield</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>none</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -1138,18 +1345,18 @@ GROUP BY
       <field>
         <name>cabecera</name>
         <type>None</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1163,15 +1370,276 @@ GROUP BY
     </GUI>
   </step>
   <step>
-    <name>Selecciona/Renombra valores 2</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
+    <name>Salida Fichero de Texto</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure>"</enclosure>
+    <enclosure_forced>Y</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding>ISO-8859-1</encoding>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>C:/intercambio/V12_TRASPASO_SALDOS</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention/>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>ID</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>SIVTYP_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>NUM_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>BPR_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>BPRSAC_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>FCY_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>ACCDAT_0</name>
+        <type>Date</type>
+        <format>ddMMyyyy</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>CUR_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>PTE_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>VAC_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>BPRVCR_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>DUDLIG_0</name>
+        <type>Integer</type>
+        <format>0</format>
+        <currency/>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>DUDDAT_0</name>
+        <type>Date</type>
+        <format>ddMMyyyy</format>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>PAM_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>AMTCUR</name>
+        <type>Number</type>
+        <format>0.#####</format>
+        <currency/>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>ACCNUM_0</name>
+        <type>Integer</type>
+        <format>0</format>
+        <currency/>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>PDTE</name>
+        <type>Number</type>
+        <format>0.#####</format>
+        <currency/>
+        <decimal>,</decimal>
+        <group>.</group>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>976</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -1203,6 +1671,119 @@ GROUP BY
       </field>
       <field>
         <name>BPRVCR_0</name>
+      </field>
+      <field>
+        <name>DUDLIG_0</name>
+      </field>
+      <field>
+        <name>DUDDAT_0</name>
+      </field>
+      <field>
+        <name>PAM_0</name>
+      </field>
+      <field>
+        <name>AMTCUR</name>
+      </field>
+      <field>
+        <name>ACCNUM_0</name>
+      </field>
+      <field>
+        <name>PDTE</name>
+      </field>
+      <field>
+        <name>ID</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>ACCDAT_0</name>
+        <rename>ACCDAT_0</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>ddMMyyyy</conversion_mask>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>DUDDAT_0</name>
+        <rename>DUDDAT_0</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>ddMMyyyy</conversion_mask>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>160</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores 2</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>SIVTYP_0</name>
+      </field>
+      <field>
+        <name>NUM_0</name>
+      </field>
+      <field>
+        <name>BPR_0</name>
+      </field>
+      <field>
+        <name>BPRSAC_0</name>
+      </field>
+      <field>
+        <name>FCY_0</name>
+      </field>
+      <field>
+        <name>ACCDAT_0</name>
+      </field>
+      <field>
+        <name>CUR_0</name>
+      </field>
+      <field>
+        <name>PTE_0</name>
+      </field>
+      <field>
+        <name>VAC_0</name>
+      </field>
+      <field>
+        <name>BPRDAT_0</name>
       </field>
       <field>
         <name>DUDLIG_0</name>
@@ -1235,16 +1816,16 @@ GROUP BY
         <type>String</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>ACCDAT_0</name>
@@ -1254,14 +1835,14 @@ GROUP BY
         <precision>-2</precision>
         <conversion_mask>ddMMyyyy</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>DUDDAT_0</name>
@@ -1271,18 +1852,35 @@ GROUP BY
         <precision>-2</precision>
         <conversion_mask>ddMMyyyy</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>BPRDAT_0</name>
+        <rename>BPRDAT_0</rename>
+        <type>Date</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask>ddMMyyyy</conversion_mask>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1295,10 +1893,42 @@ GROUP BY
       <draw>Y</draw>
     </GUI>
   </step>
+  <step>
+    <name>Split field to rows</name>
+    <type>SplitFieldToRows3</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <splitfield>NUM_0</splitfield>
+    <delimiter>-</delimiter>
+    <newfield>NEWFIELD</newfield>
+    <rownum>Y</rownum>
+    <rownum_field>ROWN</rownum_field>
+    <resetrownumber>Y</resetrownumber>
+    <delimiter_is_regex>N</delimiter_is_regex>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>544</xloc>
+      <yloc>16</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
   <step_error_handling>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

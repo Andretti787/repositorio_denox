@@ -438,7 +438,7 @@
       <note>AGRUPO POR ALBARÁN PARA NO GENERAR TANTAS LÍNEAS DE LOG COMO LÍNEAS DE ALBARÁN</note>
       <xloc>960</xloc>
       <yloc>480</yloc>
-      <width>582</width>
+      <width>528</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -459,7 +459,7 @@
       <note>Genero fichero con los datos del pedido en C:/intercambio/XPO_PEDIDO</note>
       <xloc>608</xloc>
       <yloc>208</yloc>
-      <width>440</width>
+      <width>394</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -480,7 +480,7 @@
       <note>Selecciono los pedidos de Mercadona (cliente 461023) que no han sido enviados ya</note>
       <xloc>32</xloc>
       <yloc>160</yloc>
-      <width>516</width>
+      <width>448</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -581,7 +581,7 @@
     <hop>
       <from>Text file output</from>
       <to>Add constants</to>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Add constants</from>
@@ -597,6 +597,21 @@
       <from>Group by</from>
       <to>Genera LOG</to>
       <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Genera LOG</from>
+      <to>Mail</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Genera LOG</from>
+      <to>Add constants 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Add constants 2</from>
+      <to>Mail</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
@@ -647,6 +662,105 @@
     <GUI>
       <xloc>1168</xloc>
       <yloc>144</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Add constants 2</name>
+    <type>Constant</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>maildir</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>mmarco@denox.eu</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>mailsend</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>informatica@famesa.es</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>smtp</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>smtp.famesa.es</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>puerto</name>
+        <type>Integer</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>25</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>user</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>informatica@famesa.es</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>pwd</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>System345</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>480</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -753,6 +867,73 @@
     </GUI>
   </step>
   <step>
+    <name>Mail</name>
+    <type>Mail</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <server>smtp</server>
+    <port>puerto</port>
+    <destination>maildir</destination>
+    <destinationCc/>
+    <destinationBCc/>
+    <replyToAddresses/>
+    <replyto>mailsend</replyto>
+    <replytoname>C_TIPO</replytoname>
+    <subject>C_AMBITO</subject>
+    <include_date>Y</include_date>
+    <include_subfolders>N</include_subfolders>
+    <zipFilenameDynamic>N</zipFilenameDynamic>
+    <isFilenameDynamic>N</isFilenameDynamic>
+    <attachContentFromField>N</attachContentFromField>
+    <attachContentField/>
+    <attachContentFileNameField/>
+    <dynamicFieldname/>
+    <dynamicWildcard/>
+    <dynamicZipFilename/>
+    <sourcefilefoldername>C:\intercambio\XPO\XPO_PEDIDO</sourcefilefoldername>
+    <sourcewildcard>.*\.txt</sourcewildcard>
+    <contact_person/>
+    <contact_phone/>
+    <comment/>
+    <include_files>N</include_files>
+    <zip_files>N</zip_files>
+    <zip_name/>
+    <zip_limit_size>0</zip_limit_size>
+    <use_auth>Y</use_auth>
+    <use_secure_auth>N</use_secure_auth>
+    <auth_user>user</auth_user>
+    <auth_password>Encrypted 2be98afc86aa7f2e4cb79ce10be82b8de</auth_password>
+    <only_comment>N</only_comment>
+    <use_HTML>N</use_HTML>
+    <use_Priority>N</use_Priority>
+    <encoding>UTF-8</encoding>
+    <priority>normal</priority>
+    <importance>normal</importance>
+    <sensitivity>normal</sensitivity>
+    <secureconnectiontype>SSL</secureconnectiontype>
+    <embeddedimages>
+      </embeddedimages>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>416</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Select values</name>
     <type>SelectValues</type>
     <description/>
@@ -851,8 +1032,8 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>304</xloc>
-      <yloc>272</yloc>
+      <xloc>432</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -894,7 +1075,7 @@
     </remotesteps>
     <GUI>
       <xloc>592</xloc>
-      <yloc>272</yloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -968,30 +1149,23 @@
       <schema_name/>
     </partitioning>
     <connection>MSSQL v12</connection>
-    <sql>SELECT CAB.ORDDAT_0 AS FECHA_PEDIDO, CAB.DEMDLVDAT_0 AS FECHA_ENTREGA, CAB.CUSORDREF_0 AS PEDIDO_MERCADONA
-, DEL.SDHNUM_0 AS ALBARAN, DEL.ITMREF_0, /*DEL.QTYSTU_0 AS UDS*/ABS(SUM(JOU.QTYSTU_0)) AS UDS, JOU.LOT_0 AS LOTE, CAB.BPAADD_0 AS DESTINATARIO
-/*, ZLO.CODIGO
-, DE1.CFMFLG_0
-,  CAB.BPCORD_0, CAB.SOHNUM_0, CAB.CUSORDREF_0, CAB.BPAADD_0, ORQ.QTYSTU_0, ORQ.ITMREF_0, ORQ.SOPLIN_0  
-, DEL.LOT_0, DEL.ITMREF_0
-, JOU.TRSTYP_0, JOU.QTYSTU_0, JOU.LOT_0,JOU.PALNUM_0, LIVE.ZFUNCMENUITEM('704', JOU.TRSTYP_0, 'SPA'), JOU.VCRNUM_0, JOU.VCRNUMORI_0*/
+    <sql>
+SELECT CAB.ORDDAT_0 AS FECHA_PEDIDO, CAB.DEMDLVDAT_0 AS FECHA_ENTREGA, CAB.CUSORDREF_0 AS PEDIDO_MERCADONA
+, DEL.SDHNUM_0 AS ALBARAN, DEL.ITMREF_0, SUM(SPA.QTY_0) AS UDS, SPA.LOT_0 AS LOTE, CAB.BPAADD_0 AS DESTINATARIO
 FROM LIVE.SORDER CAB
 INNER JOIN LIVE.SDELIVERY DE1 ON DE1.SOHNUM_0 = CAB.SOHNUM_0
 INNER JOIN LIVE.SORDERQ ORQ ON ORQ.SOHNUM_0 = CAB.SOHNUM_0
 LEFT JOIN LIVE.SDELIVERYD DEL ON DEL.SOHNUM_0 = CAB.SOHNUM_0 AND DEL.VCRLINORI_0 = ORQ.SOPLIN_0
-LEFT JOIN LIVE.STOJOU JOU ON JOU.VCRNUM_0 = DEL.SDHNUM_0 AND JOU.VCRLIN_0 = DEL.SOPLIN_0 AND TRSTYP_0 = 4
+--LEFT JOIN LIVE.STOJOU JOU ON JOU.VCRNUM_0 = DEL.SDHNUM_0 AND JOU.VCRLIN_0 = DEL.SOPLIN_0 AND TRSTYP_0 = 4
+LEFT JOIN LIVE.SPACKD SPA ON SPA.VCRNUM_0 = DE1.SDHNUM_0
 LEFT JOIN LIVE.ZLOG ZLO ON ZLO.CODIGO = DEL.SDHNUM_0
 --WHERE CAB.SOHNUM_0 = 'OVT-23-FAM-000550'
-WHERE CAB.BPCORD_0 = '461023' AND DEL.ITMREF_0 = '24210.790'
-AND DE1.CFMFLG_0 = 2 --EL ALBARÁN ESTÁ VALIDADO
+WHERE CAB.BPCORD_0 IN('461023', '550317') AND DEL.ITMREF_0 = '24210.790'
 AND ZLO.CODIGO IS NULL -- NO HA SIDO ENVIADO TODAVÍA
 AND DE1.CFMFLG_0 = 2 -- ALBARÁN VALIDADO
-AND CAB.CUSORDREF_0 &lt;&gt; 'MUESTRAS' -- QUITO LAS MUESTRAS 
-GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMREF_0, DEL.QTYSTU_0, JOU.LOT_0, CAB.BPAADD_0
-
-
-
-</sql>
+--and DE1.SDHNUM_0 IN ('ALB-24-FAM-011254','ALB-24-FAM-011255')
+AND CAB.CUSORDREF_0 &lt;&gt;'MUESTRAS' 
+GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMREF_0, SPA.LOT_0, CAB.BPAADD_0</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -1019,7 +1193,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1042,7 +1216,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1065,7 +1239,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1088,7 +1262,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1111,7 +1285,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1134,7 +1308,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1157,7 +1331,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
@@ -1180,7 +1354,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
         <output_padding>N</output_padding>
         <date_format_lenient>N</date_format_lenient>
         <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Madrid</date_format_timezone>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
     </row-meta>
@@ -1223,7 +1397,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
     <fileNameField/>
     <create_parent_folder>N</create_parent_folder>
     <file>
-      <name>/home/mmarco/Público/XPO/XPO_PEDIDO</name>
+      <name>C:/intercambio/XPO/XPO_PEDIDO</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>Y</do_not_open_new_file_init>
       <extention>txt</extention>
@@ -1346,7 +1520,7 @@ GROUP BY CAB.ORDDAT_0, CAB.DEMDLVDAT_0, CAB.CUSORDREF_0, DEL.SDHNUM_0, DEL.ITMRE
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
+      <xloc>720</xloc>
       <yloc>144</yloc>
       <draw>Y</draw>
     </GUI>

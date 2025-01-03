@@ -2,21 +2,21 @@
 <transformation>
   <info>
     <name>carga_detalles_entrega_new</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <directory>/</directory>
     <parameters>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -41,37 +41,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -125,11 +125,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -207,10 +207,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -273,10 +273,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -349,10 +349,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -401,9 +401,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -414,7 +414,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -437,16 +437,16 @@
   </notepads>
   <connection>
     <name>MSSQL SAGE</name>
-    <server>213.149.235.131</server>
+    <server>217.116.8.58</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
     <database>x3famesa</database>
     <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -503,9 +503,9 @@
     <port>3306</port>
     <username>famesa</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -557,7 +557,7 @@
     </hop>
     <hop>
       <from>Selecciona/Renombra valores</from>
-      <to>Insertar / Actualizar</to>
+      <to>Insertar / Actualizar DETALLES_ENTREGA</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -569,13 +569,13 @@
   <step>
     <name>Entrada Tabla SDELIVERYD</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL SAGE</connection>
     <sql>SELECT BPCORD_0 AS CLIENTE, CREDAT_0 AS FECHA_CREACION, ITMREF_0 AS ARTICULO, ITMDES_0 AS DESCRIP, NETPRI_0 AS PRECIO_NETO, 
@@ -584,12 +584,12 @@ SHIDAT_0 AS FECHA_EXPEDICION, SOHNUM_0 AS NUM_PEDIDO
 FROM FAMESAOF.SDELIVERYD
 where CREDAT_0 >= '01/07/2018'</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -603,75 +603,75 @@ where CREDAT_0 >= '01/07/2018'</sql>
     </GUI>
   </step>
   <step>
-    <name>Insertar / Actualizar</name>
+    <name>Insertar / Actualizar DETALLES_ENTREGA</name>
     <type>InsertUpdate</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MySQL Mariodb</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema />
+      <schema/>
       <table>DETALLES_ENTREGA</table>
       <key>
         <name>CLIENTE</name>
         <field>CLIENTE</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>FECHA_CREACION</name>
         <field>FECHA_CREACION</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>ARTICULO</name>
         <field>ARTICULO</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>CANTIDAD_ENTREGADA</name>
         <field>CANTIDAD_ENTREGADA</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>CANTIDAD_ENTREGADA_US</name>
         <field>CANTIDAD_ENTREGADA_US</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>CANTIDAD_DEVOLUCION</name>
         <field>CANTIDAD_DEVOLUCION</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>CANTIDAD_DEVOLUCION_US</name>
         <field>CANTIDAD_DEVOLUCION_US</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>FECHA_EXPEDICION</name>
         <field>FECHA_EXPEDICION</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>NUM_PEDIDO</name>
         <field>NUM_PEDIDO</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <value>
         <name>CLIENTE</name>
@@ -729,8 +729,8 @@ where CREDAT_0 >= '01/07/2018'</sql>
         <update>Y</update>
       </value>
     </lookup>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -738,7 +738,7 @@ where CREDAT_0 >= '01/07/2018'</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>992</xloc>
+      <xloc>1024</xloc>
       <yloc>192</yloc>
       <draw>Y</draw>
     </GUI>
@@ -746,20 +746,20 @@ where CREDAT_0 >= '01/07/2018'</sql>
   <step>
     <name>Ordenar filas</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -779,8 +779,8 @@ where CREDAT_0 >= '01/07/2018'</sql>
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -796,13 +796,13 @@ where CREDAT_0 >= '01/07/2018'</sql>
   <step>
     <name>Selecciona/Renombra valores</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -846,16 +846,16 @@ where CREDAT_0 >= '01/07/2018'</sql>
         <type>Integer</type>
         <length>20</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>CANTIDAD_DEVOLUCION_US</name>
@@ -863,16 +863,16 @@ where CREDAT_0 >= '01/07/2018'</sql>
         <type>Integer</type>
         <length>20</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>CANTIDAD_ENTREGADA</name>
@@ -880,16 +880,16 @@ where CREDAT_0 >= '01/07/2018'</sql>
         <type>Integer</type>
         <length>20</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>CANTIDAD_ENTREGADA_US</name>
@@ -897,20 +897,20 @@ where CREDAT_0 >= '01/07/2018'</sql>
         <type>Integer</type>
         <length>20</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -928,5 +928,5 @@ where CREDAT_0 >= '01/07/2018'</sql>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

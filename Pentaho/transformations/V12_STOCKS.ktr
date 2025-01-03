@@ -437,7 +437,7 @@
   </notepads>
   <connection>
     <name>MSSQL V8</name>
-    <server>192.168.50.10</server>
+    <server>192.168.28.200</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
     <database>x3famesa</database>
@@ -976,6 +976,18 @@
         <precision>-1</precision>
       </field>
       <field>
+        <name>BPSLOT_0</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
         <name>LOTE_CALCULADO</name>
         <type>String</type>
         <format/>
@@ -1097,6 +1109,100 @@ LEFT JOIN FAMESAOF.ITMMASTER ITM ON ITM.ITMREF_0 = STO.ITMREF_0
     </remotesteps>
     <GUI>
       <xloc>96</xloc>
+      <yloc>48</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla 2</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL V8</connection>
+    <sql>WITH RECUR AS
+(
+select TSICOD_1, 'E' as ID_CAB, 19 AS TIPO_REG, '' AS NUM_ASIENTO, 'FAM' AS PLANTA,  FORMAT(GETDATE(),'yyyyMMdd') AS FECHA, 'PROYECTO' AS PROJECT, '' AS COD_MOV
+, 'L' AS ID_LIN, '' AS NUM_LIN, STO.ITMREF_0, ITM.ITMDES1_0 AS DESCRIP, STO.PCU_0 AS UD, STO.QTYSTU_0 AS CANT, STO.PCU_0 AS UD_STOCK
+, STO.QTYSTU_0 AS CANT_US
+, CASE (TSICOD_1) WHEN '20' THEN 
+					(SELECT VLTTOT_0
+							FROM FAMESAOF.ITMCOST IT2
+							WHERE ITMREF_0 = STO.ITMREF_0
+							AND ITCSEQ_0 = (SELECT MAX(ITCSEQ_0)
+											FROM FAMESAOF.ITMCOST COST
+											WHERE COST.ITMREF_0 = IT2.ITMREF_0
+											AND CSTTYP_0 = 2) 
+					AND CSTTYP_0 = 2 --PRECIO ESTÁNDAR ACTUALIZADO
+					)
+				  ELSE 
+					ITC.VLTTOT_0 
+				  END AS VLTTOT_0
+, 'S' AS ID_DET, STO.PCU_0 AS UD_DET, STO.QTYSTU_0 AS CANT_DET, STO.BPSLOT_0
+, CASE WHEN (TSICOD_1)  IN ('20','22')
+						THEN FAMESAOF.ZDECODE (LOT_0, '', CONCAT('F','22',LEFT(STO.LOC_0,3)), LOT_0)
+						ELSE LOT_0 END AS LOTE_CALCULADO
+, CASE WHEN (TSICOD_1) IN ('20','22')
+						THEN FAMESAOF.ZDECODE (SLO_0, '', '000', SLO_0)
+						ELSE LOT_0 END AS SUBLOTE_CALCULADO
+, CASE (ITF.PCKCAP_0) WHEN 0 THEN 1 ELSE ITF.PCKCAP_0 END AS CAP_PALLET
+--, CEILING( STO.QTYSTU_0 / CASE ITF.PCKCAP_0 WHEN 0 THEN 1 ELSE ITF.PCKCAP_0 END) AS NUM_PALLET
+, CEILING( STO.QTYSTU_0 / CASE ITF.PCKCAP_0 WHEN 0 THEN  STO.QTYSTU_0 / 3 ELSE ITF.PCKCAP_0 END) AS NUM_PALLET
+, CAST (STO.QTYSTU_0 % CASE ITF.PCKCAP_0 WHEN 0 THEN 1 ELSE ITF.PCKCAP_0 END AS INT)  AS RESTO
+, 1 AS T
+, STO.LOC_0 AS UBICACION, STO.STA_0 AS ESTADO
+From FAMESAOF.STOCK STO 
+LEFT join FAMESAOF.ZV_ARTCOST ITC ON ITC.ITMREF_0 = STO.ITMREF_0
+LEFT JOIN FAMESAOF.ITMMASTER ITM ON ITM.ITMREF_0 = STO.ITMREF_0
+LEFT JOIN FAMESAOF.ITMFACILIT ITF ON ITF.ITMREF_0 = STO.ITMREF_0
+WHERE STO.ITMREF_0 NOT IN (SELECT ITMREF_0  COLLATE Latin1_General_BIN2 FROM [192.168.28.100\X3V12].x3.LIVE.STOCK WHERE STOFCY_0 = 'FAM')
+UNION ALL
+SELECT TSICOD_1, ID_CAB, TIPO_REG, NUM_ASIENTO, PLANTA, FECHA, PROJECT, COD_MOV, ID_LIN, NUM_LIN, ITMREF_0, DESCRIP, UD, CANT, UD_STOCK
+, CANT_US, VLTTOT_0
+, ID_DET, UD_DET, CANT_DET, BPSLOT_0, LOTE_CALCULADO, SUBLOTE_CALCULADO, CAP_PALLET, NUM_PALLET
+, RESTO, T+1 AS T, UBICACION, ESTADO
+FROM RECUR WHERE T&lt; NUM_PALLET
+AND TSICOD_1 IN('20','22')--SÓLO CALCULO SUBLOTES PARA EL CANAL 20 Y 22
+) 
+SELECT TSICOD_1, ID_CAB, TIPO_REG, NUM_ASIENTO, PLANTA, FECHA, PROJECT, COD_MOV, ID_LIN, NUM_LIN, ITMREF_0, DESCRIP, UD, CANT, UD_STOCK
+, CANT_US, VLTTOT_0
+, ID_DET, UD_DET, CANT_DET, BPSLOT_0, LOTE_CALCULADO, NUM_PALLET 
+--, CASE WHEN (SUBLOTE_CALCULADO&lt;&gt;'') THEN CONCAT(SUBLOTE_CALCULADO, CONVERT(VARCHAR(3), T)) ELSE SUBLOTE_CALCULADO END AS SUBLOTE_CALCULADO
+, CASE WHEN (SUBLOTE_CALCULADO&lt;&gt;'') THEN RIGHT('00000' + Ltrim(Rtrim(CONCAT(SUBLOTE_CALCULADO, CONVERT(VARCHAR(3), T)))),5) ELSE SUBLOTE_CALCULADO END AS SUBLOTE_CALCULADO
+, CAP_PALLET, NUM_PALLET, RESTO, T, UBICACION, ESTADO
+, CASE WHEN (TSICOD_1) IN ('20','22') THEN 
+									(
+										CASE WHEN NUM_PALLET &lt;&gt; T THEN CAP_PALLET
+																	ELSE RESTO
+																	END 
+									) 
+									ELSE CANT_DET
+									END AS CANTIDAD_SUBLOTE
+FROM RECUR
+ORDER BY TSICOD_1, ITMREF_0, UBICACION, LOTE_CALCULADO, T
+OPTION(MAXRECURSION 1000);
+
+</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>896</xloc>
       <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1321,103 +1427,81 @@ LEFT JOIN FAMESAOF.ITMMASTER ITM ON ITM.ITMREF_0 = STO.ITMREF_0
     <fields>
       <field>
         <name>CONTADOR</name>
-        <rename/>
       </field>
       <field>
         <name>ID_CAB</name>
-        <rename/>
       </field>
       <field>
         <name>TIPO_REG</name>
-        <rename/>
       </field>
       <field>
         <name>NUM_ASIENTO</name>
-        <rename/>
       </field>
       <field>
         <name>PLANTA</name>
-        <rename/>
       </field>
       <field>
         <name>FECHA</name>
-        <rename/>
       </field>
       <field>
         <name>PROJECT</name>
-        <rename/>
       </field>
       <field>
         <name>COD_MOV</name>
-        <rename/>
       </field>
       <field>
         <name>ID_LIN</name>
-        <rename/>
       </field>
       <field>
         <name>NUM_LIN</name>
-        <rename/>
       </field>
       <field>
         <name>ITMREF_0</name>
-        <rename/>
       </field>
       <field>
         <name>DESCRIP</name>
-        <rename/>
       </field>
       <field>
         <name>UD</name>
-        <rename/>
       </field>
       <field>
         <name>CANT</name>
-        <rename/>
       </field>
       <field>
         <name>UD_STOCK</name>
-        <rename/>
       </field>
       <field>
         <name>CANT_US</name>
-        <rename/>
       </field>
       <field>
         <name>VLTTOT_0</name>
-        <rename/>
       </field>
       <field>
         <name>ID_DET</name>
-        <rename/>
       </field>
       <field>
         <name>UD_DET</name>
-        <rename/>
       </field>
       <field>
         <name>CANT_DET</name>
-        <rename/>
       </field>
       <field>
         <name>LOTE_CALCULADO</name>
-        <rename/>
       </field>
       <field>
         <name>SUBLOTE_CALCULADO</name>
-        <rename/>
       </field>
       <field>
         <name>UBICACION</name>
-        <rename/>
       </field>
       <field>
         <name>ESTADO</name>
-        <rename/>
       </field>
       <field>
         <name>CANTIDAD_SUBLOTE</name>
-        <rename/>
+      </field>
+      <field>
+        <name>BPSLOT_0</name>
       </field>
       <select_unspecified>N</select_unspecified>
       <meta>
@@ -1500,99 +1584,6 @@ LEFT JOIN FAMESAOF.ITMMASTER ITM ON ITM.ITMREF_0 = STO.ITMREF_0
     <GUI>
       <xloc>80</xloc>
       <yloc>272</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Entrada Tabla 2</name>
-    <type>TableInput</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MSSQL V8</connection>
-    <sql>WITH RECUR AS
-(
-select TSICOD_1, 'E' as ID_CAB, 19 AS TIPO_REG, '' AS NUM_ASIENTO, 'FAM' AS PLANTA,  FORMAT(GETDATE(),'yyyyMMdd') AS FECHA, 'PROYECTO' AS PROJECT, '' AS COD_MOV
-, 'L' AS ID_LIN, '' AS NUM_LIN, STO.ITMREF_0, ITM.ITMDES1_0 AS DESCRIP, STO.PCU_0 AS UD, STO.QTYSTU_0 AS CANT, STO.PCU_0 AS UD_STOCK
-, STO.QTYSTU_0 AS CANT_US
-, CASE (TSICOD_1) WHEN '20' THEN 
-					(SELECT VLTTOT_0
-							FROM FAMESAOF.ITMCOST IT2
-							WHERE ITMREF_0 = STO.ITMREF_0
-							AND ITCSEQ_0 = (SELECT MAX(ITCSEQ_0)
-											FROM FAMESAOF.ITMCOST COST
-											WHERE COST.ITMREF_0 = IT2.ITMREF_0
-											AND CSTTYP_0 = 2) 
-					AND CSTTYP_0 = 2 --PRECIO ESTÁNDAR ACTUALIZADO
-					)
-				  ELSE 
-					ITC.VLTTOT_0 
-				  END AS VLTTOT_0
-, 'S' AS ID_DET, STO.PCU_0 AS UD_DET, STO.QTYSTU_0 AS CANT_DET, STO.BPSLOT_0
-, CASE WHEN (TSICOD_1)  IN ('20','22')
-						THEN FAMESAOF.ZDECODE (LOT_0, '', CONCAT('F','22',LEFT(STO.LOC_0,3)), LOT_0)
-						ELSE LOT_0 END AS LOTE_CALCULADO
-, CASE WHEN (TSICOD_1) IN ('20','22')
-						THEN FAMESAOF.ZDECODE (SLO_0, '', '000', SLO_0)
-						ELSE LOT_0 END AS SUBLOTE_CALCULADO
-, CASE (ITF.PCKCAP_0) WHEN 0 THEN 1 ELSE ITF.PCKCAP_0 END AS CAP_PALLET
---, CEILING( STO.QTYSTU_0 / CASE ITF.PCKCAP_0 WHEN 0 THEN 1 ELSE ITF.PCKCAP_0 END) AS NUM_PALLET
-, CEILING( STO.QTYSTU_0 / CASE ITF.PCKCAP_0 WHEN 0 THEN  STO.QTYSTU_0 / 3 ELSE ITF.PCKCAP_0 END) AS NUM_PALLET
-, CAST (STO.QTYSTU_0 % CASE ITF.PCKCAP_0 WHEN 0 THEN 1 ELSE ITF.PCKCAP_0 END AS INT)  AS RESTO
-, 1 AS T
-, STO.LOC_0 AS UBICACION, STO.STA_0 AS ESTADO
-From FAMESAOF.STOCK STO 
-LEFT join FAMESAOF.ZV_ARTCOST ITC ON ITC.ITMREF_0 = STO.ITMREF_0
-LEFT JOIN FAMESAOF.ITMMASTER ITM ON ITM.ITMREF_0 = STO.ITMREF_0
-LEFT JOIN FAMESAOF.ITMFACILIT ITF ON ITF.ITMREF_0 = STO.ITMREF_0
-UNION ALL
-SELECT TSICOD_1, ID_CAB, TIPO_REG, NUM_ASIENTO, PLANTA, FECHA, PROJECT, COD_MOV, ID_LIN, NUM_LIN, ITMREF_0, DESCRIP, UD, CANT, UD_STOCK
-, CANT_US, VLTTOT_0
-, ID_DET, UD_DET, CANT_DET, BPSLOT_0, LOTE_CALCULADO, SUBLOTE_CALCULADO, CAP_PALLET, NUM_PALLET
-, RESTO, T+1 AS T, UBICACION, ESTADO
-FROM RECUR WHERE T&lt; NUM_PALLET
-AND TSICOD_1 IN('20','22')--SÓLO CALCULO SUBLOTES PARA EL CANAL 20 Y 22
-) 
-SELECT TSICOD_1, ID_CAB, TIPO_REG, NUM_ASIENTO, PLANTA, FECHA, PROJECT, COD_MOV, ID_LIN, NUM_LIN, ITMREF_0, DESCRIP, UD, CANT, UD_STOCK
-, CANT_US, VLTTOT_0
-, ID_DET, UD_DET, CANT_DET, BPSLOT_0, LOTE_CALCULADO, NUM_PALLET 
---, CASE WHEN (SUBLOTE_CALCULADO&lt;&gt;'') THEN CONCAT(SUBLOTE_CALCULADO, CONVERT(VARCHAR(3), T)) ELSE SUBLOTE_CALCULADO END AS SUBLOTE_CALCULADO
-, CASE WHEN (SUBLOTE_CALCULADO&lt;&gt;'') THEN RIGHT('00000' + Ltrim(Rtrim(CONCAT(SUBLOTE_CALCULADO, CONVERT(VARCHAR(3), T)))),5) ELSE SUBLOTE_CALCULADO END AS SUBLOTE_CALCULADO
-, CAP_PALLET, NUM_PALLET, RESTO, T, UBICACION, ESTADO
-, CASE WHEN (TSICOD_1) IN ('20','22') THEN 
-									(
-										CASE WHEN NUM_PALLET &lt;&gt; T THEN CAP_PALLET
-																	ELSE RESTO
-																	END 
-									) 
-									ELSE 0
-									END AS CANTIDAD_SUBLOTE
-FROM RECUR
-ORDER BY TSICOD_1, ITMREF_0, UBICACION, LOTE_CALCULADO, T
-OPTION(MAXRECURSION 1000);
-
-</sql>
-    <limit>0</limit>
-    <lookup/>
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>896</xloc>
-      <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

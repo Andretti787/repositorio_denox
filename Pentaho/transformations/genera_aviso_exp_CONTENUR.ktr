@@ -2,21 +2,21 @@
 <transformation>
   <info>
     <name>genera_aviso_exp_CONTENUR</name>
-    <description />
-    <extended_description />
-    <trans_version />
+    <description/>
+    <extended_description/>
+    <trans_version/>
     <trans_type>Normal</trans_type>
     <directory>/</directory>
     <parameters>
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -41,37 +41,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -125,11 +125,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -207,10 +207,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -273,10 +273,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -349,10 +349,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -401,9 +401,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -414,7 +414,7 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
@@ -444,9 +444,9 @@
     <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -496,18 +496,8 @@
   </connection>
   <order>
     <hop>
-      <from>Table input</from>
-      <to>Select values</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Select values</from>
       <to>Sort rows</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Sort rows</from>
-      <to>Text file output</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -520,26 +510,36 @@
       <to>Genera LOG</to>
       <enabled>Y</enabled>
     </hop>
+    <hop>
+      <from>Table input</from>
+      <to>Select values</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows</from>
+      <to>Text file output</to>
+      <enabled>Y</enabled>
+    </hop>
   </order>
   <step>
     <name>Add constants</name>
     <type>Constant</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
         <name>C_AMBITO</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <nullif>AVI</nullif>
         <length>3</length>
         <precision>-1</precision>
@@ -548,18 +548,18 @@
       <field>
         <name>C_TIPO</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
         <nullif>ALBARAN</nullif>
         <length>7</length>
         <precision>-1</precision>
         <set_empty_string>N</set_empty_string>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -567,21 +567,21 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>816</xloc>
-      <yloc>256</yloc>
+      <xloc>1328</xloc>
+      <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Genera LOG</name>
     <type>TableOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL V12</connection>
     <schema>LIVE</schema>
@@ -592,14 +592,14 @@
     <use_batch>Y</use_batch>
     <specify_fields>Y</specify_fields>
     <partitioning_enabled>N</partitioning_enabled>
-    <partitioning_field />
+    <partitioning_field/>
     <partitioning_daily>N</partitioning_daily>
     <partitioning_monthly>Y</partitioning_monthly>
     <tablename_in_field>N</tablename_in_field>
-    <tablename_field />
+    <tablename_field/>
     <tablename_in_table>Y</tablename_in_table>
     <return_keys>N</return_keys>
-    <return_field />
+    <return_field/>
     <fields>
       <field>
         <column_name>AMBITO</column_name>
@@ -614,8 +614,8 @@
         <stream_name>SDHNUM_0</stream_name>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -623,7 +623,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>560</xloc>
+      <xloc>928</xloc>
       <yloc>352</yloc>
       <draw>Y</draw>
     </GUI>
@@ -631,13 +631,13 @@
   <step>
     <name>Select values</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -668,16 +668,16 @@
         <type>Integer</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
       <meta>
         <name>FECHA_ALB</name>
@@ -687,18 +687,18 @@
         <precision>-2</precision>
         <conversion_mask>yyyyMMdd HHmmss</conversion_mask>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -706,7 +706,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
+      <xloc>560</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -714,20 +714,20 @@
   <step>
     <name>Sort rows</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -739,8 +739,8 @@
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -748,7 +748,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>576</xloc>
+      <xloc>816</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -756,30 +756,51 @@
   <step>
     <name>Table input</name>
     <type>TableInput</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL V12</connection>
-    <sql>SELECT CAB.CREDATTIM_0 AS FECHA_ALB, CAB.SDHNUM_0, LIN.SOHNUM_0, ORD.CUSORDREF_0 AS PED_CONTENUR
+    <sql>SELECT CAB.CREDATTIM_0 AS FECHA_ALB, CAB.SDHNUM_0, LIN.SOHNUM_0
+,  REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/') as PED_CONTENUR
 , LIN.ITMREF_0 AS ARTICULO, LIN.ITMDES_0 AS DECRIP_ARTI, LIN.QTYSTU_0 AS CANT_ENTREGADA
+, 'MARCA' AS BANDERA
+fROM [192.168.28.200\X3FAMESA].x3famesa.TRILLA.SDELIVERY CAB
+INNER JOIN [192.168.28.200\X3FAMESA].x3famesa.TRILLA.SDELIVERYD LIN ON LIN.SDHNUM_0 = CAB.SDHNUM_0
+INNER JOIN [192.168.28.200\X3FAMESA].x3famesa.TRILLA.SORDER ORD ON ORD.SOHNUM_0 = LIN.SOHNUM_0
+--LEFT JOIN LIVE.ZLOG ZLO ON ZLO.CODIGO = LIN.SDHNUM_0 AND ZLO.AMBITO = 'AVI'
+WHERE CAB.BPCORD_0 = '026018' AND CAB.CREDATTIM_0 >= '20210101'
+AND CAB.STOFCY_0 = 'TRI' 
+AND CHARINDEX('/', RIGHT(REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'),4)) &lt;= 0
+AND ASCII(SUBSTRING (REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'), CHARINDEX('/', REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/')) +1, 1)) BETWEEN 48 AND 57
+UNION ALL
+SELECT CAB.CREDATTIM_0 AS FECHA_ALB, CAB.SDHNUM_0 COLLATE Latin1_General_BIN2, LIN.SOHNUM_0 COLLATE Latin1_General_BIN2
+, REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/') COLLATE Latin1_General_BIN2 AS PED_CONTENUR
+, LIN.ITMREF_0 COLLATE Latin1_General_BIN2 AS ARTICULO, LIN.ITMDES_0 COLLATE Latin1_General_BIN2 AS DECRIP_ARTI, LIN.QTYSTU_0 AS CANT_ENTREGADA
+, 'MARCA' AS BANDERA
+--, CHARINDEX ('/', RIGHT(CUSORDREF_0,4)) AS '/', CHARINDEX ('.', RIGHT(CUSORDREF_0,4)) AS '.', CHARINDEX ('-', RIGHT(CUSORDREF_0,4)) AS '-'
+--, SUBSTRING (REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'), CHARINDEX('/', REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/')) +1, LEN(REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'))) AS CADENA
+--,  CHARINDEX('/',REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/')) AS INDICE
+--, ASCII(SUBSTRING (REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'), CHARINDEX('/', REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/')) +1, 1)) AS CADENA2
 fROM LIVE.SDELIVERY CAB
 INNER JOIN LIVE.SDELIVERYD LIN ON LIN.SDHNUM_0 = CAB.SDHNUM_0
 INNER JOIN LIVE.SORDER ORD ON ORD.SOHNUM_0 = LIN.SOHNUM_0
-LEFT JOIN LIVE.ZLOG ZLO ON ZLO.CODIGO = LIN.SDHNUM_0 AND ZLO.AMBITO = 'AVI'
-WHERE CAB.BPCORD_0 = 'T026018' AND CAB.CREDATTIM_0 >= GETDATE() -2
-AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
+--LEFT JOIN LIVE.ZLOG ZLO ON ZLO.CODIGO = LIN.SDHNUM_0 AND ZLO.AMBITO = 'AVI'
+WHERE CAB.BPCORD_0 = 'T026018' --AND CAB.CREDATTIM_0 >= GETDATE() -2
+AND CAB.STOFCY_0 = 'TRI' 
+AND CHARINDEX('/', RIGHT(REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'),4)) &lt;= 0
+AND ASCII(SUBSTRING (REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/'), CHARINDEX('/', REPLACE(REPLACE(ORD.CUSORDREF_0,'-','/'),'.','/')) +1, 1)) BETWEEN 48 AND 57</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -787,21 +808,21 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>128</xloc>
-      <yloc>96</yloc>
+      <xloc>64</xloc>
+      <yloc>32</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
     <name>Text file output</name>
     <type>TextFileOutput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <separator>;</separator>
     <enclosure>"</enclosure>
@@ -811,13 +832,13 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding />
-    <endedLine />
+    <encoding/>
+    <endedLine/>
     <fileNameInField>N</fileNameInField>
-    <fileNameField />
+    <fileNameField/>
     <create_parent_folder>N</create_parent_folder>
     <file>
-      <name>/home/mmarco/Intercambio/AVISO_EXP</name>
+      <name>C:/intercambio/CONTENUR/AVISOS_EXP/AVISO_EXP</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention>txt</extention>
@@ -831,17 +852,17 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       <add_to_result_filenames>Y</add_to_result_filenames>
       <pad>N</pad>
       <fast_dump>N</fast_dump>
-      <splitevery />
+      <splitevery/>
     </file>
     <fields>
       <field>
         <name>FECHA_ALB</name>
         <type>Timestamp</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -849,11 +870,11 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       <field>
         <name>SDHNUM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -861,11 +882,11 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       <field>
         <name>SOHNUM_0</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -873,11 +894,11 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       <field>
         <name>PED_CONTENUR</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -885,11 +906,11 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       <field>
         <name>ARTICULO</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -897,11 +918,11 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       <field>
         <name>DECRIP_ARTI</name>
         <type>String</type>
-        <format />
-        <currency />
-        <decimal />
-        <group />
-        <nullif />
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
@@ -910,17 +931,17 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
         <name>CANT_ENTREGADA</name>
         <type>Integer</type>
         <format>0</format>
-        <currency />
+        <currency/>
         <decimal>.</decimal>
-        <group />
-        <nullif />
+        <group/>
+        <nullif/>
         <trim_type>both</trim_type>
         <length>-1</length>
         <precision>-1</precision>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -928,7 +949,7 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>800</xloc>
+      <xloc>1216</xloc>
       <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
@@ -938,5 +959,5 @@ AND CAB.STOFCY_0 = 'TRI' AND ZLO.CODIGO IS NULL</sql>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>

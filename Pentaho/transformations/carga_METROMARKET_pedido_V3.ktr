@@ -435,6 +435,49 @@
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
+    <notepad>
+      <note>Según el cp, si es para baleares se busca tarifa de portes para islas 
+(sólo en caso de que sea cp español)</note>
+      <xloc>368</xloc>
+      <yloc>384</yloc>
+      <width>356</width>
+      <heigth>42</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Busco la referencia con el EAN del csv</note>
+      <xloc>480</xloc>
+      <yloc>144</yloc>
+      <width>209</width>
+      <heigth>26</heigth>
+      <fontname>Segoe UI</fontname>
+      <fontsize>9</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <connection>
     <name>MSSQL_V12</name>
@@ -508,17 +551,12 @@
     </hop>
     <hop>
       <from>Es MetroMarket PT</from>
-      <to>Add constants</to>
+      <to>Constantes PT</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Es MetroMarket PT</from>
       <to>Es MetroMarket ES</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Es MetroMarket ES</from>
-      <to>Dummy (do nothing)</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -572,18 +610,13 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Add constants</from>
-      <to>Database join</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
       <from>Unique rows CABECERA_PEDIDO</from>
       <to>Concat fields</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Es MetroMarket ES</from>
-      <to>Add constants 2</to>
+      <to>Constantes ES</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
@@ -594,11 +627,6 @@
     <hop>
       <from>Database join</from>
       <to>Memory group by</to>
-      <enabled>N</enabled>
-    </hop>
-    <hop>
-      <from>Add constants 2</from>
-      <to>Database join</to>
       <enabled>N</enabled>
     </hop>
     <hop>
@@ -620,11 +648,6 @@
       <from>Concatenar CLIENTE_CAB</from>
       <to>Concat LINEA NOMBRE COMPLETO</to>
       <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Concat LINEA NOMBRE COMPLETO</from>
-      <to>Concat LINEA ADR COMPLETA</to>
-      <enabled>N</enabled>
     </hop>
     <hop>
       <from>Concat LINEA ADR COMPLETA</from>
@@ -678,16 +701,16 @@
     </hop>
     <hop>
       <from>Concat LINEA NOMBRE COMPLETO</from>
-      <to>Filtrar filas</to>
+      <to>Filter rows</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Filtrar filas</from>
+      <from>Filter rows</from>
       <to>Set field value</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Filtrar filas</from>
+      <from>Filter rows</from>
       <to>Concat LINEA ADR COMPLETA</to>
       <enabled>Y</enabled>
     </hop>
@@ -697,487 +720,51 @@
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Add constants</from>
-      <to>Consulta base de datos</to>
+      <from>Constantes PT</from>
+      <to>BUSCO REFERENCIA CON EL EAN</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Add constants 2</from>
-      <to>Consulta base de datos</to>
+      <from>Constantes ES</from>
+      <to>BUSCO REFERENCIA CON EL EAN</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Consulta base de datos</from>
+      <from>BUSCO REFERENCIA CON EL EAN</from>
       <to>Database join</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Es MetroMarket ES</from>
-      <to>Es MetroMarket FR</to>
+      <to>Es MetroMarket ES 2</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Es MetroMarket FR</from>
-      <to>Add constants 3</to>
+      <from>Es MetroMarket ES 2</from>
+      <to>Constantes FR</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Add constants 3</from>
-      <to>Consulta base de datos</to>
+      <from>Es MetroMarket ES 2</from>
+      <to>SIN_PAIS</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Es MetroMarket FR</from>
-      <to>Err_log</to>
+      <from>Constantes FR</from>
+      <to>BUSCO REFERENCIA CON EL EAN</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
-      <from>Err_log</from>
-      <to>Sin país</to>
-      <enabled>Y</enabled>
+      <from>Row normaliser 2</from>
+      <to>Text file output IMPORT_ZBPC 2</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Sort rows 5</from>
+      <to>Text file output IMPORT_ZSOH 2</to>
+      <enabled>N</enabled>
     </hop>
   </order>
-  <step>
-    <name>Add constants</name>
-    <type>Constant</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>COD_CTE</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>550352</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_LIN</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>L</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_CAB</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>E</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_CTE</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>B</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_ADR</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>A</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_DEST</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>D</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>TIPO_PEDIDO</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>OVW</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>PLANTA</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>FAM</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>CUR</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>EUR</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>NUM_IVA</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>PT</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
-      <yloc>64</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Add constants 2</name>
-    <type>Constant</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>COD_CTE</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>550327</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_LIN</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>L</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_CAB</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>E</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_CTE</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>B</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_ADR</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>A</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_DEST</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>D</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>TIPO_PEDIDO</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>OVW</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>PLANTA</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>FAM</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>CUR</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>EUR</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>NUM_IVA</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>ES</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
-      <yloc>176</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Add constants 3</name>
-    <type>Constant</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>COD_CTE</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>550382</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_LIN</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>L</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_CAB</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>E</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_CTE</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>B</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_ADR</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>A</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>ID_DEST</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>D</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>TIPO_PEDIDO</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>OVW</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>PLANTA</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>FAM</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>CUR</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>EUR</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-      <field>
-        <name>NUM_IVA</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif>FR</nullif>
-        <length>-1</length>
-        <precision>-1</precision>
-        <set_empty_string>N</set_empty_string>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
-      <yloc>304</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step>
     <name>Add sequence 2</name>
     <type>Sequence</type>
@@ -1214,6 +801,44 @@
     </GUI>
   </step>
   <step>
+    <name>BUSCO REFERENCIA CON EL EAN</name>
+    <type>DBJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL_V12</connection>
+    <rowlimit>0</rowlimit>
+    <sql>SELECT ITMREF_0 AS REFERENCIA 
+fROM LIVE.ITMMASTER
+WHERE EANCOD_0 = ?</sql>
+    <outer_join>N</outer_join>
+    <replace_vars>N</replace_vars>
+    <parameter>
+      <field>
+        <name>gtin</name>
+        <type>String</type>
+      </field>
+    </parameter>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>512</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
     <name>Busca ficheros de pedidos .csv</name>
     <type>GetFileNames</type>
     <description/>
@@ -1238,7 +863,7 @@
     <dynamic_include_subfolders>N</dynamic_include_subfolders>
     <limit>0</limit>
     <file>
-      <name>/home/mnaudin/metroMarket/pedidos</name>
+      <name>C:\Users\mmarco\Documents\MetroMarket\REAL</name>
       <filemask>.*\.csv</filemask>
       <exclude_filemask/>
       <file_required>N</file_required>
@@ -1253,7 +878,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>16</xloc>
+      <xloc>48</xloc>
       <yloc>224</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1269,7 +894,7 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <filename>C:\Users\mmarco\Documents\MetroMarket\REAL\fulfilment_order_attachment_1123559_20230330_225707.csv</filename>
+    <filename>C:\Users\mmarco\Documents\MetroMarket\REAL\order_20230430141121_1182008_20230501.csv</filename>
     <filename_field>filename</filename_field>
     <rownum_field>NUM_FICHERO</rownum_field>
     <include_filename>N</include_filename>
@@ -1547,7 +1172,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>48</xloc>
+      <xloc>80</xloc>
       <yloc>48</yloc>
       <draw>Y</draw>
     </GUI>
@@ -1813,8 +1438,8 @@
         <precision>-1</precision>
       </field>
       <field>
-        <name>company_name</name>
-        <type>None</type>
+        <name>TRANSPOR</name>
+        <type>String</type>
         <format/>
         <currency/>
         <decimal/>
@@ -2207,7 +1832,7 @@
       </output>
     </remotesteps>
     <GUI>
-      <xloc>640</xloc>
+      <xloc>656</xloc>
       <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
@@ -2366,7 +1991,7 @@
     </remotesteps>
     <GUI>
       <xloc>912</xloc>
-      <yloc>464</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2449,7 +2074,7 @@
         <precision>-1</precision>
       </field>
       <field>
-        <name>item_price</name>
+        <name>price</name>
         <type>Number</type>
         <format>0.#####</format>
         <currency/>
@@ -2476,34 +2101,155 @@
     </remotesteps>
     <GUI>
       <xloc>1136</xloc>
-      <yloc>464</yloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Consulta base de datos</name>
-    <type>DBJoin</type>
+    <name>Constantes ES</name>
+    <type>Constant</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MSSQL_V12</connection>
-    <rowlimit>0</rowlimit>
-    <sql>SELECT ITMREF_0 AS REFERENCIA
-FROM LIVE.ITMMASTER
-WHERE EANCOD_0 = ?</sql>
-    <outer_join>N</outer_join>
-    <replace_vars>Y</replace_vars>
-    <parameter>
+    <fields>
       <field>
-        <name>gtin</name>
+        <name>COD_CTE</name>
         <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>550327</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
       </field>
-    </parameter>
+      <field>
+        <name>ID_LIN</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>L</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_CAB</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>E</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_CTE</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>B</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_ADR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>A</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_DEST</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>D</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>TIPO_PEDIDO</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>OVW</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>PLANTA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>FAM</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>CUR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>EUR</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>NUM_IVA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>ES</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>TRANSPOR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>036</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -2513,8 +2259,326 @@ WHERE EANCOD_0 = ?</sql>
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
+      <xloc>336</xloc>
       <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Constantes FR</name>
+    <type>Constant</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>COD_CTE</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>550382</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_LIN</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>L</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_CAB</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>E</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_CTE</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>B</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_ADR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>A</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_DEST</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>D</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>TIPO_PEDIDO</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>OVW</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>PLANTA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>FAM</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>CUR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>EUR</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>NUM_IVA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>FR</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>TRANSPOR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>033</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>304</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Constantes PT</name>
+    <type>Constant</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>COD_CTE</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>550352</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_LIN</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>L</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_CAB</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>E</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_CTE</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>B</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_ADR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>A</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>ID_DEST</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>D</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>TIPO_PEDIDO</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>OVW</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>PLANTA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>FAM</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>CUR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>EUR</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>NUM_IVA</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>PT</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+      <field>
+        <name>TRANSPOR</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif>036</nullif>
+        <length>-1</length>
+        <precision>-1</precision>
+        <set_empty_string>N</set_empty_string>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2534,16 +2598,13 @@ WHERE EANCOD_0 = ?</sql>
     <sql>SELECT PORTES * ? AS PORTES
 FROM LIVE.ZITM_PORTES
 WHERE ITMREF = ?
-AND DESTINO = CASE ? WHEN 'ES' THEN 
-									CASE SUBSTRING(?,1,2) WHEN '07' THEN 'ES_IB'
-									ELSE 'ES_MAIN'
-									END
-					WHEN 'FR' THEN
-						'FR_MAIN'
-					ELSE
-						'ES_MAIN'
-					END;
-</sql>
+AND DESTINO = CASE ? WHEN 'ES' THEN
+										CASE SUBSTRING(?,1,2) WHEN '07' THEN 'ES_IB'
+										ELSE 'ES_MAIN'
+										END
+								    ELSE 
+										'ES_MAIN'
+								    END</sql>
     <outer_join>N</outer_join>
     <replace_vars>Y</replace_vars>
     <parameter>
@@ -2573,14 +2634,14 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>480</xloc>
-      <yloc>320</yloc>
+      <xloc>512</xloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Dummy (do nothing)</name>
-    <type>Dummy</type>
+    <name>Es MetroMarket ES</name>
+    <type>FilterRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -2589,6 +2650,25 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <send_true_to>Constantes ES</send_true_to>
+    <send_false_to>Es MetroMarket ES 2</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>country</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>ES</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -2598,13 +2678,365 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>64</xloc>
+      <xloc>208</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Es MetroMarket ES 2</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Constantes FR</send_true_to>
+    <send_false_to>SIN_PAIS</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>country</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>FR</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>496</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Es MetroMarket PT</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Constantes PT</send_true_to>
+    <send_false_to>Es MetroMarket ES</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>country</leftvalue>
+        <function>=</function>
+        <rightvalue/>
+        <value>
+          <name>constant</name>
+          <type>String</type>
+          <text>PT</text>
+          <length>-1</length>
+          <precision>-1</precision>
+          <isnull>N</isnull>
+          <mask/>
+        </value>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>208</xloc>
+      <yloc>224</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Filter rows</name>
+    <type>FilterRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <send_true_to>Set field value</send_true_to>
+    <send_false_to>Concat LINEA ADR COMPLETA</send_false_to>
+    <compare>
+      <condition>
+        <negated>N</negated>
+        <leftvalue>company_name</leftvalue>
+        <function>IS NULL</function>
+        <rightvalue/>
+      </condition>
+    </compare>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>784</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Memory group by</name>
+    <type>MemoryGroupBy</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <give_back_row>N</give_back_row>
+    <group>
+      <field>
+        <name>﻿order_id</name>
+      </field>
+      <field>
+        <name>customer_order_id</name>
+      </field>
+      <field>
+        <name>date_created</name>
+      </field>
+      <field>
+        <name>first_name</name>
+      </field>
+      <field>
+        <name>last_name</name>
+      </field>
+      <field>
+        <name>company_name</name>
+      </field>
+      <field>
+        <name>address_line_1</name>
+      </field>
+      <field>
+        <name>address_line_2</name>
+      </field>
+      <field>
+        <name>zip_code</name>
+      </field>
+      <field>
+        <name>city</name>
+      </field>
+      <field>
+        <name>country</name>
+      </field>
+      <field>
+        <name>phone</name>
+      </field>
+      <field>
+        <name>email</name>
+      </field>
+      <field>
+        <name>shipping_details</name>
+      </field>
+      <field>
+        <name>FEC_PED</name>
+      </field>
+      <field>
+        <name>COD_CTE</name>
+      </field>
+      <field>
+        <name>ID_LIN</name>
+      </field>
+      <field>
+        <name>ID_CAB</name>
+      </field>
+      <field>
+        <name>ID_CTE</name>
+      </field>
+      <field>
+        <name>ID_ADR</name>
+      </field>
+      <field>
+        <name>ID_DEST</name>
+      </field>
+      <field>
+        <name>TIPO_PEDIDO</name>
+      </field>
+      <field>
+        <name>PLANTA</name>
+      </field>
+      <field>
+        <name>CUR</name>
+      </field>
+      <field>
+        <name>NUM_IVA</name>
+      </field>
+      <field>
+        <name>TRANSPOR</name>
+      </field>
+    </group>
+    <fields>
+      <field>
+        <aggregate>PORTES</aggregate>
+        <subject>PORTES</subject>
+        <type>SUM</type>
+        <valuefield/>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>624</xloc>
+      <yloc>208</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Merge join</name>
+    <type>MergeJoin</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <join_type>INNER</join_type>
+    <step1>Sort rows 3</step1>
+    <step2>Add sequence 2</step2>
+    <keys_1>
+      <key>﻿order_id</key>
+    </keys_1>
+    <keys_2>
+      <key>﻿order_id</key>
+    </keys_2>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>816</xloc>
       <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Err_log</name>
+    <name>Row normaliser</name>
+    <type>Normaliser</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <typefield>typefield</typefield>
+    <fields>
+      <field>
+        <name>PEDIDO_CAB</name>
+        <value>E</value>
+        <norm>CABECERA</norm>
+      </field>
+      <field>
+        <name>PEDIDO_LIN</name>
+        <value>L</value>
+        <norm>LINEA</norm>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1312</xloc>
+      <yloc>416</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Row normaliser 2</name>
+    <type>Normaliser</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <typefield>typefield</typefield>
+    <fields>
+      <field>
+        <name>CLIENTE_CAB</name>
+        <value>B</value>
+        <norm>CABECERA_CTE</norm>
+      </field>
+      <field>
+        <name>ADR_COMPLETA_CTE</name>
+        <value>A</value>
+        <norm>ADR_LIN</norm>
+      </field>
+      <field>
+        <name>LINEA_DESTINO_CLIENTE</name>
+        <value>D</value>
+        <norm>DEST_LIN</norm>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1488</xloc>
+      <yloc>592</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>SIN_PAIS</name>
     <type>TextFileOutput</type>
     <description/>
     <distribute>Y</distribute>
@@ -2628,14 +3060,14 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>SIN_PAIS</name>
+      <name>C:/intercambio/Mmarket_sin_pais</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>Y</do_not_open_new_file_init>
       <extention>txt</extention>
       <append>N</append>
-      <split>Y</split>
+      <split>N</split>
       <haspartno>N</haspartno>
-      <add_date>Y</add_date>
+      <add_date>N</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
       <date_time_format/>
@@ -2943,401 +3375,8 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Es MetroMarket ES</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Add constants 2</send_true_to>
-    <send_false_to>Es MetroMarket FR</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>country</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>ES</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask/>
-        </value>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Es MetroMarket FR</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Add constants 3</send_true_to>
-    <send_false_to>Err_log</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>country</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>FR</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask/>
-        </value>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Es MetroMarket PT</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Add constants</send_true_to>
-    <send_false_to>Es MetroMarket ES</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>country</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>String</type>
-          <text>PT</text>
-          <length>-1</length>
-          <precision>-1</precision>
-          <isnull>N</isnull>
-          <mask/>
-        </value>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>208</xloc>
-      <yloc>224</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Filtrar filas</name>
-    <type>FilterRows</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <send_true_to>Set field value</send_true_to>
-    <send_false_to>Concat LINEA ADR COMPLETA</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>company_name</leftvalue>
-        <function>IS NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>640</xloc>
-      <yloc>800</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Memory group by</name>
-    <type>MemoryGroupBy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <give_back_row>N</give_back_row>
-    <group>
-      <field>
-        <name>﻿order_id</name>
-      </field>
-      <field>
-        <name>customer_order_id</name>
-      </field>
-      <field>
-        <name>date_created</name>
-      </field>
-      <field>
-        <name>first_name</name>
-      </field>
-      <field>
-        <name>last_name</name>
-      </field>
-      <field>
-        <name>company_name</name>
-      </field>
-      <field>
-        <name>address_line_1</name>
-      </field>
-      <field>
-        <name>address_line_2</name>
-      </field>
-      <field>
-        <name>zip_code</name>
-      </field>
-      <field>
-        <name>city</name>
-      </field>
-      <field>
-        <name>country</name>
-      </field>
-      <field>
-        <name>phone</name>
-      </field>
-      <field>
-        <name>email</name>
-      </field>
-      <field>
-        <name>shipping_details</name>
-      </field>
-      <field>
-        <name>FEC_PED</name>
-      </field>
-      <field>
-        <name>COD_CTE</name>
-      </field>
-      <field>
-        <name>ID_LIN</name>
-      </field>
-      <field>
-        <name>ID_CAB</name>
-      </field>
-      <field>
-        <name>ID_CTE</name>
-      </field>
-      <field>
-        <name>ID_ADR</name>
-      </field>
-      <field>
-        <name>ID_DEST</name>
-      </field>
-      <field>
-        <name>TIPO_PEDIDO</name>
-      </field>
-      <field>
-        <name>PLANTA</name>
-      </field>
-      <field>
-        <name>CUR</name>
-      </field>
-      <field>
-        <name>NUM_IVA</name>
-      </field>
-    </group>
-    <fields>
-      <field>
-        <aggregate>PORTES</aggregate>
-        <subject>PORTES</subject>
-        <type>SUM</type>
-        <valuefield/>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>576</xloc>
-      <yloc>208</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Merge join</name>
-    <type>MergeJoin</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <join_type>INNER</join_type>
-    <step1>Sort rows 3</step1>
-    <step2>Add sequence 2</step2>
-    <keys_1>
-      <key>﻿order_id</key>
-    </keys_1>
-    <keys_2>
-      <key>﻿order_id</key>
-    </keys_2>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>848</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Row normaliser</name>
-    <type>Normaliser</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <typefield>typefield</typefield>
-    <fields>
-      <field>
-        <name>PEDIDO_CAB</name>
-        <value>E</value>
-        <norm>CABECERA</norm>
-      </field>
-      <field>
-        <name>PEDIDO_LIN</name>
-        <value>L</value>
-        <norm>LINEA</norm>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1328</xloc>
-      <yloc>464</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Row normaliser 2</name>
-    <type>Normaliser</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <typefield>typefield</typefield>
-    <fields>
-      <field>
-        <name>CLIENTE_CAB</name>
-        <value>B</value>
-        <norm>CABECERA_CTE</norm>
-      </field>
-      <field>
-        <name>ADR_COMPLETA_CTE</name>
-        <value>A</value>
-        <norm>ADR_LIN</norm>
-      </field>
-      <field>
-        <name>LINEA_DESTINO_CLIENTE</name>
-        <value>D</value>
-        <norm>DEST_LIN</norm>
-      </field>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>1504</xloc>
-      <yloc>640</yloc>
+      <xloc>80</xloc>
+      <yloc>576</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -3460,6 +3499,23 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
         <currency_symbol/>
         <storage_type/>
       </meta>
+      <meta>
+        <name>phone</name>
+        <rename>phone</rename>
+        <type>String</type>
+        <length>20</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
     </fields>
     <attributes/>
     <cluster_schema/>
@@ -3489,192 +3545,259 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     <fields>
       <field>
         <name>﻿order_id</name>
+        <rename/>
       </field>
       <field>
         <name>customer_order_id</name>
+        <rename/>
       </field>
       <field>
         <name>date_created</name>
+        <rename/>
       </field>
       <field>
         <name>first_name</name>
+        <rename/>
       </field>
       <field>
         <name>last_name</name>
+        <rename/>
       </field>
       <field>
         <name>company_name</name>
+        <rename/>
       </field>
       <field>
         <name>address_line_1</name>
+        <rename/>
       </field>
       <field>
         <name>address_line_2</name>
+        <rename/>
       </field>
       <field>
         <name>zip_code</name>
+        <rename/>
       </field>
       <field>
         <name>city</name>
+        <rename/>
       </field>
       <field>
         <name>country</name>
+        <rename/>
       </field>
       <field>
         <name>phone</name>
+        <rename/>
       </field>
       <field>
         <name>email</name>
+        <rename/>
       </field>
       <field>
         <name>shipping_details</name>
+        <rename/>
       </field>
       <field>
         <name>shipping_gln</name>
+        <rename/>
       </field>
       <field>
         <name>pos_no</name>
+        <rename/>
       </field>
       <field>
         <name>gtin</name>
+        <rename/>
       </field>
       <field>
         <name>vendor_article_number</name>
+        <rename/>
       </field>
       <field>
         <name>product_name</name>
+        <rename/>
       </field>
       <field>
         <name>quantity</name>
+        <rename/>
       </field>
       <field>
         <name>item_price</name>
+        <rename/>
       </field>
       <field>
         <name>price</name>
+        <rename/>
       </field>
       <field>
         <name>FEC_PED</name>
+        <rename/>
       </field>
       <field>
         <name>COD_CTE</name>
+        <rename/>
       </field>
       <field>
         <name>ID_LIN</name>
+        <rename/>
       </field>
       <field>
         <name>ID_CAB</name>
+        <rename/>
       </field>
       <field>
         <name>ID_CTE</name>
+        <rename/>
       </field>
       <field>
         <name>ID_ADR</name>
+        <rename/>
       </field>
       <field>
         <name>ID_DEST</name>
+        <rename/>
       </field>
       <field>
         <name>TIPO_PEDIDO</name>
+        <rename/>
       </field>
       <field>
         <name>PLANTA</name>
+        <rename/>
       </field>
       <field>
         <name>CUR</name>
+        <rename/>
       </field>
       <field>
         <name>NUM_IVA</name>
+        <rename/>
       </field>
       <field>
         <name>PORTES</name>
+        <rename/>
       </field>
       <field>
         <name>﻿order_id_1</name>
+        <rename/>
       </field>
       <field>
         <name>customer_order_id_1</name>
+        <rename/>
       </field>
       <field>
         <name>date_created_1</name>
+        <rename/>
       </field>
       <field>
         <name>first_name_1</name>
+        <rename/>
       </field>
       <field>
         <name>last_name_1</name>
+        <rename/>
       </field>
       <field>
         <name>company_name_1</name>
+        <rename/>
       </field>
       <field>
         <name>address_line_1_1</name>
+        <rename/>
       </field>
       <field>
         <name>address_line_2_1</name>
+        <rename/>
       </field>
       <field>
         <name>zip_code_1</name>
+        <rename/>
       </field>
       <field>
         <name>city_1</name>
+        <rename/>
       </field>
       <field>
         <name>country_1</name>
+        <rename/>
       </field>
       <field>
         <name>phone_1</name>
+        <rename/>
       </field>
       <field>
         <name>email_1</name>
+        <rename/>
       </field>
       <field>
         <name>shipping_details_1</name>
+        <rename/>
       </field>
       <field>
         <name>FEC_PED_1</name>
+        <rename/>
       </field>
       <field>
         <name>COD_CTE_1</name>
+        <rename/>
       </field>
       <field>
         <name>ID_LIN_1</name>
+        <rename/>
       </field>
       <field>
         <name>ID_CAB_1</name>
+        <rename/>
       </field>
       <field>
         <name>ID_CTE_1</name>
+        <rename/>
       </field>
       <field>
         <name>ID_ADR_1</name>
+        <rename/>
       </field>
       <field>
         <name>ID_DEST_1</name>
+        <rename/>
       </field>
       <field>
         <name>TIPO_PEDIDO_1</name>
+        <rename/>
       </field>
       <field>
         <name>PLANTA_1</name>
+        <rename/>
       </field>
       <field>
         <name>CUR_1</name>
+        <rename/>
       </field>
       <field>
         <name>NUM_IVA_1</name>
+        <rename/>
       </field>
       <field>
         <name>PORTES_1</name>
+        <rename/>
       </field>
       <field>
         <name>NUM_FICHERO</name>
+        <rename/>
       </field>
       <field>
         <name>SEQ_ADR</name>
+        <rename/>
       </field>
       <field>
         <name>REFERENCIA</name>
+        <rename/>
+      </field>
+      <field>
+        <name>TRANSPOR</name>
+        <rename/>
       </field>
       <select_unspecified>N</select_unspecified>
       <meta>
@@ -3721,8 +3844,8 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>880</xloc>
-      <yloc>192</yloc>
+      <xloc>864</xloc>
+      <yloc>256</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -3752,33 +3875,8 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>784</xloc>
-      <yloc>800</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Sin país</name>
-    <type>Dummy</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>480</xloc>
-      <yloc>480</yloc>
+      <xloc>768</xloc>
+      <yloc>784</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -3819,8 +3917,8 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1232</xloc>
-      <yloc>640</yloc>
+      <xloc>1200</xloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -3878,7 +3976,7 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     </remotesteps>
     <GUI>
       <xloc>1184</xloc>
-      <yloc>368</yloc>
+      <yloc>336</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -3927,8 +4025,8 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>320</yloc>
+      <xloc>640</xloc>
+      <yloc>416</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -3969,8 +4067,8 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>672</xloc>
-      <yloc>208</yloc>
+      <xloc>720</xloc>
+      <yloc>288</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -4020,7 +4118,7 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     </remotesteps>
     <GUI>
       <xloc>912</xloc>
-      <yloc>32</yloc>
+      <yloc>112</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -4028,7 +4126,7 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     <name>Sort rows 5</name>
     <type>SortRows</type>
     <description/>
-    <distribute>Y</distribute>
+    <distribute>N</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
@@ -4093,13 +4191,13 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding>ISO-8859-1</encoding>
+    <encoding/>
     <endedLine/>
     <fileNameInField>N</fileNameInField>
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>/home/mnaudin/metroMarket/IMPORT_ZBPC</name>
+      <name>C:/Users/mmarco/Documents/MetroMarket/IMPORT_ZBPC</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention/>
@@ -4162,8 +4260,101 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1600</xloc>
-      <yloc>448</yloc>
+      <xloc>1584</xloc>
+      <yloc>464</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Text file output IMPORT_ZBPC 2</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>//192.168.28.100\d:\Datos\Sage\X3V12\folders\TEST\IMPORT\CARGA_AUTO\IMPORT_ZBPC</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention/>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>CABECERA_CTE</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>ADR_LIN</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+      <field>
+        <name>DEST_LIN</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1616</xloc>
+      <yloc>736</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -4186,13 +4377,13 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     <footer>N</footer>
     <format>DOS</format>
     <compression>None</compression>
-    <encoding>ISO-8859-1</encoding>
+    <encoding/>
     <endedLine/>
     <fileNameInField>N</fileNameInField>
     <fileNameField/>
     <create_parent_folder>Y</create_parent_folder>
     <file>
-      <name>/home/mnaudin/metroMarket/IMPORT_ZSOH</name>
+      <name>C:/Users/mmarco/Documents/MetroMarket/IMPORT_ZSOH</name>
       <servlet_output>N</servlet_output>
       <do_not_open_new_file_init>N</do_not_open_new_file_init>
       <extention/>
@@ -4231,8 +4422,77 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1664</xloc>
-      <yloc>352</yloc>
+      <xloc>1680</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Text file output IMPORT_ZSOH 2</name>
+    <type>TextFileOutput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <separator>;</separator>
+    <enclosure/>
+    <enclosure_forced>N</enclosure_forced>
+    <enclosure_fix_disabled>N</enclosure_fix_disabled>
+    <header>N</header>
+    <footer>N</footer>
+    <format>DOS</format>
+    <compression>None</compression>
+    <encoding/>
+    <endedLine/>
+    <fileNameInField>N</fileNameInField>
+    <fileNameField/>
+    <create_parent_folder>Y</create_parent_folder>
+    <file>
+      <name>//192.168.28.100\d:\Datos\Sage\X3V12\folders\TEST\IMPORT\IMPORT_ZSOH</name>
+      <servlet_output>N</servlet_output>
+      <do_not_open_new_file_init>N</do_not_open_new_file_init>
+      <extention/>
+      <append>N</append>
+      <split>N</split>
+      <haspartno>N</haspartno>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <add_to_result_filenames>Y</add_to_result_filenames>
+      <pad>N</pad>
+      <fast_dump>N</fast_dump>
+      <splitevery/>
+    </file>
+    <fields>
+      <field>
+        <name>CABECERA_FINAL</name>
+        <type>String</type>
+        <format/>
+        <currency/>
+        <decimal/>
+        <group/>
+        <nullif/>
+        <trim_type>both</trim_type>
+        <length>-1</length>
+        <precision>-1</precision>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>1648</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -4267,7 +4527,7 @@ AND DESTINO = CASE ? WHEN 'ES' THEN
     </remotesteps>
     <GUI>
       <xloc>1360</xloc>
-      <yloc>640</yloc>
+      <yloc>592</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

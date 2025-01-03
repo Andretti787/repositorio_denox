@@ -2,8 +2,8 @@
 <transformation>
   <info>
     <name>carga_expediciones</name>
-    <description />
-    <extended_description />
+    <description/>
+    <extended_description/>
     <trans_version>1.0</trans_version>
     <trans_type>Normal</trans_type>
     <trans_status>2</trans_status>
@@ -12,12 +12,12 @@
     </parameters>
     <log>
       <trans-log-table>
-        <connection />
-        <schema />
-        <table />
-        <size_limit_lines />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <size_limit_lines/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -42,37 +42,37 @@
           <id>LINES_READ</id>
           <enabled>Y</enabled>
           <name>LINES_READ</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_WRITTEN</id>
           <enabled>Y</enabled>
           <name>LINES_WRITTEN</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_UPDATED</id>
           <enabled>Y</enabled>
           <name>LINES_UPDATED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_INPUT</id>
           <enabled>Y</enabled>
           <name>LINES_INPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_OUTPUT</id>
           <enabled>Y</enabled>
           <name>LINES_OUTPUT</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>LINES_REJECTED</id>
           <enabled>Y</enabled>
           <name>LINES_REJECTED</name>
-          <subject />
+          <subject/>
         </field>
         <field>
           <id>ERRORS</id>
@@ -126,11 +126,11 @@
         </field>
       </trans-log-table>
       <perf-log-table>
-        <connection />
-        <schema />
-        <table />
-        <interval />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <interval/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -208,10 +208,10 @@
         </field>
       </perf-log-table>
       <channel-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -274,10 +274,10 @@
         </field>
       </channel-log-table>
       <step-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -350,10 +350,10 @@
         </field>
       </step-log-table>
       <metrics-log-table>
-        <connection />
-        <schema />
-        <table />
-        <timeout_days />
+        <connection/>
+        <schema/>
+        <table/>
+        <timeout_days/>
         <field>
           <id>ID_BATCH</id>
           <enabled>Y</enabled>
@@ -402,9 +402,9 @@
       </metrics-log-table>
     </log>
     <maxdate>
-      <connection />
-      <table />
-      <field />
+      <connection/>
+      <table/>
+      <field/>
       <offset>0.0</offset>
       <maxdiff>0.0</maxdiff>
     </maxdate>
@@ -415,11 +415,29 @@
     <feedback_shown>Y</feedback_shown>
     <feedback_size>50000</feedback_size>
     <using_thread_priorities>Y</using_thread_priorities>
-    <shared_objects_file />
+    <shared_objects_file/>
     <capture_step_performance>N</capture_step_performance>
     <step_performance_capturing_delay>1000</step_performance_capturing_delay>
     <step_performance_capturing_size_limit>100</step_performance_capturing_size_limit>
     <dependencies>
+      <dependency>
+        <connection>MSSQL Sage</connection>
+        <table>FAMESAOF.SPACKD</table>
+        <field/>
+      </dependency>
+      <dependency>
+        <connection>MSSQL Sage</connection>
+        <table>FAMESAOF.SDELIVERY 
+</table>
+        <field/>
+      </dependency>
+      <dependency>
+        <connection>MSSQL Sage</connection>
+        <table>FAMESAOF.ITMBPC ITEM 
+INNER JOIN FAMESAOF.BPARTNER CTE ON ITEM.BPCNUM_0 = CTE.BPRNUM_0
+INNER JOIN FAMESAOF.ITMMASTER MASTER ON ITEM.ITMREF_0 = MASTER.ITMREF_0</table>
+        <field/>
+      </dependency>
     </dependencies>
     <partitionschemas>
     </partitionschemas>
@@ -439,7 +457,7 @@
       <note>Con esta información se creará la vista V_EXPEDICIONES_IDIOMA que se usará para generar las etiquetas de los albaranes</note>
       <xloc>144</xloc>
       <yloc>32</yloc>
-      <width>744</width>
+      <width>645</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -460,7 +478,7 @@
       <note>Reemplazo los campos de DUN14  y EAN que tengan un espacio por NULL</note>
       <xloc>272</xloc>
       <yloc>672</yloc>
-      <width>458</width>
+      <width>401</width>
       <heigth>26</heigth>
       <fontname>Segoe UI</fontname>
       <fontsize>9</fontsize>
@@ -480,16 +498,16 @@
   </notepads>
   <connection>
     <name>MSSQL Sage</name>
-    <server>213.149.235.131</server>
+    <server>217.116.8.58</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
     <database>x3famesa</database>
     <port>49412</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -546,9 +564,9 @@
     <port>3306</port>
     <username>famesa</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
-    <servername />
-    <data_tablespace />
-    <index_tablespace />
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
     <attributes>
       <attribute>
         <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
@@ -655,119 +673,27 @@
     </hop>
   </order>
   <step>
-    <name>Data validator / Eliminar campos null</name>
-    <type>Validator</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <validate_all>N</validate_all>
-    <concat_errors>N</concat_errors>
-    <concat_separator>|</concat_separator>
-    <validator_field>
-      <name>PEDIDO</name>
-      <validation_name>NOT NULL PK</validation_name>
-      <max_length />
-      <min_length />
-      <null_allowed>N</null_allowed>
-      <only_null_allowed>N</only_null_allowed>
-      <only_numeric_allowed>N</only_numeric_allowed>
-      <data_type>None</data_type>
-      <data_type_verified>N</data_type_verified>
-      <conversion_mask />
-      <decimal_symbol />
-      <grouping_symbol />
-      <max_value />
-      <min_value />
-      <start_string />
-      <end_string />
-      <start_string_not_allowed />
-      <end_string_not_allowed />
-      <regular_expression />
-      <regular_expression_not_allowed />
-      <error_code />
-      <error_description />
-      <is_sourcing_values>N</is_sourcing_values>
-      <sourcing_step />
-      <sourcing_field />
-      <allowed_value />
-    </validator_field>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>336</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Entrada Tabla ITMBPC, BPARTNER e ITMMASTER</name>
-    <type>TableInput</type>
-    <description />
-    <distribute>N</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>MSSQL Sage</connection>
-    <sql>SELECT  ITEM.ITMREF_0 AS REFERENCIA, ITEM.BPCNUM_0 AS CLIENTE, ITEM.ITMREFBPC_0 AS REF_CTE, CTE.BPRNAM_0 AS NOM_CTE, 
-ITEM.SAU_0 AS SAU, MASTER.ITMDES1_0 AS DESCRIPCION, MASTER.ZITMDUN14_0 AS COD_DUN14, ZITMDUNCAP_0 AS CAPACIDAD_DUN, MASTER.EANCOD_0 AS COD_EAN
-FROM FAMESAOF.ITMBPC ITEM 
-INNER JOIN FAMESAOF.BPARTNER CTE ON ITEM.BPCNUM_0 = CTE.BPRNUM_0
-INNER JOIN FAMESAOF.ITMMASTER MASTER ON ITEM.ITMREF_0 = MASTER.ITMREF_0</sql>
-    <limit>0</limit>
-    <lookup />
-    <execute_each_row>N</execute_each_row>
-    <variables_active>N</variables_active>
-    <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>608</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Entrada Tabla SPACKD</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL Sage</connection>
     <sql>SELECT EXPNUM_0 AS NUMEXP, ITMREF_0 AS ARTICULO, CREDATTIM_0 AS FECHA_CREACION,PCK_0 AS EMBALAJE, QTY_0 AS CANTIDAD, QTYPCU_0 AS CANTIDAD_2,
 VCRTYP_0 AS TIPO_ASIENTO,VCRNUM_0 AS ASIENTO, PACNUM_0 AS NUM_BULTO, PACSEQ_0 AS NUM_SECUENCIA
 FROM FAMESAOF.SPACKD</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -781,179 +707,39 @@ FROM FAMESAOF.SPACKD</sql>
     </GUI>
   </step>
   <step>
-    <name>Espacios -> null</name>
-    <type>ReplaceString</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <in_stream_name>COD_DUN14</in_stream_name>
-        <out_stream_name />
-        <use_regex>no</use_regex>
-        <replace_string> </replace_string>
-        <replace_by_string />
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string />
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-      <field>
-        <in_stream_name>COD_EAN</in_stream_name>
-        <out_stream_name />
-        <use_regex>no</use_regex>
-        <replace_string> </replace_string>
-        <replace_by_string />
-        <set_empty_string>N</set_empty_string>
-        <replace_field_by_string />
-        <whole_word>no</whole_word>
-        <case_sensitive>no</case_sensitive>
-        <is_unicode>no</is_unicode>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>608</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insertar / Actualizar ARTI_DUN_14_NEW</name>
-    <type>InsertUpdate</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <connection>MySQL MarioDB</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema />
-      <table>ARTI_DUN14_NEW</table>
-      <key>
-        <name>REFERENCIA</name>
-        <field>REFERENCIA</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <key>
-        <name>CLIENTE</name>
-        <field>CLIENTE</field>
-        <condition>=</condition>
-        <name2 />
-      </key>
-      <value>
-        <name>REFERENCIA</name>
-        <rename>REFERENCIA</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>CLIENTE</name>
-        <rename>CLIENTE</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>REF_CTE</name>
-        <rename>REF_CTE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>NOM_CTE</name>
-        <rename>NOM_CTE</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>SAU</name>
-        <rename>SAU</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>DESCRIPCION</name>
-        <rename>DESCRIPCION</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>COD_DUN14</name>
-        <rename>COD_DUN14</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>CAPACIDAD_DUN</name>
-        <rename>CAPACIDAD_DUN</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>COD_EAN</name>
-        <rename>COD_EAN</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>992</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Insertar / Actualizar BULTOS_NEW</name>
     <type>InsertUpdate</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MySQL MarioDB</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema />
+      <schema/>
       <table>BULTOS_NEW</table>
       <key>
         <name>ARTICULO</name>
         <field>ARTICULO</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>ALBARAN</name>
         <field>ALBARAN</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <key>
         <name>NUM_BULTO</name>
         <field>NUM_BULTO</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <value>
         <name>NUM_EXPORTACION</name>
@@ -1006,8 +792,8 @@ FROM FAMESAOF.SPACKD</sql>
         <update>Y</update>
       </value>
     </lookup>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1021,27 +807,235 @@ FROM FAMESAOF.SPACKD</sql>
     </GUI>
   </step>
   <step>
-    <name>Insertar / Actualizar PEDIDOS_CLIENTE_NEW</name>
-    <type>InsertUpdate</type>
-    <description />
+    <name>Ordenar filas</name>
+    <type>SortRows</type>
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>FECHA_CREACION</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>ASIENTO</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>ARTICULO</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>320</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>NUMEXP</name>
+        <rename>NUM_EXPORTACION</rename>
+      </field>
+      <field>
+        <name>ARTICULO</name>
+      </field>
+      <field>
+        <name>FECHA_CREACION</name>
+      </field>
+      <field>
+        <name>EMBALAJE</name>
+      </field>
+      <field>
+        <name>CANTIDAD</name>
+      </field>
+      <field>
+        <name>TIPO_ASIENTO</name>
+      </field>
+      <field>
+        <name>ASIENTO</name>
+        <rename>ALBARAN</rename>
+      </field>
+      <field>
+        <name>NUM_BULTO</name>
+      </field>
+      <field>
+        <name>NUM_SECUENCIA</name>
+      </field>
+      <field>
+        <name>CANTIDAD_2</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>CANTIDAD</name>
+        <rename>CANTIDAD</rename>
+        <type>Integer</type>
+        <length>11</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>CANTIDAD_2</name>
+        <rename>CANTIDAD_2</rename>
+        <type>Integer</type>
+        <length>11</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>528</xloc>
+      <yloc>112</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Data validator / Eliminar campos null</name>
+    <type>Validator</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <validate_all>N</validate_all>
+    <concat_errors>N</concat_errors>
+    <concat_separator>|</concat_separator>
+    <validator_field>
+      <name>PEDIDO</name>
+      <validation_name>NOT NULL PK</validation_name>
+      <max_length/>
+      <min_length/>
+      <null_allowed>N</null_allowed>
+      <only_null_allowed>N</only_null_allowed>
+      <only_numeric_allowed>N</only_numeric_allowed>
+      <data_type>None</data_type>
+      <data_type_verified>N</data_type_verified>
+      <conversion_mask/>
+      <decimal_symbol/>
+      <grouping_symbol/>
+      <max_value/>
+      <min_value/>
+      <start_string/>
+      <end_string/>
+      <start_string_not_allowed/>
+      <end_string_not_allowed/>
+      <regular_expression/>
+      <regular_expression_not_allowed/>
+      <error_code/>
+      <error_description/>
+      <is_sourcing_values>N</is_sourcing_values>
+      <sourcing_step/>
+      <sourcing_field/>
+      <allowed_value/>
+    </validator_field>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insertar / Actualizar PEDIDOS_CLIENTE_NEW</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
     </partitioning>
     <connection>MySQL MarioDB</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema />
+      <schema/>
       <table>PEDIDOS_CLIENTE_NEW</table>
       <key>
         <name>PEDIDO_FAM</name>
         <field>PEDIDO_FAM</field>
         <condition>=</condition>
-        <name2 />
+        <name2/>
       </key>
       <value>
         <name>PEDIDO_FAM</name>
@@ -1094,8 +1088,8 @@ FROM FAMESAOF.SPACKD</sql>
         <update>Y</update>
       </value>
     </lookup>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1109,80 +1103,22 @@ FROM FAMESAOF.SPACKD</sql>
     </GUI>
   </step>
   <step>
-    <name>Ordenar filas</name>
-    <type>SortRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory />
-    <compress>N</compress>
-    <compress_variable />
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>FECHA_CREACION</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ASIENTO</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>ARTICULO</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>320</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Ordenar filas 2</name>
     <type>SortRows</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <directory>%%java.io.tmpdir%%</directory>
     <prefix>out</prefix>
     <sort_size>1000000</sort_size>
-    <free_memory />
+    <free_memory/>
     <compress>N</compress>
-    <compress_variable />
+    <compress_variable/>
     <unique_rows>N</unique_rows>
     <fields>
       <field>
@@ -1266,8 +1202,8 @@ FROM FAMESAOF.SPACKD</sql>
         <presorted>N</presorted>
       </field>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1281,133 +1217,27 @@ FROM FAMESAOF.SPACKD</sql>
     </GUI>
   </step>
   <step>
-    <name>Ordenar filas 3</name>
-    <type>SortRows</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <directory>%%java.io.tmpdir%%</directory>
-    <prefix>out</prefix>
-    <sort_size>1000000</sort_size>
-    <free_memory />
-    <compress>N</compress>
-    <compress_variable />
-    <unique_rows>N</unique_rows>
-    <fields>
-      <field>
-        <name>REFERENCIA</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>CLIENTE</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>REF_CTE</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>NOM_CTE</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>SAU</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>DESCRIPCION</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>COD_DUN14</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>CAPACIDAD_DUN</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>COD_EAN</name>
-        <ascending>N</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>496</xloc>
-      <yloc>480</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>QUERY SDELIVERY</name>
     <type>TableInput</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <connection>MSSQL Sage</connection>
     <sql>SELECT SOHNUM_0 AS PEDIDO, BPCGRU_0 AS CTE_GRUPO, BPCINV_0 AS CTE_FAC, CREDAT_0 AS FECHA_CREACION, DLVDAT_0 AS FECHA_ENVIO, SDHNUM_0 AS N_ALBARAN, BPCORD_0 AS CTE_ENTREGA, PACNBR_0 AS BULTOS_PALLET, YPACK_0 AS BULTOS_PACK, BPDCTY_0 AS CIUDAD_ENTREGA
 FROM FAMESAOF.SDELIVERY 
 WHERE SOHNUM_0 IS NOT NULL</sql>
     <limit>0</limit>
-    <lookup />
+    <lookup/>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1421,109 +1251,15 @@ WHERE SOHNUM_0 IS NOT NULL</sql>
     </GUI>
   </step>
   <step>
-    <name>Selecciona/Renombra valores</name>
-    <type>SelectValues</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <fields>
-      <field>
-        <name>NUMEXP</name>
-        <rename>NUM_EXPORTACION</rename>
-      </field>
-      <field>
-        <name>ARTICULO</name>
-      </field>
-      <field>
-        <name>FECHA_CREACION</name>
-      </field>
-      <field>
-        <name>EMBALAJE</name>
-      </field>
-      <field>
-        <name>CANTIDAD</name>
-      </field>
-      <field>
-        <name>TIPO_ASIENTO</name>
-      </field>
-      <field>
-        <name>ASIENTO</name>
-        <rename>ALBARAN</rename>
-      </field>
-      <field>
-        <name>NUM_BULTO</name>
-      </field>
-      <field>
-        <name>NUM_SECUENCIA</name>
-      </field>
-      <field>
-        <name>CANTIDAD_2</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-      <meta>
-        <name>CANTIDAD</name>
-        <rename>CANTIDAD</rename>
-        <type>Integer</type>
-        <length>11</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-      <meta>
-        <name>CANTIDAD_2</name>
-        <rename>CANTIDAD_2</rename>
-        <type>Integer</type>
-        <length>11</length>
-        <precision>-2</precision>
-        <conversion_mask />
-        <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
-        <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
-      </meta>
-    </fields>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>528</xloc>
-      <yloc>112</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
     <name>Selecciona/Renombra valores 2</name>
     <type>SelectValues</type>
-    <description />
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -1560,8 +1296,8 @@ WHERE SOHNUM_0 IS NOT NULL</sql>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1575,15 +1311,322 @@ WHERE SOHNUM_0 IS NOT NULL</sql>
     </GUI>
   </step>
   <step>
-    <name>Selecciona/Renombra valores 3</name>
-    <type>SelectValues</type>
-    <description />
+    <name>Transformación simulada (no hace nada)</name>
+    <type>Dummy</type>
+    <description/>
     <distribute>Y</distribute>
-    <custom_distribution />
+    <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
-      <schema_name />
+      <schema_name/>
+    </partitioning>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>352</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla ITMBPC, BPARTNER e ITMMASTER</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>N</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL Sage</connection>
+    <sql>SELECT  ITEM.ITMREF_0 AS REFERENCIA, ITEM.BPCNUM_0 AS CLIENTE, ITEM.ITMREFBPC_0 AS REF_CTE, CTE.BPRNAM_0 AS NOM_CTE, 
+ITEM.SAU_0 AS SAU, MASTER.ITMDES1_0 AS DESCRIPCION, MASTER.ZITMDUN14_0 AS COD_DUN14, ZITMDUNCAP_0 AS CAPACIDAD_DUN, MASTER.EANCOD_0 AS COD_EAN
+FROM FAMESAOF.ITMBPC ITEM 
+INNER JOIN FAMESAOF.BPARTNER CTE ON ITEM.BPCNUM_0 = CTE.BPRNUM_0
+INNER JOIN FAMESAOF.ITMMASTER MASTER ON ITEM.ITMREF_0 = MASTER.ITMREF_0</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>144</xloc>
+      <yloc>608</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Espacios -> null</name>
+    <type>ReplaceString</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <in_stream_name>COD_DUN14</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string> </replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+      <field>
+        <in_stream_name>COD_EAN</in_stream_name>
+        <out_stream_name/>
+        <use_regex>no</use_regex>
+        <replace_string> </replace_string>
+        <replace_by_string/>
+        <set_empty_string>N</set_empty_string>
+        <replace_field_by_string/>
+        <whole_word>no</whole_word>
+        <case_sensitive>no</case_sensitive>
+        <is_unicode>no</is_unicode>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>608</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insertar / Actualizar ARTI_DUN_14_NEW</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MySQL MarioDB</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema/>
+      <table>ARTI_DUN14_NEW</table>
+      <key>
+        <name>REFERENCIA</name>
+        <field>REFERENCIA</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>CLIENTE</name>
+        <field>CLIENTE</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>REFERENCIA</name>
+        <rename>REFERENCIA</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>CLIENTE</name>
+        <rename>CLIENTE</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>REF_CTE</name>
+        <rename>REF_CTE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>NOM_CTE</name>
+        <rename>NOM_CTE</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>SAU</name>
+        <rename>SAU</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>DESCRIPCION</name>
+        <rename>DESCRIPCION</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>COD_DUN14</name>
+        <rename>COD_DUN14</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CAPACIDAD_DUN</name>
+        <rename>CAPACIDAD_DUN</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>COD_EAN</name>
+        <rename>COD_EAN</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>992</xloc>
+      <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar filas 3</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>REFERENCIA</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>CLIENTE</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>REF_CTE</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>NOM_CTE</name>
+        <ascending>N</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>SAU</name>
+        <ascending>N</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>DESCRIPCION</name>
+        <ascending>N</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>COD_DUN14</name>
+        <ascending>N</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>CAPACIDAD_DUN</name>
+        <ascending>N</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+      <field>
+        <name>COD_EAN</name>
+        <ascending>N</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>496</xloc>
+      <yloc>480</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores 3</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
     </partitioning>
     <fields>
       <field>
@@ -1620,20 +1663,20 @@ WHERE SOHNUM_0 IS NOT NULL</sql>
         <type>Integer</type>
         <length>3</length>
         <precision>-2</precision>
-        <conversion_mask />
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
-        <date_format_locale />
-        <date_format_timezone />
+        <date_format_locale/>
+        <date_format_timezone/>
         <lenient_string_to_number>false</lenient_string_to_number>
-        <encoding />
-        <decimal_symbol />
-        <grouping_symbol />
-        <currency_symbol />
-        <storage_type />
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
       </meta>
     </fields>
-    <attributes />
-    <cluster_schema />
+    <attributes/>
+    <cluster_schema/>
     <remotesteps>
       <input>
       </input>
@@ -1646,47 +1689,22 @@ WHERE SOHNUM_0 IS NOT NULL</sql>
       <draw>Y</draw>
     </GUI>
   </step>
-  <step>
-    <name>Transformación simulada (no hace nada)</name>
-    <type>Dummy</type>
-    <description />
-    <distribute>Y</distribute>
-    <custom_distribution />
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name />
-    </partitioning>
-    <attributes />
-    <cluster_schema />
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>144</xloc>
-      <yloc>352</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
   <step_error_handling>
     <error>
       <source_step>Data validator / Eliminar campos null</source_step>
       <target_step>Transformación simulada (no hace nada)</target_step>
       <is_enabled>Y</is_enabled>
-      <nr_valuename />
-      <descriptions_valuename />
-      <fields_valuename />
-      <codes_valuename />
-      <max_errors />
-      <max_pct_errors />
-      <min_pct_rows />
+      <nr_valuename/>
+      <descriptions_valuename/>
+      <fields_valuename/>
+      <codes_valuename/>
+      <max_errors/>
+      <max_pct_errors/>
+      <min_pct_rows/>
     </error>
   </step_error_handling>
   <slave-step-copy-partition-distribution>
   </slave-step-copy-partition-distribution>
   <slave_transformation>N</slave_transformation>
-  <attributes />
+  <attributes/>
 </transformation>
