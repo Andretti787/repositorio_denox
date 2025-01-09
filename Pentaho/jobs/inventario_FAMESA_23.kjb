@@ -440,7 +440,7 @@
       <include_date>Y</include_date>
       <contact_person/>
       <contact_phone/>
-      <comment>Proceso de carga de inventario finalizado</comment>
+      <comment>Proceso de carga de inventario comparativo finalizado</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name/>
