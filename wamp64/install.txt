@@ -1,0 +1,48 @@
+--- Installation of Wampserver ---
+BEFORE proceeding with the installation of Wampserver, you must ensure that certain elements are installed on your system, otherwise Wampserver will absolutely not run, and in addition, the installation will be faulty and you need to remove Wampserver BEFORE installing the elements that were missing.
+Make sure you are "up to date" in the redistributable packages VC9, VC10, VC11, VC13, VC14, VC15, VC17 and VS16
+See --- Visual C++ Packages below.
+--- Do not install Wampserver OVER an existing version, follow the advice:
+- Install a new version of Wampserver: http://forum.wampserver.com/read.php?2,123606
+If you install Wampserver over an existing version, not only it will not work, but you risk losing your existing databases.
+--- Install Wampserver in a folder at the root of a disk, for example C:\wamp or D:\wamp. Take an installation path that does not include spaces or diacritics; Therefore, no installation in c:\Program Files\ or C:\Program Files (x86\
+We must BEFORE installing, disable or close some applications:
+- Close Skype or force not to use port 80
+Item No. 04 of the Wampserver TROUBLESHOOTING TIPS:http://forum.wampserver.com/read.php?2,134915
+- Disable IIS
+Item No. 08 of the Wampserver TROUBLESHOOTING TIPS:http://forum.wampserver.com/read.php?2,134915
+If these prerequisites are not in place, Press the Cancel button to cancel the installation, then apply the prerequisites and restart the installation.
+This program requires Administrator privileges to function properly. It will be launched with the "Run as administrator" option. If you do not want a program to have this option, cancel the installation.
+
+--- Visual C++ Packages ---
+The MSVC runtime libraries VC9, VC10, VC11 are required for Wampserver 3.0, even if you use only Apache and PHP versions with VC11. Runtimes VC13, VC14 is required for PHP 7 and Apache 2.4.17+ and VC15 for PHP 7.2+ and Apache 2.4.29+
+-- VC9 Packages (Visual C++ 2008 SP1)
+http://www.microsoft.com/en-us/download/details.aspx?id=5582
+http://www.microsoft.com/en-us/download/details.aspx?id=2092
+-- VC10 Packages (Visual C++ 2010 SP1)
+http://www.microsoft.com/en-us/download/details.aspx?id=8328
+http://www.microsoft.com/en-us/download/details.aspx?id=13523
+-- VC11 Packages (Visual C++ 2012 Update 4)
+The two files VSU4\vcredist_x86.exe and VSU4\vcredist_x64.exe to be download are on the same page: http://www.microsoft.com/en-us/download/details.aspx?id=30679
+-- VC13 Packages] (Visual C++ 2013)
+The two files VSU4\vcredist_x86.exe and VSU4\vcredist_x64.exe to be download are on the same page: https://www.microsoft.com/en-us/download/details.aspx?id=40784
+-- VC14 Packages (Visual C++ 2015 Update 3) - Replaced by VC15
+-- VC15 Redistribuable (Visual C++ 2017) - Replaced by VS16
+-- VS16 Redistribuable (Visual C++ 2015-2019)
+Visual C++ Redistributable Packages for Visual Studio 2015-2019 x86
+https://aka.ms/vs/16/release/VC_redist.x86.exe
+Visual C++ Redistributable Packages for Visual Studio 2015-2019 x64
+https://aka.ms/vs/16/release/VC_redist.x64.exe
+VC2015-2019 (VC16) is backward compatible to VC2015 (VC14) and VC2017 (VC15). That means, a VC14 or VC15 module can be used inside a VC16 binary. Because this compatibility the version number of the Redistributable is 14.2x.xx and after you install the Redistributable VC2015-2019, the Redistributable packages VC2015 (VC14) and VC2017 (VC15) are eventually deleted but you can still use VC14 and VC15.
+
+If you have a 64-bit Windows, you must install both 32 and 64bit versions of each VisualC++ package, even if you do not use Wampserver 64 bit.
+Warning: Sometimes Microsoft may update the VC ++ package by breaking the download links and without redirect to the new. If the case happens to you, remember that item number 20 below will be updated and the page http://wampserver.aviatechno.net/ section Visual C++ Redistribuable Packages is up to date.
+This is item number 20 of TROUBLESHOOTING TIPS of Wampserver:
+http://forum.wampserver.com/read.php?2,134915
+
+- Verify that all VC ++ packages are installed and with the latest versions.
+To do this, use the tool: Checks VC++ packages installed
+http://wampserver.aviatechno.net/files/tools/check_vcredist.exe
+Do not use a previously loaded tool. Make a new download to make sure you are using the correct version.
+To download missing packages, do not rely on Microsoft links, they are not reliable, download packages on http://wampserver.aviatechno.net/ in section Visual C++ Redistribuable Packages
+Do not forget that if you have a 64 bit Windows, you must install both 32 and 64 bit versions of each package.

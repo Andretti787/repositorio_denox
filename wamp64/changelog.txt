@@ -1,0 +1,205 @@
+Changelog
+--- Wampserver 3.2.3
+- Support for PHP 8
+- Improve check state of services BINARY PATH NAME
+- Improve Create definitions of TextMenu
+- Support Windows command SC for mysql and mariadb services
+- Improve IDNA ServerName check
+- Improve display of PHP error_reporting
+To use or unactive MariaDB or MySQL, read the file mariadb_mysql.txt
+
+--- Wampserver 3.2.2
+- Aestan Tray Menu - PromptText multiline support
+- Functions for PromptText multiligne
+- Viewing log file sizes
+- Obsolete code cleanup
+- Removing unnecessary functions
+- Redundancy check
+- Miscellaneous improvements
+
+--- Wampserver 3.2.1
+- Improve reinstall all services
+- Check SERVICE_START_NAME for all services
+- See Event Viewer error Apache Service if not started
+- Add require refreshVerifyFiles.php
+- Fix Default DBMS if none
+- Display default DBMS
+- Fix first php date.timezone in submenus
+- ThreadStackSize added into httpd.conf
+- Displaying some Apache settings
+- Improve automatic cleanup of log files
+- Aestan Tray Menu - Support text menu items
+
+--- Wampserver 3.2.0
+- Aestan Tray Menu (Wampmanager.exe) complete redevelopment
+  Compiled with Delphi 10.3.1 Community Edition
+  Updated BlueCave library for Bpl Types 260.
+  Jcl and Jvcl libraries followed by their authors.
+  Third party annex library Inno Setup maintained by its author.
+  32 bit version and a 64 bit version of Aestan Tray Menu
+- PHP 7.4.0 support
+- Improve apache variables management
+- Improve language files management
+- Improve reinstall all services
+- Tool verify  symbolic links
+- Possibility to trace Wampmanager processes
+- Check compilations Visual C++ 2019
+- Check Thread Safe for all PHP versions
+- Use write_file function instead of fopen, fwrite, fclose
+- Improve process and PID research
+- Obsolete options no more supported: Offline/Online, Change Service Names and Add localhost in url
+
+--- Wampserver 3.1.9
+- Fix VirtualHost creation issue (CVE-2019-11517). Thanks to Imre Rad
+- Warning if Apache variables not found
+- Improving the verification of the status of services
+- Support VirtualHost IDNA (Internationalized Domain Names in Applications) ServerName
+- Possibility to backup hosts file before modification (Wamp settings)
+- Non-systematic rewriting of some files
+
+--- Wampserver 3.1.8
+- Use of PHPIniDir "${APACHE_DIR}/bin" in httpd.conf
+No more warnings if the PATH environment variable contains a path on Wamp or a version of PHP.
+- Update of spanish language files - Thank to Raphy
+
+--- Wampserver 3.1.7
+- Replace integrated local base64 images by img/xxx.yyy
+- Don't change vhosts port with apache version switching
+
+--- Wampserver 3.1.6
+- Verify Apache Define's. Add Define SRVROOT if not exist
+- Don't use dnscache service anymore
+- Do not create symlink for libcrypto-1_1.dll, libssl-1_1.dll,
+  libcrypto-1_1-x64.dll libssl-1_1-x64.dll
+- New folder : wamp(64)/bin/apache/original_libcrypto_libssl/
+  containing the original libcrypto and libssl files above
+  for Apache versions 2.4.26 to 2.4.37 32 & 64 bit
+- Preparation to support PHP 7.3
+
+--- Wampserver 3.1.5
+- Fix security vulnerability (XSS) found by Franciny Salles in index.php page
+- Possibility to copy PHP dll instead of symlink
+- Apache original Variable ${SRVROOT} taken into account.
+- MySQL and MariaDB ports limits by variable
+
+--- Wampserver 3.1.4
+- Verify MySQL and MariaDB Service name
+- Verify that navigator and editor defining exe files exist
+- Correct default Put Offline after Online
+- Check ServerName with .dev tld
+- Don't use dnscache service if NOT_STOPPABLE
+- Possibility to create Wampserver Configuration Report
+- Possibility of automatic cleaning of log files
+If more than 1000 lines (configurable) reduction to the last 50 (configurable) lines
+- Possibility of automatic cleaning of tmp directory
+If more than 1000 files (configurable) suppress all files
+- Correct bug create VirtualHost if Apache use port other than 80
+- Correct bug : suppress ':port number' in $virtualHost['FirstServerName']
+
+--- Wampserver 3.1.3
+- Fix vulnerability (CRSF) found by Vipin Chaudhary page add_vhost.php - CVE ID is CVE-2018-8817
+- Fix MariaDB services instead of MySQL (Reinstall services)
+- Check the Listen Port when changing Apache versions
+- Replacing | FIND with | FINDSTR in Windows command lines
+- Correction of typographical errors
+
+--- Wampserver 3.1.2
+- Fix security vulnerability found by Vipin Chaudhary in add_vhost.php page - CVE ID is CVE-2018-8732
+  Cross site scripting (XSS) even if the server and localhost use the Apache "Require local" directive.
+- Fix bug: localhost on port different of 80
+- Fix bug: Change PHP version CLI if only one PHP version
+- Tools: Reinstall all services
+- Tools: Ability to add Listen Port to Apache
+- Tools: Update of Check compilers VC ...
+- Ability to customize prompt for MySQL and MariaDB consoles
+- Ability to choose the user for MySQL and MariaDB consoles
+
+--- Wampserver 3.1.1
+- Support for PHP 7.2.0
+- Support PHP 7.2.0+ for extension=dba in place of extension=php_dba.dll
+- Check if zend_extensions dll's files exists
+- Correct bug in check VirtualHost ServerName
+- Tool to invert default DBMS (MySQL <-> MariaDB)
+- Tool to change PHP CLI version
+- Command windows on bin folders of Apache, MySQL and MariaDB
+- Choice to show PhpMyAdmin and/or Adminer in the menu
+
+--- Wampserver 3.1.0
+- No call to PhpMyAdmin or Adminer if no Mysql nor MariaDB
+- Correct bug : check symlinks with strtolower
+- Versions Apache, PHP, MySQL, MariaDB, PhpMyAdmin in tray menus
+- Support of sql-mode for MariaDB
+- Correct bug replace mysqlService by mariadbService
+- php.exe for refreshSymlink.php in place of php-win.exe
+
+--- Wampserver 3.0.9
+- Fixed Bug in file scripts/testPort.php
+- Fixed Bug replacement of
+  $range = '127.0.0.2-127.255.255.255'; by $range = '127.0.0.1-127.255.255.255';
+- Support of zend_extension PHP extensions On/Off
+- State of services RUNNING or STOPPED
+- Better explanations of ServerName limitations
+
+--- Wampserver 3.0.8
+- Correct Bug : MariaDB version switching
+- Ability to disable MySQL
+- Ability to disable MariaDB
+- Ability to work only with Apache and PHP, without DBMS.
+- Possibility to use MariaDB instead of MySQL
+
+--- Wampserver 3.0.7
+- Possibility of multiple Apache listen ports
+- Check VirtualHost on port other than 80
+- Module Apache authz_host_module should not be disabled
+- add PHP parameter max_input_vars
+- Menu item add a VirtualHost
+- Menu items links to Documentation
+- Correction of typo's
+- Support for MariaDB
+
+--- Wampserver 3.0.6
+- Add parameter NotCheckVirtualHost
+- Check symbolic links (With Refresh)
+- Possibilities to modify php.ini parameters like date.timezone, memory_limit, max_execution_time, etc. with Wampmanager submenus. Possibility to write your own values.
+- Alias submenu
+- Possibility to modifiy some MySQL parameters
+- Possibility to suppress versions Apache, PHP and MySQL not in use
+- New file wamp\bin\apache\apache2.4.xy\wampdefineapache.conf that contains the variables (Define) Apache as the syntax of an ini file.
+- Check Apache variable into DocumentRoot and Directory paths
+
+--- Wampserver 3.0.5
+- Add edit httpd-vhosts.conf file in Apache submenu
+- Add check DNS order in Tools right submenu
+- Add 57 for PHP 7.0.6 symlinks
+- Array $phpParamsNotOnOff for PHP parameters that cannot be switched On or Off
+- Add Wamp parameter NotCheckDuplicate
+- Possibility to have VirtualHost by IP
+- Possibility to copy VirtualHost at the Apache version change.
+- Possibility to suppress VirtualHost
+
+--- Wampserver 3.0.4
+- Update and adding languags files
+- Right-Click Refresh now rebuild symbolic links
+- Possibilites to copy tools results into clipboard
+- Correct small bugs
+
+--- Wampserver 3.0.3
+- Versions used in About
+- Uninstall registry keys renamed to {wampserver32}or {wampserver64}
+
+--- Wampserver 3.0.2
+Fixed bug in the port changes for MySQL that did not work with PHP 7
+
+--- Wampserver 3.0.1
+- Separate language files for index.php and add vhost.php
+- The home pages and add vhost use the language specified in Wampmanager if the related file exists in wamp \ www \ wamplangues \
+- Support of Apache 2.2.x
+- Test the names of any services and changes related files.
+- Improved some functions
+- Edge support for Windows 10
+To choose Edge as the default browser, in the file wamp/wampmanager.conf replace the browser definition, for example:
+navigator ="J:/Com/Net/Firefox/firefox.exe"
+by
+navigator="Edge"
+Note: Only works for Windows 10. If you choose Edge in another version of Windows, Internet Explorer is to be used.
+
