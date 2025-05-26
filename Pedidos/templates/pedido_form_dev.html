@@ -1,0 +1,558 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  {{ 'Editar Pedido' if pedido_cabecera and pedido_cabecera.NUMPED else 'Nuevo Pedido' }}
+{% endblock %}
+
+{% block content %}
+  <h2>
+    {{ 'Editar Pedido: ' + pedido_cabecera.NUMPED if pedido_cabecera and pedido_cabecera.NUMPED else 'Nuevo Pedido' }}
+  </h2>
+  
+  {% set form_action = url_for('editar_pedido', numped_a_editar=pedido_cabecera.NUMPED) if pedido_cabecera and pedido_cabecera.NUMPED else url_for('agregar_pedido') %}
+  
+  <form method="POST" action="{{ form_action }}" id="form-pedido">
+    {# --- SECCIÓN CABECERA --- #}
+    <h4>Datos de Cabecera</h4>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="cod_cte">Código Cliente:</label>
+        <input type="text" class="form-control" id="cod_cte" name="COD_CTE" 
+               value="{{ pedido_cabecera.COD_CTE if pedido_cabecera and pedido_cabecera.COD_CTE is defined else '' }}" 
+               autocomplete="off" required>
+        <div id="suggestions-box-cte" class="list-group suggestions-container"></div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="cod_dir_select">Código Dirección:</label>
+        <select class="form-control" id="cod_dir_select" name="COD_DIR">
+            <option value="">-- Seleccione un cliente primero --</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="fecha_exp">Fecha Expiración (YYYY-MM-DD):</label>
+        <input type="date" class="form-control" id="fecha_exp" name="FECHA_EXP"
+               value="{{ pedido_cabecera.FECHA_EXP if pedido_cabecera and pedido_cabecera.FECHA_EXP is defined else '' }}">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="pedido_cte">Referencia Pedido Cliente:</label>
+        <input type="text" class="form-control" id="pedido_cte" name="PEDIDO_CTE" 
+               value="{{ pedido_cabecera.PEDIDO_CTE if pedido_cabecera and pedido_cabecera.PEDIDO_CTE is defined else '' }}">
+      </div>
+    </div>
+    <hr>
+
+    {# --- SECCIÓN LÍNEAS DE PEDIDO --- #}
+    <h4>Líneas del Pedido</h4>
+    <div id="lineas-pedido-container">
+      {% if lineas_pedido and lineas_pedido|length > 0 %}
+        {% for linea in lineas_pedido %}
+          <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
+            <input type="hidden" name="lineas[{{ loop.index0 }}][ID_LINEA]" value="{{ linea.ID_LINEA | default('') }}">
+            <div class="form-group col-lg-2 col-md-6">
+              <label for="arti_linea_{{ loop.index0 }}" class="sr-only">Artículo:</label>
+              <input type="text" id="arti_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][ARTI]" 
+                     value="{{ linea.ARTI | default('') }}" class="form-control arti-linea" required autocomplete="off"
+                     data-ud-emb="{{ linea.UD_EMB if linea.UD_EMB is not none else '' }}"
+                     data-precio="{{ linea.PRECIO_ARTI if linea.PRECIO_ARTI is not none else '' }}"
+                     data-stock-fam="{{ linea.STOCK_FAM_ARTI if linea.STOCK_FAM_ARTI is not none else '' }}">
+              <div id="suggestions_box_arti_linea_{{ loop.index0 }}" class="suggestions-box-arti-linea list-group suggestions-container"></div>
+            </div>
+            <div class="form-group col-lg-3 col-md-6">
+              <label for="desc_arti_linea_{{loop.index0}}" class="sr-only">Descripción:</label>
+              <input type="text" id="desc_arti_linea_{{loop.index0}}" class="form-control descripcion-articulo-linea" 
+                     value="{{ linea.DESCRIPCION_ARTI | default('') }}" readonly placeholder="Descripción">
+            </div>
+             <div class="form-group col-lg-1 col-md-3">
+                <label for="stock_linea_{{loop.index0}}" class="sr-only">Stock:</label>
+                <input type="text" id="stock_linea_{{loop.index0}}" class="form-control stock-disponible-linea text-right" 
+                       value="{{ linea.STOCK_FAM_ARTI if linea.STOCK_FAM_ARTI is not none else 'N/A' }}" readonly placeholder="Stock">
+            </div>
+            <div class="form-group col-lg-2 col-md-3">
+                <label for="precio_unit_linea_{{loop.index0}}" class="sr-only">Precio U.:</label>
+                <input type="text" id="precio_unit_linea_{{loop.index0}}" class="form-control precio-unitario-linea text-right" 
+                       value="{{ '%.2f'|format(linea.PRECIO_ARTI|float(0.0)) if linea.PRECIO_ARTI is not none else '0.00' }}" readonly placeholder="Precio U.">
+            </div>
+            <div class="form-group col-lg-1 col-md-3">
+              <label for="cant_linea_{{ loop.index0 }}" class="sr-only">Cant.:</label>
+              <input type="number" id="cant_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][CANTIDAD]" 
+                     value="{{ linea.CANTIDAD | default('') }}" class="form-control cantidad-linea text-right" required min="1">
+              <div class="aviso-ud-emb-container"></div> 
+              <div class="aviso-stock-container"></div> 
+            </div>
+            <div class="form-group col-lg-2 col-md-6">
+                <label for="importe_linea_{{loop.index0}}" class="sr-only">Importe:</label>
+                <input type="text" id="importe_linea_{{loop.index0}}" class="form-control importe-linea text-right" readonly placeholder="Importe">
+            </div>
+            <div class="form-group col-lg-1 col-md-6 d-flex align-items-end">
+              <button type="button" class="btn btn-danger btn-sm btn-remover-linea">X</button>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
+            <input type="hidden" name="lineas[0][ID_LINEA]" value="">
+            <div class="form-group col-lg-2 col-md-6"> <input type="text" id="arti_linea_0" name="lineas[0][ARTI]" class="form-control arti-linea" required autocomplete="off" placeholder="Artículo"> <div id="suggestions_box_arti_linea_0" class="suggestions-box-arti-linea list-group suggestions-container"></div> </div>
+            <div class="form-group col-lg-3 col-md-6"> <input type="text" id="desc_arti_linea_0" class="form-control descripcion-articulo-linea" readonly placeholder="Descripción"> </div>
+            <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_0" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
+            <div class="form-group col-lg-2 col-md-3"> <input type="text" id="precio_unit_linea_0" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
+            <div class="form-group col-lg-1 col-md-3"> <input type="number" id="cant_linea_0" name="lineas[0][CANTIDAD]" class="form-control cantidad-linea text-right" required min="1" placeholder="Cant."> <div class="aviso-ud-emb-container"></div><div class="aviso-stock-container"></div> </div>
+            <div class="form-group col-lg-2 col-md-6"> <input type="text" id="importe_linea_0" class="form-control importe-linea text-right" readonly placeholder="Importe"> </div>
+            <div class="form-group col-lg-1 col-md-6 d-flex align-items-end"> <button type="button" class="btn btn-danger btn-sm btn-remover-linea" style="display:none;">X</button> </div>
+        </div>
+        <p id="no-lineas-mensaje" class="text-muted" style="display: block;">Añada al menos una línea.</p>
+      {% endif %}
+    </div>
+    <button type="button" id="btn-agregar-linea" class="btn btn-info btn-sm mb-3">Añadir Línea</button>
+    
+    <div class="form-row justify-content-end mt-3"> <div class="col-md-3"> <label for="total_pedido_general" class="font-weight-bold">TOTAL PEDIDO:</label> <input type="text" id="total_pedido_general" class="form-control form-control-lg text-right font-weight-bold" readonly value="0.00"> </div> </div>
+    <hr>
+    <button type="submit" class="btn btn-primary mt-3"> {{ 'Actualizar Pedido' if pedido_cabecera and pedido_cabecera.NUMPED else 'Crear Pedido' }} </button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3">Cancelar</a>
+  </form>
+
+  <style>
+    .suggestions-container { position: absolute; width: calc(100% - 30px); left: 15px; z-index: 1000; max-height: 200px; overflow-y: auto; background-color: white; border: 1px solid #ced4da; border-top: none; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .form-group { position: relative; }
+    .list-group-item-action { cursor: pointer; }
+    .list-group-item-action:hover { background-color: #f0f0f0; }
+    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0; }
+    .aviso-ud-emb-container .form-text.text-danger, .aviso-stock-container .form-text.text-danger { font-size: 0.8em; margin-top: .25rem; display: block; }
+    .text-right { text-align: right; }
+  </style>
+  
+  <script>
+    // Función setupAutocomplete
+    function setupAutocomplete(inputId, suggestionsBoxId, endpointUrl, displayFieldKey, valueFieldKey, opciones = {}) {
+        const inputElement = document.getElementById(inputId);
+        const suggestionsBox = document.getElementById(suggestionsBoxId);
+        
+        if (!inputElement) { console.warn(`Input not found for autocompletion: ${inputId}`); return; }
+        if (!suggestionsBox) { console.warn(`Suggestions box not found for autocompletion: ${suggestionsBoxId}`); return; }
+
+        let debounceTimer;
+        inputElement.addEventListener('input', function() {
+            const query = this.value;
+            suggestionsBox.innerHTML = ''; 
+            
+            const minLength = opciones.isLinea ? 1 : (opciones.minLength !== undefined ? opciones.minLength : 2);
+
+            if (query.length < minLength && query !== "*") { 
+                suggestionsBox.style.display = 'none';
+                if (opciones.isLinea) {
+                    delete inputElement.dataset.udEmb;
+                    delete inputElement.dataset.precio;
+                    delete inputElement.dataset.stockFam;
+                    const lineaDiv = inputElement.closest('.linea-pedido');
+                    if (lineaDiv) {
+                        ['.descripcion-articulo-linea', '.precio-unitario-linea', '.importe-linea', '.stock-disponible-linea'].forEach(selector => {
+                            const el = lineaDiv.querySelector(selector);
+                            if (el) el.value = (selector === '.precio-unitario-linea' || selector === '.importe-linea') ? '0.00' : (selector === '.stock-disponible-linea' ? 'N/A' : '');
+                        });
+                        ['.aviso-ud-emb-container', '.aviso-stock-container'].forEach(selector => {
+                            const el = lineaDiv.querySelector(selector);
+                            if (el) el.innerHTML = '';
+                        });
+                        const cantidadInput = lineaDiv.querySelector('.cantidad-linea');
+                        if (cantidadInput) calcularImporteLinea(cantidadInput); // Recalcula importe a 0
+                        // calcularTotalGeneralPedido(); // Se llama desde calcularImporteLinea
+                    }
+                }
+                return;
+            }
+            
+            if (opciones.dependeDe && !document.getElementById(opciones.dependeDe)?.value && inputId !== 'cod_cte') {
+                suggestionsBox.innerHTML = `<a href="#" class="list-group-item list-group-item-action disabled text-muted">Complete el campo '${opciones.dependeDeLabel || opciones.dependeDe}' primero.</a>`;
+                suggestionsBox.style.display = 'block';
+                return;
+            }
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+                let finalEndpointUrl = `${endpointUrl}?q=${encodeURIComponent(query)}`;
+                
+                fetch(finalEndpointUrl)
+                    .then(response => {
+                        if (!response.ok) { throw new Error(`Network response error for ${finalEndpointUrl}: ${response.statusText}`); }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.mensaje) { 
+                            suggestionsBox.innerHTML = `<a href="#" class="list-group-item list-group-item-action disabled text-muted">${data.mensaje}</a>`;
+                            suggestionsBox.style.display = 'block';
+                            return;
+                        }
+                        if (data.sugerencias && data.sugerencias.length > 0) {
+                            suggestionsBox.style.display = 'block';
+                            data.sugerencias.forEach(item => {
+                                const suggestionItem = document.createElement('a');
+                                suggestionItem.classList.add('list-group-item', 'list-group-item-action');
+                                let displayText = item[valueFieldKey]; 
+                                if (item[displayFieldKey] && displayFieldKey !== valueFieldKey) {
+                                    displayText += ` - ${item[displayFieldKey]}`;
+                                }
+                                if (opciones.camposAdicionales && Array.isArray(opciones.camposAdicionales)) {
+                                    opciones.camposAdicionales.forEach(campo => {
+                                        if (item[campo.key]) {
+                                            displayText += ` (${campo.label || campo.key}: ${item[campo.key]})`;
+                                        }
+                                    });
+                                }
+                                suggestionItem.textContent = displayText;
+                                suggestionItem.href = "#";
+                                suggestionItem.addEventListener('click', function(e) {
+                                    e.preventDefault();
+                                    inputElement.value = item[valueFieldKey];
+                                    
+                                    if (opciones.isLinea) {
+                                        const lineaDiv = inputElement.closest('.linea-pedido');
+                                        if (lineaDiv) {
+                                            if (item.ud_emb !== undefined) inputElement.dataset.udEmb = item.ud_emb; else delete inputElement.dataset.udEmb;
+                                            
+                                            const precioUnitInput = lineaDiv.querySelector('.precio-unitario-linea');
+                                            if (item.precio !== undefined) {
+                                                inputElement.dataset.precio = item.precio;
+                                                if (precioUnitInput) precioUnitInput.value = parseFloat(item.precio || 0).toFixed(2);
+                                            } else {
+                                                delete inputElement.dataset.precio;
+                                                if (precioUnitInput) precioUnitInput.value = '0.00';
+                                            }
+                                            
+                                            const descInput = lineaDiv.querySelector('.descripcion-articulo-linea');
+                                            if (descInput) descInput.value = item.descripcion || '';
+                                            
+                                            const stockDispInput = lineaDiv.querySelector('.stock-disponible-linea');
+                                            if (item.stock_fam !== undefined && item.stock_fam !== null) {
+                                                inputElement.dataset.stockFam = item.stock_fam;
+                                                if (stockDispInput) stockDispInput.value = item.stock_fam;
+                                            } else {
+                                                delete inputElement.dataset.stockFam;
+                                                if (stockDispInput) stockDispInput.value = 'N/A';
+                                            }
+                                            
+                                            const cantidadInput = lineaDiv.querySelector('.cantidad-linea');
+                                            if (cantidadInput) {
+                                                validarCantidadConUdEmb(cantidadInput);
+                                                validarCantidadContraStock(cantidadInput);
+                                                calcularImporteLinea(cantidadInput); 
+                                            }
+                                        }
+                                    }
+                                    suggestionsBox.innerHTML = ''; suggestionsBox.style.display = 'none'; inputElement.focus();
+                                    if (opciones.onSelectCallback) opciones.onSelectCallback(item);
+                                });
+                                suggestionsBox.appendChild(suggestionItem);
+                            });
+                        } else {
+                            suggestionsBox.innerHTML = '<a href="#" class="list-group-item list-group-item-action disabled text-muted">No se encontraron sugerencias.</a>';
+                            suggestionsBox.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error(`Error fetching suggestions for ${inputId}:`, error);
+                        suggestionsBox.innerHTML = '<a href="#" class="list-group-item list-group-item-danger">Error al cargar sugerencias.</a>';
+                        suggestionsBox.style.display = 'block';
+                    });
+            }, 300);
+        });
+    } // Fin setupAutocomplete
+    
+    // --- Función para cargar direcciones en el select ---
+    const codCteInput = document.getElementById('cod_cte');
+    const codDirSelect = document.getElementById('cod_dir_select');
+    const valorCodDirOriginal = "{{ pedido_cabecera.COD_DIR | default('') }}";
+
+    async function cargarDireccionesCliente(selectedCodCte, seleccionarCodDir = null) {
+        codDirSelect.innerHTML = '<option value="">Cargando direcciones...</option>';
+        codDirSelect.disabled = true;
+
+        if (!selectedCodCte || selectedCodCte.trim() === '') {
+            codDirSelect.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
+            return;
+        }
+
+        try {
+            const response = await fetch(`{{ url_for('sugerencias_direccion_cliente') }}?cod_cte=${encodeURIComponent(selectedCodCte)}&q=*`);
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({})); 
+                throw new Error(`Error al cargar direcciones: ${response.statusText} ${errorData.mensaje || errorData.error || ''}`);
+            }
+            const data = await response.json();
+            
+            codDirSelect.innerHTML = ''; 
+            if (data.sugerencias && data.sugerencias.length > 0) {
+                codDirSelect.appendChild(new Option('-- Seleccione una dirección --', ''));
+                data.sugerencias.forEach(dir => {
+                    let optionText = `${dir.COD_DIR} - ${dir.DIR || 'N/A'}`;
+                    if (dir.CIUDAD) optionText += `, ${dir.CIUDAD}`;
+                    if (dir.CP) optionText += ` (${dir.CP})`;
+                    
+                    const option = new Option(optionText, dir.COD_DIR);
+                    if (seleccionarCodDir && dir.COD_DIR === seleccionarCodDir) {
+                        option.selected = true;
+                    }
+                    codDirSelect.appendChild(option);
+                });
+                codDirSelect.disabled = false;
+            } else {
+                codDirSelect.appendChild(new Option(data.mensaje || '-- No hay direcciones para este cliente --', ''));
+            }
+        } catch (error) {
+            console.error("Error en cargarDireccionesCliente:", error);
+            codDirSelect.innerHTML = `<option value="">Error: ${error.message}</option>`;
+        }
+    }
+
+    // --- Configuración de autocompletado para Cliente ---
+    setupAutocomplete(
+        'cod_cte', 
+        'suggestions-box-cte', 
+        "{{ url_for('sugerencias_cliente') }}", 
+        'razon_social', 
+        'cod_cte',
+        { 
+            onSelectCallback: function(item) {
+                cargarDireccionesCliente(item.cod_cte); 
+            }
+        }
+    );
+
+    codCteInput.addEventListener('blur', function() { 
+        setTimeout(() => {
+            const valorActualCliente = this.value.trim();
+            const dirSelectTieneOpcionesValidas = codDirSelect.options.length > 1 && codDirSelect.value !== "" && !codDirSelect.options[0].text.startsWith('--');
+            const dirSelectEstaCargandoOError = codDirSelect.options.length > 0 && (codDirSelect.options[0].text.toLowerCase().includes('cargando') || codDirSelect.options[0].text.toLowerCase().includes('error'));
+
+            if (valorActualCliente) {
+                if (!dirSelectTieneOpcionesValidas || !dirSelectEstaCargandoOError) {
+                     cargarDireccionesCliente(valorActualCliente);
+                }
+            } else {
+                cargarDireccionesCliente(null); 
+            }
+        }, 200); 
+    });
+
+    // --- VALIDACIÓN CANTIDAD CON UD_EMB (CLIENT-SIDE) ---
+    function validarCantidadConUdEmb(cantidadInputNode) {
+        const lineaDiv = cantidadInputNode.closest('.linea-pedido');
+        if (!lineaDiv) return true;
+        const artiInputNode = lineaDiv.querySelector('.arti-linea');
+        const avisoContainer = lineaDiv.querySelector('.aviso-ud-emb-container');
+        if (avisoContainer) avisoContainer.innerHTML = ''; 
+        if (!artiInputNode || artiInputNode.dataset.udEmb === undefined || artiInputNode.dataset.udEmb === '') return true; 
+        const udEmb = parseInt(artiInputNode.dataset.udEmb);
+        const cantidadStr = cantidadInputNode.value.trim();
+        if (cantidadStr === '') return true;
+        const cantidad = parseInt(cantidadStr);
+        if (isNaN(udEmb) || udEmb <= 0) return true; 
+        if (isNaN(cantidad)) {
+            const avisoEl = document.createElement('small'); avisoEl.className = 'form-text text-danger'; avisoEl.textContent = `Cantidad debe ser un número.`; if (avisoContainer) avisoContainer.appendChild(avisoEl); return false;
+        }
+        if (cantidad <= 0 ) { 
+            const avisoEl = document.createElement('small'); avisoEl.className = 'form-text text-danger'; avisoEl.textContent = `Cantidad debe ser positiva.`; if (avisoContainer) avisoContainer.appendChild(avisoEl); return false;
+        }
+        if (cantidad > 0 && cantidad % udEmb !== 0) {
+            const avisoEl = document.createElement('small'); avisoEl.className = 'form-text text-danger'; avisoEl.textContent = `Debe ser múltiplo de ${udEmb}.`; if (avisoContainer) avisoContainer.appendChild(avisoEl); return false;
+        }
+        return true;
+    }
+
+    // --- VALIDACIÓN CANTIDAD CONTRA STOCK (CLIENT-SIDE) ---
+    function validarCantidadContraStock(cantidadInputNode) {
+        const lineaDiv = cantidadInputNode.closest('.linea-pedido');
+        if (!lineaDiv) return true;
+        const artiInputNode = lineaDiv.querySelector('.arti-linea');
+        const avisoContainer = lineaDiv.querySelector('.aviso-stock-container');
+        if (avisoContainer) avisoContainer.innerHTML = ''; 
+        if (!artiInputNode || artiInputNode.dataset.stockFam === undefined || artiInputNode.dataset.stockFam === '' || artiInputNode.dataset.stockFam === 'N/A') return true; 
+        const stockFam = parseFloat(artiInputNode.dataset.stockFam);
+        const cantidadStr = cantidadInputNode.value.trim();
+        if (cantidadStr === '') return true;
+        const cantidad = parseFloat(cantidadStr);
+        if (isNaN(stockFam)) return true; 
+        if (isNaN(cantidad) || cantidad <= 0) return true;
+        if (cantidad > stockFam) {
+            const avisoEl = document.createElement('small'); avisoEl.className = 'form-text text-danger'; avisoEl.textContent = `Stock disponible: ${stockFam}.`; if (avisoContainer) avisoContainer.appendChild(avisoEl); return false;
+        }
+        return true;
+    }
+
+    // --- CÁLCULO IMPORTE DE LÍNEA Y TOTAL GENERAL ---
+    function calcularImporteLinea(cantidadInputNode) {
+        const lineaDiv = cantidadInputNode.closest('.linea-pedido');
+        if (!lineaDiv) return;
+        const artiInputNode = lineaDiv.querySelector('.arti-linea');
+        const precioUnitario = parseFloat(artiInputNode.dataset.precio || 0);
+        const cantidad = parseInt(cantidadInputNode.value) || 0;
+        const importeLineaInput = lineaDiv.querySelector('.importe-linea');
+        if (importeLineaInput) {
+            if (!isNaN(precioUnitario) && !isNaN(cantidad) && cantidad > 0 && precioUnitario >= 0) { // Permitir precio 0
+                const importe = precioUnitario * cantidad;
+                importeLineaInput.value = importe.toFixed(2);
+            } else {
+                importeLineaInput.value = '0.00';
+            }
+        }
+        calcularTotalGeneralPedido();
+    }
+
+    function calcularTotalGeneralPedido() {
+        let totalGeneral = 0;
+        document.querySelectorAll('.linea-pedido .importe-linea').forEach(importeInput => {
+            totalGeneral += parseFloat(importeInput.value || 0);
+        });
+        const totalGeneralInput = document.getElementById('total_pedido_general');
+        if (totalGeneralInput) {
+            totalGeneralInput.value = totalGeneral.toFixed(2);
+        }
+    }
+
+    // --- LÓGICA PARA LÍNEAS DE PEDIDO ---
+    let lineaIndex = {{ (lineas_pedido | length) if lineas_pedido and lineas_pedido|length > 0 else (1 if not lineas_pedido or lineas_pedido|length == 0 else 0) }}; 
+    if (document.querySelectorAll('#lineas-pedido-container .linea-pedido').length === 0 && lineaIndex > 0 && !{{lineas_pedido|length > 0}}) {
+        lineaIndex = 0; // Asegurar que si no hay líneas renderizadas desde el backend, el primer add use 0
+    } else if (document.querySelectorAll('#lineas-pedido-container .linea-pedido').length > 0 && lineaIndex === 0 && {{lineas_pedido|length > 0}}) {
+        // Caso borde: si hay líneas del backend, lineaIndex debe ser su longitud
+        lineaIndex = {{ lineas_pedido|length }};
+    }
+
+
+    function inicializarListenersParaLinea(lineaElement) {
+        const artiInput = lineaElement.querySelector('.arti-linea');
+        const cantidadInput = lineaElement.querySelector('.cantidad-linea');
+        const indexMatch = artiInput.id.match(/_(\d+)$/);
+        if (!indexMatch) { console.error("No se pudo extraer índice de línea:", artiInput.id); return; }
+        const index = indexMatch[1];
+
+        setupAutocomplete(`arti_linea_${index}`, `suggestions_box_arti_linea_${index}`, "{{ url_for('sugerencias_articulo') }}", 'descripcion', 'cod_art', { isLinea: true, minLength: 1 });
+
+        artiInput.addEventListener('input', function() {
+            if (this.value.trim() === '') {
+                const lineaDiv = this.closest('.linea-pedido');
+                if (lineaDiv) {
+                    ['.descripcion-articulo-linea', '.precio-unitario-linea', '.importe-linea', '.stock-disponible-linea'].forEach(selector => {
+                        const el = lineaDiv.querySelector(selector);
+                        if (el) el.value = (selector === '.precio-unitario-linea' || selector === '.importe-linea') ? '0.00' : (selector === '.stock-disponible-linea' ? 'N/A' : '');
+                    });
+                    delete this.dataset.udEmb; delete this.dataset.precio; delete this.dataset.stockFam;
+                    ['.aviso-ud-emb-container', '.aviso-stock-container'].forEach(sel => {
+                        const el = lineaDiv.querySelector(sel); if (el) el.innerHTML = '';
+                    });
+                    const cantInput = lineaDiv.querySelector('.cantidad-linea');
+                    if (cantInput) calcularImporteLinea(cantInput);
+                }
+            }
+        });
+        
+        if (cantidadInput) {
+            cantidadInput.addEventListener('input', function() {
+                let esValidoUdEmb = validarCantidadConUdEmb(this);
+                let esValidoStock = validarCantidadContraStock(this);
+                if (esValidoUdEmb && esValidoStock) { calcularImporteLinea(this); }
+                else {
+                    const importeLineaInput = lineaElement.querySelector('.importe-linea');
+                    if(importeLineaInput) importeLineaInput.value = '0.00';
+                    calcularTotalGeneralPedido();
+                }
+            });
+            if (artiInput && (artiInput.dataset.udEmb || artiInput.dataset.precio || artiInput.dataset.stockFam) && cantidadInput.value) {
+                 validarCantidadConUdEmb(cantidadInput);
+                 validarCantidadContraStock(cantidadInput);
+                 calcularImporteLinea(cantidadInput);
+            } else if (cantidadInput.value) { 
+                 const importeLineaInput = lineaElement.querySelector('.importe-linea');
+                 if(importeLineaInput) importeLineaInput.value = '0.00';
+                 calcularTotalGeneralPedido(); // Asegurar que el total se actualice si solo hay cantidad
+            }
+        }
+    } // Fin inicializarListenersParaLinea
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('#lineas-pedido-container .linea-pedido').forEach(lineaElement => {
+            inicializarListenersParaLinea(lineaElement);
+        });
+        actualizarBotonesRemover();
+        calcularTotalGeneralPedido(); 
+        const container = document.getElementById('lineas-pedido-container');
+        const noLineasMsg = document.getElementById('no-lineas-mensaje');
+        if (noLineasMsg) { noLineasMsg.style.display = (container.querySelectorAll('.linea-pedido').length === 0) ? 'block' : 'none'; }
+        if (codCteInput.value.trim()) { cargarDireccionesCliente(codCteInput.value.trim(), valorCodDirOriginal); }
+        else { codDirSelect.disabled = true; }
+    });
+
+    document.getElementById('btn-agregar-linea').addEventListener('click', function() {
+        const container = document.getElementById('lineas-pedido-container');
+        const noLineasMsg = document.getElementById('no-lineas-mensaje');
+        if (noLineasMsg) noLineasMsg.style.display = 'none';
+
+        const nuevaLineaHtml = `
+            <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
+                <input type="hidden" name="lineas[${lineaIndex}][ID_LINEA]" value="">
+                <div class="form-group col-lg-2 col-md-6"> <input type="text" id="arti_linea_${lineaIndex}" name="lineas[${lineaIndex}][ARTI]" class="form-control arti-linea" required autocomplete="off" placeholder="Artículo"> <div id="suggestions_box_arti_linea_${lineaIndex}" class="suggestions-box-arti-linea list-group suggestions-container"></div> </div>
+                <div class="form-group col-lg-3 col-md-6"> <input type="text" id="desc_arti_linea_${lineaIndex}" class="form-control descripcion-articulo-linea" readonly placeholder="Descripción"> </div>
+                <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_${lineaIndex}" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
+                <div class="form-group col-lg-2 col-md-3"> <input type="text" id="precio_unit_linea_${lineaIndex}" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
+                <div class="form-group col-lg-1 col-md-3"> <input type="number" id="cant_linea_${lineaIndex}" name="lineas[${lineaIndex}][CANTIDAD]" class="form-control cantidad-linea text-right" required min="1" placeholder="Cant."> <div class="aviso-ud-emb-container"></div><div class="aviso-stock-container"></div> </div>
+                <div class="form-group col-lg-2 col-md-6"> <input type="text" id="importe_linea_${lineaIndex}" class="form-control importe-linea text-right" readonly placeholder="Importe"> </div>
+                <div class="form-group col-lg-1 col-md-6 d-flex align-items-end"> <button type="button" class="btn btn-danger btn-sm btn-remover-linea">X</button> </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', nuevaLineaHtml);
+        const ultimoDivLinea = container.querySelector('.linea-pedido:last-child');
+        if(ultimoDivLinea) { inicializarListenersParaLinea(ultimoDivLinea); }
+        lineaIndex++;
+        actualizarBotonesRemover();
+        calcularTotalGeneralPedido();
+    });
+
+    function actualizarBotonesRemover() {
+        const container = document.getElementById('lineas-pedido-container');
+        const lineas = container.querySelectorAll('.linea-pedido');
+        lineas.forEach((linea) => {
+            const btnRemover = linea.querySelector('.btn-remover-linea');
+            if (btnRemover) {
+                btnRemover.style.display = (lineas.length > 0) ? 'inline-block' : 'none';
+                if (lineas.length === 1) { btnRemover.style.display = 'none'; }
+                if (!btnRemover.dataset.listenerAttached) {
+                    btnRemover.addEventListener('click', function() {
+                        this.closest('.linea-pedido').remove();
+                        ajustarVisibilidadPostRemocion();
+                        calcularTotalGeneralPedido(); 
+                    });
+                    btnRemover.dataset.listenerAttached = 'true';
+                }
+            }
+        });
+        ajustarVisibilidadPostRemocion();
+    }
+
+    function ajustarVisibilidadPostRemocion(){
+        const container = document.getElementById('lineas-pedido-container');
+        const lineas = container.querySelectorAll('.linea-pedido');
+        const noLineasMsg = document.getElementById('no-lineas-mensaje');
+        lineas.forEach(linea => {
+            const btnRemover = linea.querySelector('.btn-remover-linea');
+            if(btnRemover) btnRemover.style.display = (lineas.length > 1) ? 'inline-block' : 'none';
+        });
+        if (noLineasMsg) { noLineasMsg.style.display = (lineas.length === 0) ? 'block' : 'none'; }
+    }
+    
+    document.addEventListener('click', function(event) {
+        const activeSuggestionBoxes = document.querySelectorAll('.suggestions-container[style*="display: block"]');
+        activeSuggestionBoxes.forEach(box => {
+            let inputId;
+            if (box.id === 'suggestions-box-cte') inputId = 'cod_cte';
+            else if (box.id.startsWith('suggestions_box_arti_linea_')) {
+                const match = box.id.match(/suggestions_box_arti_linea_(\d+)/);
+                if (match && match[1]) { inputId = `arti_linea_${match[1]}`; }
+            }
+            const inputElement = inputId ? document.getElementById(inputId) : null;
+            if (inputElement && !inputElement.contains(event.target) && !box.contains(event.target)) {
+                box.style.display = 'none';
+            }
+        });
+    });
+  </script>
+{% endblock %}

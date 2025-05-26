@@ -1,0 +1,157 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar Pedido {{ pedido_cabecera.NUMPED }}{% endblock %}
+
+{% block content %}
+  <h2>Editar Pedido: {{ pedido_cabecera.NUMPED }}</h2>
+  
+  <form method="POST" id="form-editar-pedido">
+    {# --- SECCIÓN CABECERA --- #}
+    <h4>Datos de Cabecera</h4>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="cod_cte">Código Cliente:</label>
+        <input type="text" class="form-control" id="cod_cte" name="COD_CTE" 
+               value="{{ pedido_cabecera.COD_CTE if pedido_cabecera else '' }}" 
+               autocomplete="off">
+        <div id="suggestions-box-cte" class="list-group suggestions-container"></div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="cod_dir">Código Dirección:</label>
+        <input type="text" class="form-control" id="cod_dir" name="COD_DIR" 
+               value="{{ pedido_cabecera.COD_DIR if pedido_cabecera else '' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="fecha_exp">Fecha Expiración (YYYY-MM-DD):</label>
+        <input type="date" class="form-control" id="fecha_exp" name="FECHA_EXP"
+               value="{{ pedido_cabecera.FECHA_EXP if pedido_cabecera else '' }}">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="pedido_cte">Referencia Pedido Cliente:</label>
+        <input type="text" class="form-control" id="pedido_cte" name="PEDIDO_CTE" 
+               value="{{ pedido_cabecera.PEDIDO_CTE if pedido_cabecera else '' }}">
+      </div>
+    </div>
+    <hr>
+
+    {# --- SECCIÓN LÍNEAS DE PEDIDO --- #}
+    <h4>Líneas del Pedido</h4>
+    <div id="lineas-pedido-container-edit">
+      {% if lineas_pedido %}
+        {% for linea in lineas_pedido %}
+          <div class="linea-pedido form-row align-items-end mb-2">
+            <input type="hidden" name="lineas[{{ loop.index0 }}][ID_LINEA]" value="{{ linea.ID_LINEA }}"> {# ID original de la línea #}
+            <div class="form-group col-md-5">
+              <label class="sr-only" for="arti_linea_{{ loop.index0 }}">Artículo:</label>
+              <input type="text" id="arti_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][ARTI]" 
+                     value="{{ linea.ARTI }}" class="form-control arti-linea" required autocomplete="off">
+              <div id="suggestions_box_arti_linea_{{ loop.index0 }}" class="suggestions-box-arti-linea list-group suggestions-container"></div>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="sr-only" for="cant_linea_{{ loop.index0 }}">Cantidad:</label>
+              <input type="number" id="cant_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][CANTIDAD]" 
+                     value="{{ linea.CANTIDAD }}" class="form-control" required min="1">
+            </div>
+            <div class="form-group col-md-2">
+              <button type="button" class="btn btn-danger btn-sm btn-remover-linea-edit">Eliminar</button>
+            </div>
+          </div>
+        {% endfor %}
+      {% else %}
+        {# Mostrar al menos una línea vacía si no hay líneas (poco probable si se carga un pedido existente) #}
+        <div class="linea-pedido form-row align-items-end mb-2">
+            <div class="form-group col-md-5">
+              <label class="sr-only" for="arti_linea_0">Artículo:</label>
+              <input type="text" id="arti_linea_0" name="lineas[0][ARTI]" class="form-control arti-linea" required autocomplete="off">
+              <div id="suggestions_box_arti_linea_0" class="suggestions-box-arti-linea list-group suggestions-container"></div>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="sr-only" for="cant_linea_0">Cantidad:</label>
+              <input type="number" id="cant_linea_0" name="lineas[0][CANTIDAD]" class="form-control" required min="1">
+            </div>
+            <div class="form-group col-md-2">
+              <button type="button" class="btn btn-danger btn-sm btn-remover-linea-edit" style="display:none;">Eliminar</button>
+            </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <button type="button" id="btn-agregar-linea-edit" class="btn btn-info btn-sm mb-3">Añadir Línea</button>
+    
+    <hr>
+    <button type="submit" class="btn btn-primary">Actualizar Pedido</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+
+  {# Estilos (igual que en pedido_form.html) #}
+  <style>...</style> 
+  {# Script (muy similar a pedido_form.html, pero adaptado para los IDs y botones de edición) #}
+  <script>
+    // Función setupAutocomplete (la misma que antes)
+    function setupAutocomplete(inputId, suggestionsBoxId, endpointUrl, displayFieldKey, valueFieldKey, isLinea = false) { /* ...código idéntico... */ }
+
+    // Configurar autocompletado para Código Cliente (Cabecera)
+    setupAutocomplete('cod_cte', 'suggestions-box-cte', "{{ url_for('sugerencias_cliente') }}", 'razon_social', 'cod_cte');
+    
+    let lineaEditIndex = {{ lineas_pedido|length if lineas_pedido else 0 }};
+
+    function inicializarAutocompleteArticuloLineaEdit(index) {
+        const artiInputId = `arti_linea_${index}`;
+        const suggestionsBoxId = `suggestions_box_arti_linea_${index}`;
+        setupAutocomplete(artiInputId, suggestionsBoxId, "{{ url_for('sugerencias_articulo') }}", 'descripcion', 'cod_art', true);
+    }
+
+    // Inicializar autocompletado para líneas existentes al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('#lineas-pedido-container-edit .linea-pedido').forEach((lineaDiv, index) => {
+            // Los IDs ya deberían estar correctos por el loop.index0 de Jinja
+            inicializarAutocompleteArticuloLineaEdit(index);
+        });
+        actualizarBotonesRemoverEdit();
+    });
+
+    document.getElementById('btn-agregar-linea-edit').addEventListener('click', function() {
+        const container = document.getElementById('lineas-pedido-container-edit');
+        const nuevaLineaHtml = `
+            <div class="linea-pedido form-row align-items-end mb-2">
+                <input type="hidden" name="lineas[${lineaEditIndex}][ID_LINEA]" value=""> {# Nueva línea no tiene ID original #}
+                <div class="form-group col-md-5">
+                    <label class="sr-only" for="arti_linea_${lineaEditIndex}">Artículo:</label>
+                    <input type="text" id="arti_linea_${lineaEditIndex}" name="lineas[${lineaEditIndex}][ARTI]" class="form-control arti-linea" required autocomplete="off">
+                    <div id="suggestions_box_arti_linea_${lineaEditIndex}" class="suggestions-box-arti-linea list-group suggestions-container"></div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="sr-only" for="cant_linea_${lineaEditIndex}">Cantidad:</label>
+                    <input type="number" id="cant_linea_${lineaEditIndex}" name="lineas[${lineaEditIndex}][CANTIDAD]" class="form-control" required min="1">
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-danger btn-sm btn-remover-linea-edit">Eliminar</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', nuevaLineaHtml);
+        inicializarAutocompleteArticuloLineaEdit(lineaEditIndex);
+        lineaEditIndex++; // Incrementar después de usar el índice actual
+        actualizarBotonesRemoverEdit();
+    });
+
+    function actualizarBotonesRemoverEdit() {
+        const container = document.getElementById('lineas-pedido-container-edit');
+        const botonesRemover = container.querySelectorAll('.btn-remover-linea-edit');
+        botonesRemover.forEach(btn => {
+            btn.style.display = (container.querySelectorAll('.linea-pedido').length > 1) ? 'inline-block' : 'none';
+            if (!btn.dataset.listenerAttached) {
+                btn.addEventListener('click', function() {
+                    this.closest('.linea-pedido').remove();
+                    actualizarBotonesRemoverEdit();
+                });
+                btn.dataset.listenerAttached = 'true';
+            }
+        });
+    }
+    // Script para cerrar sugerencias al hacer clic fuera (igual que antes)
+    document.addEventListener('click', function(event) { /* ...código idéntico... */ });
+  </script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block title %}Mis Pedidos(CAB){% endblock %}
+{% block content %}
+  <h2>Mis Pedidos(CAB)</h2>
+  <a href="{{ url_for('agregar_pedido') }}" class="btn btn-success mb-3">Nuevo Pedido</a>
+  {% if pedidos %}
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        
+        
+        
+        <th>ID</th>
+		<th>Nº PEDIDO</th>
+	    <th>Cód. Cliente</th>
+		<th>Razón social</th>
+        <th>Cód. Dirección</th>
+        <th>Fecha Creación</th>
+        <th>Fecha Exp.</th>
+        <th>Pedido Cliente</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in pedidos %}
+      <tr>
+        
+        
+        
+        <td>{{ pedido.PED_ID }}</td>
+		<td>{{ pedido.NUMPED }}</td>
+		<td>{{ pedido.COD_CTE }}</td>
+		<td>{{ pedido.RAZON_SOCIAL }}</td>
+        <td>{{ pedido.COD_DIR }}</td>
+        <td>{{ pedido.FECHA_CREACION.strftime('%Y-%m-%d %H:%M:%S') if pedido.FECHA_CREACION else '' }}</td>
+        <td>{{ pedido.FECHA_EXP.strftime('%Y-%m-%d') if pedido.FECHA_EXP else '' }}</td>
+        <td>{{ pedido.PEDIDO_CTE }}</td>
+        <td>
+          <a href="{{ url_for('editar_pedido', id=pedido.NUMPED) }}" class="btn btn-sm btn-warning">Editar</a>
+          <form action="{{ url_for('eliminar_pedido', id=pedido.PED_ID) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de eliminar este pedido?');">
+            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p>No tienes pedidos registrados.</p>
+  {% endif %}
+{% endblock %}

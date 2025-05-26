@@ -1,0 +1,7 @@
+/* Puedes añadir estilos personalizados aquí si lo deseas */
+body {
+    padding-top: 56px; /* Ajuste por la barra de navegación fija */
+}
+.container {
+    margin-top: 20px;
+}

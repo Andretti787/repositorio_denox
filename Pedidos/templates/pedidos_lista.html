@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Mis Pedidos{% endblock %}
+{% block content %}
+  <h2>Mis Pedidos</h2>
+  <a href="{{ url_for('agregar_pedido') }}" class="btn btn-success mb-3">Nuevo Pedido</a>
+  
+  {% if pedidos_para_mostrar %} {# O el nombre que uses al pasar desde app.py, ej. pedidos_agrupados #}
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nº Pedido</th>
+          <th>Cliente</th>
+          <th>Razón Social</th>
+          <th>Fecha Creación</th>
+          <th>Líneas</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for numped, datos_pedido in pedidos_para_mostrar.items() %} {# Asumiendo que pedidos_para_mostrar es un dict #}
+          <tr>
+            <td>{{ numped }}</td>
+            <td>{{ datos_pedido.cabecera.COD_CTE }}</td>
+            <td>{{ datos_pedido.cabecera.RAZON_SOCIAL }}</td>
+            <td>
+              {% if datos_pedido.cabecera.FECHA_CREACION %}
+                {{ datos_pedido.cabecera.FECHA_CREACION.strftime('%Y-%m-%d %H:%M:%S') }}
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+            <td>{{ datos_pedido.lineas|length }}</td>
+            <td>
+              <a href="{{ url_for('editar_pedido', numped_a_editar=numped) }}" class="btn btn-sm btn-warning mr-1">Editar</a>
+              
+              {# --- NUEVO BOTÓN/FORMULARIO PARA ELIMINAR PEDIDO COMPLETO --- #}
+              <form action="{{ url_for('eliminar_pedido_completo', numped_a_eliminar=numped) }}" method="POST" style="display: inline;" 
+                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar TODO el pedido {{ numped }}? Esta acción no se puede deshacer.');">
+                <button type="submit" class="btn btn-sm btn-danger">Eliminar Pedido</button>
+              </form>
+              {# --- FIN NUEVO BOTÓN/FORMULARIO --- #}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No tienes pedidos registrados.</p>
+  {% endif %}
+{% endblock %}

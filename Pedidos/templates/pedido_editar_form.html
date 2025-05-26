@@ -1,0 +1,254 @@
+{% extends "layout.html" %}
+
+{% block title %}Editar Pedido {{ pedido_cabecera.NUMPED }}{% endblock %}
+
+{% block content %}
+  <h2>Editar Pedido: {{ pedido_cabecera.NUMPED }}</h2>
+  
+  <form method="POST" id="form-editar-pedido">
+    {# --- SECCIÓN CABECERA (sin cambios respecto a la anterior) --- #}
+    <h4>Datos de Cabecera</h4>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="cod_cte">Código Cliente:</label>
+        <input type="text" class="form-control" id="cod_cte" name="COD_CTE" 
+               value="{{ pedido_cabecera.COD_CTE if pedido_cabecera else '' }}" 
+               autocomplete="off">
+        <div id="suggestions-box-cte" class="list-group suggestions-container"></div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="cod_dir">Código Dirección:</label>
+        <input type="text" class="form-control" id="cod_dir" name="COD_DIR" 
+               value="{{ pedido_cabecera.COD_DIR if pedido_cabecera else '' }}">
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="fecha_exp">Fecha Expedición (DD-MM-AAAA):</label>
+        <input type="date" class="form-control" id="fecha_exp" name="FECHA_EXP"
+               value="{{ pedido_cabecera.FECHA_EXP if pedido_cabecera else '' }}">
+      </div>
+      <div class="form-group col-md-6">
+        <label for="pedido_cte">Referencia Pedido Cliente:</label>
+        <input type="text" class="form-control" id="pedido_cte" name="PEDIDO_CTE" 
+               value="{{ pedido_cabecera.PEDIDO_CTE if pedido_cabecera else '' }}">
+      </div>
+    </div>
+    <hr>
+
+    {# --- SECCIÓN LÍNEAS DE PEDIDO --- #}
+    <h4>Líneas del Pedido</h4>
+    <div id="lineas-pedido-container-edit">
+      {% if lineas_pedido %}
+        {% for linea in lineas_pedido %}
+          <div class="linea-pedido form-row align-items-end mb-2">
+            <input type="hidden" name="lineas[{{ loop.index0 }}][ID_LINEA]" value="{{ linea.ID_LINEA }}">
+            <div class="form-group col-md-5">
+              <label class="sr-only" for="arti_linea_{{ loop.index0 }}">Artículo:</label>
+              <input type="text" id="arti_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][ARTI]" 
+                     value="{{ linea.ARTI }}" class="form-control arti-linea" 
+                     required autocomplete="off"> {# <<--- AÑADIDO required ---#}
+              <div id="suggestions_box_arti_linea_{{ loop.index0 }}" class="suggestions-box-arti-linea list-group suggestions-container"></div>
+            </div>
+            <div class="form-group col-md-3">
+              <label class="sr-only" for="cant_linea_{{ loop.index0 }}">Cantidad:</label>
+              <input type="number" id="cant_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][CANTIDAD]" 
+                     value="{{ linea.CANTIDAD }}" class="form-control" required min="1">
+            </div>
+            <div class="form-group col-md-2">
+              <button type="button" class="btn btn-danger btn-sm btn-remover-linea-edit">Eliminar</button>
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {# Si no hay líneas al cargar (raro para editar, pero por si acaso), el botón "Añadir Línea" permitirá crear la primera #}
+      {% if not lineas_pedido %}
+         <p id="no-lineas-mensaje" class="text-muted">No hay líneas en este pedido. Añada al menos una.</p>
+      {% endif %}
+    </div>
+
+    <button type="button" id="btn-agregar-linea-edit" class="btn btn-info btn-sm mb-3">Añadir Línea</button>
+    
+    <hr>
+    <button type="submit" class="btn btn-primary">Actualizar Pedido</button>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+  </form>
+
+  {# Estilos (igual que en pedido_form.html) #}
+  <style>
+    .suggestions-container { position: relative; z-index: 1000; max-height: 200px; overflow-y: auto; background-color: white; border: 1px solid #ced4da; border-top: none; display: none; }
+    .list-group-item-action { cursor: pointer; }
+    .list-group-item-action:hover { background-color: #f0f0f0; }
+  </style> 
+  
+  <script>
+    // Función setupAutocomplete (la misma que antes, la incluimos completa por claridad)
+    function setupAutocomplete(inputId, suggestionsBoxId, endpointUrl, displayFieldKey, valueFieldKey, isLinea = false) {
+        const inputElement = document.getElementById(inputId);
+        const suggestionsBox = document.getElementById(suggestionsBoxId);
+        
+        if (!inputElement) {
+            // console.warn(`Autocomplete setup: Input element not found for ID "${inputId}"`);
+            return;
+        }
+        if (!suggestionsBox) {
+            // console.warn(`Autocomplete setup: Suggestions box not found for ID "${suggestionsBoxId}"`);
+            return;
+        }
+
+        let debounceTimer;
+
+        inputElement.addEventListener('input', function() {
+            const query = this.value;
+            suggestionsBox.innerHTML = ''; 
+
+            const minLength = isLinea ? 1 : 2; // Menor longitud para líneas si se desea
+            if (query.length < minLength) { 
+                suggestionsBox.style.display = 'none';
+                return;
+            }
+
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => {
+            fetch(`${endpointUrl}?q=${encodeURIComponent(query)}`)
+                .then(response => {
+                    if (!response.ok) { throw new Error(`Network response error for ${endpointUrl}`); }
+                    return response.json();
+                })
+                .then(data => {
+                if (data.sugerencias && data.sugerencias.length > 0) {
+                    suggestionsBox.style.display = 'block';
+                    data.sugerencias.forEach(item => {
+                    const suggestionItem = document.createElement('a');
+                    suggestionItem.classList.add('list-group-item', 'list-group-item-action');
+                    let displayText = item[valueFieldKey];
+                    if (item[displayFieldKey] && displayFieldKey !== valueFieldKey) {
+                        displayText += ` - ${item[displayFieldKey]}`;
+                    }
+                    suggestionItem.textContent = displayText;
+                    suggestionItem.href = "#";
+                    suggestionItem.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        inputElement.value = item[valueFieldKey];
+                        suggestionsBox.innerHTML = '';
+                        suggestionsBox.style.display = 'none';
+                        inputElement.focus();
+                    });
+                    suggestionsBox.appendChild(suggestionItem);
+                    });
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+                })
+                .catch(error => {
+                console.error(`Error fetching suggestions for ${inputId}:`, error);
+                suggestionsBox.style.display = 'none';
+                });
+            }, 300);
+        });
+    }
+    
+    // Configurar autocompletado para Código Cliente (Cabecera)
+    setupAutocomplete('cod_cte', 'suggestions-box-cte', "{{ url_for('sugerencias_cliente') }}", 'razon_social', 'cod_cte');
+    
+    // --- LÓGICA PARA LÍNEAS EN EDICIÓN ---
+    // El índice inicial para nuevas líneas debe considerar las existentes
+    let lineaEditIndex = {{ lineas_pedido|length if lineas_pedido else 0 }};
+
+    function inicializarAutocompleteArticuloLineaEdit(index) {
+        const artiInputId = `arti_linea_${index}`;
+        const suggestionsBoxId = `suggestions_box_arti_linea_${index}`;
+        // No es necesario verificar si existen aquí porque el que llama (DOMContentLoaded o btn-agregar) ya lo hace
+        // o crea los elementos antes de llamar.
+        setupAutocomplete(artiInputId, suggestionsBoxId, "{{ url_for('sugerencias_articulo') }}", 'descripcion', 'cod_art', true);
+    }
+
+    // Inicializar autocompletado para líneas existentes al cargar la página
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('#lineas-pedido-container-edit .linea-pedido').forEach((lineaElement, index) => {
+            // El 'index' aquí es el del querySelectorAll, que coincide con loop.index0
+            // si las líneas se renderizaron en ese orden.
+            inicializarAutocompleteArticuloLineaEdit(index);
+        });
+        actualizarBotonesRemoverEdit();
+        // Si no hay líneas iniciales, el mensaje de "No hay líneas" se mostrará.
+        // Si se añade una línea, ese mensaje debería ocultarse.
+    });
+
+    document.getElementById('btn-agregar-linea-edit').addEventListener('click', function() {
+        const container = document.getElementById('lineas-pedido-container-edit');
+        
+        // Ocultar mensaje de "no hay líneas" si está presente
+        const noLineasMsg = document.getElementById('no-lineas-mensaje');
+        if (noLineasMsg) noLineasMsg.style.display = 'none';
+
+        const nuevaLineaHtml = `
+            <div class="linea-pedido form-row align-items-end mb-2">
+                <input type="hidden" name="lineas[${lineaEditIndex}][ID_LINEA]" value=""> {# Nueva línea no tiene ID original #}
+                <div class="form-group col-md-5">
+                    <label class="sr-only" for="arti_linea_${lineaEditIndex}">Artículo:</label>
+                    <input type="text" id="arti_linea_${lineaEditIndex}" name="lineas[${lineaEditIndex}][ARTI]" 
+                           class="form-control arti-linea" required autocomplete="off"> {# <<--- AÑADIDO required ---#}
+                    <div id="suggestions_box_arti_linea_${lineaEditIndex}" class="suggestions-box-arti-linea list-group suggestions-container"></div>
+                </div>
+                <div class="form-group col-md-3">
+                    <label class="sr-only" for="cant_linea_${lineaEditIndex}">Cantidad:</label>
+                    <input type="number" id="cant_linea_${lineaEditIndex}" name="lineas[${lineaEditIndex}][CANTIDAD]" 
+                           class="form-control" required min="1">
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="button" class="btn btn-danger btn-sm btn-remover-linea-edit">Eliminar</button>
+                </div>
+            </div>
+        `;
+        container.insertAdjacentHTML('beforeend', nuevaLineaHtml);
+        inicializarAutocompleteArticuloLineaEdit(lineaEditIndex); // Inicializar para la nueva línea
+        lineaEditIndex++; // Incrementar para la próxima línea que se añada
+        actualizarBotonesRemoverEdit();
+    });
+
+    function actualizarBotonesRemoverEdit() {
+        const container = document.getElementById('lineas-pedido-container-edit');
+        const lineas = container.querySelectorAll('.linea-pedido');
+        lineas.forEach((linea, index) => {
+            const btnRemover = linea.querySelector('.btn-remover-linea-edit');
+            if (btnRemover) {
+                btnRemover.style.display = (lineas.length > 1) ? 'inline-block' : 'none';
+                // Asegurarse de no añadir múltiples listeners al mismo botón
+                if (!btnRemover.dataset.listenerAttached) {
+                    btnRemover.addEventListener('click', function() {
+                        this.closest('.linea-pedido').remove();
+                        actualizarBotonesRemoverEdit(); // Re-evaluar qué botones mostrar
+                        if (container.querySelectorAll('.linea-pedido').length === 0) {
+                            const noLineasMsg = document.getElementById('no-lineas-mensaje');
+                            if (noLineasMsg) noLineasMsg.style.display = 'block'; // Mostrar si se eliminan todas
+                        }
+                    });
+                    btnRemover.dataset.listenerAttached = 'true';
+                }
+            }
+        });
+         // Si solo queda una línea, su botón de eliminar se oculta por la lógica anterior.
+    }
+    
+    // Script para cerrar sugerencias al hacer clic fuera (igual que antes)
+    document.addEventListener('click', function(event) {
+        const cteInput = document.getElementById('cod_cte');
+        const suggestionsBoxCte = document.getElementById('suggestions-box-cte');
+        if (suggestionsBoxCte && !cteInput.contains(event.target) && !suggestionsBoxCte.contains(event.target)) {
+            if (suggestionsBoxCte.style.display === 'block') suggestionsBoxCte.style.display = 'none';
+        }
+        document.querySelectorAll('.suggestions-box-arti-linea').forEach(box => {
+            // Necesitamos encontrar el input asociado a esta caja de sugerencias
+            // El ID del input es 'arti_linea_' + el índice que está en el ID de la caja
+            const boxIdParts = box.id.split('_');
+            const index = boxIdParts[boxIdParts.length - 1]; // Obtener el último segmento (el índice)
+            const inputBoxId = `arti_linea_${index}`;
+            const inputBox = document.getElementById(inputBoxId);
+            if (inputBox && !inputBox.contains(event.target) && !box.contains(event.target)) {
+                 if (box.style.display === 'block') box.style.display = 'none';
+            }
+        });
+    });
+  </script>
+{% endblock %}
