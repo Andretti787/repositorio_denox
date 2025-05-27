@@ -1,0 +1,99 @@
+{% extends "layout.html" %}
+
+{% block title %}
+  Detalles del Pedido {{ pedido_cabecera.NUMPED if pedido_cabecera else 'Desconocido' }}
+{% endblock %}
+
+{% block content %}
+  <h2>Detalles del Pedido: {{ pedido_cabecera.NUMPED if pedido_cabecera else 'N/A' }}</h2>
+  
+  {% if pedido_cabecera %}
+    {# --- SECCIÓN CABECERA --- #}
+    <h4>Datos de Cabecera</h4>
+    <div class="card mb-3">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <p><strong>Número de Pedido:</strong> {{ pedido_cabecera.NUMPED }}</p>
+            <p><strong>Código Cliente:</strong> {{ pedido_cabecera.COD_CTE | default('N/A') }}</p>
+            <p><strong>Razón Social:</strong> {{ pedido_cabecera.RAZON_SOCIAL | default('N/A') }}</p>
+            <p><strong>Código Dirección:</strong> {{ pedido_cabecera.COD_DIR | default('N/A') }}</p>
+            {% if direccion_completa %}
+              <p><strong>Dirección Completa:</strong> {{ direccion_completa.DIR }}, {{ direccion_completa.CP }} {{ direccion_completa.CIUDAD }}, {{ direccion_completa.PROVINCIA }} ({{ direccion_completa.PAIS }})</p>
+            {% endif %}
+          </div>
+          <div class="col-md-6">
+            <p><strong>Fecha Creación:</strong> {{ pedido_cabecera.FECHA_CREACION.strftime('%Y-%m-%d %H:%M:%S') if pedido_cabecera.FECHA_CREACION else 'N/A' }}</p>
+            <p><strong>Fecha Expedición:</strong> {{ pedido_cabecera.FECHA_EXP.strftime('%Y-%m-%d') if pedido_cabecera.FECHA_EXP else 'N/A' }}</p>
+            <p><strong>Referencia Pedido Cliente:</strong> {{ pedido_cabecera.PEDIDO_CTE | default('N/A') }}</p>
+            <p><strong>Estado:</strong> 
+              <span class="badge 
+                {% set estado = pedido_cabecera.ESTADO | default('Desconocido') %}
+                {% if estado == 'PENDIENTE' %}badge-warning
+                {% elif estado == 'En Proceso' %}badge-info
+                {% elif estado == 'PROCESADO' %}badge-success
+                {% elif estado == 'ENVIADO' %}badge-primary
+                {% elif estado == 'ENTREGADO' %}badge-success
+                {% elif estado == 'CANCELADO' %}badge-danger
+                {% else %}badge-secondary
+                {% endif %}">
+                {{ estado }}
+              </span>
+            </p>
+            <p><strong>Usuario:</strong> {{ pedido_cabecera.USUARIO | default('N/A') }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {# --- SECCIÓN LÍNEAS DE PEDIDO --- #}
+    <h4>Líneas del Pedido</h4>
+    {% if lineas_pedido and lineas_pedido|length > 0 %}
+      <table class="table table-sm table-bordered">
+        <thead class="thead-light">
+          <tr>
+            <th>Artículo</th>
+            <th>Descripción</th>
+            <th class="text-right">UD. Emb.</th>
+            <th class="text-right">Precio U.</th>
+            <th class="text-right">Cantidad</th>
+            <th class="text-right">Importe</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% set total_general_calculado = namespace(valor=0.0) %}
+          {% for linea in lineas_pedido %}
+            <tr>
+              <td>{{ linea.ARTI }}</td>
+              <td>{{ linea.DESCRIPCION_ARTI | default('N/A') }}</td>
+              <td class="text-right">{{ linea.UD_EMB if linea.UD_EMB is not none else '-' }}</td>
+              <td class="text-right">{{ '%.2f'|format(linea.PRECIO_ARTI|float(0.0)) if linea.PRECIO_ARTI is not none else '0.00' }}</td>
+              <td class="text-right">{{ linea.CANTIDAD }}</td>
+              {% set importe_linea = (linea.PRECIO_ARTI|float(0.0) * linea.CANTIDAD|float(0.0)) %}
+              <td class="text-right">{{ '%.2f'|format(importe_linea) }}</td>
+              {% set total_general_calculado.valor = total_general_calculado.valor + importe_linea %}
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="5" class="text-right font-weight-bold">TOTAL PEDIDO:</td>
+            <td class="text-right font-weight-bold">{{ '%.2f'|format(total_general_calculado.valor) }}</td>
+          </tr>
+        </tfoot>
+      </table>
+    {% else %}
+      <p class="text-muted">Este pedido no tiene líneas.</p>
+    {% endif %}
+  {% else %}
+    <p class="alert alert-warning">No se encontraron datos para este pedido.</p>
+  {% endif %}
+
+  <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Volver a Mis Pedidos</a>
+  {% if pedido_cabecera and pedido_cabecera.ESTADO != 'PROCESADO' %}
+    <a href="{{ url_for('editar_pedido', numped_a_editar=pedido_cabecera.NUMPED) }}" class="btn btn-warning mt-3 ml-2">
+        <i class="fas fa-edit"></i> Editar este Pedido
+    </a>
+  {% endif %}
+
+{% endblock %}

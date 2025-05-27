@@ -12,8 +12,9 @@
           <th>Cliente</th>
           <th>Razón Social</th>
           <th>Fecha Creación</th>
-          <th>Líneas</th>
-          <th>Acciones</th>
+          <th>Estado</th>
+		  <th>Líneas</th>
+		  <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -29,16 +30,50 @@
                 N/A
               {% endif %}
             </td>
-            <td>{{ datos_pedido.lineas|length }}</td>
+			<td>
+              {# Mostrar el estado, quizás con algún estilo condicional #}
+              {% set estado = datos_pedido.cabecera.ESTADO | default('Desconocido') %}
+              <span class="badge 
+                {% if estado == 'PENDIENTE' %}badge-warning
+                {% elif estado == 'PROCESADO' %}badge-info
+                {% elif estado == 'ENVIADO' %}badge-primary
+                {% elif estado == 'ENTREGADO' %}badge-success
+                {% elif estado == 'CANCELADO' %}badge-danger
+                {% else %}badge-secondary
+                {% endif %}">
+                {{ estado }}
+              </span>
+            </td> {# <<< NUEVA CELDA PARA ESTADO #}
+             <td class="text-center">{{ datos_pedido.lineas|length }}</td>
             <td>
-              <a href="{{ url_for('editar_pedido', numped_a_editar=numped) }}" class="btn btn-sm btn-warning mr-1">Editar</a>
+              {# --- BOTÓN VER --- #}
+              <a href="{{ url_for('ver_pedido', numped_a_ver=numped) }}" 
+                 class="btn btn-sm btn-info mr-1" title="Ver Detalles del Pedido">
+                <i class="fas fa-eye"></i> Ver
+              </a>
+              {% if datos_pedido.cabecera.ESTADO != 'PROCESADO' %}
+                <a href="{{ url_for('editar_pedido', numped_a_editar=numped) }}" 
+                   class="btn btn-sm btn-warning mr-1" title="Editar Pedido">
+                  <i class="fas fa-edit"></i> Editar
+                </a>
+              {% else %}
+                <button type="button" class="btn btn-sm btn-warning mr-1" disabled title="Pedido procesado, no se puede editar">
+                  <i class="fas fa-edit"></i> Editar
+                </button> 
+              {% endif %}
               
-              {# --- NUEVO BOTÓN/FORMULARIO PARA ELIMINAR PEDIDO COMPLETO --- #}
-              <form action="{{ url_for('eliminar_pedido_completo', numped_a_eliminar=numped) }}" method="POST" style="display: inline;" 
-                    onsubmit="return confirm('¿Estás seguro de que deseas eliminar TODO el pedido {{ numped }}? Esta acción no se puede deshacer.');">
-                <button type="submit" class="btn btn-sm btn-danger">Eliminar Pedido</button>
-              </form>
-              {# --- FIN NUEVO BOTÓN/FORMULARIO --- #}
+              {% if datos_pedido.cabecera.ESTADO not in ['PROCESADO', 'Enviado', 'Entregado', 'Cancelado'] %}
+                <form action="{{ url_for('eliminar_pedido_completo', numped_a_eliminar=numped) }}" method="POST" style="display: inline;" 
+                      onsubmit="return confirm('¿Estás seguro de que deseas eliminar TODO el pedido {{ numped }}?');">
+                  <button type="submit" class="btn btn-sm btn-danger" title="Eliminar Pedido Completo">
+                      <i class="fas fa-trash-alt"></i> Eliminar
+                  </button>
+                </form>
+              {% else %}
+                 <button type="button" class="btn btn-sm btn-danger" disabled title="No se puede eliminar este pedido en su estado actual">
+                      <i class="fas fa-trash-alt"></i> Eliminar
+                  </button>
+              {% endif %}
             </td>
           </tr>
         {% endfor %}

@@ -81,72 +81,71 @@ def logout():
 @app.route('/')
 @login_required
 def index():
-    """Muestra la lista de pedidos del usuario logueado."""
     conn = get_db_connection()
     if not conn:
-        return render_template('pedidos_lista.html', pedidos=[]) # Pasas una lista vacía si no hay conexión
+        return render_template('pedidos_lista.html', pedidos_para_mostrar={}) # Pasar dict vacío
 
     cursor = conn.cursor(dictionary=True)
-    pedidos_db = [] # Inicializas como lista
+    pedidos_db = []
     try:
-        # ... tu consulta SQL ...
-        # Esta consulta devuelve una LISTA de diccionarios, donde cada diccionario es una FILA de PEDIDOS_WEB
-        # (potencialmente con datos de CLIENTES_WEB unidos)
+        # Modificar la consulta para incluir PED.ESTADO
         cursor.execute("""
-            SELECT PED.ID AS PED_ID, PED.ARTI, PED.CANTIDAD, PED.COD_CTE, PED.COD_DIR, PED.FECHA_CREACION,
-                   PED.FECHA_EXP, PED.PEDIDO_CTE, PED.USUARIO, PED.NUMPED,
-                   CTE.RAZON_SOCIAL 
-            FROM PEDIDOS_WEB PED
-            INNER JOIN CLIENTES_WEB CTE ON CTE.COD_CTE = PED.COD_CTE 
-            WHERE USUARIO = %s 
-            ORDER BY PED.NUMPED DESC, PED.ID ASC
-        """, (session['user_id'],)) # Ordenado por NUMPED y luego por ID de línea
-        pedidos_db = cursor.fetchall() # pedidos_db es una LISTA de filas (diccionarios)
+            SELECT 
+                pw.ID AS PED_ID, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
+                pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, 
+                pw.NUMPED, pw.ESTADO,  -- <<< AÑADIDO ESTADO
+                c.RAZON_SOCIAL,
+                itm.DESCRIPCION AS DESCRIPCION_ARTI,
+                itm.UD_EMB,
+                itm.PRECIO AS PRECIO_ARTI,
+                itm.STOCK_FAM
+            FROM PEDIDOS_WEB pw
+            LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
+            LEFT JOIN ITMMASTER itm ON pw.ARTI = itm.COD_ART
+            WHERE pw.USUARIO = %s 
+            ORDER BY pw.NUMPED DESC, pw.ID ASC
+        """, (session['user_id'],))
+        pedidos_db = cursor.fetchall()
     except mysql.connector.Error as err:
         flash(f"Error al obtener pedidos: {err}", "danger")
         print(f"ERROR DB Fetching pedidos: {err}")
     finally:
-        if conn.is_connected(): # Buena práctica verificar
-            cursor.close()
+        if conn.is_connected():
+            if cursor and hasattr(cursor, 'close') and callable(getattr(cursor, 'close')): # Más seguro
+                 try: cursor.close()
+                 except Exception as e: print(f"Error cerrando cursor (index): {e}")
             conn.close()
 
-    # AQUÍ ESTÁ EL PUNTO CLAVE:
-    # Si quieres agrupar por NUMPED para usar .items() en la plantilla,
-    # necesitas transformar 'pedidos_db' (que es una lista de líneas)
-    # en un diccionario donde las claves sean los NUMPED.
-
     pedidos_agrupados = {}
-    if pedidos_db: # Solo procesar si hay resultados
+    if pedidos_db:
         for linea_pedido in pedidos_db:
             numped = linea_pedido['NUMPED']
             if numped not in pedidos_agrupados:
-                # Es la primera vez que vemos este NUMPED, creamos la entrada de cabecera
                 pedidos_agrupados[numped] = {
                     'cabecera': {
                         'NUMPED': linea_pedido['NUMPED'],
                         'COD_CTE': linea_pedido['COD_CTE'],
-                        'RAZON_SOCIAL': linea_pedido['RAZON_SOCIAL'], # Del JOIN
+                        'RAZON_SOCIAL': linea_pedido.get('RAZON_SOCIAL', ''), # Usar .get() por si el JOIN falla
                         'COD_DIR': linea_pedido['COD_DIR'],
                         'FECHA_CREACION': linea_pedido['FECHA_CREACION'],
                         'FECHA_EXP': linea_pedido['FECHA_EXP'],
                         'PEDIDO_CTE': linea_pedido['PEDIDO_CTE'],
-                        'USUARIO': linea_pedido['USUARIO']
-                        # Añade cualquier otro campo de cabecera que quieras mostrar una vez por pedido
+                        'USUARIO': linea_pedido['USUARIO'],
+                        'ESTADO': linea_pedido.get('ESTADO', 'Desconocido') # <<< AÑADIDO ESTADO A CABECERA
                     },
                     'lineas': []
                 }
-            # Añadir la línea actual a la lista de líneas de este NUMPED
             pedidos_agrupados[numped]['lineas'].append({
-                'ID_LINEA': linea_pedido['PED_ID'], # El ID de la fila en PEDIDOS_WEB
+                'ID_LINEA': linea_pedido['PED_ID'],
                 'ARTI': linea_pedido['ARTI'],
-                'CANTIDAD': linea_pedido['CANTIDAD']
-                # Añade cualquier otro campo específico de la línea
+                'DESCRIPCION_ARTI': linea_pedido.get('DESCRIPCION_ARTI', ''),
+                'CANTIDAD': linea_pedido['CANTIDAD'],
+                'PRECIO_ARTI': linea_pedido.get('PRECIO_ARTI'),
+                'UD_EMB': linea_pedido.get('UD_EMB'),
+                'STOCK_FAM_ARTI': linea_pedido.get('STOCK_FAM')
             })
     
-    # Ahora 'pedidos_agrupados' es un DICCIONARIO
     return render_template('pedidos_lista.html', pedidos_para_mostrar=pedidos_agrupados)
-                                                # ^^^^^^^^^^^^^^^^^^^^^^^
-                                                # Cambia el nombre aquí o en la plantilla
 
 
 @app.route('/pedidos/nuevo', methods=['GET', 'POST'])
@@ -706,6 +705,109 @@ def eliminar_pedido_completo(numped_a_eliminar):
             
     return redirect(url_for('index'))
 
+@app.route('/pedidos/ver/<numped_a_ver>')
+@login_required
+def ver_pedido(numped_a_ver):
+    usuario_actual = session['user_id']
+    conn_get = None
+    cursor_get = None
+    
+    try:
+        conn_get = get_db_connection()
+        if not conn_get:
+            return redirect(url_for('index')) # Flash ya se mostró
+        
+        cursor_get = conn_get.cursor(dictionary=True)
+        
+        # Obtener todas las líneas del pedido y datos relacionados
+        cursor_get.execute("""
+            SELECT 
+                pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
+                pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO,
+                c.RAZON_SOCIAL,
+                itm.DESCRIPCION AS DESCRIPCION_ARTI, 
+                itm.UD_EMB,
+                itm.PRECIO AS PRECIO_ARTI,
+                itm.STOCK_FAM 
+            FROM PEDIDOS_WEB pw
+            LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
+            LEFT JOIN ITMMASTER itm ON pw.ARTI = itm.COD_ART
+            WHERE pw.NUMPED = %s AND pw.USUARIO = %s 
+            ORDER BY pw.ID ASC
+        """, (numped_a_ver, usuario_actual))
+        lineas_pedido_db = cursor_get.fetchall()
+
+        if not lineas_pedido_db:
+            flash("Pedido no encontrado o no tienes acceso para verlo.", "warning")
+            return redirect(url_for('index'))
+
+        # Tomar los datos de cabecera de la primera línea
+        cabecera_db = lineas_pedido_db[0]
+        pedido_cabecera_para_vista = {
+            'NUMPED': cabecera_db['NUMPED'],
+            'COD_CTE': cabecera_db.get('COD_CTE'),
+            'RAZON_SOCIAL': cabecera_db.get('RAZON_SOCIAL'),
+            'COD_DIR': cabecera_db.get('COD_DIR'),
+            'FECHA_CREACION': cabecera_db.get('FECHA_CREACION'),
+            'FECHA_EXP': cabecera_db.get('FECHA_EXP'),
+            'PEDIDO_CTE': cabecera_db.get('PEDIDO_CTE'),
+            'USUARIO': cabecera_db.get('USUARIO'),
+            'ESTADO': cabecera_db.get('ESTADO', 'Desconocido')
+        }
+
+        lineas_para_vista = []
+        for linea_db in lineas_pedido_db:
+            lineas_para_vista.append({
+                'ID_LINEA': linea_db['ID'], 
+                'ARTI': linea_db['ARTI'],
+                'DESCRIPCION_ARTI': linea_db.get('DESCRIPCION_ARTI', 'N/A'),
+                'CANTIDAD': linea_db['CANTIDAD'],
+                'PRECIO_ARTI': linea_db.get('PRECIO_ARTI'), # Se pasará como número
+                'UD_EMB': linea_db.get('UD_EMB'),
+                # STOCK_FAM no es estrictamente necesario para la vista de solo lectura,
+                # pero podría ser útil si decides mostrarlo.
+            })
+        
+        # Opcional: Obtener la dirección completa si hay COD_DIR y COD_CTE
+        direccion_completa_info = None
+        if pedido_cabecera_para_vista.get('COD_CTE') and pedido_cabecera_para_vista.get('COD_DIR'):
+            try: # Usar un nuevo cursor o la misma conexión si se maneja bien
+                # Es mejor un nuevo cursor si la conexión sigue abierta
+                if conn_get.is_connected(): # Reutilizar la conexión si es posible
+                    cursor_dir = conn_get.cursor(dictionary=True) # Nuevo cursor
+                    cursor_dir.execute("""
+                        SELECT DIR, CP, CIUDAD, PROVINCIA, PAIS 
+                        FROM DIRECCIONES_CTE_WEB 
+                        WHERE COD_CTE = %s AND COD_DIR = %s
+                    """, (pedido_cabecera_para_vista['COD_CTE'], pedido_cabecera_para_vista['COD_DIR']))
+                    direccion_completa_info = cursor_dir.fetchone()
+                    cursor_dir.close() # Cerrar este cursor específico
+            except mysql.connector.Error as err_dir:
+                print(f"Error obteniendo dirección completa para vista: {err_dir}")
+
+
+        return render_template('pedido_ver_detalle.html', 
+                               pedido_cabecera=pedido_cabecera_para_vista, 
+                               lineas_pedido=lineas_para_vista,
+                               direccion_completa=direccion_completa_info)
+
+    except mysql.connector.Error as db_err:
+        flash(f"Error de base de datos al ver el pedido: {db_err}", "danger")
+        print(f"ERROR DB (ver_pedido): {db_err}")
+        return redirect(url_for('index'))
+    except Exception as e:
+        flash(f"Error inesperado al ver el pedido: {e}", "danger")
+        print(f"ERROR General (ver_pedido): {type(e).__name__} - {e}")
+        return redirect(url_for('index'))
+    finally:
+        if cursor_get: # Cerrar el cursor principal
+            try: cursor_get.close()
+            except Exception as e_cursor: print(f"Error cerrando cursor_get (ver_pedido): {e_cursor}")
+        if conn_get and conn_get.is_connected(): # Cerrar la conexión principal
+            try: conn_get.close()
+            except Exception as e_conn: print(f"Error cerrando conn_get (ver_pedido): {e_conn}")
+
+
 @app.route('/sugerencias_articulo')
 @login_required
 def sugerencias_articulo():
@@ -889,4 +991,5 @@ if __name__ == '__main__': # Esto solo se ejecuta si corres este script directam
         print(f"NUMPED: {np}, Longitud: {len(np)}")
 
 if __name__ == '__main__':
-    app.run(debug=True) # debug=True solo para desarrollo
+    #app.run(debug=True) # debug=True solo para desarrollo
+    app.run(host='0.0.0.0', port=5000, debug=True)
