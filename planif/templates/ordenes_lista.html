@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Órdenes de Producción{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Órdenes de Producción</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('agregar_orden') }}" class="btn btn-success">
+            Agregar Nueva Orden
+        </a>
+    </div>
+</div>
+
+{% if ordenes %}
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>Código Pedido</th>
+                <th>Artículo (ID)</th>
+                <th>Nombre Artículo</th>
+                <th>Cantidad</th>
+                <th>Fecha Entrega Deseada</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for orden in ordenes %}
+            <tr>
+                <td>{{ orden.codigo_pedido }}</td>
+                <td>{{ orden.articulo_id }}</td>
+                <td>{{ orden.articulo.nombre }}</td>
+                <td>{{ orden.cantidad }}</td>
+                <td>{{ orden.fecha_entrega_deseada.strftime('%Y-%m-%d') if orden.fecha_entrega_deseada else '-' }}</td>
+                <td>
+                    <a href="{{ url_for('editar_orden', id_orden=orden.id) }}" class="btn btn-sm btn-primary me-1">Editar</a>
+                    <!-- TODO: Botón/Formulario para Eliminar Orden -->
+                     <form action="{{ url_for('eliminar_orden', id_orden=orden.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta orden?');">
+                        <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay órdenes registradas. <a href="{{ url_for('agregar_orden') }}">Agrega una ahora</a>.</p>
+{% endif %}
+{% endblock %}

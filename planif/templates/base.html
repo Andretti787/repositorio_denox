@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Planificación de Producción{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding-top: 5rem; }
+        .flash-messages .alert { margin-bottom: 1rem; }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="{{ url_for('index') }}">Máquinas</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint == 'listar_articulos' %}active{% endif %}" href="{{ url_for('listar_articulos') }}">Artículos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if request.endpoint.startswith('listar_ordenes') or request.endpoint.startswith('agregar_orden') or request.endpoint.startswith('editar_orden') %}active{% endif %}" href="{{ url_for('listar_ordenes') }}">Órdenes</a>
+            </li>
+            <li class="nav-item">
+                 <a class="nav-link {% if request.endpoint == 'planificar' %}active{% endif %}" href="{{ url_for('planificar') }}">Planificación</a>
+            </li>
+                <!-- Aquí irán más enlaces (Artículos, Planificación, etc.) -->
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <main class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Artículos{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Artículos</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('agregar_articulo') }}" class="btn btn-success">
+            Agregar Nuevo Artículo
+        </a>
+    </div>
+</div>
+
+{% if articulos %}
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for articulo in articulos %}
+            <tr>
+                <td>{{ articulo.id }}</td>
+                <td>{{ articulo.nombre }}</td>
+                <td>
+                      <a href="{{ url_for('editar_articulo', id_articulo=articulo.id) }}" class="btn btn-sm btn-primary me-1">Editar</a>
+                        <!-- El CASCADE DELETE en las FKs de MaquinaArticuloProduccion y Ordenes debería manejar las dependencias -->
+                        <form action="{{ url_for('eliminar_articulo', id_articulo=articulo.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este artículo?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                        </form>
+
+                    
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay artículos registrados. <a href="{{ url_for('agregar_articulo') }}">Agrega uno ahora</a>.</p>
+{% endif %}
+{% endblock %}

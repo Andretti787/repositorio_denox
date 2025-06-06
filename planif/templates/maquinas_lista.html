@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Lista de Máquinas Inyectoras{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Máquinas Inyectoras</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('agregar_maquina') }}" class="btn btn-success">
+            Agregar Nueva Máquina
+        </a>
+    </div>
+</div>
+
+{% if maquinas %}
+<div class="table-responsive">
+    <table class="table table-striped table-sm">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Costo/Hora (€)</th>
+                <th>Tiempo Cambio Molde (h)</th>
+                <th>Planta</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for maquina in maquinas %}
+            <tr>
+                <td>{{ maquina.id }}</td>
+                <td>{{ maquina.nombre }}</td>
+                <td>{{ "%.2f"|format(maquina.costo_hora) }}</td>
+                <td>{{ maquina.tiempo_cambio_molde_horas }}</td>
+                <td>{{ maquina.planta if maquina.planta else '-' }}</td>
+                <td>
+                    <a href="{{ url_for('gestionar_produccion_maquina', id_maquina=maquina.id) }}" class="btn btn-sm btn-info me-1">Producción</a>
+                    <a href="{{ url_for('editar_maquina', id_maquina=maquina.id) }}" class="btn btn-sm btn-primary me-1">Editar</a>
+                    <form action="{{ url_for('eliminar_maquina', id_maquina=maquina.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta máquina? Esto eliminará también sus configuraciones de producción asociadas.');">
+                         <button type="submit" class="btn btn-sm btn-danger">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay máquinas registradas. <a href="{{ url_for('agregar_maquina') }}">Agrega una ahora</a>.</p>
+{% endif %}
+{% endblock %}

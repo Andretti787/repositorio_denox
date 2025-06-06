@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{ titulo }}</h1>
+</div>
+
+<form method="POST" action="{{ url_for(request.endpoint, id_maquina=id_maquina if id_maquina else None) }}">
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre de la Máquina (*)</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ maquina.nombre or '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="costo_hora" class="form-label">Costo por Hora (€) (*)</label>
+        <input type="number" step="0.01" min="0" class="form-control" id="costo_hora" name="costo_hora" value="{{ maquina.costo_hora or '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="tiempo_cambio_molde_horas" class="form-label">Tiempo Cambio Molde (horas) (*)</label>
+        <input type="number" step="0.01" min="0" class="form-control" id="tiempo_cambio_molde_horas" name="tiempo_cambio_molde_horas" value="{{ maquina.tiempo_cambio_molde_horas or '' }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="planta" class="form-label">Planta</label>
+        <input type="text" class="form-control" id="planta" name="planta" value="{{ maquina.planta or '' }}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('listar_maquinas') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}

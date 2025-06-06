@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{ titulo }}</h1>
+</div>
+
+<form method="POST" action="{{ url_for(request.endpoint, id_orden=orden.id if orden.id else None) }}" class="mb-4 p-3 border rounded">
+    <div class="mb-3">
+        <label for="codigo_pedido" class="form-label">Código de Pedido (*)</label>
+        <input type="text" class="form-control" id="codigo_pedido" name="codigo_pedido" value="{{ orden.codigo_pedido or '' }}" required maxlength="20" {% if action == 'editar' %}readonly{% endif %}>
+        {% if action == 'editar' %}
+            <small class="form-text text-muted">El código de pedido no se puede cambiar una vez creado.</small>
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="articulo_id" class="form-label">Artículo (*)</label>
+        <select class="form-select" id="articulo_id" name="articulo_id" required {% if action == 'editar' %}disabled{% endif %}>
+            <option value="" disabled {% if not orden.articulo_id %}selected{% endif %}>Seleccionar artículo...</option>
+            {% for art in articulos %}
+            <option value="{{ art.id }}" {% if orden.articulo_id == art.id %}selected{% endif %}>{{ art.nombre }} ({{ art.id }})</option>
+            {% endfor %}
+        </select>
+        {% if action == 'editar' %}
+            <small class="form-text text-muted">El artículo de una orden existente no se puede cambiar a través de este formulario. Si es necesario, elimine y cree una nueva orden.</small>
+            <!-- Para permitir la edición del artículo, quite 'disabled' y asegúrese de que el backend lo maneje si es necesario -->
+        {% endif %}
+    </div>
+
+    <div class="mb-3">
+        <label for="cantidad" class="form-label">Cantidad (*)</label>
+        <input type="number" min="1" class="form-control" id="cantidad" name="cantidad" value="{{ orden.cantidad or '' }}" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="fecha_entrega_deseada" class="form-label">Fecha Entrega Deseada</label>
+        <input type="date" class="form-control" id="fecha_entrega_deseada" name="fecha_entrega_deseada" value="{{ orden.fecha_entrega_deseada.strftime('%Y-%m-%d') if orden.fecha_entrega_deseada else '' }}">
+    </div>
+    
+    <div class="mt-3">
+        <button type="submit" class="btn btn-primary">Guardar Orden</button>
+        <a href="{{ url_for('listar_ordenes') }}" class="btn btn-secondary">Cancelar</a>
+    </div>
+</form>
+
+{% endblock %}

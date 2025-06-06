@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">{{ titulo }}</h1>
+</div>
+
+<form method="POST" action="{{ url_for(request.endpoint, id_articulo=id_articulo if id_articulo else None) }}">
+    <div class="mb-3">
+        <label for="id" class="form-label">ID del Artículo (*)</label>
+        <!-- Si estamos editando, el ID no se puede cambiar -->
+        <input type="text" class="form-control" id="id" name="id" value="{{ articulo.id or '' }}" {% if action == 'editar' %} readonly {% endif %} required maxlength="20">
+        {% if action == 'editar' %}
+            <small class="form-text text-muted">El ID del artículo no se puede cambiar.</small>
+        {% endif %}
+    </div>
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre del Artículo (*)</label>
+        <input type="text" class="form-control" id="nombre" name="nombre" value="{{ articulo.nombre or '' }}" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Guardar</button>
+    <a href="{{ url_for('listar_articulos') }}" class="btn btn-secondary">Cancelar</a>
+</form>
+{% endblock %}
