@@ -24,7 +24,7 @@
           </div>
           <div class="col-md-6">
             <p><strong>Fecha Creación:</strong> {{ pedido_cabecera.FECHA_CREACION.strftime('%Y-%m-%d %H:%M:%S') if pedido_cabecera.FECHA_CREACION else 'N/A' }}</p>
-            <p><strong>Fecha Expedición:</strong> {{ pedido_cabecera.FECHA_EXP.strftime('%Y-%m-%d') if pedido_cabecera.FECHA_EXP else 'N/A' }}</p>
+            <p><strong>Fecha Entrega:</strong> {{ pedido_cabecera.FECHA_EXP.strftime('%Y-%m-%d') if pedido_cabecera.FECHA_EXP else 'N/A' }}</p>
             <p><strong>Referencia Pedido Cliente:</strong> {{ pedido_cabecera.PEDIDO_CTE | default('N/A') }}</p>
             <p><strong>Estado:</strong> 
               <span class="badge 
@@ -34,6 +34,7 @@
                 {% elif estado == 'PROCESADO' %}badge-success
                 {% elif estado == 'ENVIADO' %}badge-primary
                 {% elif estado == 'ENTREGADO' %}badge-success
+                {% elif estado == 'BLOQUEADO' %}badge-danger
                 {% elif estado == 'CANCELADO' %}badge-danger
                 {% else %}badge-secondary
                 {% endif %}">
@@ -41,8 +42,21 @@
               </span>
             </p>
             <p><strong>Usuario:</strong> {{ pedido_cabecera.USUARIO | default('N/A') }}</p>
+            {% if pedido_cabecera.get('DESCUENTO1') and pedido_cabecera.get('DESCUENTO1') > 0 %}
+              <p><strong>Descuento General:</strong> <span class="badge badge-info">{{ pedido_cabecera.get('DESCUENTO1', 0) }}%</span></p>
+            {% endif %}
           </div>
         </div>
+        {% if pedido_cabecera.OBSERVACIONES and pedido_cabecera.OBSERVACIONES.strip() %}
+        <hr>
+        <div class="row">
+            <div class="col-12">
+                <p class="mb-1"><strong>Observaciones:</strong></p>
+                {# Usamos pre-wrap para respetar los saltos de línea que el usuario haya introducido #}
+                <p class="text-muted" style="white-space: pre-wrap;">{{ pedido_cabecera.OBSERVACIONES }}</p>
+            </div>
+        </div>
+        {% endif %}
       </div>
     </div>
 
@@ -56,29 +70,44 @@
             <th>Descripción</th>
             <th class="text-right">UD. Emb.</th>
             <th class="text-right">Precio U.</th>
+            <th class="text-right">Dto. Línea %</th>
             <th class="text-right">Cantidad</th>
             <th class="text-right">Importe</th>
           </tr>
         </thead>
         <tbody>
-          {% set total_general_calculado = namespace(valor=0.0) %}
+          {% set subtotal_calculado = namespace(valor=0.0) %}
           {% for linea in lineas_pedido %}
             <tr>
               <td>{{ linea.ARTI }}</td>
               <td>{{ linea.DESCRIPCION_ARTI | default('N/A') }}</td>
               <td class="text-right">{{ linea.UD_EMB if linea.UD_EMB is not none else '-' }}</td>
-              <td class="text-right">{{ '%.2f'|format(linea.PRECIO_ARTI|float(0.0)) if linea.PRECIO_ARTI is not none else '0.00' }}</td>
+              <td class="text-right">{{ '%.2f'|format(linea.get('PRECIO_ARTI')|float(0.0)) if linea.get('PRECIO_ARTI') is not none else '0.00' }}</td>
+              <td class="text-right">{{ linea.get('DESCUENTO2', 0) }}%</td>
               <td class="text-right">{{ linea.CANTIDAD }}</td>
-              {% set importe_linea = (linea.PRECIO_ARTI|float(0.0) * linea.CANTIDAD|float(0.0)) %}
+              {% set importe_bruto_linea = (linea.get('PRECIO_ARTI', 0)|float * linea.CANTIDAD|float) %}
+              {% set importe_linea = importe_bruto_linea * (1 - (linea.get('DESCUENTO2', 0)|float / 100.0)) %}
               <td class="text-right">{{ '%.2f'|format(importe_linea) }}</td>
-              {% set total_general_calculado.valor = total_general_calculado.valor + importe_linea %}
+              {% set subtotal_calculado.valor = subtotal_calculado.valor + importe_linea %}
             </tr>
           {% endfor %}
         </tbody>
         <tfoot>
-          <tr>
-            <td colspan="5" class="text-right font-weight-bold">TOTAL PEDIDO:</td>
-            <td class="text-right font-weight-bold">{{ '%.2f'|format(total_general_calculado.valor) }}</td>
+          <tr class="table-light">
+            <td colspan="6" class="text-right font-weight-bold">Subtotal:</td>
+            <td class="text-right font-weight-bold">{{ '%.2f'|format(subtotal_calculado.valor) }}</td>
+          </tr>
+          {% set dto1_valor = pedido_cabecera.get('DESCUENTO1', 0)|float(0.0) %}
+          {% if dto1_valor > 0 %}
+          <tr class="table-light">
+            <td colspan="6" class="text-right font-weight-bold">Descuento General ({{ dto1_valor }}%):</td>
+            <td class="text-right font-weight-bold text-danger">- {{ '%.2f'|format(subtotal_calculado.valor * (dto1_valor / 100.0)) }}</td>
+          </tr>
+          {% endif %}
+          {% set total_final = subtotal_calculado.valor * (1 - (dto1_valor / 100.0)) %}
+          <tr class="table-info">
+            <td colspan="6" class="text-right font-weight-bold">TOTAL PEDIDO:</td>
+            <td class="text-right font-weight-bold">{{ '%.2f'|format(total_final) }}</td>
           </tr>
         </tfoot>
       </table>

@@ -93,7 +93,7 @@ def index():
             SELECT 
                 pw.ID AS PED_ID, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
                 pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, 
-                pw.NUMPED, pw.ESTADO,  -- <<< AÑADIDO ESTADO
+                pw.NUMPED, pw.ESTADO, pw.DESCUENTO1, pw.DESCUENTO2,
                 c.RAZON_SOCIAL,
                 itm.DESCRIPCION AS DESCRIPCION_ARTI,
                 itm.UD_EMB,
@@ -131,7 +131,8 @@ def index():
                         'FECHA_EXP': linea_pedido['FECHA_EXP'],
                         'PEDIDO_CTE': linea_pedido['PEDIDO_CTE'],
                         'USUARIO': linea_pedido['USUARIO'],
-                        'ESTADO': linea_pedido.get('ESTADO', 'Desconocido') # <<< AÑADIDO ESTADO A CABECERA
+                        'ESTADO': linea_pedido.get('ESTADO', 'Desconocido'),
+                        'DESCUENTO1': linea_pedido.get('DESCUENTO1')
                     },
                     'lineas': []
                 }
@@ -142,7 +143,8 @@ def index():
                 'CANTIDAD': linea_pedido['CANTIDAD'],
                 'PRECIO_ARTI': linea_pedido.get('PRECIO_ARTI'),
                 'UD_EMB': linea_pedido.get('UD_EMB'),
-                'STOCK_FAM_ARTI': linea_pedido.get('STOCK_FAM')
+                'STOCK_FAM_ARTI': linea_pedido.get('STOCK_FAM'),
+                'DESCUENTO2': linea_pedido.get('DESCUENTO2')
             })
     
     return render_template('pedidos_lista.html', pedidos_para_mostrar=pedidos_agrupados)
@@ -157,7 +159,12 @@ def agregar_pedido():
         cod_dir_form = request.form.get('COD_DIR', '').strip()
         fecha_exp_str_form = request.form.get('FECHA_EXP', '').strip()
         pedido_cte_ref_form = request.form.get('PEDIDO_CTE', '').strip()
+        observaciones_form = request.form.get('OBSERVACIONES', '').strip()
+        descuento1_form = request.form.get('DESCUENTO1', '0').strip()
         usuario_actual = session['user_id']
+
+        # Determinar el estado del pedido a partir del checkbox
+        estado_pedido = "BLOQUEADO" if 'bloqueado' in request.form else "PENDIENTE"
         
         # Parsear líneas del formulario ANTES de las validaciones de cabecera
         # para poder repoblar todo si algo falla.
@@ -185,10 +192,24 @@ def agregar_pedido():
 
         pedido_cabecera_para_repoblar = {
             'COD_CTE': cod_cte_form, 'COD_DIR': cod_dir_form,
-            'FECHA_EXP': fecha_exp_str_form, 'PEDIDO_CTE': pedido_cte_ref_form
+            'FECHA_EXP': fecha_exp_str_form, 'PEDIDO_CTE': pedido_cte_ref_form,
+            'OBSERVACIONES': observaciones_form,
+            'DESCUENTO1': descuento1_form
         }
 
         # --- VALIDACIONES DE CABECERA ---
+        if len(observaciones_form) > 30:
+            flash("El campo Observaciones no puede tener más de 30 caracteres.", "danger")
+            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+        
+        try:
+            descuento1_val = int(descuento1_form) if descuento1_form else 0
+            if not 0 <= descuento1_val <= 100:
+                raise ValueError("El descuento debe estar entre 0 y 100.")
+        except (ValueError, TypeError):
+            flash(f"Valor de Descuento General ('{descuento1_form}') inválido. Debe ser un número entero entre 0 y 100.", "danger")
+            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+
         if not cod_cte_form:
             flash("El Código de Cliente es obligatorio.", "danger")
             return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
@@ -243,6 +264,7 @@ def agregar_pedido():
 
             arti_linea = linea_form_data.get('ARTI', '').strip()
             cantidad_str_linea = linea_form_data.get('CANTIDAD', '').strip()
+            descuento2_str_linea = linea_form_data.get('DESCUENTO2', '0').strip()
 
             if not arti_linea:
                 flash(f"El campo Artículo es obligatorio para todas las líneas (error en línea aprox. {idx + 1}).", "danger")
@@ -309,10 +331,18 @@ def agregar_pedido():
                         return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
 
             except ValueError as e: 
-                flash(f"Cantidad inválida ('{cantidad_str_linea}') en línea aprox. {idx + 1}: {e}", "danger")
+                flash(f"Cantidad inválida ('{cantidad_str_linea}') en línea {idx + 1}: {e}", "danger")
                 return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
             
-            lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea})
+            try:
+                descuento2_val = int(descuento2_str_linea) if descuento2_str_linea else 0
+                if not 0 <= descuento2_val <= 100:
+                    raise ValueError("El descuento debe estar entre 0 y 100.")
+            except (ValueError, TypeError):
+                flash(f"Valor de Descuento de Línea ('{descuento2_str_linea}') inválido en línea {idx + 1}. Debe ser un número entero entre 0 y 100.", "danger")
+                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            
+            lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val})
 
         if not lineas_procesadas_ok:
             return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
@@ -327,9 +357,9 @@ def agregar_pedido():
         
         cursor_insert = conn_insert.cursor()
         sql_insert_linea = """
-            INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR, 
-                                     FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR,
+                                     FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         try:
             for linea_p_ok in lineas_procesadas_ok:
@@ -342,7 +372,11 @@ def agregar_pedido():
                     fecha_creacion_actual, 
                     fecha_exp_obj, 
                     pedido_cte_ref_form if pedido_cte_ref_form else None,
-                    usuario_actual
+                    usuario_actual,
+                    estado_pedido,
+                    observaciones_form if observaciones_form else None,
+                    descuento1_val,
+                    linea_p_ok['DESCUENTO2']
                 )
                 cursor_insert.execute(sql_insert_linea, val)
             
@@ -386,6 +420,11 @@ def editar_pedido(numped_a_editar):
             cod_dir_form = request.form.get('COD_DIR', '').strip()
             fecha_exp_str_form = request.form.get('FECHA_EXP', '').strip()
             pedido_cte_ref_form = request.form.get('PEDIDO_CTE', '').strip()
+            observaciones_form = request.form.get('OBSERVACIONES', '').strip()
+            descuento1_form = request.form.get('DESCUENTO1', '0').strip()
+
+            # Determinar el estado del pedido a partir del checkbox
+            estado_pedido = "BLOQUEADO" if 'bloqueado' in request.form else "PENDIENTE"
             
             for key, value in request.form.items(): # Parseo de líneas
                 if key.startswith('lineas['):
@@ -403,10 +442,24 @@ def editar_pedido(numped_a_editar):
 
             pedido_cabecera_para_repoblar = {
                 'NUMPED': numped_a_editar, 'COD_CTE': cod_cte_form, 'COD_DIR': cod_dir_form,
-                'FECHA_EXP': fecha_exp_str_form, 'PEDIDO_CTE': pedido_cte_ref_form
+                'FECHA_EXP': fecha_exp_str_form, 'PEDIDO_CTE': pedido_cte_ref_form,
+                'OBSERVACIONES': observaciones_form,
+                'DESCUENTO1': descuento1_form
             }
 
             # --- VALIDACIONES DE CABECERA ---
+            if len(observaciones_form) > 30:
+                flash("El campo Observaciones no puede tener más de 30 caracteres.", "danger")
+                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            
+            try:
+                descuento1_val = int(descuento1_form) if descuento1_form else 0
+                if not 0 <= descuento1_val <= 100:
+                    raise ValueError("El descuento debe estar entre 0 y 100.")
+            except (ValueError, TypeError):
+                flash(f"Valor de Descuento General ('{descuento1_form}') inválido. Debe ser un número entero entre 0 y 100.", "danger")
+                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+
             if not cod_cte_form:
                 flash("El Código de Cliente es obligatorio.", "danger")
                 return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
@@ -451,6 +504,7 @@ def editar_pedido(numped_a_editar):
                 ud_emb_articulo, articulo_linea_existe = None, False
                 arti_linea = linea_form_data.get('ARTI', '').strip()
                 cantidad_str_linea = linea_form_data.get('CANTIDAD', '').strip()
+                descuento2_str_linea = linea_form_data.get('DESCUENTO2', '0').strip()
                 conn_val_arti_l, cursor_val_arti_l = None, None 
 
                 if not arti_linea:
@@ -492,8 +546,16 @@ def editar_pedido(numped_a_editar):
                 except ValueError as e_cant:
                     flash(f"Cantidad inválida ('{cantidad_str_linea}') línea {idx + 1}: {e_cant}", "danger")
                     return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+
+                try:
+                    descuento2_val = int(descuento2_str_linea) if descuento2_str_linea else 0
+                    if not 0 <= descuento2_val <= 100:
+                        raise ValueError("El descuento debe estar entre 0 y 100.")
+                except (ValueError, TypeError):
+                    flash(f"Valor de Descuento de Línea ('{descuento2_str_linea}') inválido en línea {idx + 1}. Debe ser un número entero entre 0 y 100.", "danger")
+                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
                 
-                lineas_procesadas_ok_edit.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea})
+                lineas_procesadas_ok_edit.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val})
 
             if not lineas_procesadas_ok_edit: # Si ninguna línea pasó la validación o se enviaron vacías
                 # Este flash puede ser redundante si los errores de línea ya se mostraron.
@@ -515,12 +577,13 @@ def editar_pedido(numped_a_editar):
             fecha_creacion_original = pedido_original_info_tuple[1] 
             cursor_update.execute("DELETE FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s", (numped_a_editar, usuario_actual))
 
-            sql_reinsert = "INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR, FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql_reinsert = "INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR, FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             for linea_p_ok in lineas_procesadas_ok_edit:
                 val_reinsert = (
                     numped_a_editar, linea_p_ok['ARTI'], linea_p_ok['CANTIDAD'],
-                    cod_cte_form or None, cod_dir_form or None, fecha_creacion_original, 
-                    fecha_exp_obj, pedido_cte_ref_form or None, usuario_actual
+                    cod_cte_form or None, cod_dir_form or None, fecha_creacion_original,
+                    fecha_exp_obj, pedido_cte_ref_form or None, usuario_actual, estado_pedido,
+                    observaciones_form if observaciones_form else None, descuento1_val, linea_p_ok['DESCUENTO2']
                 )
                 cursor_update.execute(sql_reinsert, val_reinsert)
             
@@ -576,8 +639,8 @@ def editar_pedido(numped_a_editar):
             
             # Modificamos la consulta para incluir DESCRIPCION y UD_EMB de ITMMASTER
             cursor_get.execute("""
-                SELECT pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
-                       pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO,
+                SELECT pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, pw.DESCUENTO1, pw.DESCUENTO2,
+                       pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO, pw.OBSERVACIONES,
                        itm.DESCRIPCION AS DESCRIPCION_ARTI, 
                        itm.UD_EMB,
                        itm.PRECIO AS PRECIO_ARTI,
@@ -599,7 +662,10 @@ def editar_pedido(numped_a_editar):
                 'COD_CTE': cabecera_db_get['COD_CTE'] or '',
                 'COD_DIR': cabecera_db_get['COD_DIR'] or '',
                 'FECHA_EXP': cabecera_db_get['FECHA_EXP'].strftime('%Y-%m-%d') if cabecera_db_get['FECHA_EXP'] else '',
-                'PEDIDO_CTE': cabecera_db_get['PEDIDO_CTE'] or ''
+                'PEDIDO_CTE': cabecera_db_get['PEDIDO_CTE'] or '',
+                'ESTADO': cabecera_db_get.get('ESTADO'),
+                'OBSERVACIONES': cabecera_db_get.get('OBSERVACIONES') or '',
+                'DESCUENTO1': cabecera_db_get.get('DESCUENTO1') or 0
             }
             lineas_para_form_get = []
             for linea_db_get in lineas_pedido_db_get:
@@ -610,7 +676,8 @@ def editar_pedido(numped_a_editar):
                     'DESCRIPCION_ARTI': linea_db_get.get('DESCRIPCION_ARTI', ''), # Usar .get() por si el JOIN no trae descripción
                     'UD_EMB': linea_db_get.get('UD_EMB'), # Usar .get() por si el JOIN no trae UD_EMB
                     'PRECIO_ARTI': linea_db_get.get('PRECIO_ARTI'),
-                    'STOCK_FAM_ARTI': linea_db_get.get('STOCK_FAM')
+                    'STOCK_FAM_ARTI': linea_db_get.get('STOCK_FAM'),
+                    'DESCUENTO2': linea_db_get.get('DESCUENTO2') or 0
                 })
             
             return render_template('pedido_form.html', 
@@ -722,8 +789,8 @@ def ver_pedido(numped_a_ver):
         # Obtener todas las líneas del pedido y datos relacionados
         cursor_get.execute("""
             SELECT 
-                pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
-                pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO,
+                pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, pw.DESCUENTO1, pw.DESCUENTO2,
+                pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO, pw.OBSERVACIONES,
                 c.RAZON_SOCIAL,
                 itm.DESCRIPCION AS DESCRIPCION_ARTI, 
                 itm.UD_EMB,
@@ -752,7 +819,9 @@ def ver_pedido(numped_a_ver):
             'FECHA_EXP': cabecera_db.get('FECHA_EXP'),
             'PEDIDO_CTE': cabecera_db.get('PEDIDO_CTE'),
             'USUARIO': cabecera_db.get('USUARIO'),
-            'ESTADO': cabecera_db.get('ESTADO', 'Desconocido')
+            'ESTADO': cabecera_db.get('ESTADO', 'Desconocido'),
+            'OBSERVACIONES': cabecera_db.get('OBSERVACIONES'),
+            'DESCUENTO1': cabecera_db.get('DESCUENTO1')
         }
 
         lineas_para_vista = []
@@ -764,6 +833,7 @@ def ver_pedido(numped_a_ver):
                 'CANTIDAD': linea_db['CANTIDAD'],
                 'PRECIO_ARTI': linea_db.get('PRECIO_ARTI'), # Se pasará como número
                 'UD_EMB': linea_db.get('UD_EMB'),
+                'DESCUENTO2': linea_db.get('DESCUENTO2'),
                 # STOCK_FAM no es estrictamente necesario para la vista de solo lectura,
                 # pero podría ser útil si decides mostrarlo.
             })
@@ -937,7 +1007,7 @@ def sugerencias_direccion_cliente():
             FROM DIRECCIONES_CTE_WEB 
             WHERE {sql_conditions}
             ORDER BY COD_DIR
-            LIMIT 300 
+            LIMIT 600 
         """ # Aumento el LIMIT por si un cliente tiene muchas direcciones
         
         cursor.execute(sql_query, tuple(params))

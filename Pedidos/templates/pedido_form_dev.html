@@ -41,6 +41,22 @@
                value="{{ pedido_cabecera.PEDIDO_CTE if pedido_cabecera and pedido_cabecera.PEDIDO_CTE is defined else '' }}">
       </div>
     </div>
+    <div class="form-row">
+        <div class="form-group col-md-12">
+            <label for="observaciones">Observaciones (máx. 30 caracteres):</label>
+            <textarea class="form-control" id="observaciones" name="OBSERVACIONES" rows="2" maxlength="30">{{ pedido_cabecera.OBSERVACIONES | default('') }}</textarea>
+        </div>
+    </div>
+
+    <!-- Checkbox para bloquear el pedido -->
+    <div class="form-group">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="bloqueado" id="bloqueado" {% if pedido_cabecera and pedido_cabecera.ESTADO == 'BLOQUEADO' %}checked{% endif %}>
+        <label class="form-check-label" for="bloqueado">
+          <strong>Marcar Pedido como BLOQUEADO</strong>
+        </label>
+      </div>
+    </div>
     <hr>
 
     {# --- SECCIÓN LÍNEAS DE PEDIDO --- #}
@@ -49,35 +65,35 @@
       {% if lineas_pedido and lineas_pedido|length > 0 %}
         {% for linea in lineas_pedido %}
           <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
-            <input type="hidden" name="lineas[{{ loop.index0 }}][ID_LINEA]" value="{{ linea.ID_LINEA | default('') }}">
+            <input type="hidden" name="lineas[{{ loop.index0 }}][ID_LINEA]" value="{{ linea['ID_LINEA'] | default('') }}">
             <div class="form-group col-lg-2 col-md-6">
               <label for="arti_linea_{{ loop.index0 }}" class="sr-only">Artículo:</label>
               <input type="text" id="arti_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][ARTI]" 
-                     value="{{ linea.ARTI | default('') }}" class="form-control arti-linea" required autocomplete="off"
-                     data-ud-emb="{{ linea.UD_EMB if linea.UD_EMB is not none else '' }}"
-                     data-precio="{{ linea.PRECIO_ARTI if linea.PRECIO_ARTI is not none else '' }}"
-                     data-stock-fam="{{ linea.STOCK_FAM_ARTI if linea.STOCK_FAM_ARTI is not none else '' }}">
+                     value="{{ linea['ARTI'] | default('') }}" class="form-control arti-linea" required autocomplete="off"
+                     data-ud-emb="{{ linea.get('UD_EMB') if linea.get('UD_EMB') is not none else '' }}"
+                     data-precio="{{ linea.get('PRECIO_ARTI') if linea.get('PRECIO_ARTI') is not none else '' }}"
+                     data-stock-fam="{{ linea.get('STOCK_FAM_ARTI') if linea.get('STOCK_FAM_ARTI') is not none else '' }}">
               <div id="suggestions_box_arti_linea_{{ loop.index0 }}" class="suggestions-box-arti-linea list-group suggestions-container"></div>
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label for="desc_arti_linea_{{loop.index0}}" class="sr-only">Descripción:</label>
               <input type="text" id="desc_arti_linea_{{loop.index0}}" class="form-control descripcion-articulo-linea" 
-                     value="{{ linea.DESCRIPCION_ARTI | default('') }}" readonly placeholder="Descripción">
+                     value="{{ linea.get('DESCRIPCION_ARTI', '') }}" readonly placeholder="Descripción">
             </div>
              <div class="form-group col-lg-1 col-md-3">
                 <label for="stock_linea_{{loop.index0}}" class="sr-only">Stock:</label>
                 <input type="text" id="stock_linea_{{loop.index0}}" class="form-control stock-disponible-linea text-right" 
-                       value="{{ linea.STOCK_FAM_ARTI if linea.STOCK_FAM_ARTI is not none else 'N/A' }}" readonly placeholder="Stock">
+                       value="{{ linea.get('STOCK_FAM_ARTI') if linea.get('STOCK_FAM_ARTI') is not none else 'N/A' }}" readonly placeholder="Stock">
             </div>
             <div class="form-group col-lg-2 col-md-3">
                 <label for="precio_unit_linea_{{loop.index0}}" class="sr-only">Precio U.:</label>
                 <input type="text" id="precio_unit_linea_{{loop.index0}}" class="form-control precio-unitario-linea text-right" 
-                       value="{{ '%.2f'|format(linea.PRECIO_ARTI|float(0.0)) if linea.PRECIO_ARTI is not none else '0.00' }}" readonly placeholder="Precio U.">
+                       value="{{ '%.2f'|format(linea.get('PRECIO_ARTI')|float(0.0)) if linea.get('PRECIO_ARTI') is not none else '0.00' }}" readonly placeholder="Precio U.">
             </div>
             <div class="form-group col-lg-1 col-md-3">
               <label for="cant_linea_{{ loop.index0 }}" class="sr-only">Cant.:</label>
               <input type="number" id="cant_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][CANTIDAD]" 
-                     value="{{ linea.CANTIDAD | default('') }}" class="form-control cantidad-linea text-right" required min="1">
+                     value="{{ linea['CANTIDAD'] | default('') }}" class="form-control cantidad-linea text-right" required min="1">
               <div class="aviso-ud-emb-container"></div> 
               <div class="aviso-stock-container"></div> 
             </div>

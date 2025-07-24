@@ -21,20 +21,22 @@
         {% for numped, datos_pedido in pedidos_para_mostrar.items() %} {# Asumiendo que pedidos_para_mostrar es un dict #}
           <tr>
             <td>{{ numped }}</td>
-            <td>{{ datos_pedido.cabecera.COD_CTE }}</td>
-            <td>{{ datos_pedido.cabecera.RAZON_SOCIAL }}</td>
+            <td>{{ datos_pedido.cabecera.get('COD_CTE') }}</td>
+            <td>{{ datos_pedido.cabecera.get('RAZON_SOCIAL') }}</td>
             <td>
-              {% if datos_pedido.cabecera.FECHA_CREACION %}
-                {{ datos_pedido.cabecera.FECHA_CREACION.strftime('%Y-%m-%d %H:%M:%S') }}
+              {% if datos_pedido.cabecera.get('FECHA_CREACION') %}
+                {{ datos_pedido.cabecera.get('FECHA_CREACION').strftime('%Y-%m-%d %H:%M:%S') }}
               {% else %}
                 N/A
               {% endif %}
             </td>
 			<td>
               {# Mostrar el estado, quizás con algún estilo condicional #}
-              {% set estado = datos_pedido.cabecera.ESTADO | default('Desconocido') %}
+              {% set estado = datos_pedido.cabecera.get('ESTADO', 'Desconocido') %}
               <span class="badge 
                 {% if estado == 'PENDIENTE' %}badge-warning
+                {% elif estado == 'BLOQUEADO' %}badge-danger
+                {% elif estado == 'En Proceso' %}badge-danger
                 {% elif estado == 'PROCESADO' %}badge-info
                 {% elif estado == 'ENVIADO' %}badge-primary
                 {% elif estado == 'ENTREGADO' %}badge-success
@@ -51,7 +53,7 @@
                  class="btn btn-sm btn-info mr-1" title="Ver Detalles del Pedido">
                 <i class="fas fa-eye"></i> Ver
               </a>
-              {% if datos_pedido.cabecera.ESTADO != 'PROCESADO' %}
+              {% if datos_pedido.cabecera.get('ESTADO') != 'PROCESADO' %}
                 <a href="{{ url_for('editar_pedido', numped_a_editar=numped) }}" 
                    class="btn btn-sm btn-warning mr-1" title="Editar Pedido">
                   <i class="fas fa-edit"></i> Editar
@@ -62,7 +64,7 @@
                 </button> 
               {% endif %}
               
-              {% if datos_pedido.cabecera.ESTADO not in ['PROCESADO', 'Enviado', 'Entregado', 'Cancelado'] %}
+              {% if datos_pedido.cabecera.get('ESTADO') not in ['PROCESADO', 'Enviado', 'Entregado', 'Cancelado'] %}
                 <form action="{{ url_for('eliminar_pedido_completo', numped_a_eliminar=numped) }}" method="POST" style="display: inline;" 
                       onsubmit="return confirm('¿Estás seguro de que deseas eliminar TODO el pedido {{ numped }}?');">
                   <button type="submit" class="btn btn-sm btn-danger" title="Eliminar Pedido Completo">
