@@ -164,7 +164,7 @@ def agregar_pedido():
         usuario_actual = session['user_id']
 
         # Determinar el estado del pedido a partir del checkbox
-        estado_pedido = "BLOQUEADO" if 'bloqueado' in request.form else "PENDIENTE"
+        estado_pedido = "BORRADOR" if 'borrador' in request.form else "PENDIENTE"
         
         # Parsear líneas del formulario ANTES de las validaciones de cabecera
         # para poder repoblar todo si algo falla.
@@ -424,7 +424,7 @@ def editar_pedido(numped_a_editar):
             descuento1_form = request.form.get('DESCUENTO1', '0').strip()
 
             # Determinar el estado del pedido a partir del checkbox
-            estado_pedido = "BLOQUEADO" if 'bloqueado' in request.form else "PENDIENTE"
+            estado_pedido = "BORRADOR" if 'borrador' in request.form else "PENDIENTE"
             
             for key, value in request.form.items(): # Parseo de líneas
                 if key.startswith('lineas['):

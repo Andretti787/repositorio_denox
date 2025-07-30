@@ -53,12 +53,12 @@
         </div>
     </div>
 
-    <!-- Checkbox para bloquear el pedido -->
+    <!-- Checkbox para guardar como borrador -->
     <div class="form-group">
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" name="bloqueado" id="bloqueado" {% if pedido_cabecera and pedido_cabecera.ESTADO == 'BLOQUEADO' %}checked{% endif %}>
-        <label class="form-check-label" for="bloqueado">
-          <strong>Marcar Pedido como BLOQUEADO</strong>
+        <input class="form-check-input" type="checkbox" name="borrador" id="borrador" {% if pedido_cabecera and pedido_cabecera.ESTADO == 'BORRADOR' %}checked{% endif %}>
+        <label class="form-check-label" for="borrador">
+          <strong>Guardar como BORRADOR</strong>
         </label>
       </div>
     </div>

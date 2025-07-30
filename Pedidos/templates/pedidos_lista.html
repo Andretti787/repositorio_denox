@@ -34,12 +34,12 @@
               {# Mostrar el estado, quizás con algún estilo condicional #}
               {% set estado = datos_pedido.cabecera.get('ESTADO', 'Desconocido') %}
               <span class="badge 
-                {% if estado == 'PENDIENTE' %}badge-warning
-                {% elif estado == 'BLOQUEADO' %}badge-danger
-                {% elif estado == 'En Proceso' %}badge-danger
+                {% if estado == 'PENDIENTE' %}badge-primary
+                {% elif estado == 'BORRADOR' %}badge-danger
+                {% elif estado == 'EN PROCESO' %}badge-info
                 {% elif estado == 'PROCESADO' %}badge-info
                 {% elif estado == 'ENVIADO' %}badge-primary
-                {% elif estado == 'ENTREGADO' %}badge-success
+                {% elif estado == 'EXPEDIDO' %}badge-success
                 {% elif estado == 'CANCELADO' %}badge-danger
                 {% else %}badge-secondary
                 {% endif %}">
