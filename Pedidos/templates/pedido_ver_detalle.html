@@ -41,6 +41,9 @@
                 {{ estado }}
               </span>
             </p>
+            {% if pedido_cabecera.MUESTRA == 'X' %}
+            <p><strong>Tipo de Pedido:</strong> <span class="badge badge-success">MUESTRA (Sin Cargo)</span></p>
+            {% endif %}
             <p><strong>Usuario:</strong> {{ pedido_cabecera.USUARIO | default('N/A') }}</p>
             {% if pedido_cabecera.get('DESCUENTO1') and pedido_cabecera.get('DESCUENTO1') > 0 %}
               <p><strong>Descuento General:</strong> <span class="badge badge-info">{{ pedido_cabecera.get('DESCUENTO1', 0) }}%</span></p>
@@ -82,10 +85,17 @@
               <td>{{ linea.ARTI }}</td>
               <td>{{ linea.DESCRIPCION_ARTI | default('N/A') }}</td>
               <td class="text-right">{{ linea.UD_EMB if linea.UD_EMB is not none else '-' }}</td>
-              <td class="text-right">{{ '%.2f'|format(linea.get('PRECIO_ARTI')|float(0.0)) if linea.get('PRECIO_ARTI') is not none else '0.00' }}</td>
+              <td class="text-right">
+                {% if pedido_cabecera.MUESTRA == 'X' %}
+                  0.00
+                {% else %}
+                  {{ '%.2f'|format(linea.get('PRECIO_ARTI')|float(0.0)) if linea.get('PRECIO_ARTI') is not none else '0.00' }}
+                {% endif %}
+              </td>
               <td class="text-right">{{ linea.get('DESCUENTO2', 0) }}%</td>
               <td class="text-right">{{ linea.CANTIDAD }}</td>
-              {% set importe_bruto_linea = (linea.get('PRECIO_ARTI', 0)|float * linea.CANTIDAD|float) %}
+              {% set precio_linea = 0.0 if pedido_cabecera.MUESTRA == 'X' else linea.get('PRECIO_ARTI', 0)|float %}
+              {% set importe_bruto_linea = (precio_linea * linea.CANTIDAD|float) %}
               {% set importe_linea = importe_bruto_linea * (1 - (linea.get('DESCUENTO2', 0)|float / 100.0)) %}
               <td class="text-right">{{ '%.2f'|format(importe_linea) }}</td>
               {% set subtotal_calculado.valor = subtotal_calculado.valor + importe_linea %}
@@ -98,13 +108,13 @@
             <td class="text-right font-weight-bold">{{ '%.2f'|format(subtotal_calculado.valor) }}</td>
           </tr>
           {% set dto1_valor = pedido_cabecera.get('DESCUENTO1', 0)|float(0.0) %}
-          {% if dto1_valor > 0 %}
+          {% if dto1_valor > 0 and pedido_cabecera.MUESTRA != 'X' %}
           <tr class="table-light">
             <td colspan="6" class="text-right font-weight-bold">Descuento General ({{ dto1_valor }}%):</td>
             <td class="text-right font-weight-bold text-danger">- {{ '%.2f'|format(subtotal_calculado.valor * (dto1_valor / 100.0)) }}</td>
           </tr>
           {% endif %}
-          {% set total_final = subtotal_calculado.valor * (1 - (dto1_valor / 100.0)) %}
+          {% set total_final = subtotal_calculado.valor * (1 - (dto1_valor / 100.0)) if pedido_cabecera.MUESTRA != 'X' else 0.0 %}
           <tr class="table-info">
             <td colspan="6" class="text-right font-weight-bold">TOTAL PEDIDO:</td>
             <td class="text-right font-weight-bold">{{ '%.2f'|format(total_final) }}</td>

@@ -62,6 +62,15 @@
         </label>
       </div>
     </div>
+    <!-- Checkbox para pedido de muestra -->
+    <div class="form-group">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="muestra" id="muestra" {% if pedido_cabecera and pedido_cabecera.MUESTRA == 'X' %}checked{% endif %}>
+        <label class="form-check-label" for="muestra">
+          <strong>Pedido de Muestra (sin cargo)</strong>
+        </label>
+      </div>
+    </div>
     <hr>
 
     {# --- SECCIÓN LÍNEAS DE PEDIDO --- #}
@@ -421,7 +430,8 @@
         const lineaDiv = inputNode.closest('.linea-pedido');
         if (!lineaDiv) return;
         const artiInputNode = lineaDiv.querySelector('.arti-linea');
-        const precioUnitario = parseFloat(artiInputNode.dataset.precio || 0);
+        const esMuestra = document.getElementById('muestra').checked;
+        const precioUnitario = esMuestra ? 0 : parseFloat(artiInputNode.dataset.precio || 0);
         const cantidad = parseInt(lineaDiv.querySelector('.cantidad-linea').value) || 0;
         const descuento2 = parseFloat(lineaDiv.querySelector('.descuento-linea').value || 0);
         const importeLineaInput = lineaDiv.querySelector('.importe-linea');
@@ -534,6 +544,33 @@
         else { codDirSelect.disabled = true; }
 
         document.getElementById('descuento1').addEventListener('input', calcularTotalGeneralPedido);
+
+        const esMuestra = document.getElementById('muestra').checked;
+        if (esMuestra) {
+            document.querySelectorAll('.linea-pedido').forEach(linea => {
+                const precioUnitInput = linea.querySelector('.precio-unitario-linea');
+                precioUnitInput.value = '0.00';
+                const cantidadInput = linea.querySelector('.cantidad-linea');
+                calcularImporteLinea(cantidadInput);
+            });
+        }
+
+        document.getElementById('muestra').addEventListener('change', function() {
+            const isChecked = this.checked;
+            document.querySelectorAll('.linea-pedido').forEach(linea => {
+                const precioUnitInput = linea.querySelector('.precio-unitario-linea');
+                const artiInput = linea.querySelector('.arti-linea');
+                const cantidadInput = linea.querySelector('.cantidad-linea');
+
+                if (isChecked) {
+                    precioUnitInput.value = '0.00';
+                } else {
+                    const originalPrice = artiInput.dataset.precio || '0.00';
+                    precioUnitInput.value = parseFloat(originalPrice).toFixed(2);
+                }
+                calcularImporteLinea(cantidadInput);
+            });
+        });
     });
 
     document.getElementById('btn-agregar-linea').addEventListener('click', function() {
