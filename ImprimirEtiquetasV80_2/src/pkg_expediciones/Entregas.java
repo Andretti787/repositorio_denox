@@ -9379,7 +9379,7 @@ public class Entregas extends javax.swing.JFrame {
                     jTextArea4.append("^FD صالح للاستخدام في الميكروويف^FS\n");
                     jTextArea4.append("^FO060,750\n");
                     jTextArea4.append("^A1N96,96\n");
-                    jTextArea4.append("^FDبلد المنشأ     SPAIN\n");
+                    jTextArea4.append("^FDبلد المنشأ     SPAIN^FS\n");
                     jTextArea4.append("^XZ\n");
                                                  
                 }
