@@ -326,7 +326,7 @@ def agregar_pedido():
                     raise ValueError("Cantidad debe ser positiva")
 
                 # VALIDACIÓN: MÚLTIPLO DE UD_EMB
-                if ud_emb_articulo and ud_emb_articulo > 0: # ud_emb_articulo ya debería ser un int > 0 o None
+                if es_muestra != "X" and ud_emb_articulo and ud_emb_articulo > 0: # ud_emb_articulo ya debería ser un int > 0 o None
                     if cantidad_linea % ud_emb_articulo != 0:
                         flash(f"La cantidad ({cantidad_linea}) para el artículo '{arti_linea}' en la línea aprox. {idx + 1} "
                               f"debe ser un múltiplo de su unidad de embalaje ({ud_emb_articulo}).", "danger")
@@ -544,7 +544,7 @@ def editar_pedido(numped_a_editar):
                 try:
                     cantidad_linea = int(cantidad_str_linea)
                     if cantidad_linea <= 0: raise ValueError("Cantidad debe ser > 0")
-                    if ud_emb_articulo and cantidad_linea % ud_emb_articulo != 0:
+                    if es_muestra != "X" and ud_emb_articulo and cantidad_linea % ud_emb_articulo != 0:
                         flash(f"Cant. ({cantidad_linea}) art. '{arti_linea}' (línea {idx+1}) debe ser múltiplo de {ud_emb_articulo}.", "danger")
                         return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
                 except ValueError as e_cant:

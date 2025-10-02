@@ -387,6 +387,12 @@
         const artiInputNode = lineaDiv.querySelector('.arti-linea');
         const avisoContainer = lineaDiv.querySelector('.aviso-ud-emb-container');
         if (avisoContainer) avisoContainer.innerHTML = ''; 
+
+        const esMuestra = document.getElementById('muestra').checked;
+        if (esMuestra) {
+            return true; // Si es muestra, no se valida UD_EMB
+        }
+
         if (!artiInputNode || artiInputNode.dataset.udEmb === undefined || artiInputNode.dataset.udEmb === '') return true; 
         const udEmb = parseInt(artiInputNode.dataset.udEmb);
         const cantidadStr = cantidadInputNode.value.trim();
@@ -568,7 +574,11 @@
                     const originalPrice = artiInput.dataset.precio || '0.00';
                     precioUnitInput.value = parseFloat(originalPrice).toFixed(2);
                 }
-                calcularImporteLinea(cantidadInput);
+                
+                if(cantidadInput) {
+                    validarCantidadConUdEmb(cantidadInput);
+                    calcularImporteLinea(cantidadInput);
+                }
             });
         });
     });
