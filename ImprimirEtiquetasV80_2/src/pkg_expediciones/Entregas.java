@@ -9344,46 +9344,73 @@ public class Entregas extends javax.swing.JFrame {
             
             else if (p_modo == 11){
                 //aquí etiquetas de CAJAS en árabe
-                 int contador;
-                 int bultos = 0;
-                 System.out.println(" En zpl: " + rs.getString("TEXTO_0"));
+                int contador;
+                int bultos = 0;
+                System.out.println(" En zpl: " + rs.getString("TEXTO_0"));
                  
-                for (contador = 0; contador < p_num; contador++) {
+                if(rs.getString("BPCORD_0").equals("550429")){//Hardcoding del bueno gracias a la buena gestión comercial...
+                     for (contador = 0; contador < p_num; contador++) {
                     //String cod_ean = rs.getString("EAN");
                     //String cod_ean = jText_ref_ean.getText();
-                    bultos = bultos + 1;
-                    jTextArea4.append("^XA\n");
-                    jTextArea4.append("^CI28\n");
-                    jTextArea4.append("^PON\n");
-                    jTextArea4.append("^PW1181\n");
-                    jTextArea4.append("^LH0,0\n");
-                    jTextArea4.append("^CW1,E:TT0003M_.TTF\n");
-                    jTextArea4.append("^LL130^FS\n");
-                    jTextArea4.append("^PA0,1,1,1\n"); 
-                    jTextArea4.append("^FO20,20^XGE:LD5.JPG,1,1^FS\n");
-                    jTextArea4.append("^FO750,20^XGE:LD9.JPG,1,1^FS\n");
-                    jTextArea4.append("^FO60,250\n");
-                    jTextArea4.append("^A1N,48\n");
-                    jTextArea4.append("^FD"+ jTextNomArab.getText() + " " + jTextField_AlbNomCte.getText() + "^FS\n");
-                    jTextArea4.append("^FO060,350\n");
-                    jTextArea4.append("^A1N96,96\n");
-                    jTextArea4.append("^FD"+ rs.getString("ARTI_0") + "^FS\n");
-                    jTextArea4.append("^FO550,350\n");
-                    jTextArea4.append("^A1N96,96\n");
-                    jTextArea4.append("^FD"+ rs.getString("TEXTO_0") + "^FS\n");
-                    jTextArea4.append("^FO060,550\n");
-                    jTextArea4.append("^A1N96,96\n");
-                    jTextArea4.append("^FDصالح للغسل في غسالة الصحون^FS\n");
-                    jTextArea4.append("^FO060,650\n");
-                    jTextArea4.append("^A1N96,96\n");
-                    jTextArea4.append("^FD صالح للاستخدام في الميكروويف^FS\n");
-                    jTextArea4.append("^FO060,750\n");
-                    jTextArea4.append("^A1N96,96\n");
-                    jTextArea4.append("^FDبلد المنشأ     SPAIN^FS\n");
-                    jTextArea4.append("^XZ\n");
-                                                 
-                }
+                    
+                        bultos = bultos + 1;
+                        jTextArea4.append("^XA\n");
+                        jTextArea4.append("^CI28\n");
+                        jTextArea4.append("^PON\n");
+                        jTextArea4.append("^PW1181\n");
+                        jTextArea4.append("^LH0,0\n");
+                        jTextArea4.append("^CW1,E:TT0003M_.TTF\n");
+                        jTextArea4.append("^LL130^FS\n");
+                        jTextArea4.append("^PA0,1,1,1\n");
+                        jTextArea4.append("^FO20,20^XGE:LD5.JPG,1,1^FS\n");
+                        jTextArea4.append("^FO010,900^XGE:LD9.JPG,1,1^FS\n");
+                        jTextArea4.append("^FO020,140^XGE:LD10.JPG,1,1^FS\n");
+                        jTextArea4.append("^FB1180,2,,C\n");
+                        jTextArea4.append("^A1N86,58\n");
+                        jTextArea4.append("^FO020,60\n");
+                        jTextArea4.append("^FDREF: " + rs.getString("ARTI_0") + "\\& " + rs.getString("TEXTO_0") + "^FS\n");
+                        jTextArea4.append("^XZ\n");
+                        }
+                    }
+                    else
+                    {
+                           
+                        for (contador = 0; contador < p_num; contador++) {
+                        bultos = bultos + 1;
+                        jTextArea4.append("^XA\n");
+                        jTextArea4.append("^CI28\n");
+                        jTextArea4.append("^PON\n");
+                        jTextArea4.append("^PW1181\n");
+                        jTextArea4.append("^LH0,0\n");
+                        jTextArea4.append("^CW1,E:TT0003M_.TTF\n");
+                        jTextArea4.append("^LL130^FS\n");
+                        jTextArea4.append("^PA0,1,1,1\n"); 
+                        jTextArea4.append("^FO20,20^XGE:LD5.JPG,1,1^FS\n");
+                        jTextArea4.append("^FO750,20^XGE:LD9.JPG,1,1^FS\n");
+                        jTextArea4.append("^FO60,250\n");
+                        jTextArea4.append("^A1N,48\n");
+                        jTextArea4.append("^FD"+ jTextNomArab.getText() + " " + jTextField_AlbNomCte.getText() + "^FS\n");
+                        jTextArea4.append("^FO060,350\n");
+                        jTextArea4.append("^A1N96,96\n");
+                        jTextArea4.append("^FD"+ rs.getString("ARTI_0") + "^FS\n");
+                        jTextArea4.append("^FO550,350\n");
+                        jTextArea4.append("^A1N96,96\n");
+                        jTextArea4.append("^FD"+ rs.getString("TEXTO_0") + "^FS\n");
+                        jTextArea4.append("^FO060,550\n");
+                        jTextArea4.append("^A1N96,96\n");
+                        jTextArea4.append("^FDصالح للغسل في غسالة الصحون^FS\n");
+                        jTextArea4.append("^FO060,650\n");
+                        jTextArea4.append("^A1N96,96\n");
+                        jTextArea4.append("^FD صالح للاستخدام في الميكروويف^FS\n");
+                        jTextArea4.append("^FO060,750\n");
+                        jTextArea4.append("^A1N96,96\n");
+                        jTextArea4.append("^FDبلد المنشأ     SPAIN^FS\n");
+                        jTextArea4.append("^XZ\n");
+                        }
+                    }                             
+                
             }
+            
         } catch (SQLException err) {
             JOptionPane.showMessageDialog(this, err.getMessage());
         }
