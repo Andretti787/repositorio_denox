@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página de Prueba de Albaranes</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body { padding: 2rem; }
+        table { margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tabla de Prueba de Albaranes</h1>
+        <p>Esta página carga los datos directamente desde el backend de Flask sin usar JavaScript para el renderizado. Sirve para verificar si la función <code>get_albaranes_from_db()</code> está devolviendo datos correctamente a Flask.</p>
+
+        {% if albaranes is none %}
+            <div class="alert alert-danger" role="alert">
+                <strong>Error:</strong> La función <code>get_albaranes_from_db()</code> ha devuelto <code>None</code>. Revisa la consola de Flask para ver los detalles del error de base de datos.
+            </div>
+        {% elif albaranes|length == 0 %}
+            <div class="alert alert-warning" role="alert">
+                <strong>Aviso:</strong> La consulta se ha ejecutado correctamente, pero no ha devuelto ningún registro. La tabla está vacía.
+            </div>
+        {% else %}
+            <div class="alert alert-success" role="alert">
+                <strong>¡Éxito!</strong> Se han cargado {{ albaranes|length }} registros desde la base de datos.
+            </div>
+            <table class="table table-striped table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th>Núm. Albarán</th>
+                        <th>Fecha Envío</th>
+                        <th>Consignatario</th>
+                        <th>Pallets</th>
+                        <th>Bultos</th>
+                        <th>Peso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for albaran in albaranes %}
+                    <tr>
+                        <td>{{ albaran.NUMALB }}</td>
+                        <td>{{ albaran.FECHA_ENVIO }}</td>
+                        <td>{{ albaran.NOMBRE_CONSIGNATARIO }}</td>
+                        <td>{{ albaran.PALLETS }}</td>
+                        <td>{{ albaran.BULTOS }}</td>
+                        <td>{{ "%.2f"|format(albaran.PESO|float) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endif %}
+    </div>
+</body>
+</html>

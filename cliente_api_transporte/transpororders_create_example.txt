@@ -1,0 +1,52 @@
+{
+  "transportDate": "2025-10-10",
+  "division": "T",
+  "product": "Y",
+  "term": "031",
+  "forwarder": {
+    "id": "00000810"
+  },
+  "consignor": {
+    "id": "72761617"
+  },
+  "consignee": {
+    "names": [
+      "razonsocial"
+    ],
+    "addressInformation": {
+      "streets": [
+        "direccion"
+      ],
+      "city": "Kempten",
+      "postalCode": "87463",
+      "countryCode": "DE"
+    }
+  },
+  "references": [
+    {
+      "code": "100",
+      "value": "ALB-25-FAM-010579"
+    }
+  ],
+  "transportOrderLines": [
+    {
+      "quantity": 1,
+      "packaging": "EU",
+      "content": "contenido del transporte",
+      "weight": {
+        "weight": "30",
+        "unit": "KG"
+      },
+      "measure": {
+        "length": 193,
+        "width": 93,
+        "height": 30,
+        "unit": "CM",
+        "volume": {
+          "amount": "0.53",
+          "unit": "M3"
+        }
+      }
+    }
+  ]
+}

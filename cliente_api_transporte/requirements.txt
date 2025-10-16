@@ -1,0 +1,4 @@
+flask
+pyodbc
+requests
+python-dotenv
