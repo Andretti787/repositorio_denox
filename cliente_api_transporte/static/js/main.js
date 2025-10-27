@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const albaranesError = document.getElementById('albaranes-error');
     const albaranesTableContainer = document.getElementById('albaranes-table-container');
     const albaranSearchInput = document.getElementById('albaran-search-input');
+    const selectAllCheckbox = document.getElementById('select-all-albaranes');
 
     const postForm = document.getElementById('post-form');
     const apiResponseCode = document.querySelector('#api-response code');
@@ -33,13 +34,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 const formattedDate = alb.FECHA_ENVIO;
                 const peso = parseFloat(alb.PESO).toFixed(2);
 
-                const row = `<tr>
-                    <td><input type="radio" name="albaran-select" value="${originalIndex}"></td>
-                    <td>${alb.NUMALB}</td>
+                const isEnviado = alb.ENVIADO;
+                const trClass = isEnviado ? 'table-warning' : ''; // Usar un color más visible
+                const enviadoIcon = isEnviado ? ' <i class="fas fa-truck text-success" title="Ya enviado"></i>' : '';
+
+                const row = `<tr data-albaran-index="${originalIndex}" class="${trClass}">
+                    <td><input type="checkbox" class="albaran-select-checkbox" value="${originalIndex}"></td>
+                    <td>${alb.NUMALB}${enviadoIcon}</td>
                     <td>${formattedDate}</td>
                     <td>${alb.PALLETS}</td>
                     <td>${alb.BULTOS}</td>
                     <td>${peso}</td>
+                    <td><input type="text" class="form-control form-control-sm observation-input" value="${alb.OBSERVACIONES || ''}" data-index="${originalIndex}"></td>
                 </tr>`;
                 albaranesTbody.insertAdjacentHTML('beforeend', row);
             });
@@ -59,7 +65,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const errorDetails = responseData.details || 'No hay más detalles.';
                 throw new Error(`${errorMessage} - ${errorDetails}`);
             }
-            albaranesData = responseData;
+            albaranesData = responseData.map(alb => ({ ...alb, OBSERVACIONES: alb.OBSERVACIONES || '' })); // Inicializar OBSERVACIONES
 
             renderAlbaranes(albaranesData); // Renderizar la tabla inicial
             albaranesTableContainer.classList.remove('d-none');
@@ -199,23 +205,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    albaranesTbody.addEventListener('change', function(e) {
-        if (e.target.name === 'albaran-select') {
-            const selectedIndex = e.target.value;
-            const selectedAlbaran = albaranesData[selectedIndex];
-
-            if (selectedAlbaran) {
-                const postDataEl = document.getElementById('post-data');
-                // Rellenar el textarea con el albarán seleccionado
-                // CLAVE: Convertimos el objeto a un objeto plano antes de stringify.
-                // El objeto que viene del fetch puede tener tipos de datos complejos (como fechas)
-                // que no son directamente serializables. Al hacer esto, nos aseguramos de que es un objeto JS simple.
-                const plainAlbaranObject = { ...selectedAlbaran };
-                postDataEl.value = JSON.stringify(plainAlbaranObject, null, 2);
-            }
-        }
-    });
-
     // Listener para el campo de búsqueda de albaranes
     albaranSearchInput.addEventListener('input', function(e) {
         const searchTerm = e.target.value.toLowerCase();
@@ -230,6 +219,33 @@ document.addEventListener('DOMContentLoaded', function () {
         );
         renderAlbaranes(filteredAlbaranes);
     });
+
+    // Listener para el checkbox "Seleccionar Todos"
+    selectAllCheckbox.addEventListener('change', function(e) {
+        // Seleccionar solo los checkboxes que están visibles en la tabla
+        const checkboxes = albaranesTbody.querySelectorAll('.albaran-select-checkbox');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = e.target.checked;
+        });
+        actualizarTextareaSeleccion();
+    });
+
+    // Listener en el cuerpo de la tabla para los checkboxes individuales
+    albaranesTbody.addEventListener('change', function(e) {
+        if (e.target.classList.contains('albaran-select-checkbox')) { // Si se marca/desmarca un checkbox
+            actualizarTextareaSeleccion();
+        }
+    });
+
+    // Listener para la edición de observaciones directamente en la tabla
+    albaranesTbody.addEventListener('input', function(e) {
+        if (e.target.classList.contains('observation-input')) { // Si se escribe en un campo de observación
+            albaranesData[e.target.dataset.index].OBSERVACIONES = e.target.value;
+        }
+    });
+
+
+
     /*
     // Listener para el formulario de obtención de etiquetas
     // COMENTADO: Este bloque causaba un error porque el elemento con id 'get-form' no existe en index.html,
@@ -276,38 +292,103 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    /**
+     * Actualiza el textarea para mostrar el número de albaranes seleccionados.
+     */
+    function actualizarTextareaSeleccion() {
+        const postDataEl = document.getElementById('post-data');
+        const checkboxesSeleccionados = albaranesTbody.querySelectorAll('.albaran-select-checkbox:checked');
+        
+        if (checkboxesSeleccionados.length === 1) {
+            // Si solo hay uno seleccionado, mostrar su JSON y hacerlo editable.
+            const selectedIndex = checkboxesSeleccionados[0].value;
+            const selectedAlbaran = albaranesData[selectedIndex];
+            postDataEl.value = JSON.stringify(selectedAlbaran, null, 2);
+            postDataEl.readOnly = false;
+
+        } else if (checkboxesSeleccionados.length > 1) {
+            // Si hay varios, mostrar un mensaje y bloquear la edición.
+            postDataEl.value = `${checkboxesSeleccionados.length} albaranes seleccionados. La edición no está disponible en modo múltiple.`;
+            postDataEl.readOnly = true;
+
+        } else {
+            // Si no hay ninguno, mostrar el mensaje por defecto.
+            postDataEl.value = 'Seleccione uno o más albaranes de la lista.';
+            postDataEl.readOnly = true;
+
+        }
+    }
+
     // Listener para el formulario POST
     postForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         setApiResponseLoading(true);
-        const postDataEl = document.getElementById('post-data');
-        let body;
-
-        try {
-            body = JSON.parse(postDataEl.value);
-        } catch (error) {
-            mostrarApiResponse({ error: 'El JSON en el área de texto no es válido.' }, 400);
+        
+        const checkboxesSeleccionados = albaranesTbody.querySelectorAll('.albaran-select-checkbox:checked');
+        
+        if (checkboxesSeleccionados.length === 0) {
+            mostrarApiResponse({ error: 'No hay albaranes seleccionados.' }, 400);
             setApiResponseLoading(false);
             return;
         }
 
+        let albaranesParaEnviar = [];
+        let endpoint = '/crear-ordenes-multiples'; // Endpoint por defecto para múltiples
+
+        if (checkboxesSeleccionados.length === 1) {
+            // Si solo hay uno, leemos el contenido (posiblemente editado) del textarea.
+            const postDataEl = document.getElementById('post-data');
+            try {
+                const albaranEditado = JSON.parse(postDataEl.value);
+                albaranesParaEnviar.push(albaranEditado);
+            } catch (error) {
+                mostrarApiResponse({ error: 'El JSON en el área de texto no es válido.' }, 400);
+                setApiResponseLoading(false);
+                return;
+            }
+        } else {
+            // Si hay varios, construimos la lista a partir de los datos originales.
+            checkboxesSeleccionados.forEach(checkbox => {
+                const index = checkbox.value;
+                albaranesParaEnviar.push(albaranesData[index]);
+            });
+        }
+
+        // --- Lógica de confirmación de reenvío ---
+        const hayEnviados = albaranesParaEnviar.some(alb => alb.ENVIADO);
+        let forzarReenvio = false;
+
+        if (hayEnviados) {
+            if (confirm("Uno o más de los albaranes seleccionados ya han sido enviados. ¿Deseas reenviarlos de todas formas?")) {
+                forzarReenvio = true;
+            } else {
+                // El usuario canceló, no hacemos nada.
+                setApiResponseLoading(false);
+                mostrarApiResponse({ info: 'Operación cancelada por el usuario.' }, 400);
+                return;
+            }
+        }
+
         try {
-            const response = await fetch('/crear-orden', {
+            const finalEndpoint = forzarReenvio ? `${endpoint}?force=true` : endpoint;
+            const response = await fetch(finalEndpoint, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(body)
+                body: JSON.stringify(albaranesParaEnviar)
             });
             const data = await response.json();
             mostrarApiResponse(data, response.status);
 
-            // Si la orden se crea con éxito, rellenamos el campo del GET y disparamos la descarga
-            if (response.ok && data.id) {
-                // Descargar la etiqueta automáticamente
-                descargarEtiqueta(data.id);
+            // Descargar etiquetas para las órdenes creadas con éxito
+            if (response.ok && Array.isArray(data)) {
+                data.forEach(resultado => {
+                    if (resultado.status >= 200 && resultado.status < 300 && resultado.response.id) {
+                        descargarEtiqueta(resultado.response.id);
+                    }
+                });
             }
-
         } catch (error) {
             console.error('Error en la llamada POST:', error);
             mostrarApiResponse({ error: 'Fallo la conexión con el backend' }, 500);

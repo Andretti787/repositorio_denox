@@ -5,7 +5,7 @@ FROM rockylinux:9-minimal
 # --- Fase 2: Instalar dependencias del sistema operativo ---
 # Instalar Python y herramientas necesarias. 'dnf' es el gestor de paquetes en RHEL/CentOS 9.
 # Habilitamos el repositorio 'crb' para poder instalar 'unixODBC-devel'.
-RUN microdnf --enablerepo=crb install -y python3.9 python3.9-pip curl gzip tar unixODBC-devel && microdnf clean all
+RUN microdnf --enablerepo=crb install -y python3.9 python3.9-pip curl gzip tar unixODBC-devel mariadb-devel && microdnf clean all
 
 # Instalar el driver ODBC de Microsoft para SQL Server en un entorno RHEL/CentOS
 RUN curl -fsSL https://packages.microsoft.com/config/rhel/9.0/prod.repo > /etc/yum.repos.d/mssql-release.repo

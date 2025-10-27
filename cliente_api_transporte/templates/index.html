@@ -19,6 +19,14 @@
         background-color: #f8f9fa; /* Un color de fondo para que no se vea el contenido al hacer scroll */
         z-index: 2;
     }
+
+    /* Estilos para hacer la tabla de albaranes más compacta */
+    #albaranes-table {
+        font-size: 0.75rem; /* Reducir aún más el tamaño de la fuente */
+    }
+    #albaranes-table th, #albaranes-table td {
+        padding: 0.5rem; /* Reducir el padding para hacer las celdas más compactas */
+    }
 </style>
 {% endblock %}
 
@@ -47,12 +55,15 @@
                     <table class="table table-striped table-hover" id="albaranes-table">
                         <thead>
                             <tr>
-                                <th style="width: 5%;">Sel.</th>
+                                <th style="width: 5%;">
+                                    <input type="checkbox" id="select-all-albaranes" title="Seleccionar/Deseleccionar Todos">
+                                </th>
                                 <th>Nº Albarán</th>
                                 <th>Fecha Envío</th>
                                 <th>Pallets</th>
                                 <th>Bultos</th>
                                 <th>Peso</th>
+                                <th>Observaciones</th>
                             </tr>
                         </thead>
                         <tbody id="albaranes-tbody"></tbody>
@@ -89,7 +100,7 @@
                         <form id="post-form" class="mt-3">
                             <div class="mb-3">
                                 <label for="post-data" class="form-label">Datos del Albarán para la Orden:</label>
-                                <textarea class="form-control" id="post-data" rows="8">{}</textarea>
+                                <textarea class="form-control" id="post-data" rows="8" readonly>Seleccione uno o más albaranes de la lista.</textarea>
                             </div>
                             <button type="submit" class="btn btn-success">Crear Orden de Transporte</button>
                         </form>

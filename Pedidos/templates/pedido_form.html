@@ -123,8 +123,8 @@
               <div class="aviso-stock-container"></div> 
             </div>
             <div class="form-group col-lg-1 col-md-3">
-                <label for="dto2_linea_{{loop.index0}}" class="sr-only">Dto. Línea %:</label>
-                <input type="number" id="dto2_linea_{{loop.index0}}" name="lineas[{{loop.index0}}][DESCUENTO2]" value="{{ linea['DESCUENTO2'] | default(0) }}" class="form-control descuento-linea text-right" min="0" max="100" placeholder="Dto. %">
+                <label for="dto2_linea_{{loop.index0}}" class="sr-only">Dto. Adicional %:</label>
+                <input type="number" id="dto2_linea_{{loop.index0}}" name="lineas[{{loop.index0}}][DESCUENTO2]" value="{{ linea['DESCUENTO2'] | default(0) }}" class="form-control descuento-linea text-right" min="0" max="100" placeholder="Dto. Adic.">
             </div>
             <div class="form-group col-lg-2 col-md-6">
                 <label for="importe_linea_{{loop.index0}}" class="sr-only">Importe:</label>
@@ -143,7 +143,7 @@
             <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_0" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
             <div class="form-group col-lg-1 col-md-3"> <input type="text" id="precio_unit_linea_0" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
             <div class="form-group col-lg-1 col-md-3"> <input type="number" id="cant_linea_0" name="lineas[0][CANTIDAD]" class="form-control cantidad-linea text-right" required min="1" placeholder="Cant."> <div class="aviso-ud-emb-container"></div><div class="aviso-stock-container"></div> </div>
-            <div class="form-group col-lg-1 col-md-3"> <input type="number" id="dto2_linea_0" name="lineas[0][DESCUENTO2]" class="form-control descuento-linea text-right" min="0" max="100" value="0" placeholder="Dto. %"> </div>
+            <div class="form-group col-lg-1 col-md-3"> <input type="number" id="dto2_linea_0" name="lineas[0][DESCUENTO2]" class="form-control descuento-linea text-right" min="0" max="100" value="0" placeholder="Dto. Adic."> </div>
             <div class="form-group col-lg-2 col-md-6"> <input type="text" id="importe_linea_0" class="form-control importe-linea text-right" readonly placeholder="Importe"> </div>
             <div class="form-group col-lg-1 col-md-6 d-flex align-items-end"> <button type="button" class="btn btn-danger btn-sm btn-remover-linea" style="display:none;">X</button> </div>
         </div>
@@ -596,7 +596,7 @@
                 <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_${lineaIndex}" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
                 <div class="form-group col-lg-1 col-md-3"> <input type="text" id="precio_unit_linea_${lineaIndex}" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
                 <div class="form-group col-lg-1 col-md-3"> <input type="number" id="cant_linea_${lineaIndex}" name="lineas[${lineaIndex}][CANTIDAD]" class="form-control cantidad-linea text-right" required min="1" placeholder="Cant."> <div class="aviso-ud-emb-container"></div><div class="aviso-stock-container"></div> </div>
-                <div class="form-group col-lg-1 col-md-3"> <input type="number" id="dto2_linea_${lineaIndex}" name="lineas[${lineaIndex}][DESCUENTO2]" class="form-control descuento-linea text-right" min="0" max="100" value="0" placeholder="Dto. %"> </div>
+                <div class="form-group col-lg-1 col-md-3"> <input type="number" id="dto2_linea_${lineaIndex}" name="lineas[${lineaIndex}][DESCUENTO2]" class="form-control descuento-linea text-right" min="0" max="100" value="0" placeholder="Dto. Adic."> </div>
                 <div class="form-group col-lg-2 col-md-6"> <input type="text" id="importe_linea_${lineaIndex}" class="form-control importe-linea text-right" readonly placeholder="Importe"> </div>
                 <div class="form-group col-lg-1 col-md-6 d-flex align-items-end"> <button type="button" class="btn btn-danger btn-sm btn-remover-linea">X</button> </div>
             </div>

@@ -73,7 +73,7 @@
             <th>Descripción</th>
             <th class="text-right">UD. Emb.</th>
             <th class="text-right">Precio U.</th>
-            <th class="text-right">Dto. Línea %</th>
+            <th class="text-right">Dto. Adicional %</th>
             <th class="text-right">Cantidad</th>
             <th class="text-right">Importe</th>
           </tr>
@@ -129,7 +129,7 @@
   {% endif %}
 
   <a href="{{ url_for('index') }}" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Volver a Mis Pedidos</a>
-  {% if pedido_cabecera and pedido_cabecera.ESTADO != 'PROCESADO' %}
+  {% if pedido_cabecera and pedido_cabecera.ESTADO in ['PENDIENTE', 'BORRADOR'] %}
     <a href="{{ url_for('editar_pedido', numped_a_editar=pedido_cabecera.NUMPED) }}" class="btn btn-warning mt-3 ml-2">
         <i class="fas fa-edit"></i> Editar este Pedido
     </a>

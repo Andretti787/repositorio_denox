@@ -2,3 +2,4 @@ flask
 pyodbc
 requests
 python-dotenv
+mysql-connector-python

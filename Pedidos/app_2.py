@@ -244,13 +244,19 @@ def agregar_pedido():
                 if conn_val_dir.is_connected(): cursor_val_dir.close(); conn_val_dir.close()
             if not direccion_valida: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
 
-        fecha_exp_obj = None
-        if fecha_exp_str_form:
-            try:
-                fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str_form, '%Y-%m-%d').date()
-            except ValueError:
-                flash("Formato de Fecha de Expiración inválido. Usar YYYY-MM-DD.", "danger")
+        # --- VALIDACIÓN DE FECHA DE ENTREGA ---
+        if not fecha_exp_str_form:
+            flash("La Fecha de Entrega es obligatoria.", "danger")
+            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+        
+        try:
+            fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str_form, '%Y-%m-%d').date()
+            if fecha_exp_obj <= datetime.date.today():
+                flash("La Fecha de Entrega debe ser posterior a la fecha actual.", "danger")
                 return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+        except ValueError:
+            flash("Formato de Fecha de Entrega inválido. Usar YYYY-MM-DD.", "danger")
+            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
 
         # --- PROCESAR Y VALIDAR LÍNEAS ---
         lineas_procesadas_ok = [] 
@@ -492,11 +498,17 @@ def editar_pedido(numped_a_editar):
                 if conn_val_dir and conn_val_dir.is_connected(): conn_val_dir.close(); conn_val_dir = None
             
             fecha_exp_obj = None
-            if fecha_exp_str_form:
-                try: fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str_form, '%Y-%m-%d').date()
-                except ValueError:
-                    flash("Formato de Fecha de Expiración inválido.", "danger")
+            if not fecha_exp_str_form:
+                flash("La Fecha de Entrega es obligatoria.", "danger")
+                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            try:
+                fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str_form, '%Y-%m-%d').date()
+                if fecha_exp_obj <= datetime.date.today():
+                    flash("La Fecha de Entrega debe ser posterior a la fecha actual.", "danger")
                     return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            except ValueError:
+                flash("Formato de Fecha de Entrega inválido.", "danger")
+                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
 
             # --- PROCESAR Y VALIDAR LÍNEAS DEL FORMULARIO ---
             lineas_procesadas_ok_edit = []

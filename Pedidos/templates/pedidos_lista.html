@@ -22,7 +22,7 @@
           <tr>
             <td>{{ numped }}</td>
             <td>{{ datos_pedido.cabecera.get('COD_CTE') }}</td>
-            <td>{{ datos_pedido.cabecera.get('RAZON_SOCIAL') }}</td>
+            <td title="{{ datos_pedido.cabecera.get('RAZON_SOCIAL') }}">{{ datos_pedido.cabecera.get('RAZON_SOCIAL') | truncate(24) }}</td>
             <td>
               {% if datos_pedido.cabecera.get('FECHA_CREACION') %}
                 {{ datos_pedido.cabecera.get('FECHA_CREACION').strftime('%Y-%m-%d %H:%M:%S') }}
@@ -38,9 +38,10 @@
                 {% elif estado == 'BORRADOR' %}badge-danger
                 {% elif estado == 'EN PROCESO' %}badge-info
                 {% elif estado == 'PROCESADO' %}badge-info
-                {% elif estado == 'ENVIADO' %}badge-primary
+                {% elif estado == 'ENVIADO' %}badge-success
                 {% elif estado == 'EXPEDIDO' %}badge-success
-                {% elif estado == 'CANCELADO' %}badge-danger
+                {% elif estado == 'RECHAZADO' %}badge-dark
+                {% elif estado == 'EN.PARCIAL' %}badge-primary
                 {% else %}badge-secondary
                 {% endif %}">
                 {{ estado }}
@@ -53,18 +54,18 @@
                  class="btn btn-sm btn-info mr-1" title="Ver Detalles del Pedido">
                 <i class="fas fa-eye"></i> Ver
               </a>
-              {% if datos_pedido.cabecera.get('ESTADO') != 'PROCESADO' %}
+              {% if datos_pedido.cabecera.get('ESTADO') in ['PENDIENTE', 'BORRADOR'] %}
                 <a href="{{ url_for('editar_pedido', numped_a_editar=numped) }}" 
                    class="btn btn-sm btn-warning mr-1" title="Editar Pedido">
                   <i class="fas fa-edit"></i> Editar
                 </a>
               {% else %}
-                <button type="button" class="btn btn-sm btn-warning mr-1" disabled title="Pedido procesado, no se puede editar">
+                <button type="button" class="btn btn-sm btn-warning mr-1" disabled title="No se puede editar un pedido en estado '{{ datos_pedido.cabecera.get('ESTADO') }}'">
                   <i class="fas fa-edit"></i> Editar
                 </button> 
               {% endif %}
               
-              {% if datos_pedido.cabecera.get('ESTADO') not in ['PROCESADO', 'Enviado', 'Entregado', 'Cancelado'] %}
+              {% if datos_pedido.cabecera.get('ESTADO') in ['PENDIENTE', 'BORRADOR'] %}
                 <form action="{{ url_for('eliminar_pedido_completo', numped_a_eliminar=numped) }}" method="POST" style="display: inline;" 
                       onsubmit="return confirm('¿Estás seguro de que deseas eliminar TODO el pedido {{ numped }}?');">
                   <button type="submit" class="btn btn-sm btn-danger" title="Eliminar Pedido Completo">
@@ -72,7 +73,7 @@
                   </button>
                 </form>
               {% else %}
-                 <button type="button" class="btn btn-sm btn-danger" disabled title="No se puede eliminar este pedido en su estado actual">
+                 <button type="button" class="btn btn-sm btn-danger" disabled title="No se puede eliminar un pedido en estado '{{ datos_pedido.cabecera.get('ESTADO') }}'">
                       <i class="fas fa-trash-alt"></i> Eliminar
                   </button>
               {% endif %}
