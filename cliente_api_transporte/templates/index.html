@@ -21,10 +21,11 @@
     }
 
     /* Estilos para hacer la tabla de albaranes más compacta */
-    #albaranes-table {
+    #albaranes-table, #list-table {
         font-size: 0.75rem; /* Reducir aún más el tamaño de la fuente */
     }
-    #albaranes-table th, #albaranes-table td {
+    #albaranes-table th, #albaranes-table td,
+    #list-table th, #list-table td {
         padding: 0.5rem; /* Reducir el padding para hacer las celdas más compactas */
     }
 </style>
@@ -92,6 +93,11 @@
                                 type="button" role="tab" aria-controls="list-panel" aria-selected="false">Listar Órdenes
                         </button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="manifiesto-tab" data-bs-toggle="tab" data-bs-target="#manifiesto-panel"
+                                type="button" role="tab" aria-controls="manifiesto-panel" aria-selected="false">Manifiesto de Carga
+                        </button>
+                    </li>
                 </ul>
 
                 <div class="tab-content" id="apiTabsContent">
@@ -101,6 +107,21 @@
                             <div class="mb-3">
                                 <label for="post-data" class="form-label">Datos del Albarán para la Orden:</label>
                                 <textarea class="form-control" id="post-data" rows="8" readonly>Seleccione uno o más albaranes de la lista.</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tipo de Creación:</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="creationType" id="creationTypeLabelled" value="labelled">
+                                    <label class="form-check-label" for="creationTypeLabelled">
+                                        Crear orden temporal (labelled)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="creationType" id="creationTypeSent" value="sent" checked>
+                                    <label class="form-check-label" for="creationTypeSent">
+                                        Crear orden definitiva (sent)
+                                    </label>
+                                </div>
                             </div>
                             <button type="submit" class="btn btn-success">Crear Orden de Transporte</button>
                         </form>
@@ -141,6 +162,25 @@
                             <tbody id="list-tbody"></tbody>
                         </table>
                     </div>
+
+                    <!-- Panel para Manifiesto de Carga -->
+                    <div class="tab-pane fade" id="manifiesto-panel" role="tabpanel" aria-labelledby="manifiesto-tab">
+                        <div class="mt-3">
+                            <h5 class="mb-3">Obtener Manifiesto de Carga</h5>
+                            <p class="text-muted small">Selecciona una fecha para consultar el manifiesto (Transfer List) de Dachser.</p>
+                            
+                            <div class="row align-items-end">
+                                <div class="col-md-6">
+                                    <label for="fecha-manifiesto" class="form-label">Fecha del Manifiesto</label>
+                                    <input type="date" class="form-control" id="fecha-manifiesto">
+                                </div>
+                                <div class="col-md-6">
+                                    <button id="btn-obtener-manifiesto" class="btn btn-primary">Consultar Manifiesto</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
 
                 <!-- Área de Respuesta de la API -->
@@ -151,10 +191,82 @@
                             <span class="visually-hidden">Esperando...</span>
                         </div>
                     </div>
-                    <pre id="api-response" class="bg-light p-3 rounded"><code>Esperando llamada a la API...</code></pre>
+                    <div id="api-response" class="bg-light p-3 rounded"><code>Esperando llamada a la API...</code></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Lógica para el nuevo botón de Manifiesto de Carga
+    const btnObtenerManifiesto = document.getElementById('btn-obtener-manifiesto');
+    if (btnObtenerManifiesto) {
+        btnObtenerManifiesto.addEventListener('click', function() {
+            const fechaInput = document.getElementById('fecha-manifiesto');
+            const fecha = fechaInput.value;
+            const apiResponse = document.getElementById('api-response');
+            const apiResponseLoading = document.getElementById('api-response-loading');
+
+            if (!fecha) {
+                apiResponse.innerHTML = `<div class="text-danger">Por favor, selecciona una fecha.</div>`;
+                return;
+            }
+
+            apiResponse.innerHTML = '';
+            apiResponseLoading.classList.remove('d-none');
+
+            fetch(`/manifiesto/${fecha}`)
+                .then(response => response.json())
+                .then(result => {
+                    apiResponseLoading.classList.add('d-none');
+
+                    if (result.status === 'success' && result.type === 'pdf_base64') {
+                        // CASO 1: Recibimos un PDF en Base64. Lo decodificamos y abrimos.
+                        apiResponse.innerHTML = `<div class="text-success">PDF del manifiesto recibido. Abriendo en una nueva pestaña...</div>`;
+                        
+                        try {
+                            // Función para decodificar y abrir el PDF
+                            const byteCharacters = atob(result.data);
+                            const byteNumbers = new Array(byteCharacters.length);
+                            for (let i = 0; i < byteCharacters.length; i++) {
+                                byteNumbers[i] = byteCharacters.charCodeAt(i);
+                            }
+                            const byteArray = new Uint8Array(byteNumbers);
+                            const blob = new Blob([byteArray], { type: 'application/pdf' });
+                            const fileURL = URL.createObjectURL(blob);
+                            window.open(fileURL, '_blank');
+                        } catch (e) {
+                            console.error("Error al decodificar Base64:", e);
+                            apiResponse.innerHTML = `<div class="text-danger">Error al procesar el PDF recibido.</div>`;
+                        }
+
+                    } else if (result.status === 'success' && result.type === 'json_data') {
+                        // CASO 2: Recibimos un JSON de datos. Lo mostramos formateado en el área de respuesta.
+                        const pre = document.createElement('pre');
+                        pre.textContent = JSON.stringify(result.data, null, 2);
+                        apiResponse.innerHTML = ''; // Limpiar antes de añadir
+                        apiResponse.appendChild(pre);
+
+                    } else {
+                        // CASO 3: Es un error o una respuesta inesperada. Mostramos el JSON completo para depuración.
+                        console.warn("Respuesta inesperada o error:", result);
+                        const pre = document.createElement('pre');
+                        pre.textContent = JSON.stringify(result, null, 2);
+                        apiResponse.innerHTML = ''; // Limpiar antes de añadir
+                        apiResponse.appendChild(pre);
+                    }
+                })
+                .catch(error => {
+                    apiResponseLoading.classList.add('d-none');
+                    console.error('Error en la llamada fetch:', error);
+                    apiResponse.innerHTML = `<div class="text-danger"><b>Error de red o de conexión:</b> ${error.message}. Revisa la consola para más detalles.</div>`;
+                });
+        });
+    }
+});
+</script>
 {% endblock %}

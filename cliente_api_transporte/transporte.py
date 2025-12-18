@@ -1,11 +1,14 @@
 import os
 import json
-from flask import Flask, render_template, jsonify, request, Response
+from flask import Flask, render_template, jsonify, request, Response, g
 import requests
 from dotenv import load_dotenv
 from datetime import datetime, date
 import mysql.connector
+import pandas as pd # Importar pandas
 import base64
+from PyPDF2 import PdfWriter, PdfReader
+from io import BytesIO
 
 from database import get_albaranes_from_db
 
@@ -23,12 +26,60 @@ db_config_mysql = {
 
 def get_mysql_connection():
     """Establece conexión con la base de datos MySQL."""
-    return mysql.connector.connect(**db_config_mysql)
+    # Usamos el contexto 'g' de Flask para reutilizar la conexión en la misma petición.
+    if 'mysql_db' not in g:
+        try:
+            g.mysql_db = mysql.connector.connect(**db_config_mysql)
+        except mysql.connector.Error as err:
+            print(f"Error de conexión a MySQL: {err}")
+            g.mysql_db = None # Marcar como None para que las funciones puedan manejarlo
+    return g.mysql_db
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    """Cierra la conexión a la BD al final de la petición."""
+    db = g.pop('mysql_db', None)
+    if db is not None and db.is_connected():
+        db.close()
+
+def _extraer_pdf_de_respuesta(resultado_dachser):
+    """
+    Función auxiliar para extraer la etiqueta PDF en base64 de una respuesta de Dachser.
+    Devuelve el PDF en base64 o None si no se encuentra.
+    """
+    print("-> Intentando extraer PDF de la respuesta de Dachser...")
+    try:
+        # La respuesta de Dachser contiene una lista 'labels'.
+        # CASO 1: La respuesta contiene una lista en la clave 'labels' (plural)
+        if resultado_dachser and 'labels' in resultado_dachser and resultado_dachser['labels']:
+            print("  - Clave 'labels' encontrada y no está vacía.")
+            # La etiqueta viene en una lista, tomamos la primera
+            label_object = resultado_dachser['labels'][0]
+            pdf_base64 = label_object.get('label')
+            if pdf_base64:
+                print("  - Clave 'label' (singular) encontrada dentro de la lista 'labels'. ¡Éxito!")
+                return pdf_base64
+            print("  - ADVERTENCIA: El objeto de etiqueta no contiene la clave 'label'.")
+        
+        # CASO 2: La respuesta contiene la clave 'label' (singular) directamente
+        elif resultado_dachser and 'label' in resultado_dachser:
+            print("  - Clave 'label' (singular) encontrada en el nivel superior.")
+            pdf_base64 = resultado_dachser.get('label')
+            if isinstance(pdf_base64, str) and len(pdf_base64) > 100: # Check si parece base64
+                 print("  - Contenido de 'label' parece válido. ¡Éxito!")
+                 return pdf_base64
+
+        else:
+            print("  - ADVERTENCIA: La respuesta no contiene ni la clave 'labels' (plural) ni 'label' (singular).")
+    except (KeyError, IndexError, TypeError) as e:
+        # Si hay algún error en la estructura, lo registramos pero no detenemos el flujo.
+        print(f"Advertencia: No se pudo extraer la etiqueta PDF de la respuesta. Error: {e}")
+    return None
 
 
 # --- Funciones de Lógica de Negocio ---
 
-def crear_orden_dachser(albaran_data, force=False):
+def crear_orden_dachser(albaran_data, force=False, basket_type='labelled'):
     """
     Prepara y envía la orden de transporte a la API de Dachser.
     """
@@ -48,11 +99,13 @@ def crear_orden_dachser(albaran_data, force=False):
     if not force:
         try:
             conn_mysql = get_mysql_connection()
+            if not conn_mysql:
+                 return {"error": "No se pudo conectar a la base de datos de logs."}, 500
             cursor = conn_mysql.cursor(dictionary=True)
             cursor.execute("SELECT id_orden_transporte FROM LOG_ENVIOS WHERE num_albaran = %s", (num_albaran_actual,))
             envio_existente = cursor.fetchone()
             cursor.close()
-            conn_mysql.close()
+            # La conexión se cierra automáticamente con @app.teardown_appcontext
             if envio_existente:
                 return {"error": f"El albarán {num_albaran_actual} ya fue enviado.", "details": f"ID de orden existente: {envio_existente['id_orden_transporte']}"}, 409 # 409 Conflict
         except mysql.connector.Error as err:
@@ -198,7 +251,7 @@ def crear_orden_dachser(albaran_data, force=False):
 
     # El endpoint es /rest/v2/transportorders/{basket}
     # Usamos 'labelled' para obtener las etiquetas en la respuesta
-    url_destino = f"{base_url}/rest/v2/transportorders/labelled"
+    url_destino = f"{base_url}/rest/v2/transportorders/{basket_type}"
     headers = {
         'X-Api-Key': api_key,
         'Content-Type': 'application/json'
@@ -213,12 +266,12 @@ def crear_orden_dachser(albaran_data, force=False):
         response_data = response.json()
         if response.status_code in [200, 201] and response_data.get('id'):
             try:
-                conn_mysql_log = get_mysql_connection()
-                cursor_log = conn_mysql_log.cursor()
-                cursor_log.execute("INSERT INTO LOG_ENVIOS (num_albaran, id_orden_transporte) VALUES (%s, %s)", (num_albaran_actual, response_data['id']))
-                conn_mysql_log.commit()
-                cursor_log.close()
-                conn_mysql_log.close()
+                conn_mysql = get_mysql_connection()
+                if conn_mysql:
+                    cursor_log = conn_mysql.cursor()
+                    cursor_log.execute("INSERT INTO LOG_ENVIOS (num_albaran, id_orden_transporte) VALUES (%s, %s)", (num_albaran_actual, response_data['id']))
+                    conn_mysql.commit()
+                    cursor_log.close()
             except mysql.connector.Error as log_err:
                 print(f"¡ATENCIÓN! La orden {response_data['id']} se creó en Dachser pero falló al guardarse en el log: {log_err}")
 
@@ -270,14 +323,14 @@ def api_get_albaranes():
     # --- Consultar el log para marcar los ya enviados ---
     try:
         conn_mysql = get_mysql_connection()
-        cursor = conn_mysql.cursor()
-        cursor.execute("SELECT num_albaran FROM LOG_ENVIOS")
-        albaranes_enviados = {row[0] for row in cursor.fetchall()}
-        cursor.close()
-        conn_mysql.close()
+        if conn_mysql:
+            cursor = conn_mysql.cursor()
+            cursor.execute("SELECT num_albaran FROM LOG_ENVIOS")
+            albaranes_enviados = {row[0] for row in cursor.fetchall()}
+            cursor.close()
 
-        for albaran in albaranes:
-            albaran['ENVIADO'] = albaran['NUMALB'] in albaranes_enviados
+            for albaran in albaranes:
+                albaran['ENVIADO'] = albaran['NUMALB'] in albaranes_enviados
     except mysql.connector.Error as err:
         print(f"Advertencia: No se pudo consultar el log de envíos. {err}")
 
@@ -292,8 +345,25 @@ def crear_orden_transporte():
     if not albaran_seleccionado:
         return jsonify({"error": "No se recibió el albarán seleccionado"}), 400
 
+    basket_type = request.args.get('basket', 'labelled')
     force_resend = request.args.get('force', 'false').lower() == 'true'
-    resultado, status_code = crear_orden_dachser(albaran_seleccionado, force=force_resend)
+    resultado, status_code = crear_orden_dachser(albaran_seleccionado, force=force_resend, basket_type=basket_type)
+
+    # Si la creación fue exitosa, intentamos extraer el PDF.
+    if status_code in [200, 201]:
+        pdf_base64 = _extraer_pdf_de_respuesta(resultado)
+        
+        if pdf_base64:
+            # Devolvemos una respuesta JSON estructurada con el PDF en base64.
+            # Esto permite al frontend decidir cómo manejar el PDF.
+            return jsonify({
+                "status": "success",
+                "type": "pdf_base64",
+                "data": pdf_base64,
+                "details": resultado
+            }), 200
+
+    # Si no hubo éxito, no hay PDF, o hubo un error, devolvemos la respuesta original de Dachser.
     return jsonify(resultado), status_code
 
 @app.route('/crear-ordenes-multiples', methods=['POST'])
@@ -306,17 +376,43 @@ def crear_ordenes_multiples():
     if not isinstance(albaranes_seleccionados, list) or not albaranes_seleccionados:
         return jsonify({"error": "Se esperaba una lista de albaranes"}), 400
 
+    basket_type = request.args.get('basket', 'labelled')
     force_resend = request.args.get('force', 'false').lower() == 'true'
     resultados_globales = []
+    pdfs_bytes_list = []
+
     for albaran in albaranes_seleccionados:
         num_alb = albaran.get('NUMALB', 'Desconocido')
-        resultado, status_code = crear_orden_dachser(albaran, force=force_resend)
+        resultado, status_code = crear_orden_dachser(albaran, force=force_resend, basket_type=basket_type)
+        
+        # Si la creación fue exitosa y la respuesta contiene una etiqueta PDF
+        if status_code in [200, 201]:
+            pdf_base64 = _extraer_pdf_de_respuesta(resultado)
+            if pdf_base64:
+                pdf_bytes = base64.b64decode(pdf_base64)
+                pdfs_bytes_list.append(pdf_bytes)
+
         resultados_globales.append({
             "albaran": num_alb,
             "status": status_code,
             "response": resultado
         })
-    return jsonify(resultados_globales), 200
+
+    # Si hemos recopilado PDFs, los unimos
+    if pdfs_bytes_list:
+        merger = PdfWriter()
+        for pdf_bytes in pdfs_bytes_list:
+            reader = PdfReader(BytesIO(pdf_bytes))
+            for page in reader.pages:
+                merger.add_page(page)
+        
+        output_buffer = BytesIO()
+        merger.write(output_buffer)
+        merged_pdf_base64 = base64.b64encode(output_buffer.getvalue()).decode('utf-8')
+        
+        return jsonify({"status": "success", "type": "pdf_base64", "data": merged_pdf_base64, "details": resultados_globales})
+        
+    return jsonify({"status": "completed_with_issues", "type": "individual_results", "data": resultados_globales}), 200
 
 @app.route('/llamar-api-etiquetas/<string:order_id>', methods=['POST'])
 def proxy_api_etiquetas(order_id):
@@ -429,6 +525,93 @@ def eliminar_orden_dachser(order_id):
     except requests.exceptions.RequestException as e:
         print(f"Error de conexión al eliminar la orden en Dachser: {e}")
         return jsonify({"error": "No se pudo conectar con la API del proveedor"}), 503
+
+@app.route('/manifiesto/<string:fecha>', methods=['GET'])
+def obtener_manifiesto_carga(fecha):
+    """
+    Proxy para obtener el manifiesto de carga (transfer list) para una fecha específica
+    y devolverlo como un fichero PDF.
+    """
+    print("\n--- INICIANDO PETICIÓN DE MANIFIESTO ---")
+    print(f"Fecha solicitada: {fecha}")
+
+    base_url = os.environ.get('DACHSER_API_BASE_URL', 'https://api-gateway.dachser.com')
+    api_key = os.environ.get('DACHSER_API_KEY')
+
+    if not api_key:
+        return "Error: Falta la variable de entorno DACHSER_API_KEY", 500
+
+    # Validación básica del formato de fecha
+    try:
+        datetime.strptime(fecha, '%Y-%m-%d')
+    except ValueError:
+        print(f"-> ERROR: Formato de fecha inválido: {fecha}")
+        return "Error: Formato de fecha inválido. Use YYYY-MM-DD.", 400
+
+    url_destino = f"{base_url}/rest/v2/transferlists/{fecha}"
+    headers = {
+        'X-Api-Key': api_key,
+        'accept': 'application/json', # Solicitamos JSON para poder procesarlo con pandas
+    }
+
+    print(f"URL de destino: {url_destino}")
+    print(f"Cabeceras enviadas: {headers}")
+
+    try:
+        print("-> Realizando la petición a Dachser...")
+        response = requests.get(url_destino, headers=headers, timeout=15)
+        print(f"-> Respuesta recibida de Dachser. Código de estado: {response.status_code}")
+        print(f"-> Cabeceras de la respuesta: {response.headers}")
+
+        response.raise_for_status()
+
+        # Siempre esperamos JSON de Dachser si 'accept: application/json' fue enviado
+        dachser_data = response.json()
+
+        # Lógica para encontrar el PDF en Base64, considerando que la respuesta es una LISTA
+        pdf_base64 = None
+        item_to_process = None
+
+        # La API devuelve una lista que contiene uno o más diccionarios.
+        if isinstance(dachser_data, list) and len(dachser_data) > 0:
+            print("-> La respuesta es una lista, procesando el primer elemento.")
+            item_to_process = dachser_data[0]
+        elif isinstance(dachser_data, dict): # Fallback por si devuelve un diccionario
+            print("-> La respuesta es un diccionario.")
+            item_to_process = dachser_data
+
+        if item_to_process and 'transferList' in item_to_process:
+            print("-> Clave 'transferList' encontrada en el item.")
+            transfer_list_value = item_to_process['transferList']
+            
+            # El valor de 'transferList' es directamente la cadena Base64
+            if isinstance(transfer_list_value, str) and transfer_list_value.startswith('JVBER'):
+                pdf_base64 = transfer_list_value
+
+        if pdf_base64:
+            print("-> PDF en Base64 detectado. Preparando para enviar al frontend.")
+            return jsonify({"status": "success", "type": "pdf_base64", "data": pdf_base64})
+        else:
+            # Si no se encontró un PDF, se trata como un JSON de datos normal.
+            # Esto puede ocurrir si no hay envíos para esa fecha.
+            print("-> La respuesta es un JSON de datos. Mostrando JSON raw.")
+            return jsonify({"status": "success", "type": "json_data", "data": dachser_data})
+    except requests.exceptions.HTTPError as e:
+        print(f"-> ERROR HTTP de la API de Dachser: {e.response.status_code}")
+        try:
+            error_details = e.response.json()
+        except ValueError:
+            error_details = e.response.text
+        return jsonify({"status": "error", "type": "api_error", "message": "Error de la API de Dachser", "details": error_details}), e.response.status_code
+    except requests.exceptions.RequestException as e:
+        print(f"-> ERROR de conexión: {e}")
+        return jsonify({"status": "error", "type": "connection_error", "message": f"No se pudo conectar con la API del proveedor: {e}"}), 503
+    except json.JSONDecodeError:
+        print(f"-> ERROR: La respuesta de Dachser no es un JSON válido. Contenido: {response.text}")
+        return jsonify({"status": "error", "type": "invalid_json", "message": "La respuesta de Dachser no es un JSON válido.", "details": response.text}), 500
+    except Exception as e:
+        print(f"-> ERROR inesperado en el backend: {e}")
+        return jsonify({"status": "error", "type": "internal_error", "message": f"Error interno del servidor: {e}"}), 500
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5002, debug=True)

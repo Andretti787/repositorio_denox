@@ -3,3 +3,5 @@ pyodbc
 requests
 python-dotenv
 mysql-connector-python
+PyPDF2
+pandas
