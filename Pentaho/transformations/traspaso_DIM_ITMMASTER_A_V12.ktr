@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>carga_DIM_ITMMASTER</name>
+    <name>traspaso_DIM_ITMMASTER_A_V12</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,16 +427,16 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2022/05/12 09:23:40.745</created_date>
+    <created_date>2025/12/03 16:37:07.304</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2022/05/12 09:23:40.745</modified_date>
+    <modified_date>2025/12/03 16:37:07.304</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>MSSQL V12</name>
+    <name>MSSQL</name>
     <server>192.168.28.100\X3V12</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
@@ -559,23 +559,71 @@
   </connection>
   <order>
     <hop>
-      <from>Entrada Tabla ITMMASTER-ITMFACILIT</from>
-      <to>Ordenar filas</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Ordenar filas</from>
+      <from>MySQL</from>
       <to>Selecciona/Renombra valores</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Selecciona/Renombra valores</from>
-      <to>Insertar / Actualizar DIM_ITMMASTER</to>
+      <to>Ordenar filas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas</from>
+      <to>Insertar / Actualizar</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Entrada Tabla ITMMASTER-ITMFACILIT</name>
+    <name>Insertar / Actualizar</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>LIVE</schema>
+      <table>DIM_ITMMASTER</table>
+      <key>
+        <name>ITM_ID</name>
+        <field>ITM_ID</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>ITM_ID</name>
+        <rename>ITM_ID</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>ITM_COD</name>
+        <rename>ITM_COD</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>720</xloc>
+      <yloc>96</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>MySQL</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -585,11 +633,9 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MSSQL V12</connection>
-    <sql>SELECT ITM.ITMREF_0, ITMDES1_0, TCLCOD_0, TSICOD_0, TSICOD_1, TSICOD_2, TSICOD_3, TSICOD_4,   ITF.PCKCAP_0
-fROM LIVE.ITMMASTER ITM
-INNER JOIN LIVE.ITMFACILIT ITF ON ITF.ITMREF_0 = ITM.ITMREF_0
-WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') </sql>
+    <connection>MySQL</connection>
+    <sql>SELECT * FROM dwdb.DIM_ITMMASTER
+WHERE SUBSTRING(ITM_COD,1,5) IN ('12580','12590','12600','70122') </sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -598,13 +644,36 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
     <cached_row_meta_active>N</cached_row_meta_active>
     <row-meta>
       <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>ITM_ID</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>MySQL</origin>
+        <comments>ITM_ID</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>ITMREF_0</name>
+        <name>ITM_COD</name>
         <length>20</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>ITMREF_0</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_COD</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -623,11 +692,11 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>ITMDES1_0</name>
-        <length>30</length>
+        <name>ITM_DESCRIP</name>
+        <length>100</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>ITMDES1_0</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_DESCRIP</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -646,11 +715,34 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TCLCOD_0</name>
+        <name>ITM_CATEGORIA</name>
+        <length>10</length>
+        <precision>-1</precision>
+        <origin>MySQL</origin>
+        <comments>ITM_CATEGORIA</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ITM_TIPO1</name>
         <length>5</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TCLCOD_0</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_TIPO1</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -669,11 +761,11 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TSICOD_0</name>
-        <length>20</length>
+        <name>ITM_CANAL</name>
+        <length>5</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_0</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_CANAL</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -692,11 +784,11 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TSICOD_1</name>
-        <length>20</length>
+        <name>ITM_ORIGEN</name>
+        <length>5</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_1</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_ORIGEN</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -715,11 +807,11 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TSICOD_2</name>
-        <length>20</length>
+        <name>ITM_TIPO2</name>
+        <length>5</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_2</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_TIPO2</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -738,11 +830,57 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TSICOD_3</name>
+        <name>ITM_PROPIEDAD</name>
+        <length>5</length>
+        <precision>-1</precision>
+        <origin>MySQL</origin>
+        <comments>ITM_PROPIEDAD</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>ITM_EMBALAJE</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>MySQL</origin>
+        <comments>ITM_EMBALAJE</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ITM_EANCOD</name>
         <length>20</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_3</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_EANCOD</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -761,11 +899,11 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TSICOD_4</name>
+        <name>ITM_DUN14</name>
         <length>20</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_4</comments>
+        <origin>MySQL</origin>
+        <comments>ITM_DUN14</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -782,16 +920,16 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
         <lenient_string_to_number>N</lenient_string_to_number>
       </value-meta>
       <value-meta>
-        <type>BigNumber</type>
+        <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>PCKCAP_0</name>
-        <length>18</length>
-        <precision>7</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>PCKCAP_0</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
+        <name>ITM_CAPDUN</name>
+        <length>9</length>
+        <precision>0</precision>
+        <origin>MySQL</origin>
+        <comments>ITM_CAPDUN</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
         <trim_type>none</trim_type>
         <case_insensitive>N</case_insensitive>
@@ -814,91 +952,8 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>128</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Insertar / Actualizar DIM_ITMMASTER</name>
-    <type>InsertUpdate</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <connection>MySQL</connection>
-    <commit>100</commit>
-    <update_bypassed>N</update_bypassed>
-    <lookup>
-      <schema>dwdb</schema>
-      <table>DIM_ITMMASTER</table>
-      <key>
-        <name>ITMREF_0</name>
-        <field>ITM_COD</field>
-        <condition>=</condition>
-        <name2/>
-      </key>
-      <value>
-        <name>ITM_COD</name>
-        <rename>ITMREF_0</rename>
-        <update>N</update>
-      </value>
-      <value>
-        <name>ITM_DESCRIP</name>
-        <rename>ITMDES1_0</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_CATEGORIA</name>
-        <rename>TCLCOD_0</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_TIPO1</name>
-        <rename>TSICOD_0</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_CANAL</name>
-        <rename>TSICOD_1</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_ORIGEN</name>
-        <rename>TSICOD_2</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_TIPO2</name>
-        <rename>TSICOD_3</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_PROPIEDAD</name>
-        <rename>TSICOD_4</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_EMBALAJE</name>
-        <rename>PCKCAP_0</rename>
-        <update>Y</update>
-      </value>
-    </lookup>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>896</xloc>
-      <yloc>128</yloc>
+      <xloc>240</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -922,7 +977,7 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>ITMREF_0</name>
+        <name>ITM_ID</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -939,8 +994,8 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>128</yloc>
+      <xloc>560</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -957,31 +1012,10 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
     </partitioning>
     <fields>
       <field>
-        <name>ITMREF_0</name>
+        <name>ITM_ID</name>
       </field>
       <field>
-        <name>ITMDES1_0</name>
-      </field>
-      <field>
-        <name>TCLCOD_0</name>
-      </field>
-      <field>
-        <name>TSICOD_0</name>
-      </field>
-      <field>
-        <name>TSICOD_1</name>
-      </field>
-      <field>
-        <name>TSICOD_2</name>
-      </field>
-      <field>
-        <name>TSICOD_3</name>
-      </field>
-      <field>
-        <name>TSICOD_4</name>
-      </field>
-      <field>
-        <name>PCKCAP_0</name>
+        <name>ITM_COD</name>
       </field>
       <select_unspecified>N</select_unspecified>
     </fields>
@@ -994,8 +1028,8 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       </output>
     </remotesteps>
     <GUI>
-      <xloc>656</xloc>
-      <yloc>128</yloc>
+      <xloc>416</xloc>
+      <yloc>96</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

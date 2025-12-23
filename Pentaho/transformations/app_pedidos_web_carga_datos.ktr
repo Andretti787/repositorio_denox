@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>V12_carga_traspasos_YPAG</name>
+    <name>app_pedidos_web_carga_datos</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,64 +427,21 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2021/07/09 09:26:57.647</created_date>
+    <created_date>2025/05/15 16:47:27.417</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2021/07/09 09:26:57.647</modified_date>
+    <modified_date>2025/05/15 16:47:27.417</modified_date>
     <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
-    <notepad>
-      <note>Separo 2 strings, uno para las cabeceras y otro para las líneas de cada registro que luego normalizo para 
-crear la estructura CAB + LIN (en este casso P y D)</note>
-      <xloc>224</xloc>
-      <yloc>384</yloc>
-      <width>557</width>
-      <heigth>42</heigth>
-      <fontname>Segoe UI</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
-    <notepad>
-      <note>Generación del modelo de importación desde v8 a V12 (YPAY) Pagos y Cobros.</note>
-      <xloc>320</xloc>
-      <yloc>16</yloc>
-      <width>423</width>
-      <heigth>26</heigth>
-      <fontname>Segoe UI</fontname>
-      <fontsize>9</fontsize>
-      <fontbold>N</fontbold>
-      <fontitalic>N</fontitalic>
-      <fontcolorred>0</fontcolorred>
-      <fontcolorgreen>0</fontcolorgreen>
-      <fontcolorblue>0</fontcolorblue>
-      <backgroundcolorred>255</backgroundcolorred>
-      <backgroundcolorgreen>205</backgroundcolorgreen>
-      <backgroundcolorblue>112</backgroundcolorblue>
-      <bordercolorred>100</bordercolorred>
-      <bordercolorgreen>100</bordercolorgreen>
-      <bordercolorblue>100</bordercolorblue>
-      <drawshadow>Y</drawshadow>
-    </notepad>
   </notepads>
   <connection>
-    <name>MSSQL v8</name>
-    <server>192.168.28.200</server>
+    <name>MSSQL_V12</name>
+    <server>192.168.28.100</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
-    <database>x3famesa</database>
-    <port>49412</port>
+    <database>x3</database>
+    <port>51439</port>
     <username>it</username>
     <password>Encrypted 2be98afc86aa7b2a2aa14ab63dfc3fd89</password>
     <servername/>
@@ -513,7 +470,7 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       </attribute>
       <attribute>
         <code>PORT_NUMBER</code>
-        <attribute>49412</attribute>
+        <attribute>51439</attribute>
       </attribute>
       <attribute>
         <code>PRESERVE_RESERVED_WORD_CASE</code>
@@ -537,532 +494,133 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       </attribute>
     </attributes>
   </connection>
+  <connection>
+    <name>MySQL</name>
+    <server>192.168.35.25</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>pract</database>
+    <port>3306</port>
+    <username>mmarco</username>
+    <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>EXTRA_OPTION_MYSQL.defaultFetchSize</code>
+        <attribute>500</attribute>
+      </attribute>
+      <attribute>
+        <code>EXTRA_OPTION_MYSQL.useCursorFetch</code>
+        <attribute>true</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>3306</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>STREAM_RESULTS</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <order>
     <hop>
-      <from>Entrada Tabla YPAY</from>
-      <to>Selecciona/Renombra valores</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Concatenar_CAB</from>
-      <to>Concatenar_LIN</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Concatenar_LIN</from>
-      <to>Normalización de fila</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
       <from>Selecciona/Renombra valores</from>
-      <to>Filtrar filas</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas</from>
-      <to>Concatenar_CAB</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtrar filas</from>
-      <to>Concatenar_LIN</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Normalización de fila</from>
-      <to>Filtro cabeceras NULL</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtro cabeceras NULL</from>
-      <to>Transformación simulada (no hace nada)</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Filtro cabeceras NULL</from>
       <to>Ordenar filas</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Ordenar filas</from>
-      <to>Salida Fichero SALDOS CTE</to>
+      <to>Insertar / Actualizar ITMMASTER</to>
       <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>BPADDRESS</from>
+      <to>Selecciona/Renombra valores 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores 2</from>
+      <to>Ordenar filas 2</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas 2</from>
+      <to>Insertar / Actualizar DIRECCIONES_CTE_WEB</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>BPCUSTOMER</from>
+      <to>Selecciona/Renombra valores 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores 3</from>
+      <to>Ordenar filas 3</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas 3</from>
+      <to>Insertar / Actualizar CLIENTES_WEB</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>REP</from>
+      <to>Selecciona/Renombra valores 4</to>
+      <enabled>N</enabled>
+    </hop>
+    <hop>
+      <from>Selecciona/Renombra valores 4</from>
+      <to>Ordenar filas 4</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas 4</from>
+      <to>Insertar / Actualizar USUARIOS_LOGIN</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Entrada Tabla</from>
+      <to>Selecciona/Renombra valores</to>
+      <enabled>N</enabled>
     </hop>
   </order>
   <step>
-    <name>Concatenar_CAB</name>
-    <type>ConcatFields</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <separator>;</separator>
-    <enclosure/>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>N</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding/>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name/>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>txt</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery>0</splitevery>
-    </file>
-    <fields>
-      <field>
-        <name>NUM_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>PAYTYP_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>UMRNUM_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>BPR_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CODIGO_PLAN_CAB</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CUENTA_CAB</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CHQNUM_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CHQBAN_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>PAM_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>FCY_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>BAN_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>SNS_0</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CUR_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>AMTCUR_0</name>
-        <type>BigNumber</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>AMTBAN_0</name>
-        <type>BigNumber</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CAMBIO DIVISA</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>ACCDAT_0</name>
-        <type>Date</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>DUDDAT_0</name>
-        <type>Timestamp</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>STA_0</name>
-        <type>Integer</type>
-        <format>0</format>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
-    <ConcatFields>
-      <targetFieldName>CAB</targetFieldName>
-      <targetFieldLength>0</targetFieldLength>
-      <removeSelectedFields>N</removeSelectedFields>
-    </ConcatFields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>368</xloc>
-      <yloc>448</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Concatenar_LIN</name>
-    <type>ConcatFields</type>
-    <description/>
-    <distribute>N</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <separator>;</separator>
-    <enclosure/>
-    <enclosure_forced>N</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>N</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding/>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name/>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention>txt</extention>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery>0</splitevery>
-    </file>
-    <fields>
-      <field>
-        <name>DENCOD_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CODIGO_PLAN_LIN</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CUENTA_LIN</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>BPRLIN_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>VCRTYP_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>VCRNUM_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>CURLIN_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>AMTLIN_0</name>
-        <type>BigNumber</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>VATLIN_0</name>
-        <type>String</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-      <field>
-        <name>LIN_0</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
-      </field>
-    </fields>
-    <ConcatFields>
-      <targetFieldName>LIN</targetFieldName>
-      <targetFieldLength>0</targetFieldLength>
-      <removeSelectedFields>N</removeSelectedFields>
-    </ConcatFields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>512</xloc>
-      <yloc>320</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Entrada Tabla YPAY</name>
+    <name>BPADDRESS</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -1072,42 +630,14 @@ crear la estructura CAB + LIN (en este casso P y D)</note>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MSSQL v8</connection>
-    <sql>SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CAB.BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
-, CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
-, DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
-, DET.LIN_0 
-FROM FAMESAOF.PAYMENTH CAB 
-INNER JOIN FAMESAOF.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
-WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
---AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO
-UNION ALL
-SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CONCAT('T',CAB.BPR_0) AS BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
-, CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
-, DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
-, DET.LIN_0
-FROM TRILLA.PAYMENTH CAB 
-INNER JOIN TRILLA.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
-WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
---AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO
-UNION ALL
-SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CONCAT('I', CAB.BPR_0) AS BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
-, CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
-, DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
-, DET.LIN_0
-FROM IPTFAM.PAYMENTH CAB 
-INNER JOIN IPTFAM.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
-WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
---AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO
-UNION ALL
-SELECT CAB.NUM_0, CAB.PAYTYP_0, CAB.UMRNUM_0, CONCAT('P',CAB.BPR_0) AS BPR_0, CAB.COA_0 AS CODIGO_PLAN_CAB, CAB.ACC_0 AS CUENTA_CAB, CAB.CHQNUM_0, CAB.CHQBAN_0, CAB.PAM_0, CAB.FCY_0, CAB.BAN_0, CAB.SNS_0, CAB.CUR_0
-, CAB.AMTCUR_0, CAB.AMTBAN_0, 0 AS 'CAMBIO DIVISA', CAB.ACCDAT_0, CAB.DUDDAT_0, CAB.STA_0  
-, DET.DENCOD_0, DET.COA_0 AS CODIGO_PLAN_LIN, DET.ACC_0 AS CUENTA_LIN, DET.BPRLIN_0, DET.VCRTYP_0, DET.VCRNUM_0, DET.CURLIN_0, DET.AMTLIN_0, DET.VATLIN_0
-, DET.LIN_0
-FROM IPTRILLA.PAYMENTH CAB 
-INNER JOIN IPTRILLA.PAYMENTD DET ON CAB.NUM_0 = DET.NUM_0
-WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
---AND PAYTYP_0 = 'CHQRD' --CHEQUE RECIBIDO REMESA OR 'PPAG' --PAGARÉ EMITIDO</sql>
+    <connection>MSSQL_V12</connection>
+    <sql>SELECT ADR.BPANUM_0, ADR.BPAADD_0, CONCAT(ADR.BPAADDLIG_0, ' ', ADR.BPAADDLIG_1, ' ', ADR.BPAADDLIG_2) AS DIR, ADR.POSCOD_0, ADR.CTY_0, ADR.SAT_0, ADR.CRY_0
+FROM LIVE.BPADDRESS ADR 
+INNER JOIN LIVE.BPCUSTOMER CUS ON CUS.BPCNUM_0 = ADR.BPANUM_0
+INNER JOIN LIVE.BPDLVCUST BPD ON BPD.BPCNUM_0 = ADR.BPANUM_0 AND BPD.BPAADD_0 = ADR.BPAADD_0
+WHERE ADR.BPAADD_0 &lt;&gt; 'F001'
+AND BPCSTA_0 = 2
+AND BPD.ENAFLG_0 = 2</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -1118,11 +648,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>NUM_0</name>
-        <length>20</length>
+        <name>BPANUM_0</name>
+        <length>15</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>NUM_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>BPANUM_0</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1141,11 +671,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>PAYTYP_0</name>
+        <name>BPAADD_0</name>
         <length>5</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>PAYTYP_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>BPAADD_0</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1164,11 +694,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>UMRNUM_0</name>
-        <length>35</length>
+        <name>DIR</name>
+        <length>152</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>UMRNUM_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>DIR</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1187,103 +717,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>BPR_0</name>
-        <length>16</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>BPR_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CODIGO_PLAN_CAB</name>
-        <length>3</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CODIGO_PLAN_CAB</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CUENTA_CAB</name>
-        <length>15</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CUENTA_CAB</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CHQNUM_0</name>
-        <length>15</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CHQNUM_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CHQBAN_0</name>
+        <name>POSCOD_0</name>
         <length>10</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CHQBAN_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>POSCOD_0</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1302,11 +740,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>PAM_0</name>
-        <length>5</length>
+        <name>CTY_0</name>
+        <length>40</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>PAM_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>CTY_0</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1325,11 +763,11 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>FCY_0</name>
-        <length>5</length>
+        <name>SAT_0</name>
+        <length>35</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>FCY_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>SAT_0</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
@@ -1348,426 +786,12 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>BAN_0</name>
-        <length>5</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>BAN_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>SNS_0</name>
-        <length>2</length>
-        <precision>0</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>SNS_0</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CUR_0</name>
+        <name>CRY_0</name>
         <length>3</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CUR_0</comments>
+        <origin>BPADDRESS</origin>
+        <comments>CRY_0</comments>
         <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>BigNumber</type>
-        <storagetype>normal</storagetype>
-        <name>AMTCUR_0</name>
-        <length>27</length>
-        <precision>13</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>AMTCUR_0</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>BigNumber</type>
-        <storagetype>normal</storagetype>
-        <name>AMTBAN_0</name>
-        <length>27</length>
-        <precision>13</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>AMTBAN_0</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>CAMBIO DIVISA</name>
-        <length>9</length>
-        <precision>0</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CAMBIO DIVISA</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Timestamp</type>
-        <storagetype>normal</storagetype>
-        <name>ACCDAT_0</name>
-        <length>3</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>ACCDAT_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Timestamp</type>
-        <storagetype>normal</storagetype>
-        <name>DUDDAT_0</name>
-        <length>3</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>DUDDAT_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>STA_0</name>
-        <length>2</length>
-        <precision>0</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>STA_0</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>DENCOD_0</name>
-        <length>5</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>DENCOD_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CODIGO_PLAN_LIN</name>
-        <length>3</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CODIGO_PLAN_LIN</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CUENTA_LIN</name>
-        <length>15</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CUENTA_LIN</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>BPRLIN_0</name>
-        <length>15</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>BPRLIN_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>VCRTYP_0</name>
-        <length>5</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>VCRTYP_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>VCRNUM_0</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>VCRNUM_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>CURLIN_0</name>
-        <length>3</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>CURLIN_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>BigNumber</type>
-        <storagetype>normal</storagetype>
-        <name>AMTLIN_0</name>
-        <length>27</length>
-        <precision>13</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>AMTLIN_0</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>VATLIN_0</name>
-        <length>5</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>VATLIN_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>Integer</type>
-        <storagetype>normal</storagetype>
-        <name>LIN_0</name>
-        <length>4</length>
-        <precision>0</precision>
-        <origin>Entrada Tabla YPAY</origin>
-        <comments>LIN_0</comments>
-        <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
@@ -1792,14 +816,408 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>176</xloc>
+      <xloc>160</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>BPCUSTOMER</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL_V12</connection>
+    <sql>SELECT BPCNUM_0, BPCNAM_0
+FROM LIVE.BPCUSTOMER
+WHERE BPCSTA_0 = 2</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>BPCNUM_0</name>
+        <length>15</length>
+        <precision>-1</precision>
+        <origin>BPCUSTOMER</origin>
+        <comments>BPCNUM_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>BPCNAM_0</name>
+        <length>35</length>
+        <precision>-1</precision>
+        <origin>BPCUSTOMER</origin>
+        <comments>BPCNAM_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Entrada Tabla</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL_V12</connection>
+    <sql>SELECT ITM.ITMREF_0, ITM.ITMDES1_0, ITM.EANCOD_0, ITM.YEANCOD14_0, ITM.ZUDVTA_0
+, (SELECT MIN(PRI_0)
+	FROM LIVE.SPRICLIST 
+	WHERE PLI_0 = 'T001' AND PLICRD_0 = 'TAV-000015' 
+	AND SUBSTRING (ITM.ITMREF_0, 1,5) = PLICRI1_0
+	GROUP BY PLICRI_0) AS ULT_PREC
+, (SELECT 'X' FROM LIVE.ITMFACILIT WHERE ITMREF_0 = ITM.ITMREF_0 AND STOFCY_0 = 'FAM') AS FAM
+, (SELECT 'X' FROM LIVE.ITMFACILIT WHERE ITMREF_0 = ITM.ITMREF_0 AND STOFCY_0 = 'TRI') AS TRI
+, (SELECT SUM(QTYSTU_0) FROM LIVE.STOCK WHERE ITMREF_0 = ITM.ITMREF_0 AND STOFCY_0 = 'FAM' AND STA_0 = 'A') AS STOCK_FAM1
+, (CASE ITS.ITMTYP_0 WHEN 1 THEN 
+		(SELECT SUM(QTYSTU_0) FROM LIVE.STOCK WHERE ITMREF_0 = ITM.ITMREF_0 AND STOFCY_0 = 'FAM' AND STA_0 = 'A')
+	ELSE
+		(SELECT MIN(STO.QTYDISP_0)
+		fROM LIVE.BOMD BOM
+		LEFT JOIN LIVE.ZSTOCKDISP STO ON STO.ITMREF_0 = BOM.CPNITMREF_0
+		WHERE BOM.ITMREF_0 = ITM.ITMREF_0 AND BOMALT_0 = 1 AND STO.STOFCY_0 = 'FAM'
+		GROUP BY BOM.ITMREF_0)
+    END)
+		AS STOCK_FAM
+, (SELECT SUM(QTYSTU_0) FROM LIVE.STOCK WHERE ITMREF_0 = ITM.ITMREF_0 AND STOFCY_0 = 'TRI' AND STA_0 = 'A') AS STOCK_TRI
+FROM LIVE.ITMMASTER ITM
+LEFT JOIN LIVE.ITMSALES ITS ON ITS.ITMREF_0 = ITM.ITMREF_0
+WHERE ZCATALOGO_0 = 2 AND ITMSTA_0 = 1
+ORDER BY ITM.ITMREF_0</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ITMREF_0</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>ITMREF_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ITMDES1_0</name>
+        <length>30</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>ITMDES1_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>EANCOD_0</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>EANCOD_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>YEANCOD14_0</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>YEANCOD14_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>ZUDVTA_0</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>ZUDVTA_0</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>ULT_PREC</name>
+        <length>19</length>
+        <precision>5</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>ULT_PREC</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>FAM</name>
+        <length>1</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>FAM</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>TRI</name>
+        <length>1</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>TRI</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>STOCK_FAM1</name>
+        <length>38</length>
+        <precision>13</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>STOCK_FAM1</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>STOCK_FAM</name>
+        <length>38</length>
+        <precision>13</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>STOCK_FAM</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>STOCK_TRI</name>
+        <length>38</length>
+        <precision>13</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>STOCK_TRI</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
       <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Filtrar filas</name>
-    <type>FilterRows</type>
+    <name>Insertar / Actualizar CLIENTES_WEB</name>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1808,25 +1226,29 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Concatenar_CAB</send_true_to>
-    <send_false_to>Concatenar_LIN</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>LIN_0</leftvalue>
-        <function>=</function>
-        <rightvalue/>
-        <value>
-          <name>constant</name>
-          <type>Integer</type>
-          <text>1</text>
-          <length>-1</length>
-          <precision>0</precision>
-          <isnull>N</isnull>
-          <mask>####0;-####0</mask>
-        </value>
-      </condition>
-    </compare>
+    <connection>MySQL</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>pract</schema>
+      <table>CLIENTES_WEB</table>
+      <key>
+        <name>BPCNUM_0</name>
+        <field>COD_CTE</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>COD_CTE</name>
+        <rename>BPCNUM_0</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>RAZON_SOCIAL</name>
+        <rename>BPCNAM_0</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1836,14 +1258,14 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>208</xloc>
-      <yloc>320</yloc>
+      <xloc>656</xloc>
+      <yloc>272</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Filtro cabeceras NULL</name>
-    <type>FilterRows</type>
+    <name>Insertar / Actualizar DIRECCIONES_CTE_WEB</name>
+    <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1852,16 +1274,60 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <send_true_to>Ordenar filas</send_true_to>
-    <send_false_to>Transformación simulada (no hace nada)</send_false_to>
-    <compare>
-      <condition>
-        <negated>N</negated>
-        <leftvalue>cabecera</leftvalue>
-        <function>IS NOT NULL</function>
-        <rightvalue/>
-      </condition>
-    </compare>
+    <connection>MySQL</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>pract</schema>
+      <table>DIRECCIONES_CTE_WEB</table>
+      <key>
+        <name>BPANUM_0</name>
+        <field>COD_CTE</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <key>
+        <name>BPAADD_0</name>
+        <field>COD_DIR</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>COD_CTE</name>
+        <rename>BPANUM_0</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>COD_DIR</name>
+        <rename>BPAADD_0</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>DIR</name>
+        <rename>DIR</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CP</name>
+        <rename>POSCOD_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>CIUDAD</name>
+        <rename>CTY_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PROVINCIA</name>
+        <rename>SAT_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PAIS</name>
+        <rename>CRY_0</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1871,35 +1337,85 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
-      <yloc>208</yloc>
+      <xloc>656</xloc>
+      <yloc>176</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Normalización de fila</name>
-    <type>Normaliser</type>
+    <name>Insertar / Actualizar ITMMASTER</name>
+    <type>InsertUpdate</type>
     <description/>
-    <distribute>N</distribute>
+    <distribute>Y</distribute>
     <custom_distribution/>
     <copies>1</copies>
     <partitioning>
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <typefield>typefield</typefield>
-    <fields>
-      <field>
-        <name>CAB</name>
-        <value>P</value>
-        <norm>cabecera</norm>
-      </field>
-      <field>
-        <name>LIN</name>
-        <value>D</value>
-        <norm>linea</norm>
-      </field>
-    </fields>
+    <connection>MySQL</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>pract</schema>
+      <table>ITMMASTER</table>
+      <key>
+        <name>ITMREF_0</name>
+        <field>COD_ART</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>COD_ART</name>
+        <rename>ITMREF_0</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>DESCRIPCION</name>
+        <rename>ITMDES1_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>EAN</name>
+        <rename>EANCOD_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>DUN</name>
+        <rename>YEANCOD14_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>UD_EMB</name>
+        <rename>ZUDVTA_0</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>PRECIO</name>
+        <rename>ULT_PREC</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>FAM</name>
+        <rename>FAM</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>TRI</name>
+        <rename>TRI</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>STOCK_FAM</name>
+        <rename>STOCK_FAM</rename>
+        <update>Y</update>
+      </value>
+      <value>
+        <name>STOCK_TRI</name>
+        <rename>STOCK_TRI</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -1909,8 +1425,56 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>576</xloc>
-      <yloc>128</yloc>
+      <xloc>656</xloc>
+      <yloc>64</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Insertar / Actualizar USUARIOS_LOGIN</name>
+    <type>InsertUpdate</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MySQL</connection>
+    <commit>100</commit>
+    <update_bypassed>N</update_bypassed>
+    <lookup>
+      <schema>pract</schema>
+      <table>USUARIOS_LOGIN</table>
+      <key>
+        <name>REPNUM_0</name>
+        <field>COD_USER</field>
+        <condition>=</condition>
+        <name2/>
+      </key>
+      <value>
+        <name>COD_USER</name>
+        <rename>REPNUM_0</rename>
+        <update>N</update>
+      </value>
+      <value>
+        <name>NOMBRE</name>
+        <rename>REPNAM_0</rename>
+        <update>Y</update>
+      </value>
+    </lookup>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>656</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -1934,15 +1498,7 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>NUM_0</name>
-        <ascending>Y</ascending>
-        <case_sensitive>N</case_sensitive>
-        <collator_enabled>N</collator_enabled>
-        <collator_strength>0</collator_strength>
-        <presorted>N</presorted>
-      </field>
-      <field>
-        <name>LIN_0</name>
+        <name>ITMREF_0</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -1959,14 +1515,14 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>848</xloc>
-      <yloc>16</yloc>
+      <xloc>480</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Salida Fichero SALDOS CTE</name>
-    <type>TextFileOutput</type>
+    <name>Ordenar filas 2</name>
+    <type>SortRows</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -1975,60 +1531,29 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <separator>;</separator>
-    <enclosure/>
-    <enclosure_forced>Y</enclosure_forced>
-    <enclosure_fix_disabled>N</enclosure_fix_disabled>
-    <header>N</header>
-    <footer>N</footer>
-    <format>DOS</format>
-    <compression>None</compression>
-    <encoding>ISO-8859-1</encoding>
-    <endedLine/>
-    <fileNameInField>N</fileNameInField>
-    <fileNameField/>
-    <create_parent_folder>Y</create_parent_folder>
-    <file>
-      <name>C:/intercambio/V12_traspasos_YPAG</name>
-      <servlet_output>N</servlet_output>
-      <do_not_open_new_file_init>N</do_not_open_new_file_init>
-      <extention/>
-      <append>N</append>
-      <split>N</split>
-      <haspartno>N</haspartno>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <add_to_result_filenames>Y</add_to_result_filenames>
-      <pad>N</pad>
-      <fast_dump>N</fast_dump>
-      <splitevery/>
-    </file>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>typefield</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>none</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
+        <name>BPANUM_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
       </field>
       <field>
-        <name>cabecera</name>
-        <type>None</type>
-        <format/>
-        <currency/>
-        <decimal/>
-        <group/>
-        <nullif/>
-        <trim_type>both</trim_type>
-        <length>-1</length>
-        <precision>-1</precision>
+        <name>BPAADD_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
       </field>
     </fields>
     <attributes/>
@@ -2040,8 +1565,174 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1088</xloc>
-      <yloc>128</yloc>
+      <xloc>480</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar filas 3</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>BPCNUM_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>480</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Ordenar filas 4</name>
+    <type>SortRows</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <directory>%%java.io.tmpdir%%</directory>
+    <prefix>out</prefix>
+    <sort_size>1000000</sort_size>
+    <free_memory/>
+    <compress>N</compress>
+    <compress_variable/>
+    <unique_rows>N</unique_rows>
+    <fields>
+      <field>
+        <name>REPNUM_0</name>
+        <ascending>Y</ascending>
+        <case_sensitive>N</case_sensitive>
+        <collator_enabled>N</collator_enabled>
+        <collator_strength>0</collator_strength>
+        <presorted>N</presorted>
+      </field>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>480</xloc>
+      <yloc>368</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>REP</name>
+    <type>TableInput</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <connection>MSSQL_V12</connection>
+    <sql>SELECT REPNUM_0, REPNAM_0
+FROM LIVE.SALESREP</sql>
+    <limit>0</limit>
+    <lookup/>
+    <execute_each_row>N</execute_each_row>
+    <variables_active>N</variables_active>
+    <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>REPNUM_0</name>
+        <length>15</length>
+        <precision>-1</precision>
+        <origin>REP</origin>
+        <comments>REPNUM_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>REPNAM_0</name>
+        <length>35</length>
+        <precision>-1</precision>
+        <origin>REP</origin>
+        <comments>REPNAM_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>160</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -2057,14 +1748,44 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <schema_name/>
     </partitioning>
     <fields>
+      <field>
+        <name>ITMREF_0</name>
+      </field>
+      <field>
+        <name>ITMDES1_0</name>
+      </field>
+      <field>
+        <name>EANCOD_0</name>
+      </field>
+      <field>
+        <name>YEANCOD14_0</name>
+      </field>
+      <field>
+        <name>ZUDVTA_0</name>
+      </field>
+      <field>
+        <name>ULT_PREC</name>
+      </field>
+      <field>
+        <name>FAM</name>
+      </field>
+      <field>
+        <name>TRI</name>
+      </field>
+      <field>
+        <name>STOCK_FAM</name>
+      </field>
+      <field>
+        <name>STOCK_TRI</name>
+      </field>
       <select_unspecified>N</select_unspecified>
       <meta>
-        <name>ACCDAT_0</name>
-        <rename>ACCDAT_0</rename>
-        <type>Date</type>
+        <name>ZUDVTA_0</name>
+        <rename>ZUDVTA_0</rename>
+        <type>Integer</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask>ddMMyyyy</conversion_mask>
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
         <date_format_locale/>
         <date_format_timezone/>
@@ -2076,12 +1797,29 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
         <storage_type/>
       </meta>
       <meta>
-        <name>DUDDAT_0</name>
-        <rename>DUDDAT_0</rename>
-        <type>Date</type>
+        <name>STOCK_FAM</name>
+        <rename>STOCK_FAM</rename>
+        <type>Integer</type>
         <length>-2</length>
         <precision>-2</precision>
-        <conversion_mask>ddMMyyyy</conversion_mask>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>STOCK_TRI</name>
+        <rename>STOCK_TRI</rename>
+        <type>Integer</type>
+        <length>-2</length>
+        <precision>-2</precision>
+        <conversion_mask/>
         <date_format_lenient>false</date_format_lenient>
         <date_format_locale/>
         <date_format_timezone/>
@@ -2102,14 +1840,14 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>368</xloc>
-      <yloc>192</yloc>
+      <xloc>336</xloc>
+      <yloc>64</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Transformación simulada (no hace nada)</name>
-    <type>Dummy</type>
+    <name>Selecciona/Renombra valores 2</name>
+    <type>SelectValues</type>
     <description/>
     <distribute>Y</distribute>
     <custom_distribution/>
@@ -2118,6 +1856,30 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       <method>none</method>
       <schema_name/>
     </partitioning>
+    <fields>
+      <field>
+        <name>BPANUM_0</name>
+      </field>
+      <field>
+        <name>BPAADD_0</name>
+      </field>
+      <field>
+        <name>DIR</name>
+      </field>
+      <field>
+        <name>POSCOD_0</name>
+      </field>
+      <field>
+        <name>CTY_0</name>
+      </field>
+      <field>
+        <name>SAT_0</name>
+      </field>
+      <field>
+        <name>CRY_0</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
     <attributes/>
     <cluster_schema/>
     <remotesteps>
@@ -2127,8 +1889,76 @@ WHERE CAB.STA_0 = 1 --1- ESTADO TECLEADO, 9-EN BANCO
       </output>
     </remotesteps>
     <GUI>
-      <xloc>1056</xloc>
-      <yloc>320</yloc>
+      <xloc>336</xloc>
+      <yloc>176</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores 3</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>BPCNUM_0</name>
+      </field>
+      <field>
+        <name>BPCNAM_0</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>272</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores 4</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <field>
+        <name>REPNUM_0</name>
+      </field>
+      <field>
+        <name>REPNAM_0</name>
+      </field>
+      <select_unspecified>N</select_unspecified>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>336</xloc>
+      <yloc>368</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <transformation>
   <info>
-    <name>carga_DIM_ITMMASTER</name>
+    <name>carga_tiendas_eroski_mysql_mssql</name>
     <description/>
     <extended_description/>
     <trans_version/>
@@ -427,17 +427,17 @@
     <clusterschemas>
     </clusterschemas>
     <created_user>-</created_user>
-    <created_date>2022/05/12 09:23:40.745</created_date>
+    <created_date>2025/11/24 15:02:17.158</created_date>
     <modified_user>-</modified_user>
-    <modified_date>2022/05/12 09:23:40.745</modified_date>
-    <key_for_session_key>H4sIAAAAAAAAAAMAAAAAAAAAAAA=</key_for_session_key>
+    <modified_date>2025/11/24 15:02:17.158</modified_date>
+    <key_for_session_key/>
     <is_key_private>N</is_key_private>
   </info>
   <notepads>
   </notepads>
   <connection>
-    <name>MSSQL V12</name>
-    <server>192.168.28.100\X3V12</server>
+    <name>MSSQL_V12</name>
+    <server>192.168.28.100</server>
     <type>MSSQLNATIVE</type>
     <access>Native</access>
     <database>x3</database>
@@ -499,7 +499,7 @@
     <server>192.168.35.25</server>
     <type>MYSQL</type>
     <access>Native</access>
-    <database>dwdb</database>
+    <database>mariodb</database>
     <port>3306</port>
     <username>mmarco</username>
     <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
@@ -559,23 +559,23 @@
   </connection>
   <order>
     <hop>
-      <from>Entrada Tabla ITMMASTER-ITMFACILIT</from>
-      <to>Ordenar filas</to>
-      <enabled>Y</enabled>
-    </hop>
-    <hop>
-      <from>Ordenar filas</from>
+      <from>Entrada Tabla</from>
       <to>Selecciona/Renombra valores</to>
       <enabled>Y</enabled>
     </hop>
     <hop>
       <from>Selecciona/Renombra valores</from>
-      <to>Insertar / Actualizar DIM_ITMMASTER</to>
+      <to>Ordenar filas</to>
+      <enabled>Y</enabled>
+    </hop>
+    <hop>
+      <from>Ordenar filas</from>
+      <to>Insertar / Actualizar</to>
       <enabled>Y</enabled>
     </hop>
   </order>
   <step>
-    <name>Entrada Tabla ITMMASTER-ITMFACILIT</name>
+    <name>Entrada Tabla</name>
     <type>TableInput</type>
     <description/>
     <distribute>Y</distribute>
@@ -585,11 +585,8 @@
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MSSQL V12</connection>
-    <sql>SELECT ITM.ITMREF_0, ITMDES1_0, TCLCOD_0, TSICOD_0, TSICOD_1, TSICOD_2, TSICOD_3, TSICOD_4,   ITF.PCKCAP_0
-fROM LIVE.ITMMASTER ITM
-INNER JOIN LIVE.ITMFACILIT ITF ON ITF.ITMREF_0 = ITM.ITMREF_0
-WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') </sql>
+    <connection>MySQL</connection>
+    <sql>SELECT * fROM mariodb.TIENDAS_EROSKI</sql>
     <limit>0</limit>
     <lookup/>
     <execute_each_row>N</execute_each_row>
@@ -598,14 +595,14 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
     <cached_row_meta_active>N</cached_row_meta_active>
     <row-meta>
       <value-meta>
-        <type>String</type>
+        <type>Integer</type>
         <storagetype>normal</storagetype>
-        <name>ITMREF_0</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>ITMREF_0</comments>
-        <conversion_Mask/>
+        <name>COD_CENTRO</name>
+        <length>15</length>
+        <precision>0</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>COD_CENTRO</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
@@ -623,12 +620,35 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>ITMDES1_0</name>
-        <length>30</length>
+        <name>NOMBRE_CENTRO</name>
+        <length>16</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>ITMDES1_0</comments>
+        <origin>Entrada Tabla</origin>
+        <comments>NOMBRE_CENTRO</comments>
         <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>PUNTO_OPERACIONAL</name>
+        <length>15</length>
+        <precision>0</precision>
+        <origin>Entrada Tabla</origin>
+        <comments>PUNTO_OPERACIONAL</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
         <currency_symbol/>
@@ -646,152 +666,14 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <value-meta>
         <type>String</type>
         <storagetype>normal</storagetype>
-        <name>TCLCOD_0</name>
-        <length>5</length>
+        <name>COD_CLIENTE</name>
+        <length>63</length>
         <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TCLCOD_0</comments>
+        <origin>Entrada Tabla</origin>
+        <comments>COD_CLIENTE</comments>
         <conversion_Mask/>
         <decimal_symbol>,</decimal_symbol>
         <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>TSICOD_0</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_0</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>TSICOD_1</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_1</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>TSICOD_2</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_2</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>TSICOD_3</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_3</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>String</type>
-        <storagetype>normal</storagetype>
-        <name>TSICOD_4</name>
-        <length>20</length>
-        <precision>-1</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>TSICOD_4</comments>
-        <conversion_Mask/>
-        <decimal_symbol>,</decimal_symbol>
-        <grouping_symbol>.</grouping_symbol>
-        <currency_symbol/>
-        <trim_type>none</trim_type>
-        <case_insensitive>N</case_insensitive>
-        <collator_disabled>Y</collator_disabled>
-        <collator_strength>0</collator_strength>
-        <sort_descending>N</sort_descending>
-        <output_padding>N</output_padding>
-        <date_format_lenient>N</date_format_lenient>
-        <date_format_locale>es_ES</date_format_locale>
-        <date_format_timezone>Europe/Paris</date_format_timezone>
-        <lenient_string_to_number>N</lenient_string_to_number>
-      </value-meta>
-      <value-meta>
-        <type>BigNumber</type>
-        <storagetype>normal</storagetype>
-        <name>PCKCAP_0</name>
-        <length>18</length>
-        <precision>7</precision>
-        <origin>Entrada Tabla ITMMASTER-ITMFACILIT</origin>
-        <comments>PCKCAP_0</comments>
-        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
-        <decimal_symbol>.</decimal_symbol>
-        <grouping_symbol/>
         <currency_symbol/>
         <trim_type>none</trim_type>
         <case_insensitive>N</case_insensitive>
@@ -814,13 +696,13 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       </output>
     </remotesteps>
     <GUI>
-      <xloc>144</xloc>
-      <yloc>128</yloc>
+      <xloc>160</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
   <step>
-    <name>Insertar / Actualizar DIM_ITMMASTER</name>
+    <name>Insertar / Actualizar</name>
     <type>InsertUpdate</type>
     <description/>
     <distribute>Y</distribute>
@@ -830,61 +712,36 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       <method>none</method>
       <schema_name/>
     </partitioning>
-    <connection>MySQL</connection>
+    <connection>MSSQL_V12</connection>
     <commit>100</commit>
     <update_bypassed>N</update_bypassed>
     <lookup>
-      <schema>dwdb</schema>
-      <table>DIM_ITMMASTER</table>
+      <schema>LIVE</schema>
+      <table>ZTIENDAS_EROSKI</table>
       <key>
-        <name>ITMREF_0</name>
-        <field>ITM_COD</field>
+        <name>PUNTO_OPERACIONAL</name>
+        <field>PUNTO_OPERACIONAL</field>
         <condition>=</condition>
         <name2/>
       </key>
       <value>
-        <name>ITM_COD</name>
-        <rename>ITMREF_0</rename>
+        <name>PUNTO_OPERACIONAL</name>
+        <rename>PUNTO_OPERACIONAL</rename>
         <update>N</update>
       </value>
       <value>
-        <name>ITM_DESCRIP</name>
-        <rename>ITMDES1_0</rename>
+        <name>COD_CENTRO</name>
+        <rename>COD_CENTRO</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>ITM_CATEGORIA</name>
-        <rename>TCLCOD_0</rename>
+        <name>NOMBRE_CENTRO</name>
+        <rename>NOMBRE_CENTRO</rename>
         <update>Y</update>
       </value>
       <value>
-        <name>ITM_TIPO1</name>
-        <rename>TSICOD_0</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_CANAL</name>
-        <rename>TSICOD_1</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_ORIGEN</name>
-        <rename>TSICOD_2</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_TIPO2</name>
-        <rename>TSICOD_3</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_PROPIEDAD</name>
-        <rename>TSICOD_4</rename>
-        <update>Y</update>
-      </value>
-      <value>
-        <name>ITM_EMBALAJE</name>
-        <rename>PCKCAP_0</rename>
+        <name>COD_CLIENTE</name>
+        <rename>COD_CLIENTE</rename>
         <update>Y</update>
       </value>
     </lookup>
@@ -897,8 +754,104 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       </output>
     </remotesteps>
     <GUI>
-      <xloc>896</xloc>
-      <yloc>128</yloc>
+      <xloc>848</xloc>
+      <yloc>80</yloc>
+      <draw>Y</draw>
+    </GUI>
+  </step>
+  <step>
+    <name>Selecciona/Renombra valores</name>
+    <type>SelectValues</type>
+    <description/>
+    <distribute>Y</distribute>
+    <custom_distribution/>
+    <copies>1</copies>
+    <partitioning>
+      <method>none</method>
+      <schema_name/>
+    </partitioning>
+    <fields>
+      <select_unspecified>N</select_unspecified>
+      <meta>
+        <name>COD_CENTRO</name>
+        <rename>COD_CENTRO</rename>
+        <type>String</type>
+        <length>15</length>
+        <precision>0</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>NOMBRE_CENTRO</name>
+        <rename>NOMBRE_CENTRO</rename>
+        <type>String</type>
+        <length>80</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>PUNTO_OPERACIONAL</name>
+        <rename>PUNTO_OPERACIONAL</rename>
+        <type>Integer</type>
+        <length>15</length>
+        <precision>0</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+      <meta>
+        <name>COD_CLIENTE</name>
+        <rename>COD_CLIENTE</rename>
+        <type>String</type>
+        <length>10</length>
+        <precision>-2</precision>
+        <conversion_mask/>
+        <date_format_lenient>false</date_format_lenient>
+        <date_format_locale/>
+        <date_format_timezone/>
+        <lenient_string_to_number>false</lenient_string_to_number>
+        <encoding/>
+        <decimal_symbol/>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <storage_type/>
+      </meta>
+    </fields>
+    <attributes/>
+    <cluster_schema/>
+    <remotesteps>
+      <input>
+      </input>
+      <output>
+      </output>
+    </remotesteps>
+    <GUI>
+      <xloc>384</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>
@@ -922,7 +875,7 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
     <unique_rows>N</unique_rows>
     <fields>
       <field>
-        <name>ITMREF_0</name>
+        <name>COD_CENTRO</name>
         <ascending>Y</ascending>
         <case_sensitive>N</case_sensitive>
         <collator_enabled>N</collator_enabled>
@@ -939,63 +892,8 @@ WHERE SUBSTRING(ITM.ITMREF_0,1,5) IN ('12580','12590','12600','23420','70122') <
       </output>
     </remotesteps>
     <GUI>
-      <xloc>416</xloc>
-      <yloc>128</yloc>
-      <draw>Y</draw>
-    </GUI>
-  </step>
-  <step>
-    <name>Selecciona/Renombra valores</name>
-    <type>SelectValues</type>
-    <description/>
-    <distribute>Y</distribute>
-    <custom_distribution/>
-    <copies>1</copies>
-    <partitioning>
-      <method>none</method>
-      <schema_name/>
-    </partitioning>
-    <fields>
-      <field>
-        <name>ITMREF_0</name>
-      </field>
-      <field>
-        <name>ITMDES1_0</name>
-      </field>
-      <field>
-        <name>TCLCOD_0</name>
-      </field>
-      <field>
-        <name>TSICOD_0</name>
-      </field>
-      <field>
-        <name>TSICOD_1</name>
-      </field>
-      <field>
-        <name>TSICOD_2</name>
-      </field>
-      <field>
-        <name>TSICOD_3</name>
-      </field>
-      <field>
-        <name>TSICOD_4</name>
-      </field>
-      <field>
-        <name>PCKCAP_0</name>
-      </field>
-      <select_unspecified>N</select_unspecified>
-    </fields>
-    <attributes/>
-    <cluster_schema/>
-    <remotesteps>
-      <input>
-      </input>
-      <output>
-      </output>
-    </remotesteps>
-    <GUI>
-      <xloc>656</xloc>
-      <yloc>128</yloc>
+      <xloc>608</xloc>
+      <yloc>80</yloc>
       <draw>Y</draw>
     </GUI>
   </step>

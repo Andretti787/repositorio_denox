@@ -1211,7 +1211,7 @@
     </partitioning>
     <connection>MSSQL V12</connection>
     <sql>--V8 FAMESA
-SELECT  CAB.BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') as ACCDAT, DET.ITMREF_0, DET.NETPRI_0, DET.QTYSTU_0, DET.REP1_0
+SELECT  CAB.BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') as ACCDAT, DET.ITMREF_0, DET.NETPRI_0, (CAB.SNS_0 * DET.QTYSTU_0) AS QTYSTU_0, DET.REP1_0
 , DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
 , CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, DET.CPRPRI_0 * QTYSTU_0 AS COSTE
 ,  CASE (CAB.SNS_0) WHEN 1 THEN (DET.NETPRI_0 * QTYSTU_0) - (DET.CPRPRI_0 * QTYSTU_0)
@@ -1223,7 +1223,7 @@ INNER JOIN [192.168.28.200\X3FAMESA].x3famesa.FAMESAOF.SINVOICE CAB ON CAB.NUM_0
 WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)
 UNION ALL
 --V8 TRILLA
-SELECT  CONCAT('T', CAB.BPR_0) AS BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') as ACCDAT, DET.ITMREF_0, DET.NETPRI_0, DET.QTYSTU_0, CASE DET.REP1_0 WHEN '' THEN '0'
+SELECT  CONCAT('T', CAB.BPR_0) AS BPR_0, CAB.FCY_0, CAB.NUM_0, CAB.BPAINV_0, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') as ACCDAT, DET.ITMREF_0, DET.NETPRI_0, (CAB.SNS_0 * DET.QTYSTU_0) AS QTYSTU_0, CASE DET.REP1_0 WHEN '' THEN '0'
 		ELSE DET.REP1_0
 		END AS REP1_0
 , DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
@@ -1237,7 +1237,7 @@ INNER JOIN [192.168.28.200\X3FAMESA].x3famesa.TRILLA.SINVOICE CAB ON CAB.NUM_0 =
 WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)
 UNION ALL
 --V12
-SELECT  CAB.BPR_0 COLLATE Latin1_General_BIN, CAB.FCY_0 COLLATE Latin1_General_BIN, CAB.NUM_0 COLLATE Latin1_General_BIN, CAB.BPAINV_0 COLLATE Latin1_General_BIN, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') COLLATE Latin1_General_BIN as ACCDAT, DET.ITMREF_0 COLLATE Latin1_General_BIN, DET.NETPRI_0, DET.QTYSTU_0, DET.REP1_0 COLLATE Latin1_General_BIN
+SELECT  CAB.BPR_0 COLLATE Latin1_General_BIN, CAB.FCY_0 COLLATE Latin1_General_BIN, CAB.NUM_0 COLLATE Latin1_General_BIN, CAB.BPAINV_0 COLLATE Latin1_General_BIN, CAB.SNS_0, FORMAT(CAB.ACCDAT_0,'yyyyMMdd') COLLATE Latin1_General_BIN as ACCDAT, DET.ITMREF_0 COLLATE Latin1_General_BIN, DET.NETPRI_0, (CAB.SNS_0 * DET.QTYSTU_0) AS QTYSTU_0, DET.REP1_0 COLLATE Latin1_General_BIN
 , DET.DISCRGVAL1_0, DISCRGVAL2_0, DISCRGVAL3_0,DISCRGVAL4_0, DISCRGVAL5_0
 , CAB.SNS_0 * (DET.NETPRI_0 * QTYSTU_0) AS IMP_NETO, DET.CPRPRI_0 * QTYSTU_0 AS COSTE
 ,  CASE (CAB.SNS_0) WHEN 1 THEN (DET.NETPRI_0 * QTYSTU_0) - (DET.CPRPRI_0 * QTYSTU_0)
@@ -1252,6 +1252,423 @@ WHERE DET.LINTYP_0 NOT IN (3,7) AND CAB.INVTYP_0 IN (1,2)</sql>
     <execute_each_row>N</execute_each_row>
     <variables_active>N</variables_active>
     <lazy_conversion_active>N</lazy_conversion_active>
+    <cached_row_meta_active>N</cached_row_meta_active>
+    <row-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>BPR_0</name>
+        <length>16</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>BPR_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>FCY_0</name>
+        <length>5</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>FCY_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>NUM_0</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>NUM_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>BPAINV_0</name>
+        <length>5</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>BPAINV_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>Integer</type>
+        <storagetype>normal</storagetype>
+        <name>SNS_0</name>
+        <length>4</length>
+        <precision>0</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>SNS_0</comments>
+        <conversion_Mask>####0;-####0</conversion_Mask>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ACCDAT</name>
+        <length>4000</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>ACCDAT</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>ITMREF_0</name>
+        <length>20</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>ITMREF_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>NETPRI_0</name>
+        <length>19</length>
+        <precision>5</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>NETPRI_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>QTYSTU_0</name>
+        <length>34</length>
+        <precision>13</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>QTYSTU_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>String</type>
+        <storagetype>normal</storagetype>
+        <name>REP1_0</name>
+        <length>15</length>
+        <precision>-1</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>REP1_0</comments>
+        <conversion_Mask/>
+        <decimal_symbol>,</decimal_symbol>
+        <grouping_symbol>.</grouping_symbol>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>DISCRGVAL1_0</name>
+        <length>19</length>
+        <precision>5</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>DISCRGVAL1_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>DISCRGVAL2_0</name>
+        <length>19</length>
+        <precision>5</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>DISCRGVAL2_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>DISCRGVAL3_0</name>
+        <length>19</length>
+        <precision>5</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>DISCRGVAL3_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>DISCRGVAL4_0</name>
+        <length>19</length>
+        <precision>5</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>DISCRGVAL4_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>DISCRGVAL5_0</name>
+        <length>28</length>
+        <precision>8</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>DISCRGVAL5_0</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>IMP_NETO</name>
+        <length>38</length>
+        <precision>6</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>IMP_NETO</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>COSTE</name>
+        <length>38</length>
+        <precision>8</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>COSTE</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+      <value-meta>
+        <type>BigNumber</type>
+        <storagetype>normal</storagetype>
+        <name>MARGEN</name>
+        <length>38</length>
+        <precision>8</precision>
+        <origin>Entrada Tabla SINVOICED</origin>
+        <comments>MARGEN</comments>
+        <conversion_Mask>######0.0###################;-######0.0###################</conversion_Mask>
+        <decimal_symbol>.</decimal_symbol>
+        <grouping_symbol/>
+        <currency_symbol/>
+        <trim_type>none</trim_type>
+        <case_insensitive>N</case_insensitive>
+        <collator_disabled>Y</collator_disabled>
+        <collator_strength>0</collator_strength>
+        <sort_descending>N</sort_descending>
+        <output_padding>N</output_padding>
+        <date_format_lenient>N</date_format_lenient>
+        <date_format_locale>es_ES</date_format_locale>
+        <date_format_timezone>Europe/Paris</date_format_timezone>
+        <lenient_string_to_number>N</lenient_string_to_number>
+      </value-meta>
+    </row-meta>
     <attributes/>
     <cluster_schema/>
     <remotesteps>

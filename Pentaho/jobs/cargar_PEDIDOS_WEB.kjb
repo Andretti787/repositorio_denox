@@ -1,16 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>carga_PEDIDOS_METROMARKET</name>
+  <name>cargar_PEDIDOS_WEB</name>
   <description/>
   <extended_description/>
   <job_version/>
   <directory>/</directory>
   <created_user>-</created_user>
-  <created_date>2023/03/31 08:09:41.737</created_date>
+  <created_date>2025/05/19 15:32:46.676</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2023/03/31 08:09:41.737</modified_date>
+  <modified_date>2025/05/19 15:32:46.676</modified_date>
   <parameters>
     </parameters>
+  <connection>
+    <name>MySql</name>
+    <server>192.168.35.25</server>
+    <type>MYSQL</type>
+    <access>Native</access>
+    <database>pract</database>
+    <port>3306</port>
+    <username>mmarco</username>
+    <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
+    <servername/>
+    <data_tablespace/>
+    <index_tablespace/>
+    <attributes>
+      <attribute>
+        <code>EXTRA_OPTION_MYSQL.defaultFetchSize</code>
+        <attribute>500</attribute>
+      </attribute>
+      <attribute>
+        <code>EXTRA_OPTION_MYSQL.useCursorFetch</code>
+        <attribute>true</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>IS_CLUSTERED</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>PORT_NUMBER</code>
+        <attribute>3306</attribute>
+      </attribute>
+      <attribute>
+        <code>PRESERVE_RESERVED_WORD_CASE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>QUOTE_ALL_FIELDS</code>
+        <attribute>N</attribute>
+      </attribute>
+      <attribute>
+        <code>STREAM_RESULTS</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
+        <attribute>Y</attribute>
+      </attribute>
+      <attribute>
+        <code>USE_POOLING</code>
+        <attribute>N</attribute>
+      </attribute>
+    </attributes>
+  </connection>
   <slaveservers>
     </slaveservers>
   <job-log-table>
@@ -304,8 +367,143 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>112</xloc>
+      <xloc>48</xloc>
+      <yloc>128</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Integrar pedidos web</name>
+      <description/>
+      <type>TRANS</type>
+      <attributes/>
+      <specification_method>filename</specification_method>
+      <trans_object_id/>
+      <filename>C:/Pentaho9.2/data-integration/samples/transformations/app_pedidos_web_integracion.ktr</filename>
+      <transname/>
+      <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>Y</params_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <clear_rows>N</clear_rows>
+      <clear_files>N</clear_files>
+      <set_logfile>Y</set_logfile>
+      <logfile>C:\Trabajo\python CRUD\Integración\IMPORT_ZSOHWEB_LOG</logfile>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <loglevel>Basic</loglevel>
+      <cluster>N</cluster>
+      <slave_server_name/>
+      <set_append_logfile>N</set_append_logfile>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <create_parent_folder>N</create_parent_folder>
+      <logging_remote_work>N</logging_remote_work>
+      <run_configuration>Pentaho local</run_configuration>
+      <suppress_result_data>N</suppress_result_data>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>480</xloc>
+      <yloc>128</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Success</name>
+      <description/>
+      <type>SUCCESS</type>
+      <attributes/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>688</xloc>
+      <yloc>128</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Mail</name>
+      <description/>
+      <type>MAIL</type>
+      <attributes/>
+      <server>smtp.famesa.es</server>
+      <port>25</port>
+      <destination>mmarco@denox.eu</destination>
+      <destinationCc/>
+      <destinationBCc/>
+      <replyto>informatica@famesa.es</replyto>
+      <replytoname>Spoon (RSERVER)</replytoname>
+      <subject>Carga pedido REPRESENTANTE</subject>
+      <include_date>N</include_date>
+      <contact_person/>
+      <contact_phone/>
+      <comment>ESTO ES UN CORREO AUTOMÁTICO!!
+
+Se han generado los ficheros necesarios para la importación de los pedidos de los REPRESENTANTES.
+
+- Fichero (IMPORT_ZSOHWEB): pedidos. Importar mediante modelo: ZSOHWEB
+
+</comment>
+      <include_files>Y</include_files>
+      <zip_files>N</zip_files>
+      <zip_name/>
+      <use_auth>Y</use_auth>
+      <use_secure_auth>N</use_secure_auth>
+      <auth_user>informatica@famesa.es</auth_user>
+      <auth_password>Encrypted 2be98afc86aa7f2b7b20aba75d3c1fb8f</auth_password>
+      <only_comment>N</only_comment>
+      <use_HTML>N</use_HTML>
+      <use_Priority>N</use_Priority>
+      <encoding>UTF-8</encoding>
+      <priority>normal</priority>
+      <importance>normal</importance>
+      <sensitivity>normal</sensitivity>
+      <secureconnectiontype>SSL</secureconnectiontype>
+      <replyToAddresses>Mario</replyToAddresses>
+      <filetypes>
+        <filetype>GENERAL</filetype>
+        <filetype>LOG</filetype>
+        <filetype>ERRORLINE</filetype>
+        <filetype>ERROR</filetype>
+        <filetype>WARNING</filetype>
+      </filetypes>
+      <embeddedimages>
+      </embeddedimages>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1200</xloc>
       <yloc>96</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Copy files</name>
+      <description/>
+      <type>COPY_FILES</type>
+      <attributes/>
+      <copy_empty_folders>N</copy_empty_folders>
+      <arg_from_previous>N</arg_from_previous>
+      <overwrite_files>Y</overwrite_files>
+      <include_subfolders>N</include_subfolders>
+      <remove_source_files>N</remove_source_files>
+      <add_result_filesname>N</add_result_filesname>
+      <destination_is_a_file>N</destination_is_a_file>
+      <create_destination_folder>Y</create_destination_folder>
+      <fields>
+        <field>
+          <source_filefolder>EMPTY_SOURCE_URL-0-file:///C:/Trabajo/python%20CRUD/Integración/IMPORT_ZSOHWEB</source_filefolder>
+          <source_configuration_name/>
+          <destination_filefolder>EMPTY_DEST_URL-0-file:////192.168.28.100/d$/Sage/X3V12/folders/TEST/IMPORT/CARGA_AUTO</destination_filefolder>
+          <destination_configuration_name/>
+          <wildcard>IMPORT*.*</wildcard>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>688</xloc>
+      <yloc>304</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -315,7 +513,7 @@
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>C:/Pentaho9.2/data-integration/samples/transformations/carga_METROMARKET_pedido_V4.ktr</filename>
+      <filename>C:/Pentaho9.2/data-integration/samples/transformations/app_pedidos_web_carga_datos.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
@@ -343,24 +541,84 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>96</yloc>
+      <xloc>192</xloc>
+      <yloc>240</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Success</name>
+      <name>Success 2</name>
       <description/>
       <type>SUCCESS</type>
       <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>544</xloc>
-      <yloc>96</yloc>
+      <xloc>336</xloc>
+      <yloc>128</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Mail</name>
+      <name>Checks if files exist</name>
+      <description/>
+      <type>FILES_EXIST</type>
+      <attributes/>
+      <filename/>
+      <fields>
+        <field>
+          <name>C:\Trabajo\python CRUD\Integración\IMPORT_ZSOHWEB</name>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>896</xloc>
+      <yloc>304</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Success 3</name>
+      <description/>
+      <type>SUCCESS</type>
+      <attributes/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1040</xloc>
+      <yloc>208</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Checks if files exist 2</name>
+      <description/>
+      <type>FILES_EXIST</type>
+      <attributes/>
+      <filename/>
+      <fields>
+        <field>
+          <name>C:\Trabajo\python CRUD\Integración\IMPORT_ZSOHWEB_MUESTRAS</name>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>896</xloc>
+      <yloc>400</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Success 4</name>
+      <description/>
+      <type>SUCCESS</type>
+      <attributes/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1056</xloc>
+      <yloc>400</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Mail 2</name>
       <description/>
       <type>MAIL</type>
       <attributes/>
@@ -370,17 +628,16 @@
       <destinationCc/>
       <destinationBCc/>
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>Spoon (local)</replytoname>
-      <subject>Carga pedido MetroMarket</subject>
+      <replytoname>Spoon (RSERVER)</replytoname>
+      <subject>Carga pedido REPRESENTANTE (MUESTRAS)</subject>
       <include_date>N</include_date>
       <contact_person/>
       <contact_phone/>
       <comment>ESTO ES UN CORREO AUTOMÁTICO!!
 
-Se han generado los ficheros necesarios para la importación de los pedidos de MetroMarket.
+Se han generado los ficheros necesarios para la importación de los pedidos de los REPRESENTANTES.
 
-- Fichero (IMPORT_ZBPCMM): dirección de entrega de cliente. Importar mediante modelo: ZBPC
-- Fichero (IMPORT_ZSOH): pedidos. Importar mediante modelo: ZSOH
+- Fichero (IMPORT_ZSOHWEB): pedidos. Importar mediante modelo: ZSOHWEB
 
 </comment>
       <include_files>Y</include_files>
@@ -402,6 +659,7 @@ Se han generado los ficheros necesarios para la importación de los pedidos de M
       <filetypes>
         <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
+        <filetype>ERRORLINE</filetype>
         <filetype>ERROR</filetype>
         <filetype>WARNING</filetype>
       </filetypes>
@@ -410,254 +668,37 @@ Se han generado los ficheros necesarios para la importación de los pedidos de M
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1008</xloc>
-      <yloc>96</yloc>
+      <xloc>1184</xloc>
+      <yloc>400</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Copy files</name>
+      <name>Evaluate rows number in a table</name>
       <description/>
-      <type>COPY_FILES</type>
+      <type>EVAL_TABLE_CONTENT</type>
       <attributes/>
-      <copy_empty_folders>N</copy_empty_folders>
-      <arg_from_previous>N</arg_from_previous>
-      <overwrite_files>Y</overwrite_files>
-      <include_subfolders>N</include_subfolders>
-      <remove_source_files>N</remove_source_files>
-      <add_result_filesname>Y</add_result_filesname>
-      <destination_is_a_file>N</destination_is_a_file>
-      <create_destination_folder>Y</create_destination_folder>
-      <fields>
-        <field>
-          <source_filefolder>EMPTY_SOURCE_URL-0-file:///C:/Users/mmarco/Documents/MetroMarket</source_filefolder>
-          <source_configuration_name/>
-          <destination_filefolder>EMPTY_DEST_URL-0-file:///C:/tmp/MetroMarket/copias</destination_filefolder>
-          <destination_configuration_name/>
-          <wildcard>IMPORT*.*</wildcard>
-        </field>
-        <field>
-          <source_filefolder>EMPTY_SOURCE_URL-1-file:///C:/Users/mmarco/Documents/MetroMarket</source_filefolder>
-          <source_configuration_name/>
-          <destination_filefolder>EMPTY_DEST_URL-1-file:////192.168.28.100/d$/Sage/X3V12/folders/TEST/IMPORT/CARGA_AUTO</destination_filefolder>
-          <destination_configuration_name/>
-          <wildcard>IMPORT*.*</wildcard>
-        </field>
-      </fields>
+      <connection>MySql</connection>
+      <schemaname>pract</schemaname>
+      <tablename>PEDIDOS_WEB</tablename>
+      <success_condition>rows_count_greater</success_condition>
+      <limit>0</limit>
+      <is_custom_sql>Y</is_custom_sql>
+      <is_usevars>N</is_usevars>
+      <custom_sql>SELECT * FROM pract.PEDIDOS_WEB
+WHERE USUARIO = '24' AND ESTADO = 'PENDIENTE' AND NUMPED &lt;&gt; 'PED-2510161823-10'</custom_sql>
+      <add_rows_result>N</add_rows_result>
+      <clear_result_rows>Y</clear_result_rows>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>752</xloc>
-      <yloc>208</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Mail 2</name>
-      <description/>
-      <type>MAIL</type>
-      <attributes/>
-      <server>smtp.office365.com</server>
-      <port>587</port>
-      <destination>mmarco@denox.eu</destination>
-      <destinationCc/>
-      <destinationBCc/>
-      <replyto>mmarco@denox.eu</replyto>
-      <replytoname>Spoon (local)</replytoname>
-      <subject>Carga pedido MetroMarket</subject>
-      <include_date>N</include_date>
-      <contact_person/>
-      <contact_phone/>
-      <comment>ESTO ES UN CORREO AUTOMÁTICO!!
-
-Se han generado los ficheros necesarios para la importación de los pedidos de MetroMarket.
-
-- Fichero (IMPORT_ZBPCMM): dirección de entrega de cliente. Importar mediante modelo: ZBPC
-- Fichero (IMPORT_ZSOH): pedidos. Importar mediante modelo: ZSOH
-
-</comment>
-      <include_files>Y</include_files>
-      <zip_files>N</zip_files>
-      <zip_name/>
-      <use_auth>Y</use_auth>
-      <use_secure_auth>Y</use_secure_auth>
-      <auth_user>mmarco@denox.eu</auth_user>
-      <auth_password>Encrypted 2fecbd6bb1ec29fd7ff4cea47df9ea3df</auth_password>
-      <only_comment>N</only_comment>
-      <use_HTML>N</use_HTML>
-      <use_Priority>N</use_Priority>
-      <encoding>UTF-8</encoding>
-      <priority>normal</priority>
-      <importance>normal</importance>
-      <sensitivity>normal</sensitivity>
-      <secureconnectiontype>TLS</secureconnectiontype>
-      <replyToAddresses>Mario</replyToAddresses>
-      <filetypes>
-        <filetype>GENERAL</filetype>
-        <filetype>LOG</filetype>
-        <filetype>ERROR</filetype>
-        <filetype>WARNING</filetype>
-      </filetypes>
-      <embeddedimages>
-      </embeddedimages>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>960</xloc>
-      <yloc>288</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Move files</name>
-      <description/>
-      <type>MOVE_FILES</type>
-      <attributes/>
-      <move_empty_folders>N</move_empty_folders>
-      <arg_from_previous>N</arg_from_previous>
-      <include_subfolders>N</include_subfolders>
-      <add_result_filesname>Y</add_result_filesname>
-      <destination_is_a_file>N</destination_is_a_file>
-      <create_destination_folder>N</create_destination_folder>
-      <add_date>Y</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <nr_errors_less_than>10</nr_errors_less_than>
-      <success_condition>success_if_no_errors</success_condition>
-      <AddDateBeforeExtension>Y</AddDateBeforeExtension>
-      <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
-      <iffileexists>overwrite_file</iffileexists>
-      <destinationFolder/>
-      <ifmovedfileexists>do_nothing</ifmovedfileexists>
-      <moved_date_time_format/>
-      <create_move_to_folder>N</create_move_to_folder>
-      <add_moved_date>N</add_moved_date>
-      <add_moved_time>N</add_moved_time>
-      <SpecifyMoveFormat>N</SpecifyMoveFormat>
-      <AddMovedDateBeforeExtension>N</AddMovedDateBeforeExtension>
-      <simulate>N</simulate>
-      <fields>
-        <field>
-          <source_filefolder>C:\Users\mmarco\Documents\MetroMarket</source_filefolder>
-          <destination_filefolder>C:\tmp\MetroMarket\copias</destination_filefolder>
-          <wildcard>.*\.csv</wildcard>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>288</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Success 2</name>
-      <description/>
-      <type>SUCCESS</type>
-      <attributes/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>560</xloc>
-      <yloc>288</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Dummy</name>
-      <description/>
-      <type>SPECIAL</type>
-      <attributes/>
-      <start>N</start>
-      <dummy>Y</dummy>
-      <repeat>N</repeat>
-      <schedulerType>0</schedulerType>
-      <intervalSeconds>0</intervalSeconds>
-      <intervalMinutes>60</intervalMinutes>
-      <hour>12</hour>
-      <minutes>0</minutes>
-      <weekDay>1</weekDay>
-      <DayOfMonth>1</DayOfMonth>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>208</xloc>
-      <yloc>368</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Move files 2</name>
-      <description/>
-      <type>MOVE_FILES</type>
-      <attributes/>
-      <move_empty_folders>N</move_empty_folders>
-      <arg_from_previous>N</arg_from_previous>
-      <include_subfolders>N</include_subfolders>
-      <add_result_filesname>Y</add_result_filesname>
-      <destination_is_a_file>N</destination_is_a_file>
-      <create_destination_folder>N</create_destination_folder>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <nr_errors_less_than>10</nr_errors_less_than>
-      <success_condition>success_if_no_errors</success_condition>
-      <AddDateBeforeExtension>N</AddDateBeforeExtension>
-      <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
-      <iffileexists>overwrite_file</iffileexists>
-      <destinationFolder/>
-      <ifmovedfileexists>do_nothing</ifmovedfileexists>
-      <moved_date_time_format/>
-      <create_move_to_folder>N</create_move_to_folder>
-      <add_moved_date>N</add_moved_date>
-      <add_moved_time>N</add_moved_time>
-      <SpecifyMoveFormat>N</SpecifyMoveFormat>
-      <AddMovedDateBeforeExtension>N</AddMovedDateBeforeExtension>
-      <simulate>N</simulate>
-      <fields>
-        <field>
-          <source_filefolder>C:\Users\mmarco\Documents\MetroMarket</source_filefolder>
-          <destination_filefolder>C:\tmp\MetroMarket\copias</destination_filefolder>
-          <wildcard>IMPORT*.*</wildcard>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>752</xloc>
-      <yloc>288</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Delete files</name>
-      <description/>
-      <type>DELETE_FILES</type>
-      <attributes/>
-      <arg_from_previous>N</arg_from_previous>
-      <include_subfolders>N</include_subfolders>
-      <fields>
-        <field>
-          <name>C:\Users\mmarco\Documents\MetroMarket</name>
-          <filemask>IMPORT*.*</filemask>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>1168</xloc>
-      <yloc>288</yloc>
+      <xloc>176</xloc>
+      <yloc>48</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>Start</from>
-      <to>Transformation</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Transformation</from>
+      <from>Integrar pedidos web</from>
       <to>Success</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -667,97 +708,115 @@ Se han generado los ficheros necesarios para la importación de los pedidos de M
     </hop>
     <hop>
       <from>Success</from>
-      <to>Mail</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success</from>
       <to>Copy files</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Copy files</from>
-      <to>Mail</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Copy files</from>
-      <to>Mail 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Success</from>
-      <to>Move files</to>
+      <from>Start</from>
+      <to>Transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
+      <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Move files</from>
+      <from>Transformation</from>
       <to>Success 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success 2</from>
-      <to>Copy files</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Move files</from>
-      <to>Dummy</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>N</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success 2</from>
-      <to>Move files 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
       <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Move files 2</from>
+      <from>Success 2</from>
+      <to>Integrar pedidos web</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Copy files</from>
+      <to>Checks if files exist</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Checks if files exist</from>
+      <to>Success 3</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Success 3</from>
+      <to>Mail</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Start</from>
+      <to>Success 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Copy files</from>
+      <to>Checks if files exist 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Checks if files exist 2</from>
+      <to>Success 4</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Success 4</from>
       <to>Mail 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Mail 2</from>
-      <to>Delete files</to>
+      <from>Start</from>
+      <to>Evaluate rows number in a table</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Evaluate rows number in a table</from>
+      <to>Success 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -767,16 +826,5 @@ Se han generado los ficheros necesarios para la importación de los pedidos de M
   </hops>
   <notepads>
   </notepads>
-  <attributes>
-    <group>
-      <name>METASTORE.pentaho</name>
-      <attribute>
-        <key>Default Run Configuration</key>
-        <value>{"namespace":"pentaho","id":"Default Run Configuration","name":"Default Run Configuration","description":"Defines a default run configuration","metaStoreName":null}</value>
-      </attribute>
-    </group>
-    <group>
-      <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
-    </group>
-  </attributes>
+  <attributes/>
 </job>
