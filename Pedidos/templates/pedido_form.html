@@ -48,8 +48,8 @@
     </div>
     <div class="form-row">
         <div class="form-group col-md-12">
-            <label for="observaciones">Observaciones (máx. 30 caracteres):</label>
-            <textarea class="form-control" id="observaciones" name="OBSERVACIONES" rows="2" maxlength="30">{{ pedido_cabecera.OBSERVACIONES | default('') }}</textarea>
+            <label for="observaciones">Observaciones (máx. 100 caracteres):</label>
+            <textarea class="form-control" id="observaciones" name="OBSERVACIONES" rows="2" maxlength="100">{{ pedido_cabecera.OBSERVACIONES | default('') }}</textarea>
         </div>
     </div>
 
@@ -68,6 +68,15 @@
         <input class="form-check-input" type="checkbox" name="muestra" id="muestra" {% if pedido_cabecera and pedido_cabecera.MUESTRA == 'X' %}checked{% endif %}>
         <label class="form-check-label" for="muestra">
           <strong>Pedido de Muestra (sin cargo)</strong>
+        </label>
+      </div>
+    </div>
+    <!-- Checkbox para pedido Proforma -->
+    <div class="form-group">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" name="proforma" id="proforma" {% if pedido_cabecera and pedido_cabecera.MUESTRA == 'P' %}checked{% endif %}>
+        <label class="form-check-label" for="proforma">
+          <strong>Proforma</strong>
         </label>
       </div>
     </div>
@@ -159,7 +168,7 @@
   </form>
 
   <style>
-    .suggestions-container { position: absolute; width: calc(100% - 30px); left: 15px; z-index: 1000; max-height: 200px; overflow-y: auto; background-color: white; border: 1px solid #ced4da; border-top: none; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    .suggestions-container { position: absolute; min-width: calc(100% - 30px); width: auto; white-space: nowrap; left: 15px; z-index: 1000; max-height: 200px; overflow-y: auto; background-color: white; border: 1px solid #ced4da; border-top: none; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .form-group { position: relative; }
     .list-group-item-action { cursor: pointer; }
     .list-group-item-action:hover { background-color: #f0f0f0; }
@@ -561,8 +570,14 @@
             });
         }
 
-        document.getElementById('muestra').addEventListener('change', function() {
+        const muestraCheckbox = document.getElementById('muestra');
+        const proformaCheckbox = document.getElementById('proforma');
+
+        muestraCheckbox.addEventListener('change', function() {
             const isChecked = this.checked;
+            // Si se marca muestra, desmarcar proforma
+            if (isChecked && proformaCheckbox) proformaCheckbox.checked = false;
+
             document.querySelectorAll('.linea-pedido').forEach(linea => {
                 const precioUnitInput = linea.querySelector('.precio-unitario-linea');
                 const artiInput = linea.querySelector('.arti-linea');
@@ -581,6 +596,16 @@
                 }
             });
         });
+
+        if (proformaCheckbox) {
+            proformaCheckbox.addEventListener('change', function() {
+                if (this.checked && muestraCheckbox.checked) {
+                    muestraCheckbox.checked = false;
+                    // Disparar evento change en muestra para que restaure los precios si estaba marcado
+                    muestraCheckbox.dispatchEvent(new Event('change'));
+                }
+            });
+        }
     });
 
     document.getElementById('btn-agregar-linea').addEventListener('click', function() {

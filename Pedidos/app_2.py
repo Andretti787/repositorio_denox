@@ -1,13 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify, g
 import mysql.connector
 import time
 import random
 import datetime
+from datetime import timedelta # Importar timedelta
 from functools import wraps
+from werkzeug.security import check_password_hash # Importar para verificar hashes de contraseñas
 
 
 app = Flask(__name__)
 app.secret_key = 'tu_super_secreto_key_aqui' # ¡Cambia esto en producción!
+
+app.permanent_session_lifetime = timedelta(minutes=45) # Configurar el tiempo de vida de la sesión
 
 # Configuración de la base de datos
 db_config = {
@@ -17,17 +21,25 @@ db_config = {
     'database': 'pract'  # El nombre de tu BD
 }
 
-def get_db_connection():
-    """Establece conexión con la base de datos."""
+@app.before_request
+def before_request():
+    """Se ejecuta antes de cada petición. Establece la conexión a la BD."""
+    session.permanent = True # Refresca la sesión en cada petición
     try:
-        conn = mysql.connector.connect(**db_config)
-        return conn
+        g.db = mysql.connector.connect(**db_config)
     except mysql.connector.Error as err:
+        g.db = None
         flash(f"Error de conexión a la base de datos: {err}", "danger")
-        # Podrías loggear el error aquí también para el servidor
         print(f"ERROR DB Connection: {err}")
-        return None
 
+@app.teardown_request
+def teardown_request(exception=None):
+    """Se ejecuta después de cada petición. Cierra la conexión a la BD."""
+    db = g.pop('db', None)
+    if db is not None and db.is_connected():
+        db.close()
+
+# La función get_db_connection() ya no es necesaria y se ha eliminado.
 def login_required(f):
     """Decorador para requerir login en ciertas rutas."""
     @wraps(f)
@@ -44,31 +56,32 @@ def login():
         username = request.form['username']
         password = request.form['password']
 
-        conn = get_db_connection()
-        if not conn:
+        if not g.db: # La conexión falló en before_request
             return render_template('login.html')
 
-        cursor = conn.cursor(dictionary=True)
+        cursor = g.db.cursor(dictionary=True)
         user = None
         try:
-            # IMPORTANTE: ¡Esta es una comparación de texto plano, insegura!
-            # En producción, usa werkzeug.security.check_password_hash(user['password_hash'], password)
-            # Y almacena hashes, no contraseñas en texto plano.
-            cursor.execute("SELECT * FROM USUARIOS_LOGIN WHERE COD_USER = %s AND PWD = %s", (username, password))
+            # La columna PWD debería almacenar el hash de la contraseña.
+            # Al crear un usuario, se debe usar: generate_password_hash(password)
+            cursor.execute("SELECT * FROM USUARIOS_LOGIN WHERE COD_USER = %s", (username,))
             user = cursor.fetchone()
+
+            # SEGURIDAD: Comparamos el hash de la BD con la contraseña enviada.
+            if user and check_password_hash(user['PWD'], password):
+                session['user_id'] = user['COD_USER']
+                flash(f"Bienvenid@, {user['NOMBRE']}!", "success")
+                next_url = request.args.get('next')
+                return redirect(next_url or url_for('index'))
+
         except mysql.connector.Error as err:
             flash(f"Error al consultar usuario: {err}", "danger")
             print(f"ERROR DB Login query: {err}")
         finally:
             cursor.close()
-            conn.close()
 
-        if user:
-            session['user_id'] = user['COD_USER'] # Guardamos el username como identificador
-            flash(f"Bienvenid@, {user['NOMBRE']}!", "success")
-            next_url = request.args.get('next')
-            return redirect(next_url or url_for('index'))
-        else:
+        # Si el usuario no existe o la contraseña es incorrecta
+        if not user or not check_password_hash(user.get('PWD', ''), password):
             flash("Usuario o contraseña incorrectos.", "danger")
     return render_template('login.html')
 
@@ -81,12 +94,11 @@ def logout():
 @app.route('/')
 @login_required
 def index():
-    conn = get_db_connection()
-    if not conn:
+    if not g.db:
         return render_template('pedidos_lista.html', pedidos_para_mostrar={}) # Pasar dict vacío
 
-    cursor = conn.cursor(dictionary=True)
     pedidos_db = []
+    cursor = g.db.cursor(dictionary=True)
     try:
         # Modificar la consulta para incluir PED.ESTADO
         cursor.execute("""
@@ -110,11 +122,7 @@ def index():
         flash(f"Error al obtener pedidos: {err}", "danger")
         print(f"ERROR DB Fetching pedidos: {err}")
     finally:
-        if conn.is_connected():
-            if cursor and hasattr(cursor, 'close') and callable(getattr(cursor, 'close')): # Más seguro
-                 try: cursor.close()
-                 except Exception as e: print(f"Error cerrando cursor (index): {e}")
-            conn.close()
+        cursor.close()
 
     pedidos_agrupados = {}
     if pedidos_db:
@@ -125,7 +133,7 @@ def index():
                     'cabecera': {
                         'NUMPED': linea_pedido['NUMPED'],
                         'COD_CTE': linea_pedido['COD_CTE'],
-                        'RAZON_SOCIAL': linea_pedido.get('RAZON_SOCIAL', ''), # Usar .get() por si el JOIN falla
+                        'RAZON_SOCIAL': linea_pedido.get('RAZON_SOCIAL') or '', # Usar or '' para manejar None si el cliente se borró
                         'COD_DIR': linea_pedido['COD_DIR'],
                         'FECHA_CREACION': linea_pedido['FECHA_CREACION'],
                         'FECHA_EXP': linea_pedido['FECHA_EXP'],
@@ -140,7 +148,7 @@ def index():
             pedidos_agrupados[numped]['lineas'].append({
                 'ID_LINEA': linea_pedido['PED_ID'],
                 'ARTI': linea_pedido['ARTI'],
-                'DESCRIPCION_ARTI': linea_pedido.get('DESCRIPCION_ARTI', ''),
+                'DESCRIPCION_ARTI': linea_pedido.get('DESCRIPCION_ARTI') or '',
                 'CANTIDAD': linea_pedido['CANTIDAD'],
                 'PRECIO_ARTI': linea_pedido.get('PRECIO_ARTI'),
                 'UD_EMB': linea_pedido.get('UD_EMB'),
@@ -151,257 +159,246 @@ def index():
     return render_template('pedidos_lista.html', pedidos_para_mostrar=pedidos_agrupados)
 
 
+def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numped_a_excluir=None):
+    """
+    Función auxiliar para validar y procesar los datos de un formulario de pedido.
+    Reutilizada por agregar_pedido y editar_pedido.
+    Devuelve una tupla: (es_valido, datos_procesados, datos_para_repoblar)
+    """
+    usuario_actual = session['user_id']
+    if not g.db:
+        flash("Error de conexión a la base de datos.", "danger")
+        return False, None, {}
+
+    # --- 1. RECOGER Y PARSEAR DATOS ---
+    cod_cte = form_data.get('COD_CTE', '').strip()
+    cod_dir = form_data.get('COD_DIR', '').strip()
+    fecha_exp_str = form_data.get('FECHA_EXP', '').strip()
+    pedido_cte_ref = form_data.get('PEDIDO_CTE', '').strip()
+    observaciones = form_data.get('OBSERVACIONES', '').strip()
+    descuento1_str = form_data.get('DESCUENTO1', '0').strip()
+
+    # Parsear líneas para repoblar en caso de error
+    parsed_lineas_form = {}
+    for key, value in form_data.items():
+        if key.startswith('lineas['):
+            parts = key.replace(']', '').split('[')
+            try:
+                idx, field_name = int(parts[1]), parts[2]
+                if idx not in parsed_lineas_form: parsed_lineas_form[idx] = {}
+                parsed_lineas_form[idx][field_name] = value
+            except (IndexError, ValueError): continue
+    
+    lineas_para_repoblar = [parsed_lineas_form[idx] for idx in sorted(parsed_lineas_form.keys()) if 'ARTI' in parsed_lineas_form[idx] or 'CANTIDAD' in parsed_lineas_form[idx]]
+
+    cabecera_para_repoblar = {
+        'COD_CTE': cod_cte, 'COD_DIR': cod_dir, 'FECHA_EXP': fecha_exp_str,
+        'PEDIDO_CTE': pedido_cte_ref, 'OBSERVACIONES': observaciones, 'DESCUENTO1': descuento1_str
+    }
+    datos_para_repoblar = {'pedido_cabecera': cabecera_para_repoblar, 'lineas_pedido': lineas_para_repoblar}
+
+    # --- 2. VALIDACIONES DE CABECERA ---
+    if len(observaciones) > 100:
+        flash("El campo Observaciones no puede tener más de 100 caracteres.", "danger")
+        return False, None, datos_para_repoblar
+
+    try:
+        descuento1_val = int(descuento1_str) if descuento1_str else 0
+        if not 0 <= descuento1_val <= 100: raise ValueError()
+    except ValueError:
+        flash(f"Descuento General ('{descuento1_str}') inválido. Debe ser un número entero entre 0 y 100.", "danger")
+        return False, None, datos_para_repoblar
+
+    if not cod_cte:
+        flash("El Código de Cliente es obligatorio.", "danger")
+        return False, None, datos_para_repoblar
+
+    cursor = g.db.cursor(dictionary=True)
+    try:
+        cursor.execute("SELECT COD_CTE FROM CLIENTES_WEB WHERE COD_CTE = %s", (cod_cte,))
+        if not cursor.fetchone():
+            flash(f"El Código de Cliente '{cod_cte}' no existe.", "danger")
+            return False, None, datos_para_repoblar
+
+        if cod_dir:
+            cursor.execute("SELECT COD_DIR FROM DIRECCIONES_CTE_WEB WHERE COD_CTE = %s AND COD_DIR = %s", (cod_cte, cod_dir))
+            if not cursor.fetchone():
+                flash(f"La Dirección '{cod_dir}' no es válida para el cliente '{cod_cte}'.", "danger")
+                return False, None, datos_para_repoblar
+
+        # NUEVA VALIDACIÓN: Comprobar si la combinación COD_CTE y PEDIDO_CTE ya existe
+        if pedido_cte_ref:
+            sql_check_duplicado = "SELECT COUNT(*) as count FROM PEDIDOS_WEB WHERE COD_CTE = %s AND PEDIDO_CTE = %s AND USUARIO = %s"
+            params_check = [cod_cte, pedido_cte_ref, usuario_actual]
+
+            if numped_a_excluir:
+                sql_check_duplicado += " AND NUMPED != %s"
+                params_check.append(numped_a_excluir)
+
+            cursor.execute(sql_check_duplicado, tuple(params_check))
+            if cursor.fetchone()['count'] > 0:
+                flash(f"Ya existe un pedido con la referencia '{pedido_cte_ref}' para el cliente '{cod_cte}'.", "danger")
+                return False, None, datos_para_repoblar
+
+
+    except mysql.connector.Error as err:
+        flash(f"Error al validar cabecera: {err}", "danger")
+        return False, None, datos_para_repoblar
+    finally:
+        cursor.close()
+
+    if not fecha_exp_str:
+        flash("La Fecha de Entrega es obligatoria.", "danger")
+        return False, None, datos_para_repoblar
+    try:
+        fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str, '%Y-%m-%d').date()
+        if fecha_exp_obj <= datetime.date.today():
+            flash("La Fecha de Entrega debe ser posterior a la fecha actual.", "danger")
+            return False, None, datos_para_repoblar
+    except ValueError:
+        flash("Formato de Fecha de Entrega inválido. Usar YYYY-MM-DD.", "danger")
+        return False, None, datos_para_repoblar
+
+    # --- 3. VALIDACIONES DE LÍNEAS ---
+    if not lineas_para_repoblar:
+        flash("Debe agregar al menos una línea al pedido.", "danger")
+        return False, None, datos_para_repoblar
+
+    lineas_procesadas_ok = []
+    for idx, linea_data in enumerate(lineas_para_repoblar):
+        arti_linea = linea_data.get('ARTI', '').strip()
+        cantidad_str = linea_data.get('CANTIDAD', '').strip()
+        descuento2_str = linea_data.get('DESCUENTO2', '0').strip()
+
+        if not arti_linea:
+            flash(f"El Artículo es obligatorio en la línea {idx + 1}.", "danger")
+            return False, None, datos_para_repoblar
+
+        cursor = g.db.cursor(dictionary=True)
+        ud_emb_articulo = None
+        try:
+            cursor.execute("SELECT UD_EMB FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
+            item_maestro = cursor.fetchone()
+            if not item_maestro:
+                flash(f"Artículo '{arti_linea}' inválido en línea {idx + 1}.", "danger")
+                return False, None, datos_para_repoblar
+            
+            raw_ud_emb = item_maestro.get('UD_EMB')
+            if raw_ud_emb is not None:
+                try:
+                    temp_ud_emb = int(float(raw_ud_emb))
+                    if temp_ud_emb > 0: ud_emb_articulo = temp_ud_emb
+                except (ValueError, TypeError): pass
+        except mysql.connector.Error as err:
+            flash(f"Error al validar artículo en línea {idx + 1}: {err}", "danger")
+            return False, None, datos_para_repoblar
+        finally:
+            cursor.close()
+
+        if not cantidad_str:
+            flash(f"La Cantidad es obligatoria en la línea {idx + 1}.", "danger")
+            return False, None, datos_para_repoblar
+        try:
+            cantidad_linea = int(cantidad_str)
+            if cantidad_linea <= 0: raise ValueError("La cantidad debe ser positiva.")
+            if es_muestra != "X" and ud_emb_articulo and (cantidad_linea % ud_emb_articulo != 0):
+                flash(f"La cantidad ({cantidad_linea}) para '{arti_linea}' (línea {idx + 1}) debe ser múltiplo de {ud_emb_articulo}.", "danger")
+                return False, None, datos_para_repoblar
+        except ValueError as e:
+            flash(f"Cantidad inválida ('{cantidad_str}') en línea {idx + 1}: {e}", "danger")
+            return False, None, datos_para_repoblar
+
+        try:
+            descuento2_val = int(descuento2_str) if descuento2_str else 0
+            if not 0 <= descuento2_val <= 100: raise ValueError()
+        except ValueError:
+            flash(f"Descuento de Línea ('{descuento2_str}') inválido en línea {idx + 1}.", "danger")
+            return False, None, datos_para_repoblar
+
+        lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val})
+
+    if not lineas_procesadas_ok:
+        flash("No se procesó ninguna línea válida.", "danger")
+        return False, None, datos_para_repoblar
+
+    # --- 4. DEVOLVER DATOS PROCESADOS ---
+    datos_procesados = {
+        'cod_cte': cod_cte,
+        'cod_dir': cod_dir,
+        'fecha_exp_obj': fecha_exp_obj,
+        'pedido_cte_ref': pedido_cte_ref,
+        'observaciones': observaciones,
+        'descuento1_val': descuento1_val,
+        'usuario_actual': usuario_actual,
+        'estado_pedido': estado_pedido,
+        'es_muestra': es_muestra,
+        'lineas': lineas_procesadas_ok
+    }
+
+    return True, datos_procesados, datos_para_repoblar
+
 @app.route('/pedidos/nuevo', methods=['GET', 'POST'])
 @login_required
 def agregar_pedido():
     if request.method == 'POST':
-        # --- RECOGER DATOS DE CABECERA DEL FORMULARIO ---
-        cod_cte_form = request.form.get('COD_CTE', '').strip()
-        cod_dir_form = request.form.get('COD_DIR', '').strip()
-        fecha_exp_str_form = request.form.get('FECHA_EXP', '').strip()
-        pedido_cte_ref_form = request.form.get('PEDIDO_CTE', '').strip()
-        observaciones_form = request.form.get('OBSERVACIONES', '').strip()
-        descuento1_form = request.form.get('DESCUENTO1', '0').strip()
-        usuario_actual = session['user_id']
+        if not g.db:
+            return render_template('pedido_form.html', pedido_cabecera={}, lineas_pedido=[])
 
-        # Determinar el estado del pedido a partir del checkbox
         estado_pedido = "BORRADOR" if 'borrador' in request.form else "PENDIENTE"
-        es_muestra = "X" if 'muestra' in request.form else ""
         
-        # Parsear líneas del formulario ANTES de las validaciones de cabecera
-        # para poder repoblar todo si algo falla.
-        parsed_lineas_form_error = {}
-        lineas_para_repoblar = []
-        for key, value in request.form.items():
-            if key.startswith('lineas['):
-                parts = key.replace(']', '').split('[')
-                try:
-                    idx = int(parts[1])
-                    field_name = parts[2]
-                    if idx not in parsed_lineas_form_error:
-                        parsed_lineas_form_error[idx] = {}
-                    # Guardar también el ID_LINEA si viniera, aunque para nuevo pedido sería vacío
-                    parsed_lineas_form_error[idx][field_name] = value
-                except (IndexError, ValueError):
-                    print(f"Advertencia: Clave de línea malformada ignorada: {key}")
-                    continue
-        
-        for idx in sorted(parsed_lineas_form_error.keys()):
-            # Asegurar que la línea tenga al menos ARTI y CANTIDAD para ser considerada una línea a repoblar
-            if 'ARTI' in parsed_lineas_form_error[idx] or 'CANTIDAD' in parsed_lineas_form_error[idx]:
-                 lineas_para_repoblar.append(parsed_lineas_form_error[idx])
+        if 'proforma' in request.form:
+            es_muestra = "P"
+        elif 'muestra' in request.form:
+            es_muestra = "X"
+        else:
+            es_muestra = ""
 
+        es_valido, datos_procesados, datos_para_repoblar = _validar_y_procesar_datos_pedido(request.form, es_muestra, estado_pedido)
 
-        pedido_cabecera_para_repoblar = {
-            'COD_CTE': cod_cte_form, 'COD_DIR': cod_dir_form,
-            'FECHA_EXP': fecha_exp_str_form, 'PEDIDO_CTE': pedido_cte_ref_form,
-            'OBSERVACIONES': observaciones_form,
-            'DESCUENTO1': descuento1_form
-        }
-
-        # --- VALIDACIONES DE CABECERA ---
-        if len(observaciones_form) > 30:
-            flash("El campo Observaciones no puede tener más de 30 caracteres.", "danger")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-        
-        try:
-            descuento1_val = int(descuento1_form) if descuento1_form else 0
-            if not 0 <= descuento1_val <= 100:
-                raise ValueError("El descuento debe estar entre 0 y 100.")
-        except (ValueError, TypeError):
-            flash(f"Valor de Descuento General ('{descuento1_form}') inválido. Debe ser un número entero entre 0 y 100.", "danger")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-        if not cod_cte_form:
-            flash("El Código de Cliente es obligatorio.", "danger")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-        conn_val_cte = get_db_connection()
-        if not conn_val_cte: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-        cursor_val_cte = conn_val_cte.cursor(dictionary=True)
-        cliente_existe = False
-        try:
-            cursor_val_cte.execute("SELECT COD_CTE FROM CLIENTES_WEB WHERE COD_CTE = %s", (cod_cte_form,))
-            if cursor_val_cte.fetchone(): cliente_existe = True
-            else: flash(f"El Código de Cliente '{cod_cte_form}' no existe.", "danger")
-        except mysql.connector.Error as err: flash(f"Error al validar cliente: {err}", "danger")
-        finally: 
-            if conn_val_cte.is_connected(): cursor_val_cte.close(); conn_val_cte.close()
-        if not cliente_existe: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-        direccion_valida = True 
-        if cod_dir_form: 
-            conn_val_dir = get_db_connection()
-            if not conn_val_dir: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            cursor_val_dir = conn_val_dir.cursor(dictionary=True)
-            try:
-                cursor_val_dir.execute("SELECT COD_DIR FROM DIRECCIONES_CTE_WEB WHERE COD_CTE = %s AND COD_DIR = %s", (cod_cte_form, cod_dir_form))
-                if not cursor_val_dir.fetchone():
-                    flash(f"El Código de Dirección '{cod_dir_form}' no es válido para el cliente '{cod_cte_form}'.", "danger")
-                    direccion_valida = False
-            except mysql.connector.Error as err: flash(f"Error al validar dirección: {err}", "danger"); direccion_valida = False
-            finally: 
-                if conn_val_dir.is_connected(): cursor_val_dir.close(); conn_val_dir.close()
-            if not direccion_valida: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-        # --- VALIDACIÓN DE FECHA DE ENTREGA ---
-        if not fecha_exp_str_form:
-            flash("La Fecha de Entrega es obligatoria.", "danger")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-        
-        try:
-            fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str_form, '%Y-%m-%d').date()
-            if fecha_exp_obj <= datetime.date.today():
-                flash("La Fecha de Entrega debe ser posterior a la fecha actual.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-        except ValueError:
-            flash("Formato de Fecha de Entrega inválido. Usar YYYY-MM-DD.", "danger")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-        # --- PROCESAR Y VALIDAR LÍNEAS ---
-        lineas_procesadas_ok = [] 
-        if not lineas_para_repoblar:
-             flash("Debe agregar al menos una línea al pedido.", "danger")
-             return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-        for idx, linea_form_data in enumerate(lineas_para_repoblar):
-            # *** INICIALIZACIÓN DENTRO DEL BUCLE DE LÍNEAS ***
-            ud_emb_articulo = None 
-            articulo_linea_existe = False
-            # *** FIN INICIALIZACIÓN ***
-
-            arti_linea = linea_form_data.get('ARTI', '').strip()
-            cantidad_str_linea = linea_form_data.get('CANTIDAD', '').strip()
-            descuento2_str_linea = linea_form_data.get('DESCUENTO2', '0').strip()
-
-            if not arti_linea:
-                flash(f"El campo Artículo es obligatorio para todas las líneas (error en línea aprox. {idx + 1}).", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            
-            conn_val_arti = get_db_connection()
-            if not conn_val_arti: 
-                flash("Error de conexión al validar artículo de línea.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            
-            cursor_val_arti = conn_val_arti.cursor(dictionary=True)
-            try:
-                cursor_val_arti.execute("SELECT COD_ART, UD_EMB FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
-                item_maestro = cursor_val_arti.fetchone()
-                if item_maestro:
-                    articulo_linea_existe = True
-                    ud_emb_articulo = item_maestro.get('UD_EMB') 
-                    # Validar que UD_EMB sea un número usable para la lógica de múltiplo
-                    if ud_emb_articulo is not None:
-                        try:
-                            temp_ud_emb = int(float(ud_emb_articulo)) # Manejar Decimal y convertir a int
-                            if temp_ud_emb <= 0:
-                                print(f"Advertencia: UD_EMB para artículo '{arti_linea}' es <= 0 ({ud_emb_articulo}). No se validará múltiplo.")
-                                ud_emb_articulo = None 
-                            else:
-                                ud_emb_articulo = temp_ud_emb # Usar el entero validado
-                        except (ValueError, TypeError):
-                            print(f"Advertencia: UD_EMB para artículo '{arti_linea}' no es un número válido ({ud_emb_articulo}). No se validará múltiplo.")
-                            ud_emb_articulo = None
-                    else: # Si UD_EMB es None desde la BD
-                        ud_emb_articulo = None
-                else:
-                    flash(f"Artículo '{arti_linea}' inválido en línea aprox. {idx + 1}.", "danger")
-                    # ud_emb_articulo y articulo_linea_existe ya son None/False por inicialización
-            except mysql.connector.Error as err:
-                flash(f"Error al validar artículo de línea {idx+1}: {err}", "danger")
-                # ud_emb_articulo y articulo_linea_existe ya son None/False
-            finally:
-                if conn_val_arti.is_connected(): 
-                    cursor_val_arti.close()
-                    conn_val_arti.close()
-
-            if not articulo_linea_existe:
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-            # DEBUG ANTES DE LA LÍNEA PROBLEMÁTICA
-            # print(f"DEBUG: Línea {idx+1}, arti_linea: {arti_linea}")
-            # print(f"DEBUG: ud_emb_articulo: {ud_emb_articulo}, tipo: {type(ud_emb_articulo)}")
-            # print(f"DEBUG: cantidad_str_linea: {cantidad_str_linea}")
-
-            if not cantidad_str_linea:
-                 flash(f"La Cantidad es obligatoria para todas las líneas (error en línea aprox. {idx + 1}).", "danger")
-                 return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            try:
-                cantidad_linea = int(cantidad_str_linea)
-                if cantidad_linea <= 0:
-                    raise ValueError("Cantidad debe ser positiva")
-
-                # VALIDACIÓN: MÚLTIPLO DE UD_EMB
-                if es_muestra != "X" and ud_emb_articulo and ud_emb_articulo > 0: # ud_emb_articulo ya debería ser un int > 0 o None
-                    if cantidad_linea % ud_emb_articulo != 0:
-                        flash(f"La cantidad ({cantidad_linea}) para el artículo '{arti_linea}' en la línea aprox. {idx + 1} "
-                              f"debe ser un múltiplo de su unidad de embalaje ({ud_emb_articulo}).", "danger")
-                        return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-            except ValueError as e: 
-                flash(f"Cantidad inválida ('{cantidad_str_linea}') en línea {idx + 1}: {e}", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            
-            try:
-                descuento2_val = int(descuento2_str_linea) if descuento2_str_linea else 0
-                if not 0 <= descuento2_val <= 100:
-                    raise ValueError("El descuento debe estar entre 0 y 100.")
-            except (ValueError, TypeError):
-                flash(f"Valor de Descuento de Línea ('{descuento2_str_linea}') inválido en línea {idx + 1}. Debe ser un número entero entre 0 y 100.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            
-            lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val})
-
-        if not lineas_procesadas_ok:
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+        if not es_valido:
+            return render_template('pedido_form.html', **datos_para_repoblar)
 
         # --- SI TODAS LAS VALIDACIONES PASAN, GENERAR NUMPED E INSERTAR ---
         numped_nuevo = generar_numped()
         fecha_creacion_actual = datetime.datetime.now() 
 
-        conn_insert = get_db_connection()
-        if not conn_insert:
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-        
-        cursor_insert = conn_insert.cursor()
+        cursor = g.db.cursor()
         sql_insert_linea = """
             INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR,
                                      FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA)
             VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         try:
-            for linea_p_ok in lineas_procesadas_ok:
+            for linea in datos_procesados['lineas']:
                 val = (
                     numped_nuevo,
-                    linea_p_ok['ARTI'],
-                    linea_p_ok['CANTIDAD'],
-                    cod_cte_form if cod_cte_form else None,
-                    cod_dir_form if cod_dir_form else None,
+                    linea['ARTI'],
+                    linea['CANTIDAD'],
+                    datos_procesados['cod_cte'] or None,
+                    datos_procesados['cod_dir'] or None,
                     fecha_creacion_actual, 
-                    fecha_exp_obj, 
-                    pedido_cte_ref_form if pedido_cte_ref_form else None,
-                    usuario_actual,
-                    estado_pedido,
-                    observaciones_form if observaciones_form else None,
-                    descuento1_val,
-                    linea_p_ok['DESCUENTO2'],
-                    es_muestra
+                    datos_procesados['fecha_exp_obj'], 
+                    datos_procesados['pedido_cte_ref'] or None,
+                    datos_procesados['usuario_actual'],
+                    datos_procesados['estado_pedido'],
+                    datos_procesados['observaciones'] or None,
+                    datos_procesados['descuento1_val'],
+                    linea['DESCUENTO2'],
+                    datos_procesados['es_muestra']
                 )
-                cursor_insert.execute(sql_insert_linea, val)
+                cursor.execute(sql_insert_linea, val)
             
-            conn_insert.commit()
-            flash(f"Pedido {numped_nuevo} creado exitosamente con {len(lineas_procesadas_ok)} líneas.", "success")
+            g.db.commit()
+            flash(f"Pedido {numped_nuevo} creado exitosamente con {len(datos_procesados['lineas'])} líneas.", "success")
             return redirect(url_for('index'))
 
         except mysql.connector.Error as err:
-            conn_insert.rollback()
+            g.db.rollback()
             flash(f"Error al guardar el pedido en la base de datos: {err}", "danger")
             print(f"ERROR DB creating multi-line order: {err}")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            return render_template('pedido_form.html', **datos_para_repoblar)
         finally:
-            if conn_insert.is_connected():
-                cursor_insert.close()
-                conn_insert.close()
+            cursor.close()
 
     # --- MÉTODO GET: Mostrar formulario vacío o con valores por defecto ---
     else: 
@@ -416,245 +413,103 @@ def editar_pedido(numped_a_editar):
 
     if request.method == 'POST':
         # --- INICIO RAMA POST ---
-        conn_val_cte, cursor_val_cte = None, None
-        conn_val_dir, cursor_val_dir = None, None
-        conn_update, cursor_update = None, None
+        # Inicializar datos_para_repoblar con los datos del formulario para asegurar que siempre esté definido
+        # en caso de un error inesperado antes de que _validar_y_procesar_datos_pedido retorne.
+        cod_cte_initial = request.form.get('COD_CTE', '').strip()
+        cod_dir_initial = request.form.get('COD_DIR', '').strip()
+        fecha_exp_str_initial = request.form.get('FECHA_EXP', '').strip()
+        pedido_cte_ref_initial = request.form.get('PEDIDO_CTE', '').strip()
+        observaciones_initial = request.form.get('OBSERVACIONES', '').strip()
+        descuento1_str_initial = request.form.get('DESCUENTO1', '0').strip()
+
+        parsed_lineas_form_initial = {}
+        for key, value in request.form.items():
+            if key.startswith('lineas['):
+                parts = key.replace(']', '').split('[')
+                try:
+                    idx, field_name = int(parts[1]), parts[2]
+                    if idx not in parsed_lineas_form_initial: parsed_lineas_form_initial[idx] = {}
+                    parsed_lineas_form_initial[idx][field_name] = value
+                except (IndexError, ValueError): continue
         
-        parsed_lineas_form_error = {}
-        lineas_para_repoblar = []
+        lineas_para_repoblar_initial = [parsed_lineas_form_initial[idx] for idx in sorted(parsed_lineas_form_initial.keys()) if 'ARTI' in parsed_lineas_form_initial[idx] or 'CANTIDAD' in parsed_lineas_form_initial[idx]]
+
+        datos_para_repoblar = {
+            'pedido_cabecera': {'NUMPED': numped_a_editar, 'COD_CTE': cod_cte_initial, 'COD_DIR': cod_dir_initial, 'FECHA_EXP': fecha_exp_str_initial, 'PEDIDO_CTE': pedido_cte_ref_initial, 'OBSERVACIONES': observaciones_initial, 'DESCUENTO1': descuento1_str_initial},
+            'lineas_pedido': lineas_para_repoblar_initial
+        }
+
+        if not g.db:
+            # Si la conexión falla, intentamos repoblar el formulario con los datos que venían
+            # Esto es un fallback, ya que la validación no se podrá completar.
+            return render_template('pedido_form.html', pedido_cabecera={'NUMPED': numped_a_editar}, lineas_pedido=[])
 
         try:
-            # --- RECOGER Y PARSEAR DATOS DEL FORMULARIO ---
-            cod_cte_form = request.form.get('COD_CTE', '').strip()
-            cod_dir_form = request.form.get('COD_DIR', '').strip()
-            fecha_exp_str_form = request.form.get('FECHA_EXP', '').strip()
-            pedido_cte_ref_form = request.form.get('PEDIDO_CTE', '').strip()
-            observaciones_form = request.form.get('OBSERVACIONES', '').strip()
-            descuento1_form = request.form.get('DESCUENTO1', '0').strip()
-
-            # Determinar el estado del pedido a partir del checkbox
             estado_pedido = "BORRADOR" if 'borrador' in request.form else "PENDIENTE"
-            es_muestra = "X" if 'muestra' in request.form else ""
             
-            for key, value in request.form.items(): # Parseo de líneas
-                if key.startswith('lineas['):
-                    parts = key.replace(']', '').split('[')
-                    try:
-                        idx = int(parts[1])
-                        field_name = parts[2]
-                        if idx not in parsed_lineas_form_error: parsed_lineas_form_error[idx] = {}
-                        parsed_lineas_form_error[idx][field_name] = value
-                    except (IndexError, ValueError): print(f"Advertencia Edición POST: Clave línea malformada: {key}")
-            
-            for idx in sorted(parsed_lineas_form_error.keys()):
-                if 'ARTI' in parsed_lineas_form_error[idx] or 'CANTIDAD' in parsed_lineas_form_error[idx]:
-                     lineas_para_repoblar.append(parsed_lineas_form_error[idx])
+            if 'proforma' in request.form:
+                es_muestra = "P"
+            elif 'muestra' in request.form:
+                es_muestra = "X"
+            else:
+                es_muestra = ""
 
-            pedido_cabecera_para_repoblar = {
-                'NUMPED': numped_a_editar, 'COD_CTE': cod_cte_form, 'COD_DIR': cod_dir_form,
-                'FECHA_EXP': fecha_exp_str_form, 'PEDIDO_CTE': pedido_cte_ref_form,
-                'OBSERVACIONES': observaciones_form,
-                'DESCUENTO1': descuento1_form
-            }
+            # Esta llamada reasignará datos_para_repoblar si se ejecuta con éxito
+            es_valido, datos_procesados, datos_para_repoblar = _validar_y_procesar_datos_pedido(request.form, es_muestra, estado_pedido, numped_a_editar) 
 
-            # --- VALIDACIONES DE CABECERA ---
-            if len(observaciones_form) > 30:
-                flash("El campo Observaciones no puede tener más de 30 caracteres.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            
-            try:
-                descuento1_val = int(descuento1_form) if descuento1_form else 0
-                if not 0 <= descuento1_val <= 100:
-                    raise ValueError("El descuento debe estar entre 0 y 100.")
-            except (ValueError, TypeError):
-                flash(f"Valor de Descuento General ('{descuento1_form}') inválido. Debe ser un número entero entre 0 y 100.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-            if not cod_cte_form:
-                flash("El Código de Cliente es obligatorio.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-            conn_val_cte = get_db_connection()
-            if not conn_val_cte: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            cursor_val_cte = conn_val_cte.cursor(dictionary=True)
-            cursor_val_cte.execute("SELECT COD_CTE FROM CLIENTES_WEB WHERE COD_CTE = %s", (cod_cte_form,))
-            if not cursor_val_cte.fetchone():
-                flash(f"El Código de Cliente '{cod_cte_form}' no existe.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            # Cerrar recursos de validación de cliente
-            if cursor_val_cte: cursor_val_cte.close(); cursor_val_cte = None 
-            if conn_val_cte and conn_val_cte.is_connected(): conn_val_cte.close(); conn_val_cte = None
-
-            if cod_dir_form: # Solo validar si se proporcionó COD_DIR
-                conn_val_dir = get_db_connection()
-                if not conn_val_dir: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-                cursor_val_dir = conn_val_dir.cursor(dictionary=True)
-                cursor_val_dir.execute("SELECT COD_DIR FROM DIRECCIONES_CTE_WEB WHERE COD_CTE = %s AND COD_DIR = %s", (cod_cte_form, cod_dir_form))
-                if not cursor_val_dir.fetchone():
-                    flash(f"Dir. '{cod_dir_form}' no válida para cliente '{cod_cte_form}'.", "danger")
-                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-                # Cerrar recursos de validación de dirección
-                if cursor_val_dir: cursor_val_dir.close(); cursor_val_dir = None
-                if conn_val_dir and conn_val_dir.is_connected(): conn_val_dir.close(); conn_val_dir = None
-            
-            fecha_exp_obj = None
-            if not fecha_exp_str_form:
-                flash("La Fecha de Entrega es obligatoria.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            try:
-                fecha_exp_obj = datetime.datetime.strptime(fecha_exp_str_form, '%Y-%m-%d').date()
-                if fecha_exp_obj <= datetime.date.today():
-                    flash("La Fecha de Entrega debe ser posterior a la fecha actual.", "danger")
-                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            except ValueError:
-                flash("Formato de Fecha de Entrega inválido.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-            # --- PROCESAR Y VALIDAR LÍNEAS DEL FORMULARIO ---
-            lineas_procesadas_ok_edit = []
-            if not lineas_para_repoblar: # Si no se envió ninguna línea (ej. todas eliminadas)
-                 flash("Debe haber al menos una línea en el pedido.", "danger")
-                 return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-            for idx, linea_form_data in enumerate(lineas_para_repoblar):
-                ud_emb_articulo, articulo_linea_existe = None, False
-                arti_linea = linea_form_data.get('ARTI', '').strip()
-                cantidad_str_linea = linea_form_data.get('CANTIDAD', '').strip()
-                descuento2_str_linea = linea_form_data.get('DESCUENTO2', '0').strip()
-                conn_val_arti_l, cursor_val_arti_l = None, None 
-
-                if not arti_linea:
-                    flash(f"Artículo obligatorio (línea {idx + 1}).", "danger")
-                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-                try:
-                    conn_val_arti_l = get_db_connection()
-                    if not conn_val_arti_l: flash("Error conexión validando art. línea.", "danger"); raise Exception("DB conn fail for line item")
-                    cursor_val_arti_l = conn_val_arti_l.cursor(dictionary=True)
-                    cursor_val_arti_l.execute("SELECT COD_ART, DESCRIPCION, UD_EMB FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
-                    item_maestro = cursor_val_arti_l.fetchone()
-                    if item_maestro:
-                        articulo_linea_existe = True
-                        ud_emb_articulo_raw = item_maestro.get('UD_EMB')
-                        # DESCRIPCION no se usa aquí en POST, solo UD_EMB para validación
-                        if ud_emb_articulo_raw is not None:
-                            try:
-                                temp_ud_emb = int(float(ud_emb_articulo_raw))
-                                ud_emb_articulo = temp_ud_emb if temp_ud_emb > 0 else None
-                            except (ValueError, TypeError): ud_emb_articulo = None
-                    else: flash(f"Artículo '{arti_linea}' inválido (línea {idx + 1}).", "danger")
-                except Exception as e_arti_val:
-                    flash(f"Error validando artículo línea {idx+1}: {e_arti_val}", "danger")
-                finally:
-                    if cursor_val_arti_l: cursor_val_arti_l.close()
-                    if conn_val_arti_l and conn_val_arti_l.is_connected(): conn_val_arti_l.close()
-                
-                if not articulo_linea_existe: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-                if not cantidad_str_linea:
-                    flash(f"Cantidad obligatoria (línea {idx + 1}).", "danger")
-                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-                try:
-                    cantidad_linea = int(cantidad_str_linea)
-                    if cantidad_linea <= 0: raise ValueError("Cantidad debe ser > 0")
-                    if es_muestra != "X" and ud_emb_articulo and cantidad_linea % ud_emb_articulo != 0:
-                        flash(f"Cant. ({cantidad_linea}) art. '{arti_linea}' (línea {idx+1}) debe ser múltiplo de {ud_emb_articulo}.", "danger")
-                        return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-                except ValueError as e_cant:
-                    flash(f"Cantidad inválida ('{cantidad_str_linea}') línea {idx + 1}: {e_cant}", "danger")
-                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-
-                try:
-                    descuento2_val = int(descuento2_str_linea) if descuento2_str_linea else 0
-                    if not 0 <= descuento2_val <= 100:
-                        raise ValueError("El descuento debe estar entre 0 y 100.")
-                except (ValueError, TypeError):
-                    flash(f"Valor de Descuento de Línea ('{descuento2_str_linea}') inválido en línea {idx + 1}. Debe ser un número entero entre 0 y 100.", "danger")
-                    return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-                
-                lineas_procesadas_ok_edit.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val})
-
-            if not lineas_procesadas_ok_edit: # Si ninguna línea pasó la validación o se enviaron vacías
-                # Este flash puede ser redundante si los errores de línea ya se mostraron.
-                # flash("No se procesaron líneas válidas para el pedido.", "danger")
-                return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            if not es_valido:
+                datos_para_repoblar['pedido_cabecera']['NUMPED'] = numped_a_editar
+                return render_template('pedido_form.html', **datos_para_repoblar)
 
             # --- SI TODAS LAS VALIDACIONES PASAN, ACTUALIZAR EN BD ---
-            conn_update = get_db_connection()
-            if not conn_update: return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
-            cursor_update = conn_update.cursor()
+            cursor = g.db.cursor(buffered=True, dictionary=True)
             
-            cursor_update.execute("SELECT USUARIO, FECHA_CREACION FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s LIMIT 1", 
+            cursor.execute("SELECT USUARIO, FECHA_CREACION FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s LIMIT 1", 
                                (numped_a_editar, usuario_actual))
-            pedido_original_info_tuple = cursor_update.fetchone() 
-            if not pedido_original_info_tuple:
+            pedido_original = cursor.fetchone() 
+            if not pedido_original:
                 flash("Pedido a editar no encontrado o sin permiso.", "warning")
                 return redirect(url_for('index')) 
             
-            fecha_creacion_original = pedido_original_info_tuple[1] 
-            cursor_update.execute("DELETE FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s", (numped_a_editar, usuario_actual))
+            fecha_creacion_original = pedido_original['FECHA_CREACION']
+            cursor.execute("DELETE FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s", (numped_a_editar, usuario_actual))
 
             sql_reinsert = "INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR, FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            for linea_p_ok in lineas_procesadas_ok_edit:
+            for linea in datos_procesados['lineas']:
                 val_reinsert = (
-                    numped_a_editar, linea_p_ok['ARTI'], linea_p_ok['CANTIDAD'],
-                    cod_cte_form or None, cod_dir_form or None, fecha_creacion_original,
-                    fecha_exp_obj, pedido_cte_ref_form or None, usuario_actual, estado_pedido,
-                    observaciones_form if observaciones_form else None, descuento1_val, linea_p_ok['DESCUENTO2'], es_muestra
+                    numped_a_editar, linea['ARTI'], linea['CANTIDAD'],
+                    datos_procesados['cod_cte'] or None, datos_procesados['cod_dir'] or None, fecha_creacion_original,
+                    datos_procesados['fecha_exp_obj'], datos_procesados['pedido_cte_ref'] or None, usuario_actual, estado_pedido,
+                    datos_procesados['observaciones'] or None, datos_procesados['descuento1_val'], linea['DESCUENTO2'], es_muestra
                 )
-                cursor_update.execute(sql_reinsert, val_reinsert)
+                cursor.execute(sql_reinsert, val_reinsert)
             
-            conn_update.commit()
+            g.db.commit()
             flash(f"Pedido {numped_a_editar} actualizado.", "success")
             return redirect(url_for('index'))
 
         except mysql.connector.Error as db_err:
-            if conn_update and conn_update.is_connected(): conn_update.rollback()
+            if g.db and g.db.is_connected(): g.db.rollback()
             flash(f"Error de BD al editar el pedido: {db_err}", "danger")
             print(f"ERROR DB (POST editar_pedido): {db_err}")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            # La función de validación ya preparó los datos para repoblar
+            return render_template('pedido_form.html', **datos_para_repoblar)
         except Exception as e:
-            if conn_update and conn_update.is_connected(): conn_update.rollback()
+            if g.db and g.db.is_connected(): g.db.rollback()
             flash(f"Error inesperado al editar el pedido: {e}", "danger")
             print(f"ERROR General (POST editar_pedido): {type(e).__name__} - {e}")
-            return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            return render_template('pedido_form.html', **datos_para_repoblar)
         finally:
-            # Cerrar conexiones de validación de cabecera POST (si se abrieron y no se cerraron antes)
-            if cursor_val_cte: 
-                try: cursor_val_cte.close()
-                except Exception as e: print(f"Error cerrando cursor_val_cte (POST): {e}")
-            if conn_val_cte and conn_val_cte.is_connected(): 
-                try: conn_val_cte.close()
-                except Exception as e: print(f"Error cerrando conn_val_cte (POST): {e}")
-            
-            if cursor_val_dir: 
-                try: cursor_val_dir.close()
-                except Exception as e: print(f"Error cerrando cursor_val_dir (POST): {e}")
-            if conn_val_dir and conn_val_dir.is_connected(): 
-                try: conn_val_dir.close()
-                except Exception as e: print(f"Error cerrando conn_val_dir (POST): {e}")
-
-            # Cerrar conexión de actualización POST
-            if cursor_update: 
-                try: cursor_update.close()
-                except Exception as e: print(f"Error cerrando cursor_update (POST): {e}")
-            if conn_update and conn_update.is_connected(): 
-                try: conn_update.close()
-                except Exception as e: print(f"Error cerrando conn_update (POST): {e}")
-        
-        # Fallback en caso de que alguna lógica no retorne explícitamente
-        return render_template('pedido_form.html', pedido_cabecera=pedido_cabecera_para_repoblar, lineas_pedido=lineas_para_repoblar)
+            if 'cursor' in locals() and cursor: cursor.close()
 
     # --- MÉTODO GET: Cargar datos para el formulario de edición ---
     else: 
-        conn_get = None 
-        cursor_get = None
         try:
-            conn_get = get_db_connection()
-            if not conn_get: return redirect(url_for('index'))
-            cursor_get = conn_get.cursor(dictionary=True)
+            if not g.db: return redirect(url_for('index'))
+            cursor = g.db.cursor(dictionary=True)
             
             # Modificamos la consulta para incluir DESCRIPCION y UD_EMB de ITMMASTER
-            cursor_get.execute("""
+            cursor.execute("""
                 SELECT pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, pw.DESCUENTO1, pw.DESCUENTO2,
                        pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO, pw.OBSERVACIONES, pw.MUESTRA,
                        itm.DESCRIPCION AS DESCRIPCION_ARTI, 
@@ -666,7 +521,7 @@ def editar_pedido(numped_a_editar):
                 WHERE pw.NUMPED = %s AND pw.USUARIO = %s 
                 ORDER BY pw.ID ASC
             """, (numped_a_editar, usuario_actual))
-            lineas_pedido_db_get = cursor_get.fetchall()
+            lineas_pedido_db_get = cursor.fetchall()
 
             if not lineas_pedido_db_get:
                 flash("Pedido no encontrado o no tienes acceso para editarlo.", "warning")
@@ -690,7 +545,7 @@ def editar_pedido(numped_a_editar):
                     'ID_LINEA': linea_db_get['ID'], 
                     'ARTI': linea_db_get['ARTI'],
                     'CANTIDAD': str(linea_db_get['CANTIDAD']),
-                    'DESCRIPCION_ARTI': linea_db_get.get('DESCRIPCION_ARTI', ''), # Usar .get() por si el JOIN no trae descripción
+                    'DESCRIPCION_ARTI': linea_db_get.get('DESCRIPCION_ARTI') or '', # Usar or '' para manejar None
                     'UD_EMB': linea_db_get.get('UD_EMB'), # Usar .get() por si el JOIN no trae UD_EMB
                     'PRECIO_ARTI': linea_db_get.get('PRECIO_ARTI'),
                     'STOCK_FAM_ARTI': linea_db_get.get('STOCK_FAM'),
@@ -710,35 +565,28 @@ def editar_pedido(numped_a_editar):
             print(f"ERROR General (GET editar_pedido): {type(e_get).__name__} - {e_get}")
             return redirect(url_for('index'))
         finally:
-            if cursor_get: 
-                try: cursor_get.close()
-                except Exception as e_cursor: print(f"Error cerrando cursor GET: {e_cursor}")
-            if conn_get and conn_get.is_connected():
-                try: conn_get.close()
-                except Exception as e_conn: print(f"Error cerrando conexión GET: {e_conn}")
+            if 'cursor' in locals() and cursor: cursor.close()
 
 @app.route('/pedidos/eliminar/<int:id>', methods=['POST'])
 @login_required
 def eliminar_pedido(id):
-    conn = get_db_connection()
-    if not conn:
+    if not g.db:
         return redirect(url_for('index'))
 
-    cursor = conn.cursor()
+    cursor = g.db.cursor()
     try:
         cursor.execute("DELETE FROM PEDIDOS_WEB WHERE ID = %s AND USUARIO = %s", (id, session['user_id']))
-        conn.commit()
+        g.db.commit()
         if cursor.rowcount > 0:
             flash("Pedido eliminado exitosamente.", "success")
         else:
             flash("Pedido no encontrado o no tienes permiso para eliminarlo.", "warning")
     except mysql.connector.Error as err:
-        conn.rollback()
+        g.db.rollback()
         flash(f"Error al eliminar pedido: {err}", "danger")
         print(f"ERROR DB Deleting pedido: {err}")
     finally:
         cursor.close()
-        conn.close()
     return redirect(url_for('index'))
 
 @app.route('/pedidos/eliminar_completo/<numped_a_eliminar>', methods=['POST'])
@@ -749,13 +597,11 @@ def eliminar_pedido_completo(numped_a_eliminar):
     para el usuario actualmente logueado.
     """
     usuario_actual = session['user_id']
-    conn = get_db_connection()
-
-    if not conn:
+    if not g.db:
         # flash ya se habrá mostrado
         return redirect(url_for('index'))
 
-    cursor = conn.cursor()
+    cursor = g.db.cursor()
     try:
         # Primero, verificar si el pedido existe y pertenece al usuario (opcional pero recomendado)
         # Esto evita intentos de eliminar pedidos de otros si alguien adivina un NUMPED,
@@ -770,7 +616,7 @@ def eliminar_pedido_completo(numped_a_eliminar):
             # Eliminar todas las filas (líneas) que coincidan con el NUMPED y el USUARIO
             cursor.execute("DELETE FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s", 
                            (numped_a_eliminar, usuario_actual))
-            conn.commit()
+            g.db.commit()
             
             if cursor.rowcount > 0:
                 flash(f"Pedido {numped_a_eliminar} eliminado.", "success")
@@ -779,13 +625,11 @@ def eliminar_pedido_completo(numped_a_eliminar):
                 flash(f"No se eliminaron líneas para el pedido {numped_a_eliminar}. Puede que ya estuviera vacío o hubo un problema.", "warning")
 
     except mysql.connector.Error as err:
-        conn.rollback()
+        g.db.rollback()
         flash(f"Error al eliminar el pedido {numped_a_eliminar}: {err}", "danger")
         print(f"ERROR DB Deleting complete order {numped_a_eliminar}: {err}")
     finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
+        cursor.close()
             
     return redirect(url_for('index'))
 
@@ -793,18 +637,15 @@ def eliminar_pedido_completo(numped_a_eliminar):
 @login_required
 def ver_pedido(numped_a_ver):
     usuario_actual = session['user_id']
-    conn_get = None
-    cursor_get = None
     
     try:
-        conn_get = get_db_connection()
-        if not conn_get:
+        if not g.db:
             return redirect(url_for('index')) # Flash ya se mostró
         
-        cursor_get = conn_get.cursor(dictionary=True)
+        cursor = g.db.cursor(dictionary=True)
         
         # Obtener todas las líneas del pedido y datos relacionados
-        cursor_get.execute("""
+        cursor.execute("""
             SELECT 
                 pw.ID, pw.NUMPED, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, pw.DESCUENTO1, pw.DESCUENTO2,
                 pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO, pw.OBSERVACIONES, pw.MUESTRA,
@@ -819,7 +660,7 @@ def ver_pedido(numped_a_ver):
             WHERE pw.NUMPED = %s AND pw.USUARIO = %s 
             ORDER BY pw.ID ASC
         """, (numped_a_ver, usuario_actual))
-        lineas_pedido_db = cursor_get.fetchall()
+        lineas_pedido_db = cursor.fetchall()
 
         if not lineas_pedido_db:
             flash("Pedido no encontrado o no tienes acceso para verlo.", "warning")
@@ -830,7 +671,7 @@ def ver_pedido(numped_a_ver):
         pedido_cabecera_para_vista = {
             'NUMPED': cabecera_db['NUMPED'],
             'COD_CTE': cabecera_db.get('COD_CTE'),
-            'RAZON_SOCIAL': cabecera_db.get('RAZON_SOCIAL'),
+            'RAZON_SOCIAL': cabecera_db.get('RAZON_SOCIAL') or '',
             'COD_DIR': cabecera_db.get('COD_DIR'),
             'FECHA_CREACION': cabecera_db.get('FECHA_CREACION'),
             'FECHA_EXP': cabecera_db.get('FECHA_EXP'),
@@ -847,7 +688,7 @@ def ver_pedido(numped_a_ver):
             lineas_para_vista.append({
                 'ID_LINEA': linea_db['ID'], 
                 'ARTI': linea_db['ARTI'],
-                'DESCRIPCION_ARTI': linea_db.get('DESCRIPCION_ARTI', 'N/A'),
+                'DESCRIPCION_ARTI': linea_db.get('DESCRIPCION_ARTI') or 'N/A',
                 'CANTIDAD': linea_db['CANTIDAD'],
                 'PRECIO_ARTI': linea_db.get('PRECIO_ARTI'), # Se pasará como número
                 'UD_EMB': linea_db.get('UD_EMB'),
@@ -861,8 +702,8 @@ def ver_pedido(numped_a_ver):
         if pedido_cabecera_para_vista.get('COD_CTE') and pedido_cabecera_para_vista.get('COD_DIR'):
             try: # Usar un nuevo cursor o la misma conexión si se maneja bien
                 # Es mejor un nuevo cursor si la conexión sigue abierta
-                if conn_get.is_connected(): # Reutilizar la conexión si es posible
-                    cursor_dir = conn_get.cursor(dictionary=True) # Nuevo cursor
+                if g.db.is_connected(): # Reutilizar la conexión si es posible
+                    cursor_dir = g.db.cursor(dictionary=True) # Nuevo cursor
                     cursor_dir.execute("""
                         SELECT DIR, CP, CIUDAD, PROVINCIA, PAIS 
                         FROM DIRECCIONES_CTE_WEB 
@@ -888,12 +729,8 @@ def ver_pedido(numped_a_ver):
         print(f"ERROR General (ver_pedido): {type(e).__name__} - {e}")
         return redirect(url_for('index'))
     finally:
-        if cursor_get: # Cerrar el cursor principal
-            try: cursor_get.close()
-            except Exception as e_cursor: print(f"Error cerrando cursor_get (ver_pedido): {e_cursor}")
-        if conn_get and conn_get.is_connected(): # Cerrar la conexión principal
-            try: conn_get.close()
-            except Exception as e_conn: print(f"Error cerrando conn_get (ver_pedido): {e_conn}")
+        if 'cursor' in locals() and cursor: cursor.close()
+        # La conexión se cierra automáticamente en teardown_request
 
 
 @app.route('/sugerencias_articulo')
@@ -908,12 +745,11 @@ def sugerencias_articulo():
     if len(query_param) < min_query_length:
         return jsonify(sugerencias=[])
 
-    conn = get_db_connection()
-    if not conn:
+    if not g.db:
         # El error ya se flasheó en get_db_connection
         return jsonify(error="Error de conexión a la base de datos"), 500
 
-    cursor = conn.cursor(dictionary=True)
+    cursor = g.db.cursor(dictionary=True)
     try:
         # Modificamos la consulta para seleccionar también UD_EMB
         sql_query = """
@@ -944,9 +780,7 @@ def sugerencias_articulo():
         # Es mejor no exponer detalles del error SQL al cliente en producción.
         return jsonify(error="Error al consultar la base de datos"), 500
     finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
+        cursor.close()
 
     return jsonify(sugerencias=sugerencias_list)
 
@@ -959,11 +793,10 @@ def sugerencias_cliente():
     if len(query_param) < 2: # O el mínimo que consideres
         return jsonify(sugerencias=[])
 
-    conn = get_db_connection()
-    if not conn:
+    if not g.db:
         return jsonify(error="Error de conexión"), 500
 
-    cursor = conn.cursor(dictionary=True)
+    cursor = g.db.cursor(dictionary=True)
     try:
         sql_query = """
             SELECT COD_CTE, RAZON_SOCIAL 
@@ -982,7 +815,6 @@ def sugerencias_cliente():
         return jsonify(error="Error de base de datos"), 500
     finally:
         cursor.close()
-        conn.close()
     return jsonify(sugerencias=sugerencias_list)
 
 # En app.py
@@ -1000,11 +832,10 @@ def sugerencias_direccion_cliente():
     # Si q es '*', listamos todas las direcciones para el cliente
     # Si no, filtramos por q (COD_DIR o DIR)
     
-    conn = get_db_connection()
-    if not conn:
+    if not g.db:
         return jsonify(error="Error de conexión a BD"), 500
 
-    cursor = conn.cursor(dictionary=True)
+    cursor = g.db.cursor(dictionary=True)
     try:
         params = [cod_cte_seleccionado]
         sql_conditions = "COD_CTE = %s"
@@ -1044,9 +875,7 @@ def sugerencias_direccion_cliente():
         print(f"Error DB en sugerencias_direccion_cliente: {err}")
         return jsonify(error="Error de base de datos"), 500
     finally:
-        if conn.is_connected():
-            cursor.close()
-            conn.close()
+        cursor.close()
     return jsonify(sugerencias=sugerencias_list)
 
 def generar_numped():
@@ -1074,10 +903,10 @@ def generar_numped():
 
 # Ejemplo de uso y prueba de longitud:
 if __name__ == '__main__': # Esto solo se ejecuta si corres este script directamente
+    print("Ejemplos de NUMPED generados:")
     for _ in range(5):
         np = generar_numped()
-        print(f"NUMPED: {np}, Longitud: {len(np)}")
-
-if __name__ == '__main__':
+        print(f"  - NUMPED: {np}, Longitud: {len(np)}")
+    
     #app.run(debug=True) # debug=True solo para desarrollo
     app.run(host='0.0.0.0', port=5000, debug=True)
