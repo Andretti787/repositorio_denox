@@ -1,0 +1,8 @@
+02-01 08:38:37 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Tabla "DBCONFIG" no encontrada
+Table "DBCONFIG" not found; SQL statement:
+SELECT 1 FROM dbconfig [42102-131]
+02-01 08:44:19 jdbc[2]: SQLException
+org.h2.jdbc.JdbcSQLException: Tabla "DBCONFIG" no encontrada
+Table "DBCONFIG" not found; SQL statement:
+SELECT 1 FROM dbconfig [42102-131]
