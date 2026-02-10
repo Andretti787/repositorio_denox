@@ -4,6 +4,44 @@
   <h2>Mis Pedidos</h2>
   <a href="{{ url_for('agregar_pedido') }}" class="btn btn-success mb-3">Nuevo Pedido</a>
   
+  <!-- Formulario de Filtros -->
+  <div class="card mb-3">
+    <div class="card-header">Filtrar Pedidos</div>
+    <div class="card-body">
+      <form method="GET" action="{{ url_for('index') }}">
+        <div class="form-row align-items-end">
+          <div class="col-md-4 mb-2">
+            <label for="filter_cliente">Cliente</label>
+            <select class="form-control" id="filter_cliente" name="filter_cliente" onchange="this.form.submit()">
+                <option value="">Todos los clientes</option>
+                {% for cliente in clientes_filtro %}
+                    <option value="{{ cliente.COD_CTE }}" {% if filter_cliente == cliente.COD_CTE %}selected{% endif %}>
+                        {{ cliente.COD_CTE }} - {{ cliente.RAZON_SOCIAL }}
+                    </option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4 mb-2">
+            <label for="filter_direccion">Dirección de Envío</label>
+            <select class="form-control" id="filter_direccion" name="filter_direccion" onchange="this.form.submit()">
+                <option value="">Todas las direcciones</option>
+                {% for direccion in direcciones_filtro %}
+                    <option value="{{ direccion.COD_DIR }}" {% if filter_direccion == direccion.COD_DIR %}selected{% endif %}>
+                        {{ direccion.COD_DIR }} - {{ direccion.DIR or 'Sin descripción' }}
+                    </option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-4 mb-2">
+            {% if filter_cliente or filter_direccion %}
+              <a href="{{ url_for('index') }}" class="btn btn-secondary">Limpiar</a>
+            {% endif %}
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   {% if pedidos_para_mostrar %} {# O el nombre que uses al pasar desde app.py, ej. pedidos_agrupados #}
     <table class="table table-striped">
       <thead>
@@ -82,6 +120,36 @@
         {% endfor %}
       </tbody>
     </table>
+
+    <!-- Controles de Paginación -->
+    {% if total_pages > 1 %}
+    <nav aria-label="Navegación de pedidos">
+      <ul class="pagination justify-content-center">
+        {# Botón Anterior #}
+        <li class="page-item {% if page <= 1 %}disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('index', page=page-1, filter_cliente=filter_cliente, filter_direccion=filter_direccion) }}" tabindex="-1">Anterior</a>
+        </li>
+
+        {# Números de página #}
+        {% for p in range(1, total_pages + 1) %}
+          {# Mostrar solo un rango cercano a la página actual para no saturar si hay muchas páginas #}
+          {% if p == 1 or p == total_pages or (p >= page - 2 and p <= page + 2) %}
+            <li class="page-item {% if p == page %}active{% endif %}">
+              <a class="page-link" href="{{ url_for('index', page=p, filter_cliente=filter_cliente, filter_direccion=filter_direccion) }}">{{ p }}</a>
+            </li>
+          {% elif p == page - 3 or p == page + 3 %}
+            <li class="page-item disabled"><span class="page-link">...</span></li>
+          {% endif %}
+        {% endfor %}
+
+        {# Botón Siguiente #}
+        <li class="page-item {% if page >= total_pages %}disabled{% endif %}">
+          <a class="page-link" href="{{ url_for('index', page=page+1, filter_cliente=filter_cliente, filter_direccion=filter_direccion) }}">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+    {% endif %}
+
   {% else %}
     <p>No tienes pedidos registrados.</p>
   {% endif %}

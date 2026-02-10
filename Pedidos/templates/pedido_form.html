@@ -24,7 +24,7 @@
       </div>
       <div class="form-group col-md-6">
         <label for="cod_dir_select">Código Dirección:</label>
-        <select class="form-control" id="cod_dir_select" name="COD_DIR" required>
+        <select class="form-control" id="cod_dir_select" name="COD_DIR" style="width: 100%" required>
             <option value="">-- Seleccione un cliente primero --</option>
         </select>
       </div>
@@ -90,7 +90,7 @@
         <div class="col-lg-1 text-right">Stock</div>
         <div class="col-lg-1 text-right">Precio U.</div>
         <div class="col-lg-1 text-right">Cant.</div>
-        <div class="col-lg-1 text-right">Dto. %</div>
+        <div class="col-lg-1 text-right">Dto. Ad. %</div>
         <div class="col-lg-2 text-right">Importe</div>
         <div class="col-lg-1"></div>
     </div>
@@ -315,15 +315,25 @@
     
     // --- Función para cargar direcciones en el select ---
     const codCteInput = document.getElementById('cod_cte');
-    const codDirSelect = document.getElementById('cod_dir_select');
+    // Usamos jQuery para el select porque Select2 lo requiere
+    const $codDirSelect = $('#cod_dir_select');
     const valorCodDirOriginal = "{{ pedido_cabecera.COD_DIR | default('') }}";
 
+    // Inicializar Select2
+    $(document).ready(function() {
+        $codDirSelect.select2({
+            placeholder: "-- Seleccione una dirección --",
+            allowClear: true,
+            width: '100%' // Asegura que ocupe el ancho correcto
+        });
+    });
+
     async function cargarDireccionesCliente(selectedCodCte, seleccionarCodDir = null) {
-        codDirSelect.innerHTML = '<option value="">Cargando direcciones...</option>';
-        codDirSelect.disabled = true;
+        // Limpiar y mostrar estado de carga
+        $codDirSelect.empty().append(new Option('Cargando direcciones...', '')).prop('disabled', true).trigger('change');
 
         if (!selectedCodCte || selectedCodCte.trim() === '') {
-            codDirSelect.innerHTML = '<option value="">-- Seleccione un cliente primero --</option>';
+            $codDirSelect.empty().append(new Option('-- Seleccione un cliente primero --', '')).trigger('change');
             return;
         }
 
@@ -335,9 +345,10 @@
             }
             const data = await response.json();
             
-            codDirSelect.innerHTML = ''; 
+            $codDirSelect.empty(); // Limpiar opciones anteriores
+            
             if (data.sugerencias && data.sugerencias.length > 0) {
-                codDirSelect.appendChild(new Option('-- Seleccione una dirección --', ''));
+                $codDirSelect.append(new Option('-- Seleccione una dirección --', ''));
                 data.sugerencias.forEach(dir => {
                     let optionText = `${dir.COD_DIR} - ${dir.DIR || 'N/A'}`;
                     if (dir.CIUDAD) optionText += `, ${dir.CIUDAD}`;
@@ -347,15 +358,16 @@
                     if (seleccionarCodDir && dir.COD_DIR === seleccionarCodDir) {
                         option.selected = true;
                     }
-                    codDirSelect.appendChild(option);
+                    $codDirSelect.append(option);
                 });
-                codDirSelect.disabled = false;
+                $codDirSelect.prop('disabled', false);
             } else {
-                codDirSelect.appendChild(new Option(data.mensaje || '-- No hay direcciones para este cliente --', ''));
+                $codDirSelect.append(new Option(data.mensaje || '-- No hay direcciones para este cliente --', ''));
             }
+            $codDirSelect.trigger('change'); // Actualizar Select2 visualmente
         } catch (error) {
             console.error("Error en cargarDireccionesCliente:", error);
-            codDirSelect.innerHTML = `<option value="">Error: ${error.message}</option>`;
+            $codDirSelect.empty().append(new Option(`Error: ${error.message}`, '')).trigger('change');
         }
     }
 
@@ -376,8 +388,9 @@
     codCteInput.addEventListener('blur', function() { 
         setTimeout(() => {
             const valorActualCliente = this.value.trim();
-            const dirSelectTieneOpcionesValidas = codDirSelect.options.length > 1 && codDirSelect.value !== "" && !codDirSelect.options[0].text.startsWith('--');
-            const dirSelectEstaCargandoOError = codDirSelect.options.length > 0 && (codDirSelect.options[0].text.toLowerCase().includes('cargando') || codDirSelect.options[0].text.toLowerCase().includes('error'));
+            const options = $codDirSelect.find('option');
+            const dirSelectTieneOpcionesValidas = options.length > 1 && $codDirSelect.val() !== "" && !options.first().text().startsWith('--');
+            const dirSelectEstaCargandoOError = options.length > 0 && (options.first().text().toLowerCase().includes('cargando') || options.first().text().toLowerCase().includes('error'));
 
             if (valorActualCliente) {
                 if (!dirSelectTieneOpcionesValidas || !dirSelectEstaCargandoOError) {
@@ -449,12 +462,19 @@
         const precioUnitario = esMuestra ? 0 : parseFloat(artiInputNode.dataset.precio || 0);
         const cantidad = parseInt(lineaDiv.querySelector('.cantidad-linea').value) || 0;
         const descuento2 = parseFloat(lineaDiv.querySelector('.descuento-linea').value || 0);
+        
+        // Obtener descuento general para cálculo en cascada
+        const descuento1Input = document.getElementById('descuento1');
+        const descuento1 = parseFloat(descuento1Input.value || 0);
+        
         const importeLineaInput = lineaDiv.querySelector('.importe-linea');
 
         if (importeLineaInput) {
             if (!isNaN(precioUnitario) && !isNaN(cantidad) && cantidad > 0 && precioUnitario >= 0) { // Permitir precio 0
                 const importeBruto = precioUnitario * cantidad;
-                const importeNeto = importeBruto * (1 - (descuento2 / 100));
+                // Cálculo en cascada: (Bruto * (1 - Dto1)) * (1 - Dto2)
+                const importeConDto1 = importeBruto * (1 - (descuento1 / 100));
+                const importeNeto = importeConDto1 * (1 - (descuento2 / 100));
                 importeLineaInput.value = importeNeto.toFixed(2);
             } else {
                 importeLineaInput.value = '0.00';
@@ -464,18 +484,24 @@
     }
 
     function calcularTotalGeneralPedido() {
-        let totalBrutoGeneral = 0;
+        let totalGeneral = 0;
         document.querySelectorAll('.linea-pedido .importe-linea').forEach(importeInput => {
-            totalBrutoGeneral += parseFloat(importeInput.value || 0);
+            totalGeneral += parseFloat(importeInput.value || 0);
         });
-
-        const descuento1Input = document.getElementById('descuento1');
-        const descuento1 = parseFloat(descuento1Input.value || 0);
-        const totalNetoGeneral = totalBrutoGeneral * (1 - (descuento1 / 100));
 
         const totalGeneralInput = document.getElementById('total_pedido_general');
         if (totalGeneralInput) {
-            totalGeneralInput.value = totalNetoGeneral.toFixed(2);
+            totalGeneralInput.value = totalGeneral.toFixed(2);
+        }
+    }
+
+    function recalcularTodasLasLineas() {
+        document.querySelectorAll('.linea-pedido .cantidad-linea').forEach(input => {
+            calcularImporteLinea(input);
+        });
+        // Si no hay líneas, asegurar que el total se actualice (aunque será 0)
+        if (document.querySelectorAll('.linea-pedido').length === 0) {
+            calcularTotalGeneralPedido();
         }
     }
 
@@ -556,9 +582,9 @@
         const noLineasMsg = document.getElementById('no-lineas-mensaje');
         if (noLineasMsg) { noLineasMsg.style.display = (container.querySelectorAll('.linea-pedido').length === 0) ? 'block' : 'none'; }
         if (codCteInput.value.trim()) { cargarDireccionesCliente(codCteInput.value.trim(), valorCodDirOriginal); }
-        else { codDirSelect.disabled = true; }
+        else { $codDirSelect.prop('disabled', true); }
 
-        document.getElementById('descuento1').addEventListener('input', calcularTotalGeneralPedido);
+        document.getElementById('descuento1').addEventListener('input', recalcularTodasLasLineas);
 
         const esMuestra = document.getElementById('muestra').checked;
         if (esMuestra) {

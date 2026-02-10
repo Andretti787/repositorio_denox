@@ -6,6 +6,7 @@ import datetime
 from datetime import timedelta # Importar timedelta
 from functools import wraps
 from werkzeug.security import check_password_hash # Importar para verificar hashes de contraseñas
+import math
 
 
 app = Flask(__name__)
@@ -97,27 +98,91 @@ def index():
     if not g.db:
         return render_template('pedidos_lista.html', pedidos_para_mostrar={}) # Pasar dict vacío
 
+    # Capturar filtros de la URL
+    filter_cliente = request.args.get('filter_cliente', '').strip()
+    filter_direccion = request.args.get('filter_direccion', '').strip()
+    page = request.args.get('page', 1, type=int)
+    per_page = 10  # Número de pedidos por página
+
     pedidos_db = []
+    clientes_filtro = []
+    direcciones_filtro = []
+
     cursor = g.db.cursor(dictionary=True)
     try:
-        # Modificar la consulta para incluir PED.ESTADO
+        # --- Obtener listas para los desplegables de filtro ---
+        # Clientes que tienen pedidos
         cursor.execute("""
-            SELECT 
-                pw.ID AS PED_ID, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
-                pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, 
-                pw.NUMPED, pw.ESTADO, pw.DESCUENTO1, pw.DESCUENTO2, pw.MUESTRA,
-                c.RAZON_SOCIAL,
-                itm.DESCRIPCION AS DESCRIPCION_ARTI,
-                itm.UD_EMB,
-                itm.PRECIO AS PRECIO_ARTI,
-                itm.STOCK_FAM
-            FROM PEDIDOS_WEB pw
-            LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
-            LEFT JOIN ITMMASTER itm ON pw.ARTI = itm.COD_ART
-            WHERE pw.USUARIO = %s 
-            ORDER BY pw.NUMPED DESC, pw.ID ASC
+            SELECT DISTINCT pw.COD_CTE, c.RAZON_SOCIAL 
+            FROM PEDIDOS_WEB pw 
+            LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE 
+            WHERE pw.USUARIO = %s ORDER BY pw.COD_CTE
         """, (session['user_id'],))
-        pedidos_db = cursor.fetchall()
+        clientes_filtro = cursor.fetchall()
+
+        # Direcciones usadas en pedidos (con su descripción)
+        sql_direcciones = """
+            SELECT DISTINCT pw.COD_DIR, d.DIR 
+            FROM PEDIDOS_WEB pw 
+            LEFT JOIN DIRECCIONES_CTE_WEB d ON pw.COD_CTE = d.COD_CTE AND pw.COD_DIR = d.COD_DIR 
+            WHERE pw.USUARIO = %s AND pw.COD_DIR IS NOT NULL AND pw.COD_DIR != '' 
+        """
+        params_direcciones = [session['user_id']]
+        if filter_cliente:
+            sql_direcciones += " AND pw.COD_CTE = %s"
+            params_direcciones.append(filter_cliente)
+        sql_direcciones += " ORDER BY pw.COD_DIR"
+        cursor.execute(sql_direcciones, tuple(params_direcciones))
+        direcciones_filtro = cursor.fetchall()
+
+        # 1. Construir cláusulas WHERE comunes
+        where_clauses = ["pw.USUARIO = %s"]
+        params = [session['user_id']]
+
+        if filter_cliente:
+            where_clauses.append("pw.COD_CTE = %s")
+            params.append(filter_cliente)
+        
+        if filter_direccion:
+            where_clauses.append("pw.COD_DIR = %s")
+            params.append(filter_direccion)
+
+        where_sql = " AND ".join(where_clauses)
+
+        # 2. Contar total de pedidos distintos (agrupados por NUMPED)
+        sql_count = f"SELECT COUNT(DISTINCT pw.NUMPED) as total FROM PEDIDOS_WEB pw LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE WHERE {where_sql}"
+        cursor.execute(sql_count, tuple(params))
+        total_pedidos = cursor.fetchone()['total']
+        total_pages = math.ceil(total_pedidos / per_page)
+
+        # 3. Obtener los NUMPEDs de la página actual (Paginación)
+        offset = (page - 1) * per_page
+        sql_ids = f"SELECT DISTINCT pw.NUMPED FROM PEDIDOS_WEB pw LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE WHERE {where_sql} ORDER BY pw.NUMPED DESC LIMIT %s OFFSET %s"
+        # Añadimos limit y offset a los parámetros
+        params_ids = params + [per_page, offset]
+        cursor.execute(sql_ids, tuple(params_ids))
+        numpeds_result = cursor.fetchall()
+        numpeds_page = [row['NUMPED'] for row in numpeds_result]
+
+        # 4. Obtener detalles completos solo para los pedidos de esta página
+        if numpeds_page:
+            placeholders = ','.join(['%s'] * len(numpeds_page))
+            sql_details = f"""
+                SELECT pw.ID AS PED_ID, pw.ARTI, pw.CANTIDAD, pw.COD_CTE, pw.COD_DIR, 
+                    pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, 
+                    pw.NUMPED, pw.ESTADO, pw.DESCUENTO1, pw.DESCUENTO2, pw.MUESTRA,
+                    c.RAZON_SOCIAL, itm.DESCRIPCION AS DESCRIPCION_ARTI, itm.UD_EMB,
+                    itm.PRECIO AS PRECIO_ARTI, itm.STOCK_FAM
+                FROM PEDIDOS_WEB pw
+                LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
+                LEFT JOIN ITMMASTER itm ON pw.ARTI = itm.COD_ART
+                WHERE pw.USUARIO = %s AND pw.NUMPED IN ({placeholders})
+                ORDER BY pw.NUMPED DESC, pw.ID ASC
+            """
+            params_details = [session['user_id']] + numpeds_page
+            cursor.execute(sql_details, tuple(params_details))
+            pedidos_db = cursor.fetchall()
+
     except mysql.connector.Error as err:
         flash(f"Error al obtener pedidos: {err}", "danger")
         print(f"ERROR DB Fetching pedidos: {err}")
@@ -156,7 +221,14 @@ def index():
                 'DESCUENTO2': linea_pedido.get('DESCUENTO2')
             })
     
-    return render_template('pedidos_lista.html', pedidos_para_mostrar=pedidos_agrupados)
+    return render_template('pedidos_lista.html', 
+                           pedidos_para_mostrar=pedidos_agrupados,
+                           filter_cliente=filter_cliente,
+                           filter_direccion=filter_direccion,
+                           page=page,
+                           total_pages=total_pages,
+                           clientes_filtro=clientes_filtro,
+                           direcciones_filtro=direcciones_filtro)
 
 
 def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numped_a_excluir=None):
@@ -215,15 +287,24 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
 
     cursor = g.db.cursor(dictionary=True)
     try:
-        cursor.execute("SELECT COD_CTE FROM CLIENTES_WEB WHERE COD_CTE = %s", (cod_cte,))
+        # 1. Validar que el cliente es visible para el usuario
+        sql_val_cte = """
+            SELECT c.COD_CTE FROM CLIENTES_WEB c
+            LEFT JOIN DIRECCIONES_CTE_WEB d ON c.COD_CTE = d.COD_CTE
+            WHERE c.COD_CTE = %s AND (c.COD_USER = %s OR d.COD_USER = %s)
+            LIMIT 1
+        """
+        cursor.execute(sql_val_cte, (cod_cte, usuario_actual, usuario_actual))
         if not cursor.fetchone():
-            flash(f"El Código de Cliente '{cod_cte}' no existe.", "danger")
+            flash(f"El Código de Cliente '{cod_cte}' no existe o no tiene permiso para usarlo.", "danger")
             return False, None, datos_para_repoblar
 
         if cod_dir:
-            cursor.execute("SELECT COD_DIR FROM DIRECCIONES_CTE_WEB WHERE COD_CTE = %s AND COD_DIR = %s", (cod_cte, cod_dir))
+            # 2. Validar que la dirección es visible para el usuario
+            sql_val_dir = "SELECT d.COD_DIR FROM DIRECCIONES_CTE_WEB d WHERE d.COD_CTE = %s AND d.COD_DIR = %s AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '')"
+            cursor.execute(sql_val_dir, (cod_cte, cod_dir, usuario_actual))
             if not cursor.fetchone():
-                flash(f"La Dirección '{cod_dir}' no es válida para el cliente '{cod_cte}'.", "danger")
+                flash(f"La Dirección '{cod_dir}' no es válida para el cliente '{cod_cte}' o no tiene permiso para usarla.", "danger")
                 return False, None, datos_para_repoblar
 
         # NUEVA VALIDACIÓN: Comprobar si la combinación COD_CTE y PEDIDO_CTE ya existe
@@ -277,7 +358,8 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
         cursor = g.db.cursor(dictionary=True)
         ud_emb_articulo = None
         try:
-            cursor.execute("SELECT UD_EMB FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
+            # Recuperamos también el PRECIO para guardarlo
+            cursor.execute("SELECT UD_EMB, PRECIO FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
             item_maestro = cursor.fetchone()
             if not item_maestro:
                 flash(f"Artículo '{arti_linea}' inválido en línea {idx + 1}.", "danger")
@@ -315,7 +397,12 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
             flash(f"Descuento de Línea ('{descuento2_str}') inválido en línea {idx + 1}.", "danger")
             return False, None, datos_para_repoblar
 
-        lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val})
+        # Determinar precio a guardar: 0 si es muestra, sino el del maestro
+        precio_guardar = 0.0
+        if es_muestra != 'X' and item_maestro.get('PRECIO'):
+            precio_guardar = float(item_maestro['PRECIO'])
+
+        lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val, 'PRECIO': precio_guardar})
 
     if not lineas_procesadas_ok:
         flash("No se procesó ninguna línea válida.", "danger")
@@ -365,8 +452,8 @@ def agregar_pedido():
         cursor = g.db.cursor()
         sql_insert_linea = """
             INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR,
-                                     FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                                     FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA, PRECIO)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """
         try:
             for linea in datos_procesados['lineas']:
@@ -384,7 +471,8 @@ def agregar_pedido():
                     datos_procesados['observaciones'] or None,
                     datos_procesados['descuento1_val'],
                     linea['DESCUENTO2'],
-                    datos_procesados['es_muestra']
+                    datos_procesados['es_muestra'],
+                    linea['PRECIO']
                 )
                 cursor.execute(sql_insert_linea, val)
             
@@ -474,13 +562,13 @@ def editar_pedido(numped_a_editar):
             fecha_creacion_original = pedido_original['FECHA_CREACION']
             cursor.execute("DELETE FROM PEDIDOS_WEB WHERE NUMPED = %s AND USUARIO = %s", (numped_a_editar, usuario_actual))
 
-            sql_reinsert = "INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR, FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            sql_reinsert = "INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR, FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA, PRECIO) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             for linea in datos_procesados['lineas']:
                 val_reinsert = (
                     numped_a_editar, linea['ARTI'], linea['CANTIDAD'],
                     datos_procesados['cod_cte'] or None, datos_procesados['cod_dir'] or None, fecha_creacion_original,
                     datos_procesados['fecha_exp_obj'], datos_procesados['pedido_cte_ref'] or None, usuario_actual, estado_pedido,
-                    datos_procesados['observaciones'] or None, datos_procesados['descuento1_val'], linea['DESCUENTO2'], es_muestra
+                    datos_procesados['observaciones'] or None, datos_procesados['descuento1_val'], linea['DESCUENTO2'], es_muestra, linea['PRECIO']
                 )
                 cursor.execute(sql_reinsert, val_reinsert)
             
@@ -514,7 +602,7 @@ def editar_pedido(numped_a_editar):
                        pw.FECHA_CREACION, pw.FECHA_EXP, pw.PEDIDO_CTE, pw.USUARIO, pw.ESTADO, pw.OBSERVACIONES, pw.MUESTRA,
                        itm.DESCRIPCION AS DESCRIPCION_ARTI, 
                        itm.UD_EMB,
-                       itm.PRECIO AS PRECIO_ARTI,
+                       COALESCE(pw.PRECIO, itm.PRECIO) AS PRECIO_ARTI,
                        itm.STOCK_FAM
                 FROM PEDIDOS_WEB pw
                 LEFT JOIN ITMMASTER itm ON pw.ARTI = itm.COD_ART
@@ -652,7 +740,7 @@ def ver_pedido(numped_a_ver):
                 c.RAZON_SOCIAL,
                 itm.DESCRIPCION AS DESCRIPCION_ARTI, 
                 itm.UD_EMB,
-                itm.PRECIO AS PRECIO_ARTI,
+                COALESCE(pw.PRECIO, itm.PRECIO) AS PRECIO_ARTI,
                 itm.STOCK_FAM 
             FROM PEDIDOS_WEB pw
             LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
@@ -788,6 +876,7 @@ def sugerencias_articulo():
 @login_required
 def sugerencias_cliente():
     query_param = request.args.get('q', '')
+    usuario_actual = session['user_id']
     sugerencias_list = []
 
     if len(query_param) < 2: # O el mínimo que consideres
@@ -799,13 +888,17 @@ def sugerencias_cliente():
     cursor = g.db.cursor(dictionary=True)
     try:
         sql_query = """
-            SELECT COD_CTE, RAZON_SOCIAL 
-            FROM CLIENTES_WEB 
-            WHERE COD_CTE LIKE %s OR RAZON_SOCIAL LIKE %s 
+            SELECT DISTINCT c.COD_CTE, c.RAZON_SOCIAL
+            FROM CLIENTES_WEB c
+            LEFT JOIN DIRECCIONES_CTE_WEB d ON c.COD_CTE = d.COD_CTE
+            WHERE
+                (c.COD_CTE LIKE %s OR c.RAZON_SOCIAL LIKE %s)
+                AND (c.COD_USER = %s OR d.COD_USER = %s)
             LIMIT 10
         """
         search_term = '%' + query_param + '%' # Busca en cualquier parte
-        cursor.execute(sql_query, (search_term, search_term))
+        params = (search_term, search_term, usuario_actual, usuario_actual)
+        cursor.execute(sql_query, params)
         
         resultados = cursor.fetchall()
         for row in resultados:
@@ -824,6 +917,7 @@ def sugerencias_cliente():
 def sugerencias_direccion_cliente():
     query_param = request.args.get('q', '').strip()
     cod_cte_seleccionado = request.args.get('cod_cte', '').strip()
+    usuario_actual = session['user_id']
     sugerencias_list = []
 
     if not cod_cte_seleccionado:
@@ -837,23 +931,20 @@ def sugerencias_direccion_cliente():
 
     cursor = g.db.cursor(dictionary=True)
     try:
-        params = [cod_cte_seleccionado]
-        sql_conditions = "COD_CTE = %s"
+        # Lógica base: direcciones del cliente que son del usuario o públicas
+        params = [cod_cte_seleccionado, usuario_actual]
+        sql_conditions = "d.COD_CTE = %s AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '')"
 
-        if query_param == "*":
-            # No se añade más condición, se listan todas para el COD_CTE
-            pass
-        elif query_param: # Si hay término de búsqueda y no es "*"
-            sql_conditions += " AND (COD_DIR LIKE %s OR DIR LIKE %s)"
+        # Añadir filtro de búsqueda si existe
+        if query_param and query_param != "*":
+            sql_conditions += " AND (d.COD_DIR LIKE %s OR d.DIR LIKE %s OR d.CP LIKE %s OR d.CIUDAD LIKE %s OR d.PROVINCIA LIKE %s)"
             search_term = '%' + query_param + '%'
-            params.extend([search_term, search_term])
-        else: # Si q está vacío y no es "*", no devolver nada o un mensaje
-             return jsonify(sugerencias=[], mensaje="Escriba un término de búsqueda o '*' para listar.")
+            params.extend([search_term, search_term, search_term, search_term, search_term])
 
 
         sql_query = f"""
             SELECT COD_DIR, DIR, CP, CIUDAD, PROVINCIA, PAIS 
-            FROM DIRECCIONES_CTE_WEB 
+            FROM DIRECCIONES_CTE_WEB d
             WHERE {sql_conditions}
             ORDER BY COD_DIR
             LIMIT 600 

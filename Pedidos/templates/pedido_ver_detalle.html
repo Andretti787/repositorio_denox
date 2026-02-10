@@ -75,11 +75,14 @@
             <th class="text-right">Precio U.</th>
             <th class="text-right">Dto. Adicional %</th>
             <th class="text-right">Cantidad</th>
-            <th class="text-right">Importe</th>
+            <th class="text-right">Importe Dto. (€)</th>
+            <th class="text-right">Importe Neto</th>
           </tr>
         </thead>
         <tbody>
-          {% set subtotal_calculado = namespace(valor=0.0) %}
+          {% set total_bruto_calculado = namespace(valor=0.0) %}
+          {% set total_descuento_calculado = namespace(valor=0.0) %}
+          {% set total_neto_calculado = namespace(valor=0.0) %}
           {% for linea in lineas_pedido %}
             <tr>
               <td>{{ linea.ARTI }}</td>
@@ -94,30 +97,46 @@
               </td>
               <td class="text-right">{{ linea.get('DESCUENTO2', 0) }}%</td>
               <td class="text-right">{{ linea.CANTIDAD }}</td>
+              
+              {# --- Cálculos de importes y descuentos en cascada --- #}
               {% set precio_linea = 0.0 if pedido_cabecera.MUESTRA == 'X' else linea.get('PRECIO_ARTI', 0)|float %}
               {% set importe_bruto_linea = (precio_linea * linea.CANTIDAD|float) %}
-              {% set importe_linea = importe_bruto_linea * (1 - (linea.get('DESCUENTO2', 0)|float / 100.0)) %}
-              <td class="text-right">{{ '%.2f'|format(importe_linea) }}</td>
-              {% set subtotal_calculado.valor = subtotal_calculado.valor + importe_linea %}
+              
+              {# Obtener ambos porcentajes de descuento #}
+              {% set dto1_percent = (pedido_cabecera.get('DESCUENTO1', 0)|float) / 100.0 %}
+              {% set dto2_percent = (linea.get('DESCUENTO2', 0)|float) / 100.0 %}
+              
+              {# Aplicar descuentos en cascada: primero el general, luego el de línea #}
+              {% set importe_con_dto1 = importe_bruto_linea * (1 - dto1_percent) %}
+              {% set importe_neto_linea = importe_con_dto1 * (1 - dto2_percent) %}
+              
+              {# Calcular el importe total del descuento para la línea #}
+              {% set importe_descuento_total_linea = importe_bruto_linea - importe_neto_linea %}
+
+              <td class="text-right text-danger">-{{ '%.2f'|format(importe_descuento_total_linea) }}</td>
+              <td class="text-right font-weight-bold">{{ '%.2f'|format(importe_neto_linea) }}</td>
+              
+              {% set total_bruto_calculado.valor = total_bruto_calculado.valor + importe_bruto_linea %}
+              {% set total_descuento_calculado.valor = total_descuento_calculado.valor + importe_descuento_total_linea %}
+              {% set total_neto_calculado.valor = total_neto_calculado.valor + importe_neto_linea %}
             </tr>
           {% endfor %}
         </tbody>
         <tfoot>
           <tr class="table-light">
-            <td colspan="6" class="text-right font-weight-bold">Subtotal:</td>
-            <td class="text-right font-weight-bold">{{ '%.2f'|format(subtotal_calculado.valor) }}</td>
+            <td colspan="7" class="text-right font-weight-bold">Subtotal Bruto:</td>
+            <td class="text-right font-weight-bold">{{ '%.2f'|format(total_bruto_calculado.valor) }}</td>
           </tr>
-          {% set dto1_valor = pedido_cabecera.get('DESCUENTO1', 0)|float(0.0) %}
-          {% if dto1_valor > 0 and pedido_cabecera.MUESTRA != 'X' %}
+          
+          {% if total_descuento_calculado.valor > 0 %}
           <tr class="table-light">
-            <td colspan="6" class="text-right font-weight-bold">Descuento General ({{ dto1_valor }}%):</td>
-            <td class="text-right font-weight-bold text-danger">- {{ '%.2f'|format(subtotal_calculado.valor * (dto1_valor / 100.0)) }}</td>
+            <td colspan="7" class="text-right font-weight-bold">Total Descuentos:</td>
+            <td class="text-right font-weight-bold text-danger">- {{ '%.2f'|format(total_descuento_calculado.valor) }}</td>
           </tr>
           {% endif %}
-          {% set total_final = subtotal_calculado.valor * (1 - (dto1_valor / 100.0)) if pedido_cabecera.MUESTRA != 'X' else 0.0 %}
           <tr class="table-info">
-            <td colspan="6" class="text-right font-weight-bold">TOTAL PEDIDO:</td>
-            <td class="text-right font-weight-bold">{{ '%.2f'|format(total_final) }}</td>
+            <td colspan="7" class="text-right font-weight-bold">TOTAL PEDIDO:</td>
+            <td class="text-right font-weight-bold">{{ '%.2f'|format(total_neto_calculado.valor) }}</td>
           </tr>
         </tfoot>
       </table>
