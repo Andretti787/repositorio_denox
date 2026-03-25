@@ -272,48 +272,47 @@ const AppTransporte = {
 
         this.postForm.addEventListener('submit', async (e) => {
             e.preventDefault();
+            const submitButton = this.postForm.querySelector('button[type="submit"]');
+            submitButton.disabled = true; // Deshabilitar el botón al iniciar
             this.setApiResponseLoading(true);
             
-            const checkboxesSeleccionados = this.albaranesTbody.querySelectorAll('.albaran-select-checkbox:checked');
-            
-            if (checkboxesSeleccionados.length === 0) {
-                this.mostrarApiResponse({ error: 'No hay albaranes seleccionados.' }, 400);
-                this.setApiResponseLoading(false);
-                return;
-            }
-    
-            let albaranesParaEnviar = [];
-            let endpoint = '/crear-ordenes-multiples';
-    
-            if (checkboxesSeleccionados.length === 1) {
-                const postDataEl = document.getElementById('post-data');
-                try {
-                    albaranesParaEnviar.push(JSON.parse(postDataEl.value));
-                } catch (error) {
-                    this.mostrarApiResponse({ error: 'El JSON en el área de texto no es válido.' }, 400);
-                    this.setApiResponseLoading(false);
-                    return;
-                }
-            } else {
-                checkboxesSeleccionados.forEach(checkbox => {
-                    albaranesParaEnviar.push(this.albaranesData[checkbox.value]);
-                });
-            }
-    
-            const hayEnviados = albaranesParaEnviar.some(alb => alb.ENVIADO);
-            let forzarReenvio = false;
-    
-            if (hayEnviados) {
-                if (confirm("Uno o más de los albaranes seleccionados ya han sido enviados. ¿Deseas reenviarlos de todas formas?")) {
-                    forzarReenvio = true;
-                } else {
-                    this.setApiResponseLoading(false);
-                    this.mostrarApiResponse({ info: 'Operación cancelada por el usuario.' }, 400);
-                    return;
-                }
-            }
-    
             try {
+                const checkboxesSeleccionados = this.albaranesTbody.querySelectorAll('.albaran-select-checkbox:checked');
+                
+                if (checkboxesSeleccionados.length === 0) {
+                    this.mostrarApiResponse({ error: 'No hay albaranes seleccionados.' }, 400);
+                    return;
+                }
+        
+                let albaranesParaEnviar = [];
+                let endpoint = '/crear-ordenes-multiples';
+        
+                if (checkboxesSeleccionados.length === 1) {
+                    const postDataEl = document.getElementById('post-data');
+                    try {
+                        albaranesParaEnviar.push(JSON.parse(postDataEl.value));
+                    } catch (error) {
+                        this.mostrarApiResponse({ error: 'El JSON en el área de texto no es válido.' }, 400);
+                        return;
+                    }
+                } else {
+                    checkboxesSeleccionados.forEach(checkbox => {
+                        albaranesParaEnviar.push(this.albaranesData[checkbox.value]);
+                    });
+                }
+        
+                const hayEnviados = albaranesParaEnviar.some(alb => alb.ENVIADO);
+                let forzarReenvio = false;
+        
+                if (hayEnviados) {
+                    if (confirm("Uno o más de los albaranes seleccionados ya han sido enviados. ¿Deseas reenviarlos de todas formas?")) {
+                        forzarReenvio = true;
+                    } else {
+                        this.mostrarApiResponse({ info: 'Operación cancelada por el usuario.' }, 400);
+                        return;
+                    }
+                }
+        
                 const basketType = document.querySelector('input[name="creationType"]:checked').value;
                 const params = new URLSearchParams();
                 if (forzarReenvio) params.append('force', 'true');
@@ -347,6 +346,7 @@ const AppTransporte = {
                 this.mostrarApiResponse({ error: 'Fallo la conexión con el backend' }, 500);
             } finally {
                 this.setApiResponseLoading(false);
+                submitButton.disabled = false; // Rehabilitar el botón al finalizar
             }
         });
 

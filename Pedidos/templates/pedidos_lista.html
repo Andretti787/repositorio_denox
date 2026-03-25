@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% block title %}Mis Pedidos{% endblock %}
 {% block content %}
+<div style="position: relative;">
   <h2>Mis Pedidos</h2>
   <a href="{{ url_for('agregar_pedido') }}" class="btn btn-success mb-3">Nuevo Pedido</a>
   
@@ -153,4 +154,6 @@
   {% else %}
     <p>No tienes pedidos registrados.</p>
   {% endif %}
+
+</div>
 {% endblock %}

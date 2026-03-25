@@ -100,6 +100,7 @@
         {% for linea in lineas_pedido %}
           <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
             <input type="hidden" name="lineas[{{ loop.index0 }}][ID_LINEA]" value="{{ linea['ID_LINEA'] | default('') }}">
+            <input type="hidden" class="ud-emb-linea" name="lineas[{{ loop.index0 }}][UD_EMB]" value="{{ linea.get('UD_EMB') if linea.get('UD_EMB') is not none else '' }}">
             <div class="form-group col-lg-2 col-md-6">
               <label for="arti_linea_{{ loop.index0 }}" class="sr-only">Artículo:</label>
               <input type="text" id="arti_linea_{{ loop.index0 }}" name="lineas[{{ loop.index0 }}][ARTI]" 
@@ -111,17 +112,17 @@
             </div>
             <div class="form-group col-lg-3 col-md-6">
               <label for="desc_arti_linea_{{loop.index0}}" class="sr-only">Descripción:</label>
-              <input type="text" id="desc_arti_linea_{{loop.index0}}" class="form-control descripcion-articulo-linea" 
+              <input type="text" id="desc_arti_linea_{{loop.index0}}" name="lineas[{{ loop.index0 }}][DESCRIPCION_ARTI]" class="form-control descripcion-articulo-linea" 
                      value="{{ linea.get('DESCRIPCION_ARTI', '') }}" readonly placeholder="Descripción">
             </div>
              <div class="form-group col-lg-1 col-md-3">
                 <label for="stock_linea_{{loop.index0}}" class="sr-only">Stock:</label>
-                <input type="text" id="stock_linea_{{loop.index0}}" class="form-control stock-disponible-linea text-right" 
+                <input type="text" id="stock_linea_{{loop.index0}}" name="lineas[{{ loop.index0 }}][STOCK_FAM_ARTI]" class="form-control stock-disponible-linea text-right" 
                        value="{{ linea.get('STOCK_FAM_ARTI') if linea.get('STOCK_FAM_ARTI') is not none else 'N/A' }}" readonly placeholder="Stock">
             </div>
             <div class="form-group col-lg-1 col-md-3">
                 <label for="precio_unit_linea_{{loop.index0}}" class="sr-only">Precio U.:</label>
-                <input type="text" id="precio_unit_linea_{{loop.index0}}" class="form-control precio-unitario-linea text-right" 
+                <input type="text" id="precio_unit_linea_{{loop.index0}}" name="lineas[{{ loop.index0 }}][PRECIO_ARTI]" class="form-control precio-unitario-linea text-right" 
                        value="{{ '%.2f'|format(linea.get('PRECIO_ARTI')|float(0.0)) if linea.get('PRECIO_ARTI') is not none else '0.00' }}" readonly placeholder="Precio U.">
             </div>
             <div class="form-group col-lg-1 col-md-3">
@@ -147,10 +148,11 @@
       {% else %}
         <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
             <input type="hidden" name="lineas[0][ID_LINEA]" value="">
+            <input type="hidden" class="ud-emb-linea" name="lineas[0][UD_EMB]" value="">
             <div class="form-group col-lg-2 col-md-6"> <input type="text" id="arti_linea_0" name="lineas[0][ARTI]" class="form-control arti-linea" required autocomplete="off" placeholder="Artículo"> <div id="suggestions_box_arti_linea_0" class="suggestions-box-arti-linea list-group suggestions-container"></div> </div>
-            <div class="form-group col-lg-3 col-md-6"> <input type="text" id="desc_arti_linea_0" class="form-control descripcion-articulo-linea" readonly placeholder="Descripción"> </div>
-            <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_0" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
-            <div class="form-group col-lg-1 col-md-3"> <input type="text" id="precio_unit_linea_0" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
+            <div class="form-group col-lg-3 col-md-6"> <input type="text" id="desc_arti_linea_0" name="lineas[0][DESCRIPCION_ARTI]" class="form-control descripcion-articulo-linea" readonly placeholder="Descripción"> </div>
+            <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_0" name="lineas[0][STOCK_FAM_ARTI]" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
+            <div class="form-group col-lg-1 col-md-3"> <input type="text" id="precio_unit_linea_0" name="lineas[0][PRECIO_ARTI]" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
             <div class="form-group col-lg-1 col-md-3"> <input type="number" id="cant_linea_0" name="lineas[0][CANTIDAD]" class="form-control cantidad-linea text-right" required min="1" placeholder="Cant."> <div class="aviso-ud-emb-container"></div><div class="aviso-stock-container"></div> </div>
             <div class="form-group col-lg-1 col-md-3"> <input type="number" id="dto2_linea_0" name="lineas[0][DESCUENTO2]" class="form-control descuento-linea text-right" min="0" max="100" value="0" placeholder="Dto. Adic."> </div>
             <div class="form-group col-lg-2 col-md-6"> <input type="text" id="importe_linea_0" class="form-control importe-linea text-right" readonly placeholder="Importe"> </div>
@@ -201,6 +203,8 @@
                     delete inputElement.dataset.stockFam;
                     const lineaDiv = inputElement.closest('.linea-pedido');
                     if (lineaDiv) {
+                        const udEmbInput = lineaDiv.querySelector('.ud-emb-linea');
+                        if (udEmbInput) udEmbInput.value = '';
                         ['.descripcion-articulo-linea', '.precio-unitario-linea', '.importe-linea', '.stock-disponible-linea'].forEach(selector => {
                             const el = lineaDiv.querySelector(selector);
                             if (el) el.value = (selector === '.precio-unitario-linea' || selector === '.importe-linea') ? '0.00' : (selector === '.stock-disponible-linea' ? 'N/A' : '');
@@ -263,7 +267,14 @@
                                     if (opciones.isLinea) {
                                         const lineaDiv = inputElement.closest('.linea-pedido');
                                         if (lineaDiv) {
-                                            if (item.ud_emb !== undefined) inputElement.dataset.udEmb = item.ud_emb; else delete inputElement.dataset.udEmb;
+                                            const udEmbInput = lineaDiv.querySelector('.ud-emb-linea');
+                                            if (item.ud_emb !== undefined) {
+                                                inputElement.dataset.udEmb = item.ud_emb;
+                                                if (udEmbInput) udEmbInput.value = item.ud_emb;
+                                            } else {
+                                                delete inputElement.dataset.udEmb;
+                                                if (udEmbInput) udEmbInput.value = '';
+                                            }
                                             
                                             const precioUnitInput = lineaDiv.querySelector('.precio-unitario-linea');
                                             if (item.precio !== undefined) {
@@ -357,6 +368,8 @@
                     const option = new Option(optionText, dir.COD_DIR);
                     if (seleccionarCodDir && dir.COD_DIR === seleccionarCodDir) {
                         option.selected = true;
+                    } else if (!seleccionarCodDir && dir.DEFECTO === 'X') {
+                        option.selected = true;
                     }
                     $codDirSelect.append(option);
                 });
@@ -381,6 +394,14 @@
         { 
             onSelectCallback: function(item) {
                 cargarDireccionesCliente(item.cod_cte); 
+                
+                const proformaCheckbox = document.getElementById('proforma');
+                if (proformaCheckbox) {
+                    // Si FPAGO es 'ANT' (Anticipado), marcar Proforma por defecto
+                    const esAnticipado = (item.fpago === 'ANT');
+                    proformaCheckbox.checked = esAnticipado;
+                    proformaCheckbox.dispatchEvent(new Event('change'));
+                }
             }
         }
     );
@@ -506,12 +527,13 @@
     }
 
     // --- LÓGICA PARA LÍNEAS DE PEDIDO ---
-    let lineaIndex = {{ (lineas_pedido | length) if lineas_pedido and lineas_pedido|length > 0 else (1 if not lineas_pedido or lineas_pedido|length == 0 else 0) }}; 
-    if (document.querySelectorAll('#lineas-pedido-container .linea-pedido').length === 0 && lineaIndex > 0 && !{{lineas_pedido|length > 0}}) {
+    let lineaIndex = parseInt("{{ (lineas_pedido | length) if lineas_pedido is defined and lineas_pedido|length > 0 else (1 if not lineas_pedido or lineas_pedido|length == 0 else 0) }}", 10);
+    const hayLineasBackend = "{{ 'true' if lineas_pedido is defined and lineas_pedido|length > 0 else 'false' }}" === "true";
+    if (document.querySelectorAll('#lineas-pedido-container .linea-pedido').length === 0 && lineaIndex > 0 && !hayLineasBackend) {
         lineaIndex = 0; // Asegurar que si no hay líneas renderizadas desde el backend, el primer add use 0
-    } else if (document.querySelectorAll('#lineas-pedido-container .linea-pedido').length > 0 && lineaIndex === 0 && {{lineas_pedido|length > 0}}) {
+    } else if (document.querySelectorAll('#lineas-pedido-container .linea-pedido').length > 0 && lineaIndex === 0 && hayLineasBackend) {
         // Caso borde: si hay líneas del backend, lineaIndex debe ser su longitud
-        lineaIndex = {{ lineas_pedido|length }};
+        lineaIndex = parseInt("{{ lineas_pedido|length }}", 10);
     }
 
 
@@ -547,21 +569,26 @@
             cantidadInput.addEventListener('input', function() {
                 let esValidoUdEmb = validarCantidadConUdEmb(this);
                 let esValidoStock = validarCantidadContraStock(this);
-                if (esValidoUdEmb && esValidoStock) { calcularImporteLinea(this); }
-                else {
+                if (esValidoUdEmb && esValidoStock) {
+                    calcularImporteLinea(this);
+                } else {
                     const importeLineaInput = lineaElement.querySelector('.importe-linea');
-                    if(importeLineaInput) importeLineaInput.value = '0.00';
+                    if (importeLineaInput) {
+                        importeLineaInput.value = '0.00';
+                    }
                     calcularTotalGeneralPedido();
                 }
             });
             if (artiInput && (artiInput.dataset.udEmb || artiInput.dataset.precio || artiInput.dataset.stockFam) && cantidadInput.value) {
-                 validarCantidadConUdEmb(cantidadInput);
-                 validarCantidadContraStock(cantidadInput);
-                 calcularImporteLinea(cantidadInput);
-            } else if (cantidadInput.value) { 
-                 const importeLineaInput = lineaElement.querySelector('.importe-linea');
-                 if(importeLineaInput) importeLineaInput.value = '0.00';
-                 calcularTotalGeneralPedido(); // Asegurar que el total se actualice si solo hay cantidad
+                validarCantidadConUdEmb(cantidadInput);
+                validarCantidadContraStock(cantidadInput);
+                calcularImporteLinea(cantidadInput);
+            } else if (cantidadInput.value) {
+                const importeLineaInput = lineaElement.querySelector('.importe-linea');
+                if (importeLineaInput) {
+                    importeLineaInput.value = '0.00';
+                }
+                calcularTotalGeneralPedido(); // Asegurar que el total se actualice si solo hay cantidad
             }
         }
 
@@ -632,6 +659,21 @@
                 }
             });
         }
+
+        // Validación de importe mínimo (150€) al guardar el pedido
+        const formPedido = document.getElementById('form-pedido');
+        if (formPedido) {
+            formPedido.addEventListener('submit', function(event) {
+                const total = parseFloat(document.getElementById('total_pedido_general').value || 0);
+                const esMuestra = document.getElementById('muestra') && document.getElementById('muestra').checked;
+
+                if (!esMuestra && total < 150) {
+                    if (!confirm(`AVISO: El importe total (${total.toFixed(2)} €) no alcanza el mínimo de 150 € para ser procesado.\n\n¿Desea guardar el pedido de todas formas?`)) {
+                        event.preventDefault(); // Cancela el envío si el usuario pulsa "Cancelar"
+                    }
+                }
+            });
+        }
     });
 
     document.getElementById('btn-agregar-linea').addEventListener('click', function() {
@@ -642,10 +684,11 @@
         const nuevaLineaHtml = `
             <div class="linea-pedido form-row align-items-start mb-3 pb-3 border-bottom">
                 <input type="hidden" name="lineas[${lineaIndex}][ID_LINEA]" value="">
+                <input type="hidden" class="ud-emb-linea" name="lineas[${lineaIndex}][UD_EMB]" value="">
                 <div class="form-group col-lg-2 col-md-6"> <input type="text" id="arti_linea_${lineaIndex}" name="lineas[${lineaIndex}][ARTI]" class="form-control arti-linea" required autocomplete="off" placeholder="Artículo"> <div id="suggestions_box_arti_linea_${lineaIndex}" class="suggestions-box-arti-linea list-group suggestions-container"></div> </div>
-                <div class="form-group col-lg-3 col-md-6"> <input type="text" id="desc_arti_linea_${lineaIndex}" class="form-control descripcion-articulo-linea" readonly placeholder="Descripción"> </div>
-                <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_${lineaIndex}" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
-                <div class="form-group col-lg-1 col-md-3"> <input type="text" id="precio_unit_linea_${lineaIndex}" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
+                <div class="form-group col-lg-3 col-md-6"> <input type="text" id="desc_arti_linea_${lineaIndex}" name="lineas[${lineaIndex}][DESCRIPCION_ARTI]" class="form-control descripcion-articulo-linea" readonly placeholder="Descripción"> </div>
+                <div class="form-group col-lg-1 col-md-3"> <input type="text" id="stock_linea_${lineaIndex}" name="lineas[${lineaIndex}][STOCK_FAM_ARTI]" class="form-control stock-disponible-linea text-right" readonly placeholder="Stock"> </div>
+                <div class="form-group col-lg-1 col-md-3"> <input type="text" id="precio_unit_linea_${lineaIndex}" name="lineas[${lineaIndex}][PRECIO_ARTI]" class="form-control precio-unitario-linea text-right" readonly placeholder="Precio U."> </div>
                 <div class="form-group col-lg-1 col-md-3"> <input type="number" id="cant_linea_${lineaIndex}" name="lineas[${lineaIndex}][CANTIDAD]" class="form-control cantidad-linea text-right" required min="1" placeholder="Cant."> <div class="aviso-ud-emb-container"></div><div class="aviso-stock-container"></div> </div>
                 <div class="form-group col-lg-1 col-md-3"> <input type="number" id="dto2_linea_${lineaIndex}" name="lineas[${lineaIndex}][DESCUENTO2]" class="form-control descuento-linea text-right" min="0" max="100" value="0" placeholder="Dto. Adic."> </div>
                 <div class="form-group col-lg-2 col-md-6"> <input type="text" id="importe_linea_${lineaIndex}" class="form-control importe-linea text-right" readonly placeholder="Importe"> </div>

@@ -65,12 +65,14 @@ def login():
         try:
             # La columna PWD debería almacenar el hash de la contraseña.
             # Al crear un usuario, se debe usar: generate_password_hash(password)
-            cursor.execute("SELECT * FROM USUARIOS_LOGIN WHERE COD_USER = %s", (username,))
+            # Seleccionamos también la nueva columna TARIFA
+            cursor.execute("SELECT COD_USER, NOMBRE, PWD, TARIFA FROM USUARIOS_LOGIN WHERE COD_USER = %s", (username,))
             user = cursor.fetchone()
 
             # SEGURIDAD: Comparamos el hash de la BD con la contraseña enviada.
-            if user and check_password_hash(user['PWD'], password):
+            if user and user.get('PWD') and check_password_hash(user['PWD'], password):
                 session['user_id'] = user['COD_USER']
+                session['user_tarifa'] = user.get('TARIFA', 1) # Guardamos la tarifa en la sesión, con 1 como valor por defecto.
                 flash(f"Bienvenid@, {user['NOMBRE']}!", "success")
                 next_url = request.args.get('next')
                 return redirect(next_url or url_for('index'))
@@ -81,9 +83,8 @@ def login():
         finally:
             cursor.close()
 
-        # Si el usuario no existe o la contraseña es incorrecta
-        if not user or not check_password_hash(user.get('PWD', ''), password):
-            flash("Usuario o contraseña incorrectos.", "danger")
+        # Si la autenticación falla por cualquier motivo, mostramos un mensaje genérico.
+        flash("Usuario o contraseña incorrectos.", "danger")
     return render_template('login.html')
 
 @app.route('/logout')
@@ -220,7 +221,7 @@ def index():
                 'STOCK_FAM_ARTI': linea_pedido.get('STOCK_FAM'),
                 'DESCUENTO2': linea_pedido.get('DESCUENTO2')
             })
-    
+
     return render_template('pedidos_lista.html', 
                            pedidos_para_mostrar=pedidos_agrupados,
                            filter_cliente=filter_cliente,
@@ -286,6 +287,7 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
         return False, None, datos_para_repoblar
 
     cursor = g.db.cursor(dictionary=True)
+    tarifa_usuario = session.get('user_tarifa', 1) # Obtenemos la tarifa del usuario desde la sesión
     try:
         # 1. Validar que el cliente es visible para el usuario
         sql_val_cte = """
@@ -301,8 +303,14 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
 
         if cod_dir:
             # 2. Validar que la dirección es visible para el usuario
-            sql_val_dir = "SELECT d.COD_DIR FROM DIRECCIONES_CTE_WEB d WHERE d.COD_CTE = %s AND d.COD_DIR = %s AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '')"
-            cursor.execute(sql_val_dir, (cod_cte, cod_dir, usuario_actual))
+            sql_val_dir = """
+                SELECT d.COD_DIR 
+                FROM DIRECCIONES_CTE_WEB d 
+                JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
+                WHERE d.COD_CTE = %s AND d.COD_DIR = %s 
+                AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '' OR c.COD_USER = %s)
+            """
+            cursor.execute(sql_val_dir, (cod_cte, cod_dir, usuario_actual, usuario_actual))
             if not cursor.fetchone():
                 flash(f"La Dirección '{cod_dir}' no es válida para el cliente '{cod_cte}' o no tiene permiso para usarla.", "danger")
                 return False, None, datos_para_repoblar
@@ -359,12 +367,23 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
         ud_emb_articulo = None
         try:
             # Recuperamos también el PRECIO para guardarlo
-            cursor.execute("SELECT UD_EMB, PRECIO FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
+            # Modificamos la consulta para traer los 4 precios
+            cursor.execute("SELECT UD_EMB, PRECIO, PRECIO_2, PRECIO_3, PRECIO_4 FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
             item_maestro = cursor.fetchone()
             if not item_maestro:
                 flash(f"Artículo '{arti_linea}' inválido en línea {idx + 1}.", "danger")
                 return False, None, datos_para_repoblar
             
+            # Lógica para seleccionar el precio correcto según la tarifa
+            precio_a_usar = item_maestro.get('PRECIO', 0.0) # Precio por defecto (Tarifa 1)
+            if tarifa_usuario == 2 and item_maestro.get('PRECIO_2', 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_2')
+            elif tarifa_usuario == 3 and item_maestro.get('PRECIO_3', 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_3')
+            elif tarifa_usuario == 4 and item_maestro.get('PRECIO_4', 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_4')
+
+
             raw_ud_emb = item_maestro.get('UD_EMB')
             if raw_ud_emb is not None:
                 try:
@@ -397,10 +416,10 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
             flash(f"Descuento de Línea ('{descuento2_str}') inválido en línea {idx + 1}.", "danger")
             return False, None, datos_para_repoblar
 
-        # Determinar precio a guardar: 0 si es muestra, sino el del maestro
+        # Determinar precio a guardar: 0 si es muestra, sino el que corresponde por tarifa
         precio_guardar = 0.0
-        if es_muestra != 'X' and item_maestro.get('PRECIO'):
-            precio_guardar = float(item_maestro['PRECIO'])
+        if es_muestra != 'X':
+            precio_guardar = float(precio_a_usar)
 
         lineas_procesadas_ok.append({'ARTI': arti_linea, 'CANTIDAD': cantidad_linea, 'DESCUENTO2': descuento2_val, 'PRECIO': precio_guardar})
 
@@ -835,23 +854,31 @@ def sugerencias_articulo():
 
     if not g.db:
         # El error ya se flasheó en get_db_connection
-        return jsonify(error="Error de conexión a la base de datos"), 500
+        return jsonify(error="Error de conexión a la base de datos."), 500
 
     cursor = g.db.cursor(dictionary=True)
+    tarifa_usuario = session.get('user_tarifa', 1) # Obtenemos la tarifa del usuario
     try:
-        # Modificamos la consulta para seleccionar también UD_EMB
+        # Modificamos la consulta para seleccionar el precio correcto con un CASE
         sql_query = """
-            SELECT COD_ART, DESCRIPCION, UD_EMB, PRECIO, STOCK_FAM
+            SELECT 
+                COD_ART, DESCRIPCION, UD_EMB, STOCK_FAM,
+                CASE
+                    WHEN %s = 4 AND PRECIO_4 > 0 THEN PRECIO_4
+                    WHEN %s = 3 AND PRECIO_3 > 0 THEN PRECIO_3
+                    WHEN %s = 2 AND PRECIO_2 > 0 THEN PRECIO_2
+                    ELSE PRECIO
+                END AS precio_aplicado
             FROM ITMMASTER 
             WHERE COD_ART LIKE %s OR DESCRIPCION LIKE %s 
             ORDER BY COD_ART 
             LIMIT 40 
         """
-        # Usamos '%' al inicio y al final para buscar coincidencias parciales en cualquier parte.
-        # Si prefieres que solo busque artículos que COMIENCEN con query_param, usa: query_param + '%'
         search_term = '%' + query_param + '%'
         
-        cursor.execute(sql_query, (search_term, search_term))
+        # Pasamos la tarifa del usuario para cada WHEN en el CASE, y luego los términos de búsqueda
+        params = (tarifa_usuario, tarifa_usuario, tarifa_usuario, search_term, search_term)
+        cursor.execute(sql_query, params)
         resultados = cursor.fetchall()
 
         for row in resultados:
@@ -859,7 +886,7 @@ def sugerencias_articulo():
                 'cod_art': row['COD_ART'], 
                 'descripcion': row['DESCRIPCION'],
                 'ud_emb': row['UD_EMB'],
-                'precio': row['PRECIO'],
+                'precio': row['precio_aplicado'], # Usamos el nuevo campo calculado 'precio_aplicado'
                 'stock_fam': row['STOCK_FAM']
             })
 
@@ -883,12 +910,12 @@ def sugerencias_cliente():
         return jsonify(sugerencias=[])
 
     if not g.db:
-        return jsonify(error="Error de conexión"), 500
+        return jsonify(error="Error de conexión a la base de datos."), 500
 
     cursor = g.db.cursor(dictionary=True)
     try:
         sql_query = """
-            SELECT DISTINCT c.COD_CTE, c.RAZON_SOCIAL
+            SELECT DISTINCT c.COD_CTE, c.RAZON_SOCIAL, c.FPAGO
             FROM CLIENTES_WEB c
             LEFT JOIN DIRECCIONES_CTE_WEB d ON c.COD_CTE = d.COD_CTE
             WHERE
@@ -902,7 +929,7 @@ def sugerencias_cliente():
         
         resultados = cursor.fetchall()
         for row in resultados:
-            sugerencias_list.append({'cod_cte': row['COD_CTE'], 'razon_social': row['RAZON_SOCIAL']})
+            sugerencias_list.append({'cod_cte': row['COD_CTE'], 'razon_social': row['RAZON_SOCIAL'], 'fpago': row['FPAGO']})
     except mysql.connector.Error as err:
         print(f"Error en sugerencias_cliente: {err}")
         return jsonify(error="Error de base de datos"), 500
@@ -927,13 +954,13 @@ def sugerencias_direccion_cliente():
     # Si no, filtramos por q (COD_DIR o DIR)
     
     if not g.db:
-        return jsonify(error="Error de conexión a BD"), 500
+        return jsonify(error="Error de conexión a la base de datos."), 500
 
     cursor = g.db.cursor(dictionary=True)
     try:
-        # Lógica base: direcciones del cliente que son del usuario o públicas
-        params = [cod_cte_seleccionado, usuario_actual]
-        sql_conditions = "d.COD_CTE = %s AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '')"
+        # Lógica base: direcciones del cliente que son del usuario o públicas, O si el cliente pertenece al usuario
+        params = [cod_cte_seleccionado, usuario_actual, usuario_actual]
+        sql_conditions = "d.COD_CTE = %s AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '' OR c.COD_USER = %s)"
 
         # Añadir filtro de búsqueda si existe
         if query_param and query_param != "*":
@@ -943,8 +970,9 @@ def sugerencias_direccion_cliente():
 
 
         sql_query = f"""
-            SELECT COD_DIR, DIR, CP, CIUDAD, PROVINCIA, PAIS 
+            SELECT d.COD_DIR, d.DIR, d.CP, d.CIUDAD, d.PROVINCIA, d.PAIS, d.DEFECTO 
             FROM DIRECCIONES_CTE_WEB d
+            JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
             WHERE {sql_conditions}
             ORDER BY COD_DIR
             LIMIT 600 
@@ -960,7 +988,8 @@ def sugerencias_direccion_cliente():
                 'CP': row['CP'],
                 'CIUDAD': row['CIUDAD'],
                 'PROVINCIA': row['PROVINCIA'],
-                'PAIS': row['PAIS']
+                'PAIS': row['PAIS'],
+                'DEFECTO': row['DEFECTO']
             })
     except mysql.connector.Error as err:
         print(f"Error DB en sugerencias_direccion_cliente: {err}")
