@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
   <name>carga_PEDIDOS_METROMARKET</name>
-  <description />
-  <extended_description />
-  <job_version />
+  <description/>
+  <extended_description/>
+  <job_version/>
   <directory>/</directory>
   <created_user>-</created_user>
   <created_date>2023/03/31 08:09:41.737</created_date>
@@ -14,12 +14,12 @@
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection />
-    <schema />
-    <table />
-    <size_limit_lines />
-    <interval />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <size_limit_lines/>
+    <interval/>
+    <timeout_days/>
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -127,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -218,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection />
-    <schema />
-    <table />
-    <timeout_days />
+    <connection/>
+    <schema/>
+    <table/>
+    <timeout_days/>
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -284,13 +284,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file />
+  <shared_objects_file/>
   <entries>
     <entry>
       <name>Start</name>
-      <description />
+      <description/>
       <type>SPECIAL</type>
-      <attributes />
+      <attributes/>
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -306,74 +306,75 @@
       <nr>0</nr>
       <xloc>64</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Transformation</name>
-      <description />
+      <description/>
       <type>TRANS</type>
-      <attributes />
+      <attributes/>
       <specification_method>filename</specification_method>
-      <trans_object_id />
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_METROMARKET_pedido_V3.ktr</filename>
-      <transname />
+      <trans_object_id/>
+      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_METROMARKET_pedido_V4.ktr</filename>
+      <transname/>
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile />
-      <logext />
+      <logfile/>
+      <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name />
+      <slave_server_name/>
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
       <run_configuration>Pentaho local</run_configuration>
+      <suppress_result_data>N</suppress_result_data>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>336</xloc>
+      <xloc>352</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Success</name>
-      <description />
+      <description/>
       <type>SUCCESS</type>
-      <attributes />
+      <attributes/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>560</xloc>
       <yloc>64</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Mail</name>
-      <description />
+      <description/>
       <type>MAIL</type>
-      <attributes />
-      <server>smtp.famesa.es</server>
-      <port>25</port>
-      <destination>mmarco@denox.eu mnaudin@denox.eu</destination>
-      <destinationCc />
-      <destinationBCc />
-      <replyto>informatica@famesa.es</replyto>
+      <attributes/>
+      <server>smtp.office365.com</server>
+      <port>587</port>
+      <destination>mmarco@denox.eu mnaudin@denox.eu e-commerce@denox.eu</destination>
+      <destinationCc/>
+      <destinationBCc/>
+      <replyto>mmarco@denox.eu</replyto>
       <replytoname>Spoon (rserver)</replytoname>
       <subject>Carga pedido MetroMarket</subject>
       <include_date>N</include_date>
-      <contact_person />
-      <contact_phone />
+      <contact_person/>
+      <contact_phone/>
       <comment>ESTO ES UN CORREO AUTOMÁTICO!!
 
 Se han generado los ficheros necesarios para la importación de los pedidos de MetroMarket.
@@ -388,11 +389,11 @@ El orden de importación de los ficheros es:
 </comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name />
+      <zip_name/>
       <use_auth>Y</use_auth>
-      <use_secure_auth>N</use_secure_auth>
-      <auth_user>informatica@famesa.es</auth_user>
-      <auth_password>Encrypted 2be98afc86aa7f2b7b20aba75d3c1fb8f</auth_password>
+      <use_secure_auth>Y</use_secure_auth>
+      <auth_user>mmarco@denox.eu</auth_user>
+      <auth_password>Encrypted 2fecbd6bb1ec29fd7ff4cea47df9ea3df</auth_password>
       <only_comment>N</only_comment>
       <use_HTML>N</use_HTML>
       <use_Priority>N</use_Priority>
@@ -400,7 +401,7 @@ El orden de importación de los ficheros es:
       <priority>normal</priority>
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
-      <secureconnectiontype>SSL</secureconnectiontype>
+      <secureconnectiontype>TLS</secureconnectiontype>
       <replyToAddresses>Mario</replyToAddresses>
       <filetypes>
         <filetype>GENERAL</filetype>
@@ -413,15 +414,15 @@ El orden de importación de los ficheros es:
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>944</xloc>
+      <xloc>928</xloc>
       <yloc>48</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Move files</name>
-      <description />
+      <description/>
       <type>MOVE_FILES</type>
-      <attributes />
+      <attributes/>
       <move_empty_folders>N</move_empty_folders>
       <arg_from_previous>N</arg_from_previous>
       <include_subfolders>N</include_subfolders>
@@ -431,15 +432,15 @@ El orden de importación de los ficheros es:
       <add_date>Y</add_date>
       <add_time>N</add_time>
       <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format />
+      <date_time_format/>
       <nr_errors_less_than>10</nr_errors_less_than>
       <success_condition>success_if_no_errors</success_condition>
-      <AddDateBeforeExtension>N</AddDateBeforeExtension>
+      <AddDateBeforeExtension>Y</AddDateBeforeExtension>
       <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
       <iffileexists>overwrite_file</iffileexists>
-      <destinationFolder />
+      <destinationFolder/>
       <ifmovedfileexists>do_nothing</ifmovedfileexists>
-      <moved_date_time_format />
+      <moved_date_time_format/>
       <create_move_to_folder>N</create_move_to_folder>
       <add_moved_date>N</add_moved_date>
       <add_moved_time>N</add_moved_time>
@@ -458,17 +459,17 @@ El orden de importación de los ficheros es:
       <nr>0</nr>
       <xloc>720</xloc>
       <yloc>224</yloc>
-      <attributes_kjc />
+      <attributes_kjc/>
     </entry>
     <entry>
       <name>Evaluate files metrics</name>
-      <description />
+      <description/>
       <type>EVAL_FILES_METRICS</type>
-      <attributes />
-      <result_filenames_wildcard />
-      <Result_field_file />
-      <Result_field_wildcard />
-      <Result_field_includesubfolders />
+      <attributes/>
+      <result_filenames_wildcard/>
+      <Result_field_file/>
+      <Result_field_wildcard/>
+      <Result_field_includesubfolders/>
       <fields>
         <field>
           <source_filefolder>/home/mnaudin/metroMarket/pedidos</source_filefolder>
@@ -477,8 +478,8 @@ El orden de importación de los ficheros es:
         </field>
       </fields>
       <comparevalue>0</comparevalue>
-      <minvalue />
-      <maxvalue />
+      <minvalue/>
+      <maxvalue/>
       <successnumbercondition>greater</successnumbercondition>
       <source_files>files</source_files>
       <evaluation_type>count</evaluation_type>
@@ -486,9 +487,227 @@ El orden de importación de los ficheros es:
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>192</xloc>
-      <yloc>272</yloc>
-      <attributes_kjc />
+      <xloc>352</xloc>
+      <yloc>224</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Get a file with SFTP</name>
+      <description/>
+      <type>SFTP</type>
+      <attributes/>
+      <servername>sftp.metro-vendoroffice.com</servername>
+      <serverport>40222</serverport>
+      <username>mnaudin@denox.eu</username>
+      <password>Encrypted 2be98afc82fc49d97b20aba75d3defd8b</password>
+      <sftpdirectory>/Orders</sftpdirectory>
+      <targetdirectory>/home/mnaudin/metroMarket/pedidos</targetdirectory>
+      <wildcard>.*\.csv</wildcard>
+      <remove>Y</remove>
+      <isaddresult>Y</isaddresult>
+      <createtargetfolder>N</createtargetfolder>
+      <copyprevious>N</copyprevious>
+      <usekeyfilename>N</usekeyfilename>
+      <keyfilename/>
+      <keyfilepass>Encrypted </keyfilepass>
+      <compression>none</compression>
+      <proxyType/>
+      <proxyHost/>
+      <proxyPort/>
+      <proxyUsername/>
+      <proxyPassword>Encrypted </proxyPassword>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>176</xloc>
+      <yloc>432</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Success 2</name>
+      <description/>
+      <type>SUCCESS</type>
+      <attributes/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>352</xloc>
+      <yloc>432</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Copy files</name>
+      <description/>
+      <type>COPY_FILES</type>
+      <attributes/>
+      <copy_empty_folders>N</copy_empty_folders>
+      <arg_from_previous>N</arg_from_previous>
+      <overwrite_files>Y</overwrite_files>
+      <include_subfolders>N</include_subfolders>
+      <remove_source_files>N</remove_source_files>
+      <add_result_filesname>N</add_result_filesname>
+      <destination_is_a_file>N</destination_is_a_file>
+      <create_destination_folder>N</create_destination_folder>
+      <fields>
+        <field>
+          <source_filefolder>EMPTY_SOURCE_URL-0-file:///home/mnaudin/metroMarket</source_filefolder>
+          <source_configuration_name/>
+          <destination_filefolder>EMPTY_DEST_URL-0-file:///mnt/X3DATABASE</destination_filefolder>
+          <destination_configuration_name>STATIC-DEST-FILE-0</destination_configuration_name>
+          <wildcard>IMPORT*.*</wildcard>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1152</xloc>
+      <yloc>112</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>montar_ud_compartida.sh</name>
+      <description/>
+      <type>SHELL</type>
+      <attributes/>
+      <filename>/home/mmarco/Documentos/montar_ud_compartida.sh</filename>
+      <work_directory/>
+      <arg_from_previous>N</arg_from_previous>
+      <exec_per_row>N</exec_per_row>
+      <set_logfile>N</set_logfile>
+      <logfile/>
+      <set_append_logfile>N</set_append_logfile>
+      <logext/>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <insertScript>Y</insertScript>
+      <script>sudo umount /mnt/X3DATABASE
+sudo mount -t cifs //192.168.28.100/CARGA_AUTO_LIVE /mnt/X3DATABASE -o username="mmarco",password="System345",uid=100,gid=1000,rw,file_mode=0775,dir_mode=0775</script>
+      <loglevel>Basic</loglevel>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>927</xloc>
+      <yloc>347</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Dummy</name>
+      <description/>
+      <type>SPECIAL</type>
+      <attributes/>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>928</xloc>
+      <yloc>528</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Success 3</name>
+      <description/>
+      <type>SUCCESS</type>
+      <attributes/>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1152</xloc>
+      <yloc>352</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Move files 2</name>
+      <description/>
+      <type>MOVE_FILES</type>
+      <attributes/>
+      <move_empty_folders>N</move_empty_folders>
+      <arg_from_previous>N</arg_from_previous>
+      <include_subfolders>N</include_subfolders>
+      <add_result_filesname>Y</add_result_filesname>
+      <destination_is_a_file>N</destination_is_a_file>
+      <create_destination_folder>N</create_destination_folder>
+      <add_date>N</add_date>
+      <add_time>N</add_time>
+      <SpecifyFormat>N</SpecifyFormat>
+      <date_time_format/>
+      <nr_errors_less_than>10</nr_errors_less_than>
+      <success_condition>success_if_no_errors</success_condition>
+      <AddDateBeforeExtension>N</AddDateBeforeExtension>
+      <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
+      <iffileexists>overwrite_file</iffileexists>
+      <destinationFolder/>
+      <ifmovedfileexists>do_nothing</ifmovedfileexists>
+      <moved_date_time_format/>
+      <create_move_to_folder>N</create_move_to_folder>
+      <add_moved_date>N</add_moved_date>
+      <add_moved_time>N</add_moved_time>
+      <SpecifyMoveFormat>N</SpecifyMoveFormat>
+      <AddMovedDateBeforeExtension>N</AddMovedDateBeforeExtension>
+      <simulate>N</simulate>
+      <fields>
+        <field>
+          <source_filefolder>file:///home/mnaudin/metroMarket</source_filefolder>
+          <destination_filefolder>file:///mnt/X3DATABASE</destination_filefolder>
+          <wildcard>IMPORT*.*</wildcard>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>1296</xloc>
+      <yloc>48</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Dummy 2</name>
+      <description/>
+      <type>SPECIAL</type>
+      <attributes/>
+      <start>N</start>
+      <dummy>Y</dummy>
+      <repeat>N</repeat>
+      <schedulerType>0</schedulerType>
+      <intervalSeconds>0</intervalSeconds>
+      <intervalMinutes>60</intervalMinutes>
+      <hour>12</hour>
+      <minutes>0</minutes>
+      <weekDay>1</weekDay>
+      <DayOfMonth>1</DayOfMonth>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>528</xloc>
+      <yloc>400</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Delete files</name>
+      <description/>
+      <type>DELETE_FILES</type>
+      <attributes/>
+      <arg_from_previous>N</arg_from_previous>
+      <include_subfolders>N</include_subfolders>
+      <fields>
+        <field>
+          <name>/home/mnaudin/metroMarket</name>
+          <filemask>IMPORT*.*</filemask>
+        </field>
+      </fields>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>736</xloc>
+      <yloc>48</yloc>
+      <attributes_kjc/>
     </entry>
   </entries>
   <hops>
@@ -515,18 +734,9 @@ El orden de importación de los ficheros es:
       <to>Mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>Y</enabled>
+      <enabled>N</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Start</from>
-      <to>Evaluate files metrics</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>Evaluate files metrics</from>
@@ -537,8 +747,210 @@ El orden de importación de los ficheros es:
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
     </hop>
+    <hop>
+      <from>Start</from>
+      <to>Get a file with SFTP</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>Y</unconditional>
+    </hop>
+    <hop>
+      <from>Get a file with SFTP</from>
+      <to>Success 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Success 2</from>
+      <to>Evaluate files metrics</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Mail</from>
+      <to>montar_ud_compartida.sh</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>montar_ud_compartida.sh</from>
+      <to>Success 3</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Success 3</from>
+      <to>Copy files</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>montar_ud_compartida.sh</from>
+      <to>Dummy</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Move files</from>
+      <to>montar_ud_compartida.sh</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Copy files</from>
+      <to>Mail</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Success 3</from>
+      <to>Move files 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Move files 2</from>
+      <to>Mail</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>N</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Evaluate files metrics</from>
+      <to>Dummy 2</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>N</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
+    <hop>
+      <from>Mail</from>
+      <to>Delete files</to>
+      <from_nr>0</from_nr>
+      <to_nr>0</to_nr>
+      <enabled>Y</enabled>
+      <evaluation>Y</evaluation>
+      <unconditional>N</unconditional>
+    </hop>
   </hops>
   <notepads>
+    <notepad>
+      <note>copio los ficheros a importar en la ud. mapeada de X3DATABASE
+para que se carge desde X3 como petición ZIMPORTPED</note>
+      <xloc>992</xloc>
+      <yloc>176</yloc>
+      <width>422</width>
+      <heigth>50</heigth>
+      <fontname>Cantarell</fontname>
+      <fontsize>11</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Compruebo q haya algún fichero del get del sftp</note>
+      <xloc>224</xloc>
+      <yloc>288</yloc>
+      <width>318</width>
+      <heigth>30</heigth>
+      <fontname>Cantarell</fontname>
+      <fontsize>11</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Muevo los csv procesados al Dir "cargados"</note>
+      <xloc>608</xloc>
+      <yloc>176</yloc>
+      <width>286</width>
+      <heigth>30</heigth>
+      <fontname>Cantarell</fontname>
+      <fontsize>11</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
+    <notepad>
+      <note>Desmonto y monto la ud compartida de X3DATABASE</note>
+      <xloc>736</xloc>
+      <yloc>416</yloc>
+      <width>353</width>
+      <heigth>30</heigth>
+      <fontname>Cantarell</fontname>
+      <fontsize>11</fontsize>
+      <fontbold>N</fontbold>
+      <fontitalic>N</fontitalic>
+      <fontcolorred>0</fontcolorred>
+      <fontcolorgreen>0</fontcolorgreen>
+      <fontcolorblue>0</fontcolorblue>
+      <backgroundcolorred>255</backgroundcolorred>
+      <backgroundcolorgreen>205</backgroundcolorgreen>
+      <backgroundcolorblue>112</backgroundcolorblue>
+      <bordercolorred>100</bordercolorred>
+      <bordercolorgreen>100</bordercolorgreen>
+      <bordercolorblue>100</bordercolorblue>
+      <drawshadow>Y</drawshadow>
+    </notepad>
   </notepads>
   <attributes>
     <group>
@@ -550,10 +962,6 @@ El orden de importación de los ficheros es:
     </group>
     <group>
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
-      <attribute>
-        <key>Pentaho local</key>
-        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
-      </attribute>
     </group>
   </attributes>
 </job>

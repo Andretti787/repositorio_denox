@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>carga_PEDIDOS_METROMARKET</name>
-  <description/>
-  <extended_description/>
-  <job_version/>
+  <name>carga_consumos_fabrica</name>
+  <description />
+  <extended_description />
+  <job_version />
   <directory>/</directory>
   <created_user>-</created_user>
-  <created_date>2023/03/31 08:09:41.737</created_date>
+  <created_date>2023/01/23 09:13:41.422</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2023/03/31 08:09:41.737</modified_date>
+  <modified_date>2023/01/23 09:13:41.422</modified_date>
   <parameters>
     </parameters>
   <slaveservers>
     </slaveservers>
   <job-log-table>
-    <connection/>
-    <schema/>
-    <table/>
-    <size_limit_lines/>
-    <interval/>
-    <timeout_days/>
+    <connection />
+    <schema />
+    <table />
+    <size_limit_lines />
+    <interval />
+    <timeout_days />
     <field>
       <id>ID_JOB</id>
       <enabled>Y</enabled>
@@ -127,10 +127,10 @@
     </field>
   </job-log-table>
   <jobentry-log-table>
-    <connection/>
-    <schema/>
-    <table/>
-    <timeout_days/>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -218,10 +218,10 @@
     </field>
   </jobentry-log-table>
   <channel-log-table>
-    <connection/>
-    <schema/>
-    <table/>
-    <timeout_days/>
+    <connection />
+    <schema />
+    <table />
+    <timeout_days />
     <field>
       <id>ID_BATCH</id>
       <enabled>Y</enabled>
@@ -284,13 +284,13 @@
     </field>
   </channel-log-table>
   <pass_batchid>N</pass_batchid>
-  <shared_objects_file/>
+  <shared_objects_file />
   <entries>
     <entry>
       <name>Start</name>
-      <description/>
+      <description />
       <type>SPECIAL</type>
-      <attributes/>
+      <attributes />
       <start>Y</start>
       <dummy>N</dummy>
       <repeat>N</repeat>
@@ -304,39 +304,38 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>64</xloc>
-      <yloc>64</yloc>
-      <attributes_kjc/>
+      <xloc>144</xloc>
+      <yloc>80</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Transformation</name>
-      <description/>
+      <description />
       <type>TRANS</type>
-      <attributes/>
+      <attributes />
       <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_METROMARKET_pedido_V4.ktr</filename>
-      <transname/>
+      <trans_object_id />
+      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/carga_consumos_fabrica_TRILLA.ktr</filename>
+      <transname />
       <arg_from_previous>N</arg_from_previous>
       <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>N</set_logfile>
-      <logfile/>
-      <logext/>
+      <logfile />
+      <logext />
       <add_date>N</add_date>
       <add_time>N</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
-      <slave_server_name/>
+      <slave_server_name />
       <set_append_logfile>N</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
       <logging_remote_work>N</logging_remote_work>
       <run_configuration>Pentaho local</run_configuration>
-      <suppress_result_data>N</suppress_result_data>
       <parameters>
         <pass_all_parameters>Y</pass_all_parameters>
       </parameters>
@@ -344,52 +343,29 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>336</xloc>
-      <yloc>64</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Success</name>
-      <description/>
-      <type>SUCCESS</type>
-      <attributes/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>560</xloc>
-      <yloc>64</yloc>
-      <attributes_kjc/>
+      <yloc>112</yloc>
+      <attributes_kjc />
     </entry>
     <entry>
       <name>Mail</name>
-      <description/>
+      <description />
       <type>MAIL</type>
-      <attributes/>
+      <attributes />
       <server>smtp.famesa.es</server>
       <port>25</port>
-      <destination>mmarco@denox.eu mnaudin@denox.eu dilies@denox.eu e-commerce@denox.eu</destination>
-      <destinationCc/>
-      <destinationBCc/>
+      <destination>mmarco@denox.eu</destination>
+      <destinationCc />
+      <destinationBCc />
       <replyto>informatica@famesa.es</replyto>
-      <replytoname>Spoon (rserver)</replytoname>
-      <subject>Carga pedido MetroMarket</subject>
-      <include_date>N</include_date>
-      <contact_person/>
-      <contact_phone/>
-      <comment>ESTO ES UN CORREO AUTOMÁTICO!!
-
-Se han generado los ficheros necesarios para la importación de los pedidos de MetroMarket.
-
-El orden de importación de los ficheros es:
- 1- IMPORT_ZBPC
- 2- IMPORT_ZSOH
-
-- Fichero (IMPORT_ZBPC): dirección de entrega de cliente. Importar mediante modelo: ZBPCMM
-- Fichero (IMPORT_ZSOH): pedidos. Importar mediante modelo: ZSOH
-
-</comment>
+      <replytoname>spoon (rserver)</replytoname>
+      <subject>Carga CONSUMOS FABRICA</subject>
+      <include_date>Y</include_date>
+      <contact_person />
+      <contact_phone />
+      <comment>Carga de los consumos teóricos y reales de fabricación</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
-      <zip_name/>
+      <zip_name />
       <use_auth>Y</use_auth>
       <use_secure_auth>N</use_secure_auth>
       <auth_user>informatica@famesa.es</auth_user>
@@ -401,210 +377,27 @@ El orden de importación de los ficheros es:
       <priority>normal</priority>
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
-      <secureconnectiontype>SSL</secureconnectiontype>
-      <replyToAddresses>Mario</replyToAddresses>
+      <secureconnectiontype>TLS</secureconnectiontype>
+      <replyToAddresses />
       <filetypes>
         <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
         <filetype>ERROR</filetype>
-        <filetype>WARNING</filetype>
       </filetypes>
       <embeddedimages>
       </embeddedimages>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>48</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Move files</name>
-      <description/>
-      <type>MOVE_FILES</type>
-      <attributes/>
-      <move_empty_folders>N</move_empty_folders>
-      <arg_from_previous>N</arg_from_previous>
-      <include_subfolders>N</include_subfolders>
-      <add_result_filesname>Y</add_result_filesname>
-      <destination_is_a_file>N</destination_is_a_file>
-      <create_destination_folder>N</create_destination_folder>
-      <add_date>Y</add_date>
-      <add_time>N</add_time>
-      <SpecifyFormat>N</SpecifyFormat>
-      <date_time_format/>
-      <nr_errors_less_than>10</nr_errors_less_than>
-      <success_condition>success_if_no_errors</success_condition>
-      <AddDateBeforeExtension>Y</AddDateBeforeExtension>
-      <DoNotKeepFolderStructure>N</DoNotKeepFolderStructure>
-      <iffileexists>overwrite_file</iffileexists>
-      <destinationFolder/>
-      <ifmovedfileexists>do_nothing</ifmovedfileexists>
-      <moved_date_time_format/>
-      <create_move_to_folder>N</create_move_to_folder>
-      <add_moved_date>N</add_moved_date>
-      <add_moved_time>N</add_moved_time>
-      <SpecifyMoveFormat>N</SpecifyMoveFormat>
-      <AddMovedDateBeforeExtension>N</AddMovedDateBeforeExtension>
-      <simulate>N</simulate>
-      <fields>
-        <field>
-          <source_filefolder>/home/mnaudin/metroMarket/pedidos</source_filefolder>
-          <destination_filefolder>/home/mnaudin/metroMarket/cargados</destination_filefolder>
-          <wildcard>.*\.csv</wildcard>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>720</xloc>
-      <yloc>224</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Evaluate files metrics</name>
-      <description/>
-      <type>EVAL_FILES_METRICS</type>
-      <attributes/>
-      <result_filenames_wildcard/>
-      <Result_field_file/>
-      <Result_field_wildcard/>
-      <Result_field_includesubfolders/>
-      <fields>
-        <field>
-          <source_filefolder>/home/mnaudin/metroMarket/pedidos</source_filefolder>
-          <wildcard>.*\.csv</wildcard>
-          <include_subFolders>N</include_subFolders>
-        </field>
-      </fields>
-      <comparevalue>0</comparevalue>
-      <minvalue/>
-      <maxvalue/>
-      <successnumbercondition>greater</successnumbercondition>
-      <source_files>files</source_files>
-      <evaluation_type>count</evaluation_type>
-      <scale>bytes</scale>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>224</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Get a file with SFTP</name>
-      <description/>
-      <type>SFTP</type>
-      <attributes/>
-      <servername>sftp.metro-vendoroffice.com</servername>
-      <serverport>40222</serverport>
-      <username>mnaudin@denox.eu</username>
-      <password>Encrypted 2be98afc82fc49d97b20aba75d3defd8b</password>
-      <sftpdirectory>/Orders</sftpdirectory>
-      <targetdirectory>/home/mnaudin/metroMarket/pedidos</targetdirectory>
-      <wildcard>.*\.csv</wildcard>
-      <remove>Y</remove>
-      <isaddresult>Y</isaddresult>
-      <createtargetfolder>N</createtargetfolder>
-      <copyprevious>N</copyprevious>
-      <usekeyfilename>N</usekeyfilename>
-      <keyfilename/>
-      <keyfilepass>Encrypted </keyfilepass>
-      <compression>none</compression>
-      <proxyType/>
-      <proxyHost/>
-      <proxyPort/>
-      <proxyUsername/>
-      <proxyPassword>Encrypted </proxyPassword>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>176</xloc>
-      <yloc>432</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Success 2</name>
-      <description/>
-      <type>SUCCESS</type>
-      <attributes/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>352</xloc>
-      <yloc>432</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Copy files 2</name>
-      <description/>
-      <type>COPY_FILES</type>
-      <attributes/>
-      <copy_empty_folders>N</copy_empty_folders>
-      <arg_from_previous>N</arg_from_previous>
-      <overwrite_files>Y</overwrite_files>
-      <include_subfolders>N</include_subfolders>
-      <remove_source_files>Y</remove_source_files>
-      <add_result_filesname>N</add_result_filesname>
-      <destination_is_a_file>N</destination_is_a_file>
-      <create_destination_folder>N</create_destination_folder>
-      <fields>
-        <field>
-          <source_filefolder>EMPTY_SOURCE_URL-0-file:///home/mnaudin/metroMarket</source_filefolder>
-          <source_configuration_name/>
-          <destination_filefolder>EMPTY_DEST_URL-0-/mnt/X3</destination_filefolder>
-          <destination_configuration_name>STATIC-DEST-FILE-0</destination_configuration_name>
-          <wildcard>IMPORT*.*</wildcard>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>944</xloc>
-      <yloc>224</yloc>
-      <attributes_kjc/>
+      <xloc>512</xloc>
+      <yloc>144</yloc>
+      <attributes_kjc />
     </entry>
   </entries>
   <hops>
     <hop>
-      <from>Transformation</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success</from>
-      <to>Move files</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Move files</from>
-      <to>Mail</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Evaluate files metrics</from>
-      <to>Transformation</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
       <from>Start</from>
-      <to>Get a file with SFTP</to>
+      <to>Transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -612,34 +405,7 @@ El orden de importación de los ficheros es:
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Get a file with SFTP</from>
-      <to>Success 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success 2</from>
-      <to>Evaluate files metrics</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Move files</from>
-      <to>Copy files 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Copy files 2</from>
+      <from>Transformation</from>
       <to>Mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -660,6 +426,10 @@ El orden de importación de los ficheros es:
     </group>
     <group>
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
     </group>
   </attributes>
 </job>

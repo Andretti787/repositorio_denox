@@ -1,79 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <job>
-  <name>cargar_PEDIDOS_WEB</name>
+  <name>integracion_CONTENUR_SIN_CHECK_PRECIO_AUTO</name>
   <description/>
   <extended_description/>
   <job_version/>
+  <job_status>0</job_status>
   <directory>/</directory>
   <created_user>-</created_user>
-  <created_date>2025/05/19 15:32:46.676</created_date>
+  <created_date>2022/06/10 11:18:49.054</created_date>
   <modified_user>-</modified_user>
-  <modified_date>2025/05/19 15:32:46.676</modified_date>
+  <modified_date>2022/06/10 11:18:49.054</modified_date>
   <parameters>
     </parameters>
-  <connection>
-    <name>MySQL</name>
-    <server>192.168.35.25</server>
-    <type>MYSQL</type>
-    <access>Native</access>
-    <database>pract</database>
-    <port>3306</port>
-    <username>mmarco</username>
-    <password>Encrypted 2be98afc86aa7b2b7b20aba75d3c1fb8f</password>
-    <servername/>
-    <data_tablespace/>
-    <index_tablespace/>
-    <attributes>
-      <attribute>
-        <code>EXTRA_OPTION_MYSQL.defaultFetchSize</code>
-        <attribute>500</attribute>
-      </attribute>
-      <attribute>
-        <code>EXTRA_OPTION_MYSQL.useCursorFetch</code>
-        <attribute>true</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_LOWERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>FORCE_IDENTIFIERS_TO_UPPERCASE</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>IS_CLUSTERED</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>PORT_NUMBER</code>
-        <attribute>3306</attribute>
-      </attribute>
-      <attribute>
-        <code>PRESERVE_RESERVED_WORD_CASE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>QUOTE_ALL_FIELDS</code>
-        <attribute>N</attribute>
-      </attribute>
-      <attribute>
-        <code>STREAM_RESULTS</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_BOOLEAN_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>SUPPORTS_TIMESTAMP_DATA_TYPE</code>
-        <attribute>Y</attribute>
-      </attribute>
-      <attribute>
-        <code>USE_POOLING</code>
-        <attribute>N</attribute>
-      </attribute>
-    </attributes>
-  </connection>
   <slaveservers>
     </slaveservers>
   <job-log-table>
@@ -367,33 +305,33 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>96</xloc>
-      <yloc>128</yloc>
+      <xloc>128</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Cargar datos APPWEB</name>
+      <name>Transformation</name>
       <description/>
       <type>TRANS</type>
       <attributes/>
       <specification_method>filename</specification_method>
       <trans_object_id/>
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/app_pedidos_web_carga_datos.ktr</filename>
+      <filename>/home/agarcia/transformaciones/carga_CONTENUR_SIN_CHECK_PRECIO_AUTO.ktr</filename>
       <transname/>
       <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
+      <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <clear_rows>N</clear_rows>
       <clear_files>N</clear_files>
       <set_logfile>Y</set_logfile>
-      <logfile>/home/mmarco/appweb/IMPORT_ZSOHWEB_LOG</logfile>
+      <logfile>carga_contenur_log</logfile>
       <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
+      <add_date>Y</add_date>
+      <add_time>Y</add_time>
       <loglevel>Basic</loglevel>
       <cluster>N</cluster>
       <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
+      <set_append_logfile>Y</set_append_logfile>
       <wait_until_finished>Y</wait_until_finished>
       <follow_abort_remote>N</follow_abort_remote>
       <create_parent_folder>N</create_parent_folder>
@@ -406,8 +344,58 @@
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>272</xloc>
-      <yloc>48</yloc>
+      <xloc>336</xloc>
+      <yloc>80</yloc>
+      <attributes_kjc/>
+    </entry>
+    <entry>
+      <name>Mail2</name>
+      <description/>
+      <type>MAIL</type>
+      <attributes/>
+      <server>smtp.famesa.es</server>
+      <port>25</port>
+      <destination>mmarco@denox.eu</destination>
+      <destinationCc/>
+      <destinationBCc/>
+      <replyto>informatica@famesa.es</replyto>
+      <replytoname>spoon </replytoname>
+      <subject>Integración Contenur</subject>
+      <include_date>Y</include_date>
+      <contact_person/>
+      <contact_phone/>
+      <comment>ESTO ES UN CORREO AUTOMÁTICO!!
+
+Integración de Fichero contenur en error
+</comment>
+      <include_files>Y</include_files>
+      <zip_files>N</zip_files>
+      <zip_name/>
+      <use_auth>Y</use_auth>
+      <use_secure_auth>N</use_secure_auth>
+      <auth_user>informatica@famesa.es</auth_user>
+      <auth_password>Encrypted 2be98afc86aa7f2b7b20aba75d3c1fb8f</auth_password>
+      <only_comment>N</only_comment>
+      <use_HTML>N</use_HTML>
+      <use_Priority>N</use_Priority>
+      <encoding>UTF-8</encoding>
+      <priority>normal</priority>
+      <importance>normal</importance>
+      <sensitivity>normal</sensitivity>
+      <secureconnectiontype>TLS</secureconnectiontype>
+      <replyToAddresses/>
+      <filetypes>
+        <filetype>GENERAL</filetype>
+        <filetype>LOG</filetype>
+        <filetype>ERROR</filetype>
+      </filetypes>
+      <embeddedimages>
+      </embeddedimages>
+      <parallel>N</parallel>
+      <draw>Y</draw>
+      <nr>0</nr>
+      <xloc>512</xloc>
+      <yloc>240</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -419,105 +407,7 @@
       <draw>Y</draw>
       <nr>0</nr>
       <xloc>512</xloc>
-      <yloc>128</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Mail</name>
-      <description/>
-      <type>MAIL</type>
-      <attributes/>
-      <server>smtp.famesa.es</server>
-      <port>25</port>
-      <destination>mmarco@denox.eu</destination>
-      <destinationCc/>
-      <destinationBCc/>
-      <replyto>informatica@famesa.es</replyto>
-      <replytoname>Spoon (rserver)</replytoname>
-      <subject>pedidos de REPRESENTANTES cargados</subject>
-      <include_date>N</include_date>
-      <contact_person/>
-      <contact_phone/>
-      <comment>ESTO ES UN CORREO AUTOMÁTICO!!
-
-Se han cargado los pedidos de REPRESENTANTES.
-
-- Fichero (IMPORT_ZSOHWEB): pedidos. Importar mediante modelo: ZSOHWEB
-
-CONSULTA LA TRAZA DE CARGA DESDE:
-
-	Informes->Informes->lectura de seguimientos (busca la traza con nombre: traza de carga de pedidos representantes a fecha de hoy)
-
-</comment>
-      <include_files>Y</include_files>
-      <zip_files>N</zip_files>
-      <zip_name/>
-      <use_auth>Y</use_auth>
-      <use_secure_auth>N</use_secure_auth>
-      <auth_user>informatica@famesa.es</auth_user>
-      <auth_password>Encrypted 2be98afc86aa7f2b7b20aba75d3c1fb8f</auth_password>
-      <only_comment>N</only_comment>
-      <use_HTML>N</use_HTML>
-      <use_Priority>N</use_Priority>
-      <encoding>UTF-8</encoding>
-      <priority>normal</priority>
-      <importance>normal</importance>
-      <sensitivity>normal</sensitivity>
-      <secureconnectiontype>SSL</secureconnectiontype>
-      <replyToAddresses>Mario</replyToAddresses>
-      <filetypes>
-        <filetype>GENERAL</filetype>
-        <filetype>LOG</filetype>
-        <filetype>ERRORLINE</filetype>
-        <filetype>ERROR</filetype>
-        <filetype>WARNING</filetype>
-      </filetypes>
-      <embeddedimages>
-      </embeddedimages>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>1296</xloc>
-      <yloc>160</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Integración APPWEB</name>
-      <description/>
-      <type>TRANS</type>
-      <attributes/>
-      <specification_method>filename</specification_method>
-      <trans_object_id/>
-      <filename>/home/mmarco/Pentaho/data-integration/samples/transformations/app_pedidos_web_integracion.ktr</filename>
-      <transname/>
-      <arg_from_previous>N</arg_from_previous>
-      <params_from_previous>Y</params_from_previous>
-      <exec_per_row>N</exec_per_row>
-      <clear_rows>N</clear_rows>
-      <clear_files>N</clear_files>
-      <set_logfile>Y</set_logfile>
-      <logfile>/home/mmarco/appweb/IMPORT_ZSOHWEB_LOG</logfile>
-      <logext/>
-      <add_date>N</add_date>
-      <add_time>N</add_time>
-      <loglevel>Basic</loglevel>
-      <cluster>N</cluster>
-      <slave_server_name/>
-      <set_append_logfile>N</set_append_logfile>
-      <wait_until_finished>Y</wait_until_finished>
-      <follow_abort_remote>N</follow_abort_remote>
-      <create_parent_folder>N</create_parent_folder>
-      <logging_remote_work>N</logging_remote_work>
-      <run_configuration>Pentaho local</run_configuration>
-      <suppress_result_data>N</suppress_result_data>
-      <parameters>
-        <pass_all_parameters>Y</pass_all_parameters>
-      </parameters>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>368</xloc>
-      <yloc>256</yloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
@@ -528,118 +418,76 @@ CONSULTA LA TRAZA DE CARGA DESDE:
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>688</xloc>
-      <yloc>256</yloc>
+      <xloc>864</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>montar_ud_compartida.sh</name>
+      <name>Mueve fichero</name>
       <description/>
-      <type>SHELL</type>
+      <type>JOB</type>
       <attributes/>
-      <filename>/home/mmarco/Documentos/montar_ud_compartida.sh</filename>
-      <work_directory/>
+      <specification_method>filename</specification_method>
+      <job_object_id/>
+      <filename>/home/agarcia/jobs/integracion_CONTENUR_mueve_fichero.kjb</filename>
+      <jobname/>
+      <directory/>
       <arg_from_previous>N</arg_from_previous>
+      <params_from_previous>N</params_from_previous>
       <exec_per_row>N</exec_per_row>
       <set_logfile>N</set_logfile>
       <logfile/>
-      <set_append_logfile>N</set_append_logfile>
       <logext/>
       <add_date>N</add_date>
       <add_time>N</add_time>
-      <insertScript>Y</insertScript>
-      <script>sudo umount /mnt/X3DATABASE
-sudo mount -t cifs -o username="mmarco",password="System345" //192.168.28.100/CARGA_AUTO_LIVE /mnt/X3DATABASE</script>
-      <loglevel>Basic</loglevel>
+      <loglevel>Nothing</loglevel>
+      <slave_server_name/>
+      <wait_until_finished>Y</wait_until_finished>
+      <follow_abort_remote>N</follow_abort_remote>
+      <expand_remote_job>N</expand_remote_job>
+      <create_parent_folder>N</create_parent_folder>
+      <pass_export>N</pass_export>
+      <run_configuration>Pentaho local</run_configuration>
+      <parameters>
+        <pass_all_parameters>Y</pass_all_parameters>
+      </parameters>
+      <set_append_logfile>N</set_append_logfile>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>688</xloc>
-      <yloc>128</yloc>
+      <xloc>656</xloc>
+      <yloc>80</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Checks if files exist (PEDIDO NORMAL)</name>
-      <description/>
-      <type>FILES_EXIST</type>
-      <attributes/>
-      <filename>file:///mnt/X3DATABASE/IMPORT_ZSOHWEB</filename>
-      <fields>
-        <field>
-          <name>file:///mnt/X3DATABASE/IMPORT_ZSOHWEB</name>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>976</xloc>
-      <yloc>256</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Success 3</name>
-      <description/>
-      <type>SUCCESS</type>
-      <attributes/>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>1136</xloc>
-      <yloc>160</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Checks if files exist (PEDIDO MUESTRA)</name>
-      <description/>
-      <type>FILES_EXIST</type>
-      <attributes/>
-      <filename/>
-      <fields>
-        <field>
-          <name>file:///mnt/X3DATABASE/IMPORT_ZSOHWEB_MUESTRA</name>
-        </field>
-      </fields>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>976</xloc>
-      <yloc>368</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Mail 2</name>
+      <name>Mail</name>
       <description/>
       <type>MAIL</type>
       <attributes/>
-      <server>smtp.famesa.es</server>
-      <port>25</port>
-      <destination>mmarco@denox.eu</destination>
+      <server>smtp.office365.com</server>
+      <port>587</port>
+      <destination>mmarco@denox.eu, agarcia@iptrilla.es </destination>
       <destinationCc/>
       <destinationBCc/>
-      <replyto>informatica@famesa.es</replyto>
+      <replyto>mmarco@denox.eu</replyto>
       <replytoname>Spoon (rserver)</replytoname>
-      <subject>pedidos de REPRESENTANTES (MUESTRAS) cargados</subject>
-      <include_date>N</include_date>
+      <subject>Integración Contenur</subject>
+      <include_date>Y</include_date>
       <contact_person/>
       <contact_phone/>
       <comment>ESTO ES UN CORREO AUTOMÁTICO!!
 
-Se han cargado los pedidos de REPRESENTANTES.
+Fichero contenur integrado. 
+Consulta el resultado en Sage ->Informes->Informes-> Ejecución de consultas->ZPEDCONT
 
-- Fichero (IMPORT_ZSOHWEB): pedidos. Importar mediante modelo: ZSOHWEB
-
-CONSULTA LA TRAZA DE CARGA DESDE:
-
-	Informes->Informes->lectura de seguimientos (busca la traza con nombre: traza de carga de pedidos representantes a fecha de hoy)
-
-</comment>
+Si es OK, carga el fichero adjunto a este correo con el modelo de imortación ZSOHCON2</comment>
       <include_files>Y</include_files>
       <zip_files>N</zip_files>
       <zip_name/>
       <use_auth>Y</use_auth>
-      <use_secure_auth>N</use_secure_auth>
-      <auth_user>informatica@famesa.es</auth_user>
-      <auth_password>Encrypted 2be98afc86aa7f2b7b20aba75d3c1fb8f</auth_password>
+      <use_secure_auth>Y</use_secure_auth>
+      <auth_user>mmarco@denox.eu</auth_user>
+      <auth_password>Encrypted 2fecbd6bb1ec29fd7ff4cea47df9ea3df</auth_password>
       <only_comment>N</only_comment>
       <use_HTML>N</use_HTML>
       <use_Priority>N</use_Priority>
@@ -647,12 +495,11 @@ CONSULTA LA TRAZA DE CARGA DESDE:
       <priority>normal</priority>
       <importance>normal</importance>
       <sensitivity>normal</sensitivity>
-      <secureconnectiontype>SSL</secureconnectiontype>
+      <secureconnectiontype>TLS</secureconnectiontype>
       <replyToAddresses>Mario</replyToAddresses>
       <filetypes>
         <filetype>GENERAL</filetype>
         <filetype>LOG</filetype>
-        <filetype>ERRORLINE</filetype>
         <filetype>ERROR</filetype>
         <filetype>WARNING</filetype>
       </filetypes>
@@ -661,69 +508,37 @@ CONSULTA LA TRAZA DE CARGA DESDE:
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1296</xloc>
-      <yloc>368</yloc>
+      <xloc>1040</xloc>
+      <yloc>240</yloc>
       <attributes_kjc/>
     </entry>
     <entry>
-      <name>Success 4</name>
+      <name>Abort job</name>
       <description/>
-      <type>SUCCESS</type>
+      <type>ABORT</type>
       <attributes/>
+      <message/>
       <parallel>N</parallel>
       <draw>Y</draw>
       <nr>0</nr>
-      <xloc>1152</xloc>
-      <yloc>368</yloc>
-      <attributes_kjc/>
-    </entry>
-    <entry>
-      <name>Evaluate rows number in a table</name>
-      <description/>
-      <type>EVAL_TABLE_CONTENT</type>
-      <attributes/>
-      <connection>MySQL</connection>
-      <schemaname/>
-      <tablename/>
-      <success_condition>rows_count_greater</success_condition>
-      <limit>0</limit>
-      <is_custom_sql>Y</is_custom_sql>
-      <is_usevars>N</is_usevars>
-      <custom_sql>SELECT * fROM pract.PEDIDOS_WEB
-WHERE USUARIO NOT IN('001','002','003')
-AND ESTADO = 'PENDIENTE'</custom_sql>
-      <add_rows_result>N</add_rows_result>
-      <clear_result_rows>Y</clear_result_rows>
-      <parallel>N</parallel>
-      <draw>Y</draw>
-      <nr>0</nr>
-      <xloc>272</xloc>
-      <yloc>176</yloc>
+      <xloc>336</xloc>
+      <yloc>240</yloc>
       <attributes_kjc/>
     </entry>
   </entries>
   <hops>
     <hop>
       <from>Start</from>
-      <to>Cargar datos APPWEB</to>
+      <to>Transformation</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
-      <enabled>N</enabled>
+      <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>Y</unconditional>
     </hop>
     <hop>
-      <from>Cargar datos APPWEB</from>
+      <from>Transformation</from>
       <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Integración APPWEB</from>
-      <to>Success 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -732,7 +547,7 @@ AND ESTADO = 'PENDIENTE'</custom_sql>
     </hop>
     <hop>
       <from>Success</from>
-      <to>montar_ud_compartida.sh</to>
+      <to>Mueve fichero</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -740,43 +555,16 @@ AND ESTADO = 'PENDIENTE'</custom_sql>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>montar_ud_compartida.sh</from>
-      <to>Integración APPWEB</to>
+      <from>Mueve fichero</from>
+      <to>Success 2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
       <evaluation>Y</evaluation>
       <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Start</from>
-      <to>Success</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>N</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
     </hop>
     <hop>
       <from>Success 2</from>
-      <to>Checks if files exist (PEDIDO NORMAL)</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Checks if files exist (PEDIDO NORMAL)</from>
-      <to>Success 3</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success 3</from>
       <to>Mail</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
@@ -785,44 +573,17 @@ AND ESTADO = 'PENDIENTE'</custom_sql>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Success 2</from>
-      <to>Checks if files exist (PEDIDO MUESTRA)</to>
+      <from>Transformation</from>
+      <to>Abort job</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
+      <evaluation>N</evaluation>
       <unconditional>N</unconditional>
     </hop>
     <hop>
-      <from>Checks if files exist (PEDIDO MUESTRA)</from>
-      <to>Success 4</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Success 4</from>
-      <to>Mail 2</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>N</unconditional>
-    </hop>
-    <hop>
-      <from>Start</from>
-      <to>Evaluate rows number in a table</to>
-      <from_nr>0</from_nr>
-      <to_nr>0</to_nr>
-      <enabled>Y</enabled>
-      <evaluation>Y</evaluation>
-      <unconditional>Y</unconditional>
-    </hop>
-    <hop>
-      <from>Evaluate rows number in a table</from>
-      <to>Success</to>
+      <from>Abort job</from>
+      <to>Mail2</to>
       <from_nr>0</from_nr>
       <to_nr>0</to_nr>
       <enabled>Y</enabled>
@@ -842,6 +603,10 @@ AND ESTADO = 'PENDIENTE'</custom_sql>
     </group>
     <group>
       <name>{"_":"Embedded MetaStore Elements","namespace":"pentaho","type":"Default Run Configuration"}</name>
+      <attribute>
+        <key>Pentaho local</key>
+        <value>{"children":[{"children":[],"id":"server","value":null},{"children":[],"id":"clustered","value":"N"},{"children":[],"id":"name","value":"Pentaho local"},{"children":[],"id":"description","value":null},{"children":[],"id":"pentaho","value":"N"},{"children":[],"id":"readOnly","value":"Y"},{"children":[],"id":"sendResources","value":"N"},{"children":[],"id":"logRemoteExecutionLocally","value":"N"},{"children":[],"id":"remote","value":"N"},{"children":[],"id":"local","value":"Y"},{"children":[],"id":"showTransformations","value":"N"}],"id":"Pentaho local","value":null,"name":"Pentaho local","owner":null,"ownerPermissionsList":[]}</value>
+      </attribute>
     </group>
   </attributes>
 </job>
