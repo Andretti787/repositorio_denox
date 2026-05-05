@@ -126,9 +126,11 @@ def index():
             SELECT DISTINCT pw.COD_DIR, d.DIR 
             FROM PEDIDOS_WEB pw 
             LEFT JOIN DIRECCIONES_CTE_WEB d ON pw.COD_CTE = d.COD_CTE AND pw.COD_DIR = d.COD_DIR 
-            WHERE pw.USUARIO = %s AND pw.COD_DIR IS NOT NULL AND pw.COD_DIR != '' 
+            LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
+            WHERE pw.USUARIO = %s AND pw.COD_DIR IS NOT NULL AND pw.COD_DIR != ''
+            AND (d.COD_USER = %s OR c.COD_USER = %s)
         """
-        params_direcciones = [session['user_id']]
+        params_direcciones = [session['user_id'], session['user_id'], session['user_id']]
         if filter_cliente:
             sql_direcciones += " AND pw.COD_CTE = %s"
             params_direcciones.append(filter_cliente)
@@ -292,8 +294,7 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
         # 1. Validar que el cliente es visible para el usuario
         sql_val_cte = """
             SELECT c.COD_CTE FROM CLIENTES_WEB c
-            LEFT JOIN DIRECCIONES_CTE_WEB d ON c.COD_CTE = d.COD_CTE
-            WHERE c.COD_CTE = %s AND (c.COD_USER = %s OR d.COD_USER = %s)
+            WHERE c.COD_CTE = %s AND c.ACTIVO = 2 AND (c.COD_USER = %s OR EXISTS (SELECT 1 FROM DIRECCIONES_CTE_WEB d WHERE d.COD_CTE = c.COD_CTE AND d.COD_USER = %s))
             LIMIT 1
         """
         cursor.execute(sql_val_cte, (cod_cte, usuario_actual, usuario_actual))
@@ -308,7 +309,7 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
                 FROM DIRECCIONES_CTE_WEB d 
                 JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
                 WHERE d.COD_CTE = %s AND d.COD_DIR = %s 
-                AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '' OR c.COD_USER = %s)
+                AND (d.COD_USER = %s OR c.COD_USER = %s)
             """
             cursor.execute(sql_val_dir, (cod_cte, cod_dir, usuario_actual, usuario_actual))
             if not cursor.fetchone():
@@ -375,13 +376,14 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
                 return False, None, datos_para_repoblar
             
             # Lógica para seleccionar el precio correcto según la tarifa
-            precio_a_usar = item_maestro.get('PRECIO', 0.0) # Precio por defecto (Tarifa 1)
-            if tarifa_usuario == 2 and item_maestro.get('PRECIO_2', 0.0) > 0:
-                precio_a_usar = item_maestro.get('PRECIO_2')
-            elif tarifa_usuario == 3 and item_maestro.get('PRECIO_3', 0.0) > 0:
-                precio_a_usar = item_maestro.get('PRECIO_3')
-            elif tarifa_usuario == 4 and item_maestro.get('PRECIO_4', 0.0) > 0:
-                precio_a_usar = item_maestro.get('PRECIO_4')
+            # Usamos "or 0.0" para manejar casos donde el valor en la BD sea NULL (None en Python)
+            precio_a_usar = item_maestro.get('PRECIO') or 0.0
+            if tarifa_usuario == 2 and (item_maestro.get('PRECIO_2') or 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_2') or 0.0
+            elif tarifa_usuario == 3 and (item_maestro.get('PRECIO_3') or 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_3') or 0.0
+            elif tarifa_usuario == 4 and (item_maestro.get('PRECIO_4') or 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_4') or 0.0
 
 
             raw_ud_emb = item_maestro.get('UD_EMB')
@@ -812,10 +814,12 @@ def ver_pedido(numped_a_ver):
                 if g.db.is_connected(): # Reutilizar la conexión si es posible
                     cursor_dir = g.db.cursor(dictionary=True) # Nuevo cursor
                     cursor_dir.execute("""
-                        SELECT DIR, CP, CIUDAD, PROVINCIA, PAIS 
-                        FROM DIRECCIONES_CTE_WEB 
-                        WHERE COD_CTE = %s AND COD_DIR = %s
-                    """, (pedido_cabecera_para_vista['COD_CTE'], pedido_cabecera_para_vista['COD_DIR']))
+                        SELECT d.DIR, d.CP, d.CIUDAD, d.PROVINCIA, d.PAIS 
+                        FROM DIRECCIONES_CTE_WEB d
+                        JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
+                        WHERE d.COD_CTE = %s AND d.COD_DIR = %s
+                        AND (d.COD_USER = %s OR c.COD_USER = %s)
+                    """, (pedido_cabecera_para_vista['COD_CTE'], pedido_cabecera_para_vista['COD_DIR'], usuario_actual, usuario_actual))
                     direccion_completa_info = cursor_dir.fetchone()
                     cursor_dir.close() # Cerrar este cursor específico
             except mysql.connector.Error as err_dir:
@@ -918,9 +922,9 @@ def sugerencias_cliente():
             SELECT DISTINCT c.COD_CTE, c.RAZON_SOCIAL, c.FPAGO
             FROM CLIENTES_WEB c
             LEFT JOIN DIRECCIONES_CTE_WEB d ON c.COD_CTE = d.COD_CTE
-            WHERE
-                (c.COD_CTE LIKE %s OR c.RAZON_SOCIAL LIKE %s)
-                AND (c.COD_USER = %s OR d.COD_USER = %s)
+            WHERE c.ACTIVO = 2 AND
+                (c.COD_CTE LIKE %s OR c.RAZON_SOCIAL LIKE %s) AND
+                (c.COD_USER = %s OR d.COD_USER = %s)
             LIMIT 10
         """
         search_term = '%' + query_param + '%' # Busca en cualquier parte
@@ -958,9 +962,9 @@ def sugerencias_direccion_cliente():
 
     cursor = g.db.cursor(dictionary=True)
     try:
-        # Lógica base: direcciones del cliente que son del usuario o públicas, O si el cliente pertenece al usuario
+        # Lógica base: direcciones asignadas específicamente al usuario O todas si el cliente le pertenece
         params = [cod_cte_seleccionado, usuario_actual, usuario_actual]
-        sql_conditions = "d.COD_CTE = %s AND (d.COD_USER = %s OR d.COD_USER IS NULL OR d.COD_USER = '' OR c.COD_USER = %s)"
+        sql_conditions = "d.COD_CTE = %s AND (d.COD_USER = %s OR c.COD_USER = %s)"
 
         # Añadir filtro de búsqueda si existe
         if query_param and query_param != "*":
@@ -1000,25 +1004,20 @@ def sugerencias_direccion_cliente():
 
 def generar_numped():
     """
-    Genera un número de pedido único con formato PED-timestamp_segundos-aleatorio_2digitos.
-    La longitud total aproximada es de 17 caracteres.
+    Genera un número de pedido único con formato PED-YYMMDDHHMMSS-RRR.
+    Asegura unicidad incluyendo segundos y un número aleatorio de 3 dígitos.
+    La longitud total es de 20 caracteres, compatible con VARCHAR(20).
     """
-    #timestamp_segundos = int(time.time())       # Timestamp en segundos (aprox. 10 dígitos)
     now = datetime.datetime.now()
-    timestamp_segundos = now.strftime("%y%m%d%H%M")
-    aleatorio = random.randint(10, 99)          # Aleatorio de 2 dígitos (10-99)
+    # Formato: YYMMDDHHMMSS (12 caracteres)
+    timestamp_part = now.strftime("%y%m%d%H%M%S")
+    # Aleatorio de 3 dígitos (100-999)
+    aleatorio = random.randint(100, 999)
     
-    # Formato: PED-SSSSSSSSSS-RR (S=segundo, R=aleatorio)
-    # Longitud: 4  +    10    + 1 +  2  = 17 caracteres
-    numped = f"PED-{timestamp_segundos}-{aleatorio:02d}" # :02d asegura 2 dígitos para el aleatorio (ej. 07)
+    # Formato: PED-YYMMDDHHMMSS-RRR
+    # Longitud: 4  +    12    + 1 +  3  = 20 caracteres
+    numped = f"PED-{timestamp_part}-{aleatorio:03d}"
     
-    # Verificación de longitud (opcional, pero bueno para desarrollo)
-    if len(numped) > 20:
-        print(f"ADVERTENCIA: NUMPED generado ('{numped}') excede los 20 caracteres.")
-        # Aquí podrías truncar o lanzar un error si es crítico,
-        # pero con el cálculo anterior no debería pasar.
-        # Para este caso, lo dejaremos pasar si ocurriera, pero el cálculo indica que no.
-
     return numped
 
 # Ejemplo de uso y prueba de longitud:

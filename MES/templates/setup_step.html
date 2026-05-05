@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración MES - {{ titulo }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .card { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .btn-primary { padding: 12px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header bg-primary text-white text-center py-3">
+            <h4 class="mb-0">Gestión de Inyectoras</h4>
+        </div>
+        <div class="card-body p-4">
+            <h5 class="text-secondary mb-4 text-center">Paso: {{ titulo }}</h5>
+            <form method="POST">
+                <div class="mb-4">
+                    <label for="{{ campo }}" class="form-label fw-bold">Selecciona tu {{ titulo }}:</label>
+                    {% if choices %}
+                    <select class="form-select form-select-lg" id="{{ campo }}" name="{{ campo }}" required>
+                        <option value="" disabled selected>Elige una opción...</option>
+                        {% for choice in choices %}
+                        <option value="{{ choice }}">{{ choice }}</option>
+                        {% endfor %}
+                    </select>
+                    {% else %}
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           id="{{ campo }}"
+                           name="{{ campo }}"
+                           placeholder="Escribe aquí..."
+                           required
+                           autofocus>
+                    {% endif %}
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg shadow-sm">Siguiente</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
