@@ -1,0 +1,245 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .page { width: 794px; background: white; font-family: 'DM Sans', sans-serif; color: #111; padding: 44px 52px; border: 0.5px solid #ccc; border-radius: 6px; }
+
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 16px; margin-bottom: 26px; }
+  .logo-slot { width: 100px; height: 44px; border: 1.5px dashed #999; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; font-family: 'DM Mono', monospace; cursor: pointer; flex-shrink: 0; }
+  .logo-slot:hover { border-color: #555; }
+  .logo-slot.has-logo { border: none; padding: 0; }
+  .logo-slot img { width: 100%; height: 100%; object-fit: contain; }
+  #logo-input { display: none; }
+  .doc-title { font-size: 19px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: #111; }
+
+  .section { margin-bottom: 22px; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 10.5px; font-weight: 500; letter-spacing: 0.13em; text-transform: uppercase; color: #111; margin-bottom: 11px; display: flex; align-items: center; gap: 8px; }
+  .section-label::after { content: ''; flex: 1; height: 0.5px; background: #aaa; }
+
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  .field-key { font-size: 10px; font-family: 'DM Mono', monospace; letter-spacing: 0.09em; text-transform: uppercase; color: #111; }
+  .field-val { border: none; border-bottom: 1px solid #888; padding: 5px 0 4px; font-size: 14px; font-family: 'DM Sans', sans-serif; color: #111; background: transparent; outline: none; width: 100%; }
+  .field-val:focus { border-bottom-color: #111; }
+  .field-val.mono { font-family: 'DM Mono', monospace; }
+
+  .divider { height: 1px; background: #aaa; margin: 20px 0; }
+
+  .yn { display: inline-flex; align-items: center; gap: 12px; }
+  .yn label { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; color: #111; cursor: pointer; }
+  .yn input[type="radio"] { accent-color: #111; width: 13px; height: 13px; cursor: pointer; }
+
+  /* shared row label style — same as spec td-key */
+  .row-key {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #111;
+  }
+
+  .bare { border: none; outline: none; background: transparent; font-size: 13.5px; font-family: 'DM Sans', sans-serif; color: #111; width: 100%; padding: 2px 0; }
+
+  .check-table { width: 100%; border-collapse: collapse; }
+  .check-table tr { border-bottom: 0.5px solid #bbb; }
+  .check-table tr:last-child { border-bottom: none; }
+  .check-table td { padding: 9px 6px; vertical-align: middle; color: #111; }
+  .check-table .td-yn { width: 95px; white-space: nowrap; }
+
+  .spec-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0 32px; align-items: start; }
+  .spec-table { width: 100%; border-collapse: collapse; }
+  .spec-table tr { border-bottom: 0.5px solid #bbb; }
+  .spec-table tr:last-child { border-bottom: none; }
+  .spec-table td { padding: 9px 6px; vertical-align: middle; }
+  .spec-table .td-key { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.07em; text-transform: uppercase; color: #111; width: 165px; white-space: nowrap; }
+  .spec-table .td-sep { width: 14px; color: #111; font-size: 13px; }
+
+  .etiq-table { width: 100%; border-collapse: collapse; }
+  .etiq-table thead tr { border-bottom: 1px solid #111; }
+  .etiq-table tbody tr { border-bottom: 0.5px solid #bbb; }
+  .etiq-table tbody tr:last-child { border-bottom: none; }
+  .etiq-table th { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 0.11em; text-transform: uppercase; color: #111; padding: 7px 8px; text-align: left; font-weight: 500; }
+  .etiq-table td { padding: 9px 8px; vertical-align: middle; color: #111; }
+  .etiq-table .td-req { width: 200px; }
+  .etiq-yn { width: 105px; white-space: nowrap; }
+  .etiq-lines { display: flex; flex-direction: column; gap: 8px; padding: 4px 0; }
+
+  /* observaciones */
+  .obs-label { font-family: 'DM Mono', monospace; font-size: 10.5px; font-weight: 700; letter-spacing: 0.13em; text-transform: uppercase; color: #111; margin-bottom: 11px; display: flex; align-items: center; gap: 8px; }
+  .obs-label::after { content: ''; flex: 1; height: 0.5px; background: #aaa; }
+  .obs-body { display: flex; flex-direction: column; justify-content: space-between; min-height: 90px; }
+  .obs-bottom-line { height: 1px; background: #aaa; margin-top: auto; }
+
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: #111; color: white; border: none; border-radius: 6px; padding: 10px 20px; font-size: 13px; font-family: 'DM Sans', sans-serif; cursor: pointer; display: flex; align-items: center; gap: 7px; z-index: 100; }
+  .print-btn:hover { background: #333; }
+  @media print {
+    .print-btn { display: none !important; }
+    .page { border: none; border-radius: 0; padding: 28px 36px; }
+    body { background: white; }
+  }
+</style>
+
+<div class="page">
+
+  <div class="header">
+    <div class="logo-slot" id="logoSlot" onclick="document.getElementById('logo-input').click()"><span>LOGO</span></div>
+    <input type="file" id="logo-input" accept="image/*">
+    <div class="doc-title">Ficha de Paletización</div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Datos del cliente</div>
+    <div class="grid-3">
+      <div class="field">
+        <span class="field-key">Cliente</span>
+        <input type="text" class="field-val" />
+      </div>
+      <div class="field">
+        <span class="field-key">Número de cliente</span>
+        <input type="text" class="field-val mono" />
+      </div>
+      <div class="field">
+        <span class="field-key">Destino</span>
+        <input type="text" class="field-val" />
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="section">
+    <div class="section-label">Preparación de mercancía</div>
+    <table class="check-table">
+      <tr>
+        <td class="td-label"><span class="row-key">Empaquetado individual</span></td>
+        <td class="td-yn"><span class="yn"><label><input type="radio" name="r1" /> Sí</label><label><input type="radio" name="r1" /> No</label></span></td>
+        <td></td>
+      </tr>
+      <tr>
+        <td class="td-label"><span class="row-key">Etiquetado especial</span></td>
+        <td class="td-yn"><span class="yn"><label><input type="radio" name="r3" /> Sí</label><label><input type="radio" name="r3" /> No</label></span></td>
+        <td><input type="text" class="bare" /></td>
+      </tr>
+      <tr>
+        <td class="td-label"><span class="row-key">Separación por referencias</span></td>
+        <td class="td-yn"><span class="yn"><label><input type="radio" name="r4" /> Sí</label><label><input type="radio" name="r4" /> No</label></span></td>
+        <td><input type="text" class="bare" /></td>
+      </tr>
+      <tr>
+        <td class="td-label"><span class="row-key">Documentación adjunta</span></td>
+        <td class="td-yn"><span class="yn"><label><input type="radio" name="r5" /> Sí</label><label><input type="radio" name="r5" /> No</label></span></td>
+        <td><input type="text" class="bare" /></td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Especificaciones de paletización</div>
+    <div class="spec-wrap">
+      <table class="spec-table">
+        <tr>
+          <td class="td-key">Altura máxima</td>
+          <td class="td-sep">:</td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+        <tr>
+          <td class="td-key">Peso máximo</td>
+          <td class="td-sep">:</td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+        <tr>
+          <td class="td-key">Tipo de palet</td>
+          <td class="td-sep">:</td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+        <tr>
+          <td class="td-key">Palet apilable</td>
+          <td class="td-sep">:</td>
+          <td style="padding-top:7px;">
+            <span class="yn"><label><input type="radio" name="apilable" /> Sí</label><label><input type="radio" name="apilable" /> No</label></span>
+          </td>
+        </tr>
+      </table>
+      <table class="spec-table">
+        <tr>
+          <td class="td-key">Distribución mercancía</td>
+          <td class="td-sep">:</td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-label">Etiquetado y documentación</div>
+    <table class="etiq-table">
+      <thead>
+        <tr>
+          <th>Requisito</th>
+          <th class="etiq-yn">Sí / No</th>
+          <th>Detalle</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-req"><span class="row-key">Lleva carteles cliente</span></td>
+          <td class="etiq-yn"><span class="yn"><label><input type="radio" name="e1" /> Sí</label><label><input type="radio" name="e1" /> No</label></span></td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+        <tr>
+          <td class="td-req" style="vertical-align:top; padding-top:10px;"><span class="row-key">Etiquetas</span></td>
+          <td class="etiq-yn" style="vertical-align:top; padding-top:10px;"><span class="yn"><label><input type="radio" name="e2" /> Sí</label><label><input type="radio" name="e2" /> No</label></span></td>
+          <td>
+            <div class="etiq-lines">
+              <input type="text" class="bare" />
+              <input type="text" class="bare" />
+              <input type="text" class="bare" />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="td-req"><span class="row-key">Código SSCC</span></td>
+          <td class="etiq-yn"><span class="yn"><label><input type="radio" name="e4" /> Sí</label><label><input type="radio" name="e4" /> No</label></span></td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+        <tr>
+          <td class="td-req"><span class="row-key">Packing list</span></td>
+          <td class="etiq-yn"><span class="yn"><label><input type="radio" name="e5" /> Sí</label><label><input type="radio" name="e5" /> No</label></span></td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+        <tr>
+          <td class="td-req"><span class="row-key">Etiqueta transporte</span></td>
+          <td class="etiq-yn"><span class="yn"><label><input type="radio" name="e6" /> Sí</label><label><input type="radio" name="e6" /> No</label></span></td>
+          <td><input type="text" class="bare" /></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section">
+    <div class="obs-label">Observaciones importantes</div>
+    <div class="obs-body">
+      <div></div>
+      <div class="obs-bottom-line"></div>
+    </div>
+  </div>
+
+</div>
+
+<button class="print-btn" onclick="window.print()">
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+  Imprimir / Guardar PDF
+</button>
+
+<script>
+  document.getElementById('logo-input').addEventListener('change', function(e) {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const slot = document.getElementById('logoSlot');
+      slot.innerHTML = '<img src="' + ev.target.result + '" />';
+      slot.classList.add('has-logo');
+    };
+    reader.readAsDataURL(file);
+  });
+</script>

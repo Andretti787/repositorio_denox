@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumen de Pedidos Web</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <i class="fas fa-chart-line header-icon"></i>
+                <h1>Resumen de Pedidos Web</h1>
+                <p class="subtitle">Usuario: <strong>{{ username }}</strong></p>
+                <a href="/logout" class="logout-link" style="margin-left: auto; color: white; text-decoration: none;">
+                    <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                </a>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Barra de herramientas -->
+            <div class="toolbar">
+                <button id="refresh-btn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> Actualizar Datos
+                </button>
+                <button id="export-btn" class="btn btn-secondary" disabled>
+                    <i class="fas fa-download"></i> Exportar CSV
+                </button>
+                <div class="status-indicator">
+                    <span id="status-text">Esperando...</span>
+                    <span id="connection-status" class="status-dot"></span>
+                </div>
+            </div>
+
+            <!-- Tabla de datos -->
+            <div class="table-container">
+                <table id="pedidos-table" class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th class="number">Nº Pedidos</th>
+                            <th class="number">Importe Total</th>
+                            <th class="number">Importe Medio</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Los datos se cargarán dinámicamente -->
+                    </tbody>
+                    <tfoot id="table-footer">
+                        <!-- Totales generales -->
+                    </tfoot>
+                </table>
+            </div>
+
+            <!-- Mensaje de error -->
+            <div id="error-message" class="error-message" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="error-text"></span>
+            </div>
+
+            <!-- Loading -->
+            <div id="loading" class="loading-overlay" style="display: none;">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <p>Cargando datos...</p>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Última actualización: <span id="last-update">--</span></p>
+            <p>Aplicación v1.0.0</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

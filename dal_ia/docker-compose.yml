@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  dal-ia:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dal-ia-app
+    restart: unless-stopped
+    ports:
+      - "5005:5005"
+    environment:
+      - HOST=0.0.0.0
+      - PORT=5005
+      - FLASK_ENV=production
+      # Variables de base de datos (sobrescriben las del .env)
+      - DB_HOST=${DB_HOST:-192.168.35.25}
+      - DB_PORT=${DB_PORT:-3306}
+      - DB_NAME=${DB_NAME:-dalia}
+      - DB_USER=${DB_USER:-mmarco}
+      - DB_PASSWORD=${DB_PASSWORD:-@System345}
+      # Credenciales de la aplicación
+      - APP_USER=${APP_USER:-dilies}
+      - APP_PASSWORD=${APP_PASSWORD:-dalia123}
+      - SECRET_KEY=${SECRET_KEY:-cambia_esta_clave_secreta_en_produccion}
+    volumes:
+      # Montar .env desde el host (opcional, para facilitar configuración)
+      - ./.env:/app/.env:ro
+    networks:
+      - dal-ia-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5005/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  dal-ia-network:
+    driver: bridge

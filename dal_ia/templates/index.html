@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichas de Paletización - DAL-IA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: #111;
+            color: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+        }
+        
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .navbar-user span {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .navbar-user a {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .navbar-user a:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #111;
+            letter-spacing: 0.03em;
+        }
+        
+        .btn-primary {
+            background: #111;
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-primary:hover {
+            background: #333;
+        }
+        
+        .flash-messages {
+            margin-bottom: 24px;
+        }
+        
+        .flash-message {
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+        
+        .flash-message.success {
+            background: #dcfce7;
+            border: 1px solid #86efac;
+            color: #166534;
+        }
+        
+        .flash-message.error {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+        
+        .fichas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+        
+        .ficha-card {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s;
+        }
+        
+        .ficha-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .ficha-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+        }
+        
+        .ficha-cliente {
+            font-size: 18px;
+            font-weight: 600;
+            color: #111;
+            margin-bottom: 4px;
+        }
+        
+        .ficha-destino {
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .ficha-id {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: #999;
+            background: #f5f5f5;
+            padding: 4px 8px;
+            border-radius: 4px;
+        }
+        
+        .ficha-info {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .ficha-info-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        
+        .ficha-info-label {
+            color: #666;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .ficha-info-value {
+            color: #111;
+            font-weight: 500;
+        }
+        
+        .ficha-card-actions {
+            display: flex;
+            gap: 8px;
+            padding-top: 16px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #111;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #ddd;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #111;
+        }
+        
+        .btn-danger {
+            background: white;
+            color: #dc2626;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            border: 1px solid #fecaca;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .btn-danger:hover {
+            background: #fee2e2;
+            border-color: #dc2626;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 64px 32px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .empty-state h3 {
+            font-size: 20px;
+            color: #111;
+            margin-bottom: 8px;
+        }
+        
+        .empty-state p {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            .page-header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+            
+            .fichas-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* ASCII Art interactivo */
+        .ascii-cursor-follower {
+            position: fixed;
+            pointer-events: none;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            line-height: 1;
+            color: rgba(17, 17, 17, 0.15);
+            z-index: 9999;
+            white-space: pre;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.3s;
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- ASCII art que sigue al cursor -->
+    <div class="ascii-cursor-follower" id="asciiFollower"></div>
+    <nav class="navbar">
+        <div class="navbar-brand">DAL-IA</div>
+        <div class="navbar-user">
+            <span>{{ session.get('username', '') }}</span>
+            <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Fichas de Paletización</h1>
+            <a href="{{ url_for('ficha_nueva') }}" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Nueva Ficha
+            </a>
+        </div>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% endwith %}
+        
+        {% if fichas %}
+        <div class="fichas-grid">
+            {% for ficha in fichas %}
+            <div class="ficha-card">
+                <div class="ficha-card-header">
+                    <div>
+                        <div class="ficha-cliente">{{ ficha.cliente or 'Sin cliente' }}</div>
+                        <div class="ficha-destino">{{ ficha.destino or 'Sin destino' }}</div>
+                    </div>
+                    <span class="ficha-id">#{{ ficha.id }}</span>
+                </div>
+                
+                <div class="ficha-info">
+                    <div class="ficha-info-row">
+                        <span class="ficha-info-label">Nº Cliente</span>
+                        <span class="ficha-info-value">{{ ficha.numero_cliente or '-' }}</span>
+                    </div>
+                    <div class="ficha-info-row">
+                        <span class="ficha-info-label">Peso Máximo</span>
+                        <span class="ficha-info-value">{{ ficha.peso_maximo or '-' }}</span>
+                    </div>
+                    <div class="ficha-info-row">
+                        <span class="ficha-info-label">Tipo Palet</span>
+                        <span class="ficha-info-value">{{ ficha.tipo_palet or '-' }}</span>
+                    </div>
+                    <div class="ficha-info-row">
+                        <span class="ficha-info-label">Creada</span>
+                        <span class="ficha-info-value">{{ ficha.fecha_creacion.strftime('%d/%m/%Y') if ficha.fecha_creacion else '-' }}</span>
+                    </div>
+                </div>
+                
+                <div class="ficha-card-actions">
+                    <a href="{{ url_for('ver_ficha', ficha_id=ficha.id) }}" class="btn-secondary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                        Ver
+                    </a>
+                    <a href="{{ url_for('editar_ficha', ficha_id=ficha.id) }}" class="btn-secondary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+                        Editar
+                    </a>
+                    <form action="{{ url_for('eliminar_ficha_route', ficha_id=ficha.id) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Está seguro de eliminar esta ficha?');">
+                        <button type="submit" class="btn-danger">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            Eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <h3>No hay fichas registradas</h3>
+            <p>Comienza creando tu primera ficha de paletización</p>
+            <a href="{{ url_for('ficha_nueva') }}" class="btn-primary">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Crear Primera Ficha
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    
+    <script>
+        // ASCII art que sigue al cursor
+        (function() {
+            const follower = document.getElementById('asciiFollower');
+            if (!follower) return;
+            
+            // ASCII art de una pequeña cara sonriente
+            const asciiArt = ` ✨
+(◕‿◕)
+ DAL-IA`;
+            
+            let mouseX = 0, mouseY = 0;
+            let followerX = 0, followerY = 0;
+            const speed = 0.08; // Suavidad del seguimiento
+            const threshold = 50; // Distancia mínima para mostrar
+            
+            document.addEventListener('mousemove', function(e) {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+            
+            function animate() {
+                // Movimiento suave hacia la posición del ratón
+                followerX += (mouseX - followerX) * speed;
+                followerY += (mouseY - followerY) * speed;
+                
+                // Solo mostrar si está lejos del centro (esquinas)
+                const distFromCenter = Math.sqrt(
+                    Math.pow(mouseX - window.innerWidth / 2, 2) + 
+                    Math.pow(mouseY - window.innerHeight / 2, 2)
+                );
+                
+                if (distFromCenter > window.innerWidth * 0.35) {
+                    follower.style.opacity = '1';
+                    follower.style.left = followerX + 'px';
+                    follower.style.top = followerY + 'px';
+                    follower.textContent = asciiArt;
+                } else {
+                    follower.style.opacity = '0';
+                }
+                
+                requestAnimationFrame(animate);
+            }
+            
+            // Iniciar animación
+            animate();
+            
+            // Ocultar al hacer scroll
+            let scrollTimeout;
+            document.addEventListener('scroll', function() {
+                follower.style.opacity = '0';
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(function() {
+                    // Volver a mostrar después del scroll
+                }, 500);
+            });
+        })();
+    </script>
+</body>
+</html>

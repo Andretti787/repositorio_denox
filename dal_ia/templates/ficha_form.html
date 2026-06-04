@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Editar' if ficha else 'Nueva' }} Ficha - DAL-IA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+        
+        .navbar {
+            background: #111;
+            color: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .navbar-brand {
+            font-size: 18px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .navbar-user {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .navbar-user span {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .navbar-user a {
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            padding: 8px 16px;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .navbar-user a:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: white;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #111;
+        }
+        
+        .btn-back {
+            color: #111;
+            text-decoration: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+        
+        .btn-back:hover {
+            opacity: 0.7;
+        }
+        
+        .form-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .form-body {
+            padding: 32px;
+        }
+        
+        .section {
+            margin-bottom: 32px;
+        }
+        
+        .section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .section-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            font-weight: 500;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+            color: #111;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 0.5px;
+            background: #ddd;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+        
+        .form-group {
+            margin-bottom: 16px;
+        }
+        
+        .form-group:last-child {
+            margin-bottom: 0;
+        }
+        
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            font-family: 'DM Mono', monospace;
+            font-weight: 500;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 6px;
+        }
+        
+        .form-group input[type="text"],
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            transition: border-color 0.2s;
+        }
+        
+        .form-group input[type="text"]:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #111;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .form-group select {
+            cursor: pointer;
+            background-color: white;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            color: #111;
+            cursor: pointer;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: normal;
+        }
+        
+        .radio-group input[type="radio"] {
+            accent-color: #111;
+            width: 14px;
+            height: 14px;
+        }
+        
+        .check-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .check-row:last-child {
+            border-bottom: none;
+        }
+        
+        .check-row-label {
+            font-size: 14px;
+            color: #111;
+            flex: 1;
+        }
+        
+        .check-row-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .check-row-content input[type="text"] {
+            width: 200px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        
+        .logo-upload {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo-preview {
+            width: 100px;
+            height: 50px;
+            border: 1.5px dashed #ddd;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            color: #999;
+            font-family: 'DM Mono', monospace;
+            cursor: pointer;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+        
+        .logo-preview:hover {
+            border-color: #111;
+        }
+        
+        .logo-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        .logo-preview.has-logo {
+            border-style: solid;
+            border-color: #ddd;
+        }
+        
+        #logo-input {
+            display: none;
+        }
+        
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 24px;
+            border-top: 1px solid #eee;
+            margin-top: 24px;
+        }
+        
+        .btn-primary {
+            background: #111;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary:hover {
+            background: #333;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #111;
+            border: 1px solid #ddd;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-secondary:hover {
+            background: #f5f5f5;
+            border-color: #111;
+        }
+        
+        .cliente-info {
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 4px;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #111;
+            display: none;
+        }
+        
+        .cliente-info.visible {
+            display: block;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid #ddd;
+            border-top-color: #111;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+            display: none;
+        }
+        
+        .loading.visible {
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .check-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            
+            .check-row-content input[type="text"] {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">DAL-IA</a>
+        <div class="navbar-user">
+            <span>{{ session.get('username', '') }}</span>
+            <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">{{ 'Editar' if ficha else 'Nueva' }} Ficha de Paletización</h1>
+            <a href="{{ url_for('index') }}" class="btn-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Volver al listado
+            </a>
+        </div>
+        
+        <div class="form-card">
+            <form method="POST" class="form-body" id="fichaForm">
+                <input type="hidden" name="logo_data" id="logo_data" value="{{ ficha.logo_data if ficha else '' }}">
+                
+                <!-- Logo de la empresa (MOVED TO TOP) -->
+                <div class="section">
+                    <div class="section-label">Logo de la empresa</div>
+                    <div class="logo-upload">
+                        <div class="logo-preview" id="logoPreview" onclick="document.getElementById('logo-input').click()">
+                            {% if ficha and ficha.logo_data %}
+                            <img src="{{ ficha.logo_data }}" alt="Logo">
+                            {% else %}
+                            <span>LOGO</span>
+                            {% endif %}
+                        </div>
+                        <div>
+                            <input type="file" id="logo-input" accept="image/*">
+                            <p style="font-size: 12px; color: #666;">Haz clic en el recuadro para subir un logo</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Datos del cliente -->
+                <div class="section">
+                    <div class="section-label">Datos del cliente</div>
+                    <div class="grid-3">
+                        <div class="form-group">
+                            <label for="numero_cliente">Número de cliente <span class="loading" id="loading-indicator"></span></label>
+                            <select name="numero_cliente" id="numero_cliente" required>
+                                <option value="">Seleccionar cliente...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="cliente">Cliente</label>
+                            <input type="text" name="cliente" id="cliente" value="{{ ficha.cliente if ficha else '' }}" readonly style="background-color: #f9fafb;">
+                            <div class="cliente-info" id="cliente-info"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="destino">Destino</label>
+                            <input type="text" name="destino" id="destino" value="{{ ficha.destino if ficha else '' }}">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Preparación de mercancía -->
+                <div class="section">
+                    <div class="section-label">Preparación de mercancía</div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Empaquetado individual</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="empaquetado_individual" value="1" {{ 'checked' if ficha and ficha.empaquetado_individual == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="empaquetado_individual" value="0" {{ 'checked' if ficha and ficha.empaquetado_individual == 0 else '' }}> No</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Etiquetado especial</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="etiquetado_especial" value="1" {{ 'checked' if ficha and ficha.etiquetado_especial == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="etiquetado_especial" value="0" {{ 'checked' if ficha and ficha.etiquetado_especial == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="etiquetado_especial_detalle" value="{{ ficha.etiquetado_especial_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Separación por referencias</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="separacion_referencias" value="1" {{ 'checked' if ficha and ficha.separacion_referencias == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="separacion_referencias" value="0" {{ 'checked' if ficha and ficha.separacion_referencias == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="separacion_referencias_detalle" value="{{ ficha.separacion_referencias_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Documentación adjunta</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="documentacion_adjunta" value="1" {{ 'checked' if ficha and ficha.documentacion_adjunta == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="documentacion_adjunta" value="0" {{ 'checked' if ficha and ficha.documentacion_adjunta == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="documentacion_adjunta_detalle" value="{{ ficha.documentacion_adjunta_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Especificaciones de paletización -->
+                <div class="section">
+                    <div class="section-label">Especificaciones de paletización</div>
+                    <div class="grid-2">
+                        <div>
+                            <div class="form-group">
+                                <label for="altura_maxima">Altura máxima</label>
+                                <input type="text" name="altura_maxima" id="altura_maxima" value="{{ ficha.altura_maxima if ficha else '' }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="peso_maximo">Peso máximo</label>
+                                <input type="text" name="peso_maximo" id="peso_maximo" value="{{ ficha.peso_maximo if ficha else '' }}">
+                            </div>
+                            <div class="form-group">
+                                <label for="tipo_palet">Tipo de palet</label>
+                                <input type="text" name="tipo_palet" id="tipo_palet" value="{{ ficha.tipo_palet if ficha else '' }}">
+                            </div>
+                            <div class="form-group">
+                                <label>Palet apilable</label>
+                                <div class="radio-group">
+                                    <label><input type="radio" name="palet_apilable" value="1" {{ 'checked' if ficha and ficha.palet_apilable == 1 else '' }}> Sí</label>
+                                    <label><input type="radio" name="palet_apilable" value="0" {{ 'checked' if ficha and ficha.palet_apilable == 0 else '' }}> No</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="form-group">
+                                <label for="distribucion_mercancia">Distribución mercancía</label>
+                                <textarea name="distribucion_mercancia" id="distribucion_mercancia" rows="5">{{ ficha.distribucion_mercancia if ficha else '' }}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Etiquetado y documentación -->
+                <div class="section">
+                    <div class="section-label">Etiquetado y documentación</div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Lleva carteles cliente</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="lleva_carteles" value="1" {{ 'checked' if ficha and ficha.lleva_carteles == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="lleva_carteles" value="0" {{ 'checked' if ficha and ficha.lleva_carteles == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="lleva_carteles_detalle" value="{{ ficha.lleva_carteles_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Etiquetas</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="etiquetas" value="1" {{ 'checked' if ficha and ficha.etiquetas == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="etiquetas" value="0" {{ 'checked' if ficha and ficha.etiquetas == 0 else '' }}> No</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="check-row" style="border-bottom: none;">
+                        <span class="check-row-label"></span>
+                        <div class="check-row-content">
+                            <input type="text" name="etiquetas_detalle1" value="{{ ficha.etiquetas_detalle1 if ficha else '' }}" placeholder="Línea 1">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row" style="border-bottom: none;">
+                        <span class="check-row-label"></span>
+                        <div class="check-row-content">
+                            <input type="text" name="etiquetas_detalle2" value="{{ ficha.etiquetas_detalle2 if ficha else '' }}" placeholder="Línea 2">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row" style="border-bottom: none;">
+                        <span class="check-row-label"></span>
+                        <div class="check-row-content">
+                            <input type="text" name="etiquetas_detalle3" value="{{ ficha.etiquetas_detalle3 if ficha else '' }}" placeholder="Línea 3">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Código SSCC</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="codigo_sscc" value="1" {{ 'checked' if ficha and ficha.codigo_sscc == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="codigo_sscc" value="0" {{ 'checked' if ficha and ficha.codigo_sscc == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="codigo_sscc_detalle" value="{{ ficha.codigo_sscc_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Packing list</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="packing_list" value="1" {{ 'checked' if ficha and ficha.packing_list == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="packing_list" value="0" {{ 'checked' if ficha and ficha.packing_list == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="packing_list_detalle" value="{{ ficha.packing_list_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                    
+                    <div class="check-row">
+                        <span class="check-row-label">Etiqueta transporte</span>
+                        <div class="check-row-content">
+                            <div class="radio-group">
+                                <label><input type="radio" name="etiqueta_transporte" value="1" {{ 'checked' if ficha and ficha.etiqueta_transporte == 1 else '' }}> Sí</label>
+                                <label><input type="radio" name="etiqueta_transporte" value="0" {{ 'checked' if ficha and ficha.etiqueta_transporte == 0 else '' }}> No</label>
+                            </div>
+                            <input type="text" name="etiqueta_transporte_detalle" value="{{ ficha.etiqueta_transporte_detalle if ficha else '' }}" placeholder="Detalle">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Observaciones -->
+                <div class="section">
+                    <div class="section-label">Observaciones importantes</div>
+                    <div class="form-group">
+                        <textarea name="observaciones" rows="4" placeholder="Ingrese observaciones adicionales...">{{ ficha.observaciones if ficha else '' }}</textarea>
+                    </div>
+                </div>
+                
+                <!-- Acciones -->
+                <div class="form-actions">
+                    <a href="{{ url_for('index') }}" class="btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        {{ 'Guardar Cambios' if ficha else 'Crear Ficha' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Manejo del logo
+        document.getElementById('logo-input').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const preview = document.getElementById('logoPreview');
+                preview.innerHTML = '<img src="' + ev.target.result + '" alt="Logo">';
+                preview.classList.add('has-logo');
+                document.getElementById('logo_data').value = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        // Cargar lista de clientes al iniciar
+        document.addEventListener('DOMContentLoaded', function() {
+            cargarClientes();
+            
+            // Si estamos editando, seleccionar el cliente actual
+            const numeroClienteActual = "{{ ficha.numero_cliente if ficha else '' }}";
+            if (numeroClienteActual) {
+                document.getElementById('numero_cliente').value = numeroClienteActual;
+            }
+        });
+        
+        // Función para cargar la lista de clientes
+        function cargarClientes() {
+            fetch('/api/clientes')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const select = document.getElementById('numero_cliente');
+                        // Mantener la opción por defecto
+                        select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+                        
+                        data.data.forEach(cliente => {
+                            const option = document.createElement('option');
+                            option.value = cliente.CTE_COD;
+                            option.textContent = `${cliente.CTE_COD} - ${cliente.CTE_RAZON_SOCIAL}`;
+                            select.appendChild(option);
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al cargar clientes:', error);
+                });
+        }
+        
+        // Escuchar cambios en el select de número de cliente
+        document.getElementById('numero_cliente').addEventListener('change', function() {
+            const cteCod = this.value;
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const clienteInput = document.getElementById('cliente');
+            const clienteInfo = document.getElementById('cliente-info');
+            
+            if (!cteCod) {
+                clienteInput.value = '';
+                clienteInfo.classList.remove('visible');
+                return;
+            }
+            
+            // Mostrar indicador de carga
+            loadingIndicator.classList.add('visible');
+            
+            // Obtener datos del cliente
+            fetch(`/api/cliente/${cteCod}`)
+                .then(response => response.json())
+                .then(data => {
+                    loadingIndicator.classList.remove('visible');
+                    
+                    if (data.success) {
+                        clienteInput.value = data.data.cte_razon_social;
+                        clienteInfo.textContent = `Código: ${data.data.cte_cod}`;
+                        clienteInfo.classList.add('visible');
+                    } else {
+                        clienteInput.value = '';
+                        clienteInfo.classList.remove('visible');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al obtener cliente:', error);
+                    loadingIndicator.classList.remove('visible');
+                    clienteInput.value = '';
+                    clienteInfo.classList.remove('visible');
+                });
+        });
+    </script>
+</body>
+</html>
