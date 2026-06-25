@@ -147,8 +147,19 @@ const AppTransporte = {
     /**
      * Llama al backend para descargar la etiqueta de una orden específica.
      * @param {string} orderId - El ID de la orden de transporte.
+     * @param {HTMLButtonElement} [boton] - (Opcional) El botón "Imprimir" que disparó la acción,
+     *        para dar feedback visual directamente en la fila de la tabla.
      */
-    async descargarEtiqueta(orderId) {
+    async descargarEtiqueta(orderId, boton = null) {
+        // Feedback visual directo en el botón pulsado, para que el usuario sepa
+        // que la impresión se está procesando SIN tener que cambiar de pestaña.
+        let textoOriginalBoton = null;
+        if (boton) {
+            textoOriginalBoton = boton.innerHTML;
+            boton.disabled = true;
+            boton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Imprimiendo...';
+        }
+
         this.setApiResponseLoading(true);
         try {
             const response = await fetch(`/llamar-api-etiquetas/${orderId}`, {
@@ -168,7 +179,7 @@ const AppTransporte = {
                             printWindow.print();
                         }, 500); 
                     };
-                    this.mostrarApiResponse({ status: "OK", mensaje: `La etiqueta para la orden ${orderId} se ha abierto para imprimir.` }, response.status);
+                    this.mostrarApiResponse({ status: "OK", mensaje: `La etiqueta para la orden ${orderId} se ha abierto para imprimir en una nueva pestaña del navegador.` }, response.status);
                 } else {
                     this.mostrarApiResponse({ error: 'No se pudo abrir la ventana de impresión. Asegúrate de que los bloqueadores de pop-ups estén desactivados.' }, 500);
                 }
@@ -182,8 +193,14 @@ const AppTransporte = {
             this.mostrarApiResponse({ error: 'Fallo la conexión con el backend' }, 500);
         } finally {
             this.setApiResponseLoading(false);
+            // Restaurar el estado original del botón.
+            if (boton) {
+                boton.disabled = false;
+                boton.innerHTML = textoOriginalBoton;
+            }
         }
     },
+
 
     /**
      * Actualiza el textarea para mostrar el número de albaranes seleccionados.
@@ -407,9 +424,13 @@ const AppTransporte = {
             if (!orderId) return;
 
             if (target.classList.contains('print-label-btn')) {
-                this.descargarEtiqueta(orderId);
-                new bootstrap.Tab(document.getElementById('post-tab')).show();
+                // Importante: NO cambiamos de pestaña. El área "Respuesta de la API" es
+                // común a todas las pestañas, por lo que el usuario verá el resultado sin
+                // perder el contexto de "Listar Órdenes". El feedback inmediato se da en el
+                // propio botón (spinner "Imprimiendo...").
+                this.descargarEtiqueta(orderId, target);
             }
+
 
             if (target.classList.contains('delete-order-btn')) {
                 if (confirm(`¿Estás seguro de que quieres eliminar la orden ${orderId}?`)) {

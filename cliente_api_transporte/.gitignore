@@ -1,0 +1,32 @@
+# --- Secretos y configuración local ---
+# NUNCA versionar el fichero .env con credenciales reales.
+.env
+*.env
+!.env.example
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+build/
+dist/
+*.egg-info/
+
+# --- Logs y temporales ---
+*.log
+*.tmp
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db

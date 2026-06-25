@@ -17,12 +17,15 @@ load_dotenv()
 app = Flask(__name__)
 
 # --- Configuración de la base de datos MySQL para el log ---
+# Las credenciales se leen desde variables de entorno (.env) para no exponerlas
+# en el código fuente.
 db_config_mysql = {
-    'host': '192.168.35.25',
-    'user': 'mmarco',
-    'password': '@System345',
-    'database': 'pract'
+    'host': os.environ.get('MYSQL_HOST'),
+    'user': os.environ.get('MYSQL_USER'),
+    'password': os.environ.get('MYSQL_PASSWORD'),
+    'database': os.environ.get('MYSQL_DATABASE')
 }
+
 
 def get_mysql_connection():
     """Establece conexión con la base de datos MySQL."""
@@ -614,4 +617,12 @@ def obtener_manifiesto_carga(fecha):
         return jsonify({"status": "error", "type": "internal_error", "message": f"Error interno del servidor: {e}"}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002, debug=True)
+    # La configuración se lee desde variables de entorno (.env).
+    # IMPORTANTE: FLASK_DEBUG debe ser "false" en producción. El debugger de Flask
+    # permite ejecución de código arbitrario, por lo que NUNCA debe activarse en
+    # un entorno accesible públicamente.
+    debug_mode = os.environ.get('FLASK_DEBUG', 'false').lower() == 'true'
+    host = os.environ.get('FLASK_HOST', '0.0.0.0')
+    port = int(os.environ.get('FLASK_PORT', '5002'))
+    app.run(host=host, port=port, debug=debug_mode)
+

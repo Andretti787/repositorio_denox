@@ -1,0 +1,30 @@
+# Evitar copiar secretos y ficheros innecesarios a la imagen Docker.
+
+# Secretos / configuración local (NUNCA dentro de la imagen)
+.env
+*.env
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+
+# Control de versiones / IDE
+.git/
+.gitignore
+.vscode/
+.idea/
+
+# Documentación y ficheros de prueba no necesarios en runtime
+*.md
+*.pdf
+test_db_connection.py
+transpororders_create_example.txt
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
