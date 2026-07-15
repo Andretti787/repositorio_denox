@@ -308,12 +308,12 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
                 SELECT d.COD_DIR 
                 FROM DIRECCIONES_CTE_WEB d 
                 JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
-                WHERE d.COD_CTE = %s AND d.COD_DIR = %s 
+                WHERE d.COD_CTE = %s AND d.COD_DIR = %s AND d.ACTIVO = 2
                 AND (d.COD_USER = %s OR c.COD_USER = %s)
             """
             cursor.execute(sql_val_dir, (cod_cte, cod_dir, usuario_actual, usuario_actual))
             if not cursor.fetchone():
-                flash(f"La Dirección '{cod_dir}' no es válida para el cliente '{cod_cte}' o no tiene permiso para usarla.", "danger")
+                flash(f"La Dirección '{cod_dir}' no es válida para el cliente '{cod_cte}', no tiene permiso o no está activa.", "danger")
                 return False, None, datos_para_repoblar
 
         # NUEVA VALIDACIÓN: Comprobar si la combinación COD_CTE y PEDIDO_CTE ya existe
@@ -369,7 +369,7 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
         try:
             # Recuperamos también el PRECIO para guardarlo
             # Modificamos la consulta para traer los 4 precios
-            cursor.execute("SELECT UD_EMB, PRECIO, PRECIO_2, PRECIO_3, PRECIO_4 FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
+            cursor.execute("SELECT UD_EMB, PRECIO, PRECIO_2, PRECIO_3, PRECIO_4, PRECIO_5 FROM ITMMASTER WHERE COD_ART = %s", (arti_linea,))
             item_maestro = cursor.fetchone()
             if not item_maestro:
                 flash(f"Artículo '{arti_linea}' inválido en línea {idx + 1}.", "danger")
@@ -384,7 +384,8 @@ def _validar_y_procesar_datos_pedido(form_data, es_muestra, estado_pedido, numpe
                 precio_a_usar = item_maestro.get('PRECIO_3') or 0.0
             elif tarifa_usuario == 4 and (item_maestro.get('PRECIO_4') or 0.0) > 0:
                 precio_a_usar = item_maestro.get('PRECIO_4') or 0.0
-
+            elif tarifa_usuario == 5 and (item_maestro.get('PRECIO_5') or 0.0) > 0:
+                precio_a_usar = item_maestro.get('PRECIO_5') or 0.0
 
             raw_ud_emb = item_maestro.get('UD_EMB')
             if raw_ud_emb is not None:
@@ -466,11 +467,11 @@ def agregar_pedido():
         if not es_valido:
             return render_template('pedido_form.html', **datos_para_repoblar)
 
+        cursor = g.db.cursor()
         # --- SI TODAS LAS VALIDACIONES PASAN, GENERAR NUMPED E INSERTAR ---
-        numped_nuevo = generar_numped()
+        numped_nuevo = generar_numped(cursor)
         fecha_creacion_actual = datetime.datetime.now() 
 
-        cursor = g.db.cursor()
         sql_insert_linea = """
             INSERT INTO PEDIDOS_WEB (NUMPED, ARTI, CANTIDAD, COD_CTE, COD_DIR,
                                      FECHA_CREACION, FECHA_EXP, PEDIDO_CTE, USUARIO, ESTADO, OBSERVACIONES, DESCUENTO1, DESCUENTO2, MUESTRA, PRECIO)
@@ -868,6 +869,7 @@ def sugerencias_articulo():
             SELECT 
                 COD_ART, DESCRIPCION, UD_EMB, STOCK_FAM,
                 CASE
+                    WHEN %s = 5 AND PRECIO_5 > 0 THEN PRECIO_5
                     WHEN %s = 4 AND PRECIO_4 > 0 THEN PRECIO_4
                     WHEN %s = 3 AND PRECIO_3 > 0 THEN PRECIO_3
                     WHEN %s = 2 AND PRECIO_2 > 0 THEN PRECIO_2
@@ -881,7 +883,7 @@ def sugerencias_articulo():
         search_term = '%' + query_param + '%'
         
         # Pasamos la tarifa del usuario para cada WHEN en el CASE, y luego los términos de búsqueda
-        params = (tarifa_usuario, tarifa_usuario, tarifa_usuario, search_term, search_term)
+        params = (tarifa_usuario, tarifa_usuario, tarifa_usuario, tarifa_usuario, search_term, search_term)
         cursor.execute(sql_query, params)
         resultados = cursor.fetchall()
 
@@ -964,7 +966,7 @@ def sugerencias_direccion_cliente():
     try:
         # Lógica base: direcciones asignadas específicamente al usuario O todas si el cliente le pertenece
         params = [cod_cte_seleccionado, usuario_actual, usuario_actual]
-        sql_conditions = "d.COD_CTE = %s AND (d.COD_USER = %s OR c.COD_USER = %s)"
+        sql_conditions = "d.COD_CTE = %s AND d.ACTIVO = 2 AND (d.COD_USER = %s OR c.COD_USER = %s)"
 
         # Añadir filtro de búsqueda si existe
         if query_param and query_param != "*":
@@ -1002,30 +1004,41 @@ def sugerencias_direccion_cliente():
         cursor.close()
     return jsonify(sugerencias=sugerencias_list)
 
-def generar_numped():
+def generar_numped(cursor=None):
     """
     Genera un número de pedido único con formato PED-YYMMDDHHMMSS-RRR.
     Asegura unicidad incluyendo segundos y un número aleatorio de 3 dígitos.
+    Si se proporciona un cursor, verifica en la BD que no exista.
     La longitud total es de 20 caracteres, compatible con VARCHAR(20).
     """
-    now = datetime.datetime.now()
-    # Formato: YYMMDDHHMMSS (12 caracteres)
-    timestamp_part = now.strftime("%y%m%d%H%M%S")
-    # Aleatorio de 3 dígitos (100-999)
-    aleatorio = random.randint(100, 999)
-    
-    # Formato: PED-YYMMDDHHMMSS-RRR
-    # Longitud: 4  +    12    + 1 +  3  = 20 caracteres
-    numped = f"PED-{timestamp_part}-{aleatorio:03d}"
-    
-    return numped
+    intentos = 0
+    while intentos < 10:
+        now = datetime.datetime.now()
+        # Formato: YYMMDDHHMMSS (12 caracteres)
+        timestamp_part = now.strftime("%y%m%d%H%M%S")
+        # Aleatorio de 3 dígitos (100-999)
+        aleatorio = random.randint(100, 999)
+        
+        # Formato: PED-YYMMDDHHMMSS-RRR
+        numped = f"PED-{timestamp_part}-{aleatorio:03d}"
+        
+        if cursor:
+            cursor.execute("SELECT COUNT(*) FROM PEDIDOS_WEB WHERE NUMPED = %s", (numped,))
+            if cursor.fetchone()[0] == 0:
+                return numped
+            intentos += 1
+            time.sleep(0.1) # Breve espera para cambiar el timestamp
+        else:
+            return numped
+            
+    return numped # Fallback en caso de fallo de bucle
 
 # Ejemplo de uso y prueba de longitud:
-if __name__ == '__main__': # Esto solo se ejecuta si corres este script directamente
+if __name__ == '__main__': # Esto solo se ejecuta si ejecutamos este script directamente
     print("Ejemplos de NUMPED generados:")
     for _ in range(5):
         np = generar_numped()
         print(f"  - NUMPED: {np}, Longitud: {len(np)}")
     
     #app.run(debug=True) # debug=True solo para desarrollo
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
