@@ -20,6 +20,9 @@
             <p><strong>Código Dirección:</strong> {{ pedido_cabecera.COD_DIR | default('N/A') }}</p>
             {% if direccion_completa %}
               <p><strong>Dirección Completa:</strong> {{ direccion_completa.DIR }}, {{ direccion_completa.CP }} {{ direccion_completa.CIUDAD }}, {{ direccion_completa.PROVINCIA }} ({{ direccion_completa.PAIS }})</p>
+              {% if direccion_completa.DESCRIPCION %}
+                <p><strong>Descripción Dirección:</strong> {{ direccion_completa.DESCRIPCION }}</p>
+              {% endif %}
             {% endif %}
           </div>
           <div class="col-md-6">

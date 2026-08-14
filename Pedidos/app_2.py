@@ -122,15 +122,16 @@ def index():
         clientes_filtro = cursor.fetchall()
 
         # Direcciones usadas en pedidos (con su descripción)
+        # No filtramos por COD_USER para mostrar todas las direcciones de pedidos ya registrados,
+        # aunque el representante de la dirección haya cambiado.
         sql_direcciones = """
-            SELECT DISTINCT pw.COD_DIR, d.DIR 
+            SELECT DISTINCT pw.COD_DIR, d.DIR, d.DESCRIPCION 
             FROM PEDIDOS_WEB pw 
             LEFT JOIN DIRECCIONES_CTE_WEB d ON pw.COD_CTE = d.COD_CTE AND pw.COD_DIR = d.COD_DIR 
             LEFT JOIN CLIENTES_WEB c ON pw.COD_CTE = c.COD_CTE
             WHERE pw.USUARIO = %s AND pw.COD_DIR IS NOT NULL AND pw.COD_DIR != ''
-            AND (d.COD_USER = %s OR c.COD_USER = %s)
         """
-        params_direcciones = [session['user_id'], session['user_id'], session['user_id']]
+        params_direcciones = [session['user_id']]
         if filter_cliente:
             sql_direcciones += " AND pw.COD_CTE = %s"
             params_direcciones.append(filter_cliente)
@@ -815,7 +816,7 @@ def ver_pedido(numped_a_ver):
                 if g.db.is_connected(): # Reutilizar la conexión si es posible
                     cursor_dir = g.db.cursor(dictionary=True) # Nuevo cursor
                     cursor_dir.execute("""
-                        SELECT d.DIR, d.CP, d.CIUDAD, d.PROVINCIA, d.PAIS 
+                        SELECT d.DIR, d.DESCRIPCION, d.CP, d.CIUDAD, d.PROVINCIA, d.PAIS 
                         FROM DIRECCIONES_CTE_WEB d
                         JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
                         WHERE d.COD_CTE = %s AND d.COD_DIR = %s
@@ -976,7 +977,7 @@ def sugerencias_direccion_cliente():
 
 
         sql_query = f"""
-            SELECT d.COD_DIR, d.DIR, d.CP, d.CIUDAD, d.PROVINCIA, d.PAIS, d.DEFECTO 
+            SELECT d.COD_DIR, d.DIR, d.DESCRIPCION, d.CP, d.CIUDAD, d.PROVINCIA, d.PAIS, d.DEFECTO 
             FROM DIRECCIONES_CTE_WEB d
             JOIN CLIENTES_WEB c ON d.COD_CTE = c.COD_CTE
             WHERE {sql_conditions}
@@ -991,6 +992,7 @@ def sugerencias_direccion_cliente():
             sugerencias_list.append({
                 'COD_DIR': row['COD_DIR'], 
                 'DIR': row['DIR'],
+                'DESCRIPCION': row['DESCRIPCION'],
                 'CP': row['CP'],
                 'CIUDAD': row['CIUDAD'],
                 'PROVINCIA': row['PROVINCIA'],

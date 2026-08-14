@@ -361,7 +361,12 @@
             if (data.sugerencias && data.sugerencias.length > 0) {
                 $codDirSelect.append(new Option('-- Seleccione una dirección --', ''));
                 data.sugerencias.forEach(dir => {
-                    let optionText = `${dir.COD_DIR} - ${dir.DIR || 'N/A'}`;
+                    let optionText = `${dir.COD_DIR} - `;
+                    if (dir.DESCRIPCION && dir.DIR) {
+                        optionText += `(${dir.DESCRIPCION}) ${dir.DIR}`;
+                    } else {
+                        optionText += `${dir.DESCRIPCION || dir.DIR || 'N/A'}`;
+                    }
                     if (dir.CIUDAD) optionText += `, ${dir.CIUDAD}`;
                     if (dir.CP) optionText += ` (${dir.CP})`;
                     

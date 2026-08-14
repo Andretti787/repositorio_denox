@@ -28,7 +28,7 @@
                 <option value="">Todas las direcciones</option>
                 {% for direccion in direcciones_filtro %}
                     <option value="{{ direccion.COD_DIR }}" {% if filter_direccion == direccion.COD_DIR %}selected{% endif %}>
-                        {{ direccion.COD_DIR }} - {{ direccion.DIR or 'Sin descripción' }}
+                        {{ direccion.COD_DIR }} - {{ direccion.DIR or 'Sin descripción' }}{% if direccion.DESCRIPCION %} ({{ direccion.DESCRIPCION }}){% endif %}
                     </option>
                 {% endfor %}
             </select>
