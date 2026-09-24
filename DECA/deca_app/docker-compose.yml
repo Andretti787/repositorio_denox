@@ -1,0 +1,49 @@
+# Despliegue de la aplicacion DeCA.
+#
+# EL FICHERO .env DEBE ESTAR EN ESTA MISMA CARPETA, EN EL HOST DONDE CORRE DOCKER.
+# NO entra en la imagen (Esta excluido en .dockerignore) ni se versiona (.gitignore).
+# Las credenciales se inyectan en runtime unicamente mediante 'env_file', que lee el
+# fichero .env del host y lo convierte en variables de entorno del contenedor.
+# Esto es la via mas robusta en CentOS/RHEL porque no depende de la interpolacion de
+# Compose ni del directorio desde el que se ejecute 'docker compose'.
+#
+# RECUERDE: si modifica docker-compose.yml o el .env, reconstruya el contenedor con
+#   docker compose up -d --build --force-recreate
+# 'docker compose restart' NO aplica cambios en la inyeccion de variables.
+
+services:
+  deca-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: deca-app
+    restart: unless-stopped
+    ports:
+      - "5010:5010"
+    env_file:
+      - .env
+    # Unica variable adicional no sensible: puerto de la aplicacion.
+    environment:
+      - APP_PORT=5010
+    volumes:
+      # Repositorio local persistente de los PDF generados (conservacion >= 1 ano).
+      # La etiqueta :Z ajusta el contexto SELinux en CentOS/RHEL; comentela si da
+      # problemas de permisos (la aplicacion funciona igual sin montar este volumen).
+      - deca_pdf:/app/deca_pdf:Z
+    networks:
+      - deca-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5010/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  deca-network:
+    driver: bridge
+
+volumes:
+  deca_pdf:
+    driver: local
+

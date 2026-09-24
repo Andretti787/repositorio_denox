@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeCA - Documento electrónico de Control Administrativo</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <h1>Gestión DeCA</h1>
+    <p>Documento electrónico de Control Administrativo de los albaranes de transporte
+       (Resolución de 5 de junio de 2026 - DT 8a Ley de Movilidad Sostenible - Orden FOM/2861/2012)</p>
+</header>
+<main>
+    <div class="toolbar">
+        <label><input type="checkbox" id="chk-pendientes" checked> Solo pendientes</label>
+        <button id="btn-refrescar" type="button">Refrescar</button>
+        <button id="btn-generar-seleccion" type="button" class="primario">Generar DeCA de seleccionados</button>
+        <label>Mostrar <input type="number" id="num-limite" value="200" min="1" max="1000" class="num"></label>
+        <label>Origen
+            <select id="sel-origen" class="texto">
+                <option value="">Todos</option>
+            </select>
+        </label>
+        <label>Transportista
+            <input type="text" id="txt-transportista" class="texto" placeholder="Nombre o codigo">
+        </label>
+        <label>Buscar <input type="text" id="txt-filtro" class="texto" placeholder="N. albaran o destino"></label>
+        <span class="ayuda">Pulsa el encabezado de columna para ordenar.
+            Filas en verde = DeCA ya generado. El cargador contractual del PDF usa el origen.
+            Naturaleza fija: MENAJE DE PLÁSTICO.</span>
+    </div>
+    <div id="mensajes" class="mensaje"></div>
+    <div id="resumen-seleccion" class="resumen" style="display:none"></div>
+    <table>
+        <thead>
+        <tr>
+            <th><input type="checkbox" id="chk-todos" title="Seleccionar todos"></th>
+            <th class="ordenable" data-campo="numalbaran">Albaran</th>
+            <th class="ordenable" data-campo="fecha_transporte">Fecha</th>
+            <th class="ordenable" data-campo="transportista_nombre">Transportista</th>
+            <th class="ordenable" data-campo="origen">Origen</th>
+            <th class="ordenable" data-campo="destino_ciudad">Destino</th>
+            <th class="ordenable" data-campo="peso_kg">Peso (kg)</th>
+            <th class="ordenable" data-campo="num_pallets">Palets</th>
+            <th class="ordenable" data-campo="matricula_tractor">Mat. tractor *</th>
+            <th class="ordenable" data-campo="matricula_remolque">Mat. remolque</th>
+            <th class="ordenable" data-campo="deca_estado">Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="cuerpo-tabla"></tbody>
+    </table>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

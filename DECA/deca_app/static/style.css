@@ -1,0 +1,150 @@
+/* Estilos de la interfaz de gestion de DeCA */
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2933;
+}
+
+header {
+    background: #12395c;
+    color: #ffffff;
+    padding: 16px 24px;
+}
+
+header h1 { margin: 0 0 4px 0; font-size: 20px; }
+header p { margin: 0; font-size: 12px; opacity: 0.85; }
+
+main { padding: 16px 24px 40px 24px; }
+
+.toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+}
+
+.ayuda { font-size: 12px; color: #52606d; }
+
+button {
+    border: 1px solid #c8d2dc;
+    background: #ffffff;
+    color: #12395c;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+button:hover { background: #eef3f8; }
+
+button.primario {
+    background: #1f7a3f;
+    border-color: #176030;
+    color: #ffffff;
+}
+
+button.primario:hover { background: #176030; }
+
+.mensaje { min-height: 20px; font-size: 13px; margin-bottom: 8px; }
+.mensaje.ok { color: #176030; }
+.mensaje.error { color: #a3232b; font-weight: bold; }
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #ffffff;
+    font-size: 12px;
+}
+
+th, td {
+    border: 1px solid #dde5ec;
+    padding: 4px 6px;
+    text-align: left;
+    vertical-align: middle;
+}
+
+thead th {
+    background: #e8eef5;
+    position: sticky;
+    top: 0;
+    font-size: 11px;
+    text-transform: uppercase;
+}
+
+tbody tr:nth-child(even) { background: #fafcfe; }
+
+input.matricula {
+    width: 105px;
+    padding: 3px 4px;
+    border: 1px solid #c8d2dc;
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+}
+
+input.matricula.invalido { border-color: #a3232b; background: #fdecec; }
+
+.estado-ok { color: #176030; font-weight: bold; }
+.estado-pendiente { color: #8a6d00; }
+
+.acciones { white-space: nowrap; }
+a { color: #1d5c99; margin-right: 6px; }
+
+.resumen { margin:12px 0; padding:12px 16px; border-radius:6px; background:#f4f7fb; border:1px solid #c5d4e8; }
+.resumen.error { background:#fdecea; border-color:#f5c2c0; }
+.resumen h3 { margin:0 0 8px 0; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+
+tbody tr.fila-generado {
+    background: #e8f6ee !important;
+}
+tbody tr.fila-generado:nth-child(even) {
+    background: #dff2e6 !important;
+}
+tbody tr.fila-pendiente:nth-child(even) {
+    background: #fafcfe;
+}
+th.ordenable {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+}
+th.ordenable:hover {
+    background: #d5e2f0;
+}
+th.ordenable.ord-asc::after {
+    content: " ▲";
+    font-size: 10px;
+    color: #1d5c99;
+}
+th.ordenable.ord-desc::after {
+    content: " ▼";
+    font-size: 10px;
+    color: #1d5c99;
+}
+select.texto {
+    min-width: 160px;
+    padding: 4px 6px;
+    border: 1px solid #c8d2dc;
+    border-radius: 3px;
+    font-size: 13px;
+}
+input.numero.editable-num {
+    width: 80px;
+    padding: 3px 4px;
+    border: 1px solid #c8d2dc;
+    border-radius: 3px;
+    text-align: right;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+}
+input.numero.editable-num.invalido {
+    border-color: #a3232b;
+    background: #fdecec;
+}
+

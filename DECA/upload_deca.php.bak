@@ -1,0 +1,54 @@
+<?php
+header('Content-Type: application/json; charset=utf-8');
+
+// 1. Configuración de directorio de almacenamiento (el directorio debe tener permisos de escritura)
+$uploadDir = __DIR__ . '/deca_storage/';
+
+// Crear directorio si no existe
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0755, true);
+}
+
+// 2. Verificar si la solicitud contiene un archivo
+if (!isset($_FILES['pdf']) || $_FILES['pdf']['error'] !== UPLOAD_ERR_OK) {
+    http_response_code(400);
+    echo json_encode(['error' => 'No se recibió ningún archivo PDF válido']);
+    exit;
+}
+
+$file = $_FILES['pdf'];
+
+// 3. Validación de seguridad: tipo y tamaño
+$allowedMime = ['application/pdf'];
+if (!in_array($file['type'], $allowedMime)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Solo se permiten archivos PDF']);
+    exit;
+}
+
+// Límite de 5 MB según normativa DeCA
+if ($file['size'] > 5 * 1024 * 1024) {
+    http_response_code(400);
+    echo json_encode(['error' => 'El archivo excede el límite de 5 MB']);
+    exit;
+}
+
+// 4. Generar nombre de archivo único (evitar sobreescritura y path traversal)
+$extension = 'pdf';
+$uniqueName = bin2hex(random_bytes(16)) . '.' . $extension; // Ej: a1b2c3d4e5f6.pdf
+$targetPath = $uploadDir . $uniqueName;
+
+// 5. Almacenar el archivo
+if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+    http_response_code(500);
+    echo json_encode(['error' => 'Error al guardar el archivo']);
+    exit;
+}
+
+// 6. Construir URL de descarga directa HTTPS
+// Ajusta según tu nombre de dominio real
+$baseUrl = 'https://tudominio.com/deca_storage/';
+$downloadUrl = $baseUrl . $uniqueName;
+
+// 7. Devolver la URL
+echo json_encode(['url' => $downloadUrl]);
