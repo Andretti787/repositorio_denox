@@ -102,16 +102,16 @@ verificado sobre el esquema real:
 | Numero de albaran | `LIVE.SDELIVERY.SDHNUM_0` |
 | Fecha de realizacion del transporte | `LIVE.SDELIVERY.SHIDAT_0` |
 | Cargador contractual (nombre) | `LIVE.FACILITY.FCYNAM_0` del sitio de carga (`STOFCY_0`); se puede fijar con `DECA_CARGADOR_NOMBRE` |
-| Cargador contractual (NIF y domicilio) | Variables `DECA_CARGADOR_NIF` y `DECA_CARGADOR_DOMICILIO` (son constantes de la empresa) |
-| Destinatario | `LIVE.BPCUSTOMER.BPCNAM_0` del cliente del albaran (`BPCORD_0`) |
+| Cargador contractual (nombre, NIF y domicilio) | `LIVE.FACILITY` (`FCYNAM_0`, `CRN_0`) + `LIVE.BPADDRESS` del sitio de carga (`STOFCY_0`). Solo si la BD no aporta NIF/domicilio se usa `DECA_CARGADOR_NIF` / `DECA_CARGADOR_DOMICILIO` |
 | Transportista efectivo | `LIVE.BPARTNER.BPRNAM_0` o `LIVE.BPCARRIER.BPTNAM_0` del transportista (`BPTNUM_0`) |
 | NIF del transportista efectivo | `LIVE.BPARTNER.CRN_0` |
-| Origen | Sitio de carga: `LIVE.FACILITY` (`FCY_0` = `SDELIVERY.STOFCY_0`) |
-| Destino | `SDELIVERY.BPDCTY_0`, `BPDPOSCOD_0` y `BPDCRYNAM_0`/`BPDCRY_0` (direccion de entrega) |
-| Naturaleza de la mercancia | Hasta 3 descripciones `LIVE.ITMMASTER.ITMDES1_0` de las lineas de `LIVE.SDELIVERYD` |
-| Peso de la mercancia | `LIVE.SDELIVERY.GROWEI_0` (kg) |
-| Observaciones | `LIVE.BPDLVCUST.DLVTEX_0` -> `LIVE.TEXCLOB.TEXTE_0` |
-| Matriculas y cambios (4 campos editables) | `LIVE.ZDECA` (editables en la interfaz) |
+| Origen / lugar de carga | `BPADDRESS.POSCOD_0` + `CTY_0` del sitio de carga (CP + ciudad) |
+| Destino | `SDELIVERY.BPDPOSCOD_0`, `BPDCTY_0` y `BPDCRYNAM_0`/`BPDCRY_0` (CP + ciudad + pais). **Editable** en la interfaz (`ZDESTINO_0`) |
+| Naturaleza de la mercancia | Valor fijo: `MENAJE DE PLÁSTICO` (no se consultan las lineas de albaran) |
+| Peso de la mercancia | `LIVE.SDELIVERY.GROWEI_0` (kg), **editable** (`ZDECA.ZPESO_0`) |
+| Numero de palets | `LIVE.SDELIVERY.PACNBR_0`, **editable** (`ZDECA.ZPALETS_0`) |
+| Observaciones | **Editables** en la interfaz (`ZDECA.ZOBSERV_0`). Ya no se leen de `BPDLVCUST`/`TEXCLOB` |
+| Matriculas (editables) | `LIVE.ZDECA` (tractor y remolque) |
 
 Los campos editables y el estado del DeCA se guardan en `LIVE.ZDECA`:
 
@@ -120,11 +120,13 @@ Los campos editables y el estado del DeCA se guardan en `LIVE.ZDECA`:
 | `SDHNUM_0` | VARCHAR(20) PK | Numero de albaran (`SDELIVERY.SDHNUM_0`) |
 | `ZMATTRA_0` | NVARCHAR(15) | Matricula del vehiculo tractor |
 | `ZMATREM_0` | NVARCHAR(15) | Matricula del remolque |
-| `ZCAMTRA_0` | NVARCHAR(15) | Cambio de matricula del vehiculo tractor |
-| `ZCAMREM_0` | NVARCHAR(15) | Cambio de matricula del remolque |
+| `ZPESO_0` | FLOAT | Peso editable (si es NULL se usa `GROWEI_0`) |
+| `ZPALETS_0` | INT | Palets editables (si es NULL se usa `PACNBR_0`) |
+| `ZDESTINO_0` | NVARCHAR(160) | Destino editable (si es NULL se usa CP + ciudad + pais) |
+| `ZOBSERV_0` | NVARCHAR(500) | Observaciones editables que se imprimen en el DeCA |
 | `ZDECAURL_0` | NVARCHAR(500) | URL publica del DeCA generado |
 | `ZDECAEST_0` | SMALLINT | 0 = pendiente, 1 = DeCA generado |
-| `CREDAT_0` / `UPDDAT_0` | DATE | Fecha de creacion / modificacion del registro |
+| `CREDAT_0` / `UPDDAT_0` | DATETIME | Fecha y hora de creacion / modificacion del registro |
 
 > Si las columnas de tu Sage X3 difieren, ajusta la consulta `_SQL_BASE` de
 > `app/database.py` (los JOIN y alias estan comentados y agrupados para facilitarlo).
@@ -133,8 +135,8 @@ Los campos editables y el estado del DeCA se guardan en `LIVE.ZDECA`:
 
 | Metodo | Ruta | Descripcion |
 |---|---|---|
-| GET | `/albaranes?solo_pendientes=true&limite=200&desplazamiento=0&filtro=texto` | Lista de albaranes con los datos de solo lectura y los 4 campos editables. El historico tiene decenas de miles de filas: use `limite` (por defecto 200, maximo `ALBARANES_LIMITE_MAX` = 1000), `desplazamiento` para paginar y `filtro` para buscar por numero de albaran o destinatario |
-| PUT | `/albaranes/{numalbaran}` | Valida y guarda (UPSERT en `LIVE.ZDECA`) los 4 campos editables |
+| GET | `/albaranes?solo_pendientes=true&limite=200&desplazamiento=0&filtro=texto` | Lista de albaranes con los datos de solo lectura y los campos editables. El historico tiene decenas de miles de filas: use `limite` (por defecto 200, maximo `ALBARANES_LIMITE_MAX` = 1000), `desplazamiento` para paginar, `filtro` (nº de albaran, destino u origen), `origen`, `transportista`, `ordenar_por` y `orden_desc` |
+| PUT | `/albaranes/{numalbaran}` | Valida y guarda (UPSERT en `LIVE.ZDECA`) los campos editables: matriculas, peso, palets, observaciones y destino |
 | POST | `/albaranes/{numalbaran}/deca` | Genera el PDF con QR, lo sube por HTTPS y guarda la URL |
 | GET | `/albaranes/{numalbaran}/deca/pdf` | Descarga local del PDF generado |
 | POST | `/albaranes/{numalbaran}/deca/email` | Envia el PDF al email indicado |
@@ -145,10 +147,17 @@ Los campos editables y el estado del DeCA se guardan en `LIVE.ZDECA`:
 # 1) Listar albaranes pendientes
 curl -s "http://localhost:5010/albaranes?solo_pendientes=true"
 
-# 2) Guardar las matriculas de un albaran (se normalizan a mayusculas)
+# 2) Guardar los campos editables de un albaran (matriculas, peso, palets y destino).
+#    "destino_auto" es el destino que muestra la pantalla (CP + ciudad + pais): si
+#    coincide con "destino", no se fija una modificacion manual.
 curl -s -X PUT "http://localhost:5010/albaranes/ALB000123" \
   -H "Content-Type: application/json" \
-  -d '{"matricula_tractor":"1234BCD","matricula_remolque":"R5678BCD","cambio_matricula_tractor":"","cambio_matricula_remolque":""}'
+  -d '{"matricula_tractor":"1234BCD","matricula_remolque":"R5678BCD","peso_kg":3000,"num_pallets":12,"observaciones":"Entregar por la tarde en muelle 3","destino":"Poligono Malpica, nave 12 - 50016 Zaragoza","destino_auto":"50001 ZARAGOZA (ESPANA)"}'
+
+# 2b) Volver al destino del albaran: enviar "destino": null o "" 
+curl -s -X PUT "http://localhost:5010/albaranes/ALB000123" \
+  -H "Content-Type: application/json" \
+  -d '{"matricula_tractor":"1234BCD","destino":null}'
 
 # 3) Generar y subir el DeCA (respuesta: {"url":"https://denox.eu/DECA/deca_storage/DECA_ALB000123_ab12cd34ef56.pdf", ...})
 curl -s -X POST "http://localhost:5010/albaranes/ALB000123/deca"
@@ -161,11 +170,33 @@ curl -s -X POST "http://localhost:5010/albaranes/ALB000123/deca/email" \
 ## 7. Flujo en la interfaz
 
 1. La pantalla carga los albaranes (`GET /albaranes`). Los datos del albaran son de solo lectura.
-2. El usuario escribe las 4 matriculas; al salir del campo se guardan automaticamente (`PUT`).
+2. El usuario escribe las matriculas, el peso, los palets, las observaciones y, si es necesario,
+   el destino; al salir del campo se guardan automaticamente (`PUT`). Si el destino se deja vacio
+   se vuelve a usar el del albaran (`BPDPOSCOD_0` + `BPDCTY_0` + pais).
 3. Con el boton **Generar DeCA** (por fila o por seleccion multiple) la app:
    recupera los datos de SQL Server, genera el PDF nativo con QR, lo sube al endpoint
    HTTPS, guarda la URL en `ZDECAURL_0` y marca el albaran como generado (`ZDECAEST_0 = 1`).
 4. Si el albaran ya esta generado, se ofrece **Descargar** y **Enviar email**.
+
+### Destino y observaciones editables
+
+**Destino.** El destino que se imprime en el DeCA se compone asi:
+
+1. `LIVE.ZDECA.ZDESTINO_0` si el usuario lo ha editado en la pantalla.
+2. Si no, el destino del albaran en Sage: `BPDPOSCOD_0` (CP) + `BPDCTY_0` (ciudad) + pais.
+
+**Observaciones.** Se escriben en la propia fila de la tabla y se guardan en
+`LIVE.ZDECA.ZOBSERV_0`. Ya **no** se leen de `BPDLVCUST.DLVTEX_0`/`TEXCLOB` (el `OUTER APPLY`
+que las traia se ha eliminado de `_SQL_BASE`). En un DeCA multi-albaran se concatenan las
+observaciones de los albaranes seleccionados (sin repetir).
+
+En el PDF y en la consolidacion multi (`deca-multi`) se aplica la misma regla, de modo que
+cada destino y cada observacion respetan lo editado en pantalla.
+
+> **Requiere las columnas `ZDESTINO_0` y `ZOBSERV_0`.** Ejecute `sql/create_zdeca.sql` (o los
+> `ALTER TABLE` que aparecen en ese fichero) **antes** de usar estas funcionalidades: si falta
+> alguna columna, el listado devuelve `42S22 El nombre de columna 'ZDESTINO_0' no es valido`
+> y la app indica que hay que ejecutar el script.
 
 ## 8. QR y URL de descarga (paso necesario en el PHP)
 
@@ -226,10 +257,13 @@ sobre `deca_storage` sin afectar a los datos de `LIVE.ZDECA`.
 El historico de albaranes es muy amplio (mas de 75.000 filas), por lo que el listado:
 
 - Devuelve **200 filas por defecto** (`limite`, maximo `ALBARANES_LIMITE_MAX`) y permite
-  paginar (`desplazamiento`) y buscar (`filtro`) por numero de albaran o destinatario.
-- Completa la **naturaleza de la mercancia** en una segunda consulta ligera: hacerlo dentro
-  de la consulta del listado multiplicaba el tiempo de respuesta (de 0,7 s a 14 s con 200
-  filas) y podia saturar las conexiones de SQL Server (provocando `HYT00 Login timeout`).
+  paginar (`desplazamiento`) y buscar (`filtro`) por numero de albaran, destino u origen.
+- Permite filtrar por **origen** (`origen`), por **transportista** (`transportista`) y
+  ordenar por cualquier columna visible (`ordenar_por` + `orden_desc`).
+- La **naturaleza de la mercancia** es un valor fijo (`MENAJE DE PLÁSTICO`), por lo que no se
+  consultan las lineas de albaran (`SDELIVERYD`/`ITMMASTER`): resolverla dentro de la consulta
+  del listado multiplicaba el tiempo de respuesta (de 0,7 s a 14 s con 200 filas) y podia
+  saturar las conexiones de SQL Server (provocando `HYT00 Login timeout`).
 
 Tiempos medidos sobre la base real: 200 filas en ~0,7 s y 500 filas en ~0,95 s.
 

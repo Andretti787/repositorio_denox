@@ -147,4 +147,60 @@ input.numero.editable-num.invalido {
     border-color: #a3232b;
     background: #fdecec;
 }
+input.texto.editable-texto {
+    width: 100%;
+    min-width: 170px;
+    padding: 3px 4px;
+    border: 1px solid #c8d2dc;
+    border-radius: 3px;
+    font-size: 12px;
+}
+input.texto.editable-texto:focus {
+    border-color: #1d5c99;
+    background: #f4f9ff;
+}
+input.texto.editable-obs {
+    min-width: 190px;
+    font-size: 11px;
+}
+input.texto.editable-transp {
+    min-width: 180px;
+    font-size: 11px;
+}
+input.texto.editable-transp-nif {
+    min-width: 90px;
+    font-size: 11px;
+}
+button.nuevo {
+    background: #2e7d32;
+    color: #fff;
+    border: 1px solid #245c28;
+}
+.panel-manual {
+    margin: 12px 0 16px 0;
+    padding: 14px 18px;
+    border: 1px solid #c5d4e8;
+    border-radius: 8px;
+    background: #f7fafd;
+}
+.panel-manual h3 { margin: 0 0 6px 0; }
+.panel-manual .nota { margin: 0 0 12px 0; font-size: 12px; color: #55606b; }
+.panel-manual .rejilla {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 10px 16px;
+}
+.panel-manual label { display: block; font-size: 12px; font-weight: 600; }
+.panel-manual label.ancha { margin-top: 10px; }
+.panel-manual input.texto, .panel-manual select.texto { width: 100%; font-weight: 400; }
+.cargador-info {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: #eef4fb;
+    border: 1px solid #d3e0f0;
+    font-size: 12px;
+}
+.cargador-info p { margin: 2px 0; }
+.acciones-manual { margin-top: 14px; display: flex; gap: 10px; }
 

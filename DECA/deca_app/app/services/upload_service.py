@@ -49,7 +49,8 @@ def subir_pdf(pdf_bytes: bytes, nombre_fichero: str) -> str:
         raise ErrorSubida(f"La URL de subida debe usar HTTPS: {url_endpoint}")
 
     try:
-        with httpx.Client(verify=_contexto_tls(), timeout=30.0) as cliente:
+        headers = {"User-Agent": settings.deca_user_agent}
+        with httpx.Client(verify=_contexto_tls(), timeout=30.0, headers=headers) as cliente:
             respuesta = cliente.post(
                 url_endpoint,
                 files={"pdf": (nombre_fichero, pdf_bytes, "application/pdf")},

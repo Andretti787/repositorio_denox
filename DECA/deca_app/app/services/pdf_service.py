@@ -16,10 +16,15 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import Image, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 from ..config import settings
+from ..database import componer_destino
 
 logger = logging.getLogger("deca.pdf")
 
 NATURALEZA_FIJA = "MENAJE DE PLÁSTICO"
+
+# Titulo del documento: aparece en el encabezado del PDF y en sus metadatos.
+TITULO_DECA = "CARTA DE PORTE Y DOCUMENTO ELECTRÓNICO DE CONTROL ADMINISTRATIVO (DeCA)"
+TITULO_DECA_MULTI = TITULO_DECA + " - MULTI-ALBARÁN"
 
 _FUENTES_REG = [
     Path(r"C:\Windows\Fonts\arial.ttf"),
@@ -105,17 +110,14 @@ def _valor(albaran: dict, clave: str, defecto: str = "-") -> str:
 
 
 def formatear_destino(albaran: dict) -> str:
-    cp = str(albaran.get("destino_cp") or "").strip()
-    ciudad = str(albaran.get("destino_ciudad") or "").strip()
-    pais = str(albaran.get("destino_pais") or "").strip()
-    partes = []
-    if cp:
-        partes.append(cp)
-    if ciudad:
-        partes.append(ciudad)
-    if pais:
-        partes.append(f"({pais})")
-    return " ".join(partes).strip()
+    """Texto del lugar de destino que se imprime en el DeCA.
+
+    Se reutiliza la misma logica que la capa de datos (database.componer_destino)
+    para que pantalla y PDF nunca muestren destinos distintos:
+      1. Destino editado manualmente (LIVE.ZDECA.ZDESTINO_0).
+      2. Destino del albaran en Sage: CP + ciudad + (pais).
+    """
+    return componer_destino(albaran)
 
 
 def _estilos():
@@ -182,18 +184,20 @@ def _construir_pdf(titulo: str, campos: list[tuple[str, str]], url: str) -> byte
 
     caja_cargador = [
         Paragraph("<b>Firma del cargador</b>", estilos["firma"]),
-        Spacer(1, 18 * mm),
-        Paragraph("Nombre y fecha: _______________________", estilos["firma"]),
+        Spacer(1, 16 * mm),
+        Paragraph("Nombre y fecha: _____________________", estilos["firma"]),
     ]
     caja_transportista = [
         Paragraph("<b>Firma del transportista</b>", estilos["firma"]),
-        Spacer(1, 18 * mm),
-        Paragraph("Nombre y fecha: _______________________", estilos["firma"]),
+        Spacer(1, 16 * mm),
+        Paragraph("Nombre y fecha: _____________________", estilos["firma"]),
+        Spacer(1, 3 * mm),
+        Paragraph("DNI: ________________________________", estilos["firma"]),
     ]
     tabla_firmas = Table(
         [[caja_cargador, caja_transportista]],
         colWidths=[87 * mm, 87 * mm],
-        rowHeights=[42 * mm],
+        rowHeights=[45 * mm],
     )
     tabla_firmas.setStyle(TableStyle([
         ("BOX", (0, 0), (0, 0), 0.8, colors.black),
@@ -264,7 +268,8 @@ def _campos_comunes(
         ("NIF del transportista efectivo", _valor(albaran, "transportista_nif")),
         ("Origen / lugar de carga", _valor(albaran, "origen")),
         ("Lugar de destino", destino_html),
-        ("Naturaleza de la mercancía", escape(NATURALEZA_FIJA)),
+        ("Naturaleza de la mercancía", _valor(albaran, "naturaleza_mercancia",
+                                              escape(NATURALEZA_FIJA))),
         ("Peso de la mercancía", peso_texto),
         ("Número de palets", palets_texto),
         (
@@ -295,7 +300,7 @@ def generar_pdf_deca(albaran: dict) -> tuple[bytes, str, str]:
 
     campos = _campos_comunes(albaran, destino, peso_texto, str(palets))
     pdf_bytes = _construir_pdf(
-        "DOCUMENTO ELECTRÓNICO DE CONTROL ADMINISTRATIVO (DeCA)",
+        TITULO_DECA,
         campos,
         url,
     )
@@ -338,7 +343,7 @@ def generar_pdf_deca_multi(albaran_consolidado: dict) -> tuple[bytes, str, str]:
         albaran_consolidado, destino_html, peso_texto, f"{palets} (total)"
     )
     pdf_bytes = _construir_pdf(
-        "DOCUMENTO ELECTRÓNICO DE CONTROL ADMINISTRATIVO (DeCA) - MULTI-ALBARÁN",
+        TITULO_DECA_MULTI,
         campos,
         url,
     )

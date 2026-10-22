@@ -8,20 +8,28 @@ const txtFiltro = document.getElementById("txt-filtro");
 const selOrigen = document.getElementById("sel-origen");
 const txtTransportista = document.getElementById("txt-transportista");
 const divResumen = document.getElementById("resumen-seleccion");
-
-const RE_ACTUAL = /^\d{4}[A-Z]{3}$/;
-const RE_REMOLQUE = /^R\d{4}[A-Z]{3}$/;
-const RE_ANTIGUA = /^[A-Z]{1,2}\d{4}[A-Z]{0,2}$/;
+const panelManual = document.getElementById("panel-manual");
+const selManOrigen = document.getElementById("man-origen");
+const txtManFecha = document.getElementById("man-fecha");
+const txtManReferencia = document.getElementById("man-referencia");
+const txtManTransportista = document.getElementById("man-transportista");
+const txtManTransportistaNif = document.getElementById("man-transportista-nif");
+const txtManMatTractor = document.getElementById("man-mat-tractor");
+const txtManMatRemolque = document.getElementById("man-mat-remolque");
+const txtManPeso = document.getElementById("man-peso");
+const txtManPalets = document.getElementById("man-palets");
+const txtManDestino = document.getElementById("man-destino");
+const txtManObservaciones = document.getElementById("man-observaciones");
+const divManCargador = document.getElementById("man-cargador");
+const btnManGenerar = document.getElementById("btn-manual-generar");
 
 let ordenarPor = "fecha_transporte";
 let ordenDesc = true;
 
-function matriculaValida(valor) {
-    return RE_ACTUAL.test(valor) || RE_REMOLQUE.test(valor) || RE_ANTIGUA.test(valor);
-}
+// Sin validacion de formato de matricula: se admiten espanolas y extranjeras.
 
 function normalizar(valor) {
-    return String(valor || "").trim().toUpperCase().replace(/[\s-]/g, "");
+    return String(valor || "").trim().toUpperCase();
 }
 
 function esc(texto) {
@@ -30,7 +38,8 @@ function esc(texto) {
         .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-function formatearDestino(a) {
+// Destino tal y como viene del albaran en Sage (CP + ciudad + pais)
+function destinoAutomatico(a) {
     const cp = String(a.destino_cp || "").trim();
     const ciudad = String(a.destino_ciudad || "").trim();
     const pais = String(a.destino_pais || "").trim();
@@ -39,6 +48,11 @@ function formatearDestino(a) {
     if (ciudad) partes.push(ciudad);
     if (pais) partes.push("(" + pais + ")");
     return partes.join(" ");
+}
+
+// Destino efectivo: el editado manualmente si existe; si no, el del albaran
+function formatearDestino(a) {
+    return String(a.destino || "").trim() || destinoAutomatico(a);
 }
 
 function mostrarMensaje(texto, esError) {
@@ -101,7 +115,7 @@ async function cargarOrigenes() {
 }
 
 async function cargarAlbaranes() {
-    cuerpoTabla.innerHTML = "<tr><td colspan=\"12\">Cargando albaranes...</td></tr>";
+    cuerpoTabla.innerHTML = "<tr><td colspan=\"14\">Cargando albaranes...</td></tr>";
     try {
         const parametros = new URLSearchParams({
             solo_pendientes: chkPendientes.checked,
@@ -117,7 +131,7 @@ async function cargarAlbaranes() {
         actualizarIndicadoresOrden();
         mostrarMensaje("Mostrando " + albaranes.length + " albaran(es).");
     } catch (e) {
-        cuerpoTabla.innerHTML = "<tr><td colspan=\"12\">Error al cargar los albaranes</td></tr>";
+        cuerpoTabla.innerHTML = "<tr><td colspan=\"14\">Error al cargar los albaranes</td></tr>";
         mostrarMensaje("Error al cargar los albaranes: " + e.message, true);
     }
 }
@@ -135,9 +149,48 @@ function celdaNumero(albaran, campo) {
         + "\" value=\"" + esc(valor) + "\"></td>";
 }
 
+// Destino editable: se muestra el destino efectivo y se recuerda el automatico
+// en data-auto, para que el backend no fije una modificacion innecesaria.
+function celdaDestino(albaran) {
+    const efectivo = formatearDestino(albaran);
+    const automatico = destinoAutomatico(albaran);
+    return "<td><input class=\"texto editable-texto\" data-campo=\"destino\""
+        + " data-auto=\"" + esc(automatico) + "\" maxlength=\"160\""
+        + " title=\"Edite el destino solo si es necesario; dejelo vacio para usar el del albaran\""
+        + " value=\"" + esc(efectivo) + "\"></td>";
+}
+
+// Celda de texto editable generica (observaciones, transportista, NIF...)
+function celdaTextoEditable(albaran, campo, clase, maxLen, marcador, ayuda) {
+    const valor = String(albaran[campo] || "");
+    return "<td><input class=\"texto editable-texto " + clase + "\" data-campo=\"" + campo + "\""
+        + " maxlength=\"" + maxLen + "\""
+        + (marcador ? " placeholder=\"" + marcador + "\"" : "")
+        + (ayuda ? " title=\"" + ayuda + "\"" : "")
+        + " value=\"" + esc(valor) + "\"></td>";
+}
+
+// Observaciones editables por albaran: se imprimen en el DeCA
+function celdaObservaciones(albaran) {
+    return celdaTextoEditable(albaran, "observaciones", "editable-obs", 320, "Observaciones",
+        "Observaciones que se imprimen en el DeCA");
+}
+
+// Transportista efectivo editable (si se deja vacio se usa el del albaran)
+function celdaTransportista(albaran) {
+    return celdaTextoEditable(albaran, "transportista_nombre", "editable-transp", 80,
+        "Transportista", "Transportista efectivo que figura en el DeCA");
+}
+
+// NIF del transportista efectivo (editable)
+function celdaTransportistaNif(albaran) {
+    return celdaTextoEditable(albaran, "transportista_nif", "editable-transp-nif", 20,
+        "NIF", "NIF del transportista efectivo");
+}
+
 function pintarTabla(albaranes) {
     if (!albaranes.length) {
-        cuerpoTabla.innerHTML = "<tr><td colspan=\"12\">No hay albaranes que mostrar</td></tr>";
+        cuerpoTabla.innerHTML = "<tr><td colspan=\"14\">No hay albaranes que mostrar</td></tr>";
         return;
     }
     const vistos = {};
@@ -168,11 +221,13 @@ function pintarTabla(albaranes) {
             + "<td><input type=\"checkbox\" class=\"seleccion\"></td>"
             + "<td>" + esc(a.numalbaran) + "</td>"
             + "<td>" + esc(a.fecha_transporte) + "</td>"
-            + "<td>" + esc(a.transportista_nombre) + "</td>"
+            + celdaTransportista(a)
+            + celdaTransportistaNif(a)
             + "<td>" + esc(a.origen) + "</td>"
-            + "<td>" + esc(dest) + "</td>"
+            + celdaDestino(a)
             + celdaNumero(a, "peso_kg")
             + celdaNumero(a, "num_pallets")
+            + celdaObservaciones(a)
             + celdaInput(a, "matricula_tractor")
             + celdaInput(a, "matricula_remolque")
             + "<td class=\"" + (generado ? "estado-ok" : "estado-pendiente") + "\">" + estado + "</td>"
@@ -183,18 +238,32 @@ function pintarTabla(albaranes) {
 
 function leerMatriculas(fila) {
     const datos = {};
-    fila.querySelectorAll("input.matricula, input.editable-num").forEach(function (input) {
-        const campo = input.dataset.campo;
-        if (campo === "matricula_tractor" || campo === "matricula_remolque") {
-            datos[campo] = normalizar(input.value) || null;
-        } else if (campo === "peso_kg") {
-            const v = String(input.value || "").trim().replace(",", ".");
-            datos[campo] = v === "" ? null : parseFloat(v);
-        } else if (campo === "num_pallets") {
-            const v = String(input.value || "").trim();
-            datos[campo] = v === "" ? null : parseInt(v, 10);
-        }
-    });
+    fila.querySelectorAll("input.matricula, input.editable-num, input.editable-texto")
+        .forEach(function (input) {
+            const campo = input.dataset.campo;
+            if (campo === "matricula_tractor" || campo === "matricula_remolque") {
+                datos[campo] = normalizar(input.value) || null;
+            } else if (campo === "peso_kg") {
+                const v = String(input.value || "").trim().replace(",", ".");
+                datos[campo] = v === "" ? null : parseFloat(v);
+            } else if (campo === "num_pallets") {
+                const v = String(input.value || "").trim();
+                datos[campo] = v === "" ? null : parseInt(v, 10);
+            } else if (campo === "destino") {
+                const v = String(input.value || "").trim();
+                datos.destino = v === "" ? null : v;
+                datos.destino_auto = (input.dataset.auto || "") || null;
+            } else if (campo === "observaciones") {
+                const v = String(input.value || "").trim();
+                datos.observaciones = v === "" ? null : v;
+            } else if (campo === "transportista_nombre") {
+                const v = String(input.value || "").trim();
+                datos.transportista_nombre = v === "" ? null : v;
+            } else if (campo === "transportista_nif") {
+                const v = String(input.value || "").trim();
+                datos.transportista_nif = v === "" ? null : v;
+            }
+        });
     datos.transportista_codigo = fila.dataset.transportista || null;
     return datos;
 }
@@ -210,9 +279,7 @@ function validarFila(fila) {
             if (obligatorio) ok = false;
             return;
         }
-        const valido = matriculaValida(valor);
-        input.classList.toggle("invalido", !valido);
-        if (!valido) ok = false;
+        input.classList.remove("invalido");
     });
     fila.querySelectorAll("input.editable-num").forEach(function (input) {
         const v = String(input.value || "").trim().replace(",", ".");
@@ -351,7 +418,8 @@ async function enviarEmail(numalbaran) {
 
 cuerpoTabla.addEventListener("focusout", async function (evento) {
     if (!evento.target.classList.contains("matricula")
-        && !evento.target.classList.contains("editable-num")) return;
+        && !evento.target.classList.contains("editable-num")
+        && !evento.target.classList.contains("editable-texto")) return;
     const fila = evento.target.closest("tr");
     if (!validarFila(fila)) return;
     try {
@@ -360,6 +428,12 @@ cuerpoTabla.addEventListener("focusout", async function (evento) {
         const datos = leerMatriculas(fila);
         if (datos.peso_kg != null) fila.dataset.peso = String(datos.peso_kg);
         if (datos.num_pallets != null) fila.dataset.palets = String(datos.num_pallets);
+        const inputDestino = fila.querySelector("input.editable-texto[data-campo='destino']");
+        if (inputDestino) {
+            // Si se dejo vacio se vuelve al destino del albaran (automatico)
+            if (!datos.destino) inputDestino.value = inputDestino.dataset.auto || "";
+            fila.dataset.destino = inputDestino.value.trim();
+        }
         mostrarMensaje("Datos guardados para " + fila.dataset.sdhnum);
     } catch (e) {
         mostrarMensaje("Error al guardar: " + e.message, true);
@@ -395,6 +469,120 @@ chkTodos.addEventListener("change", function () {
         casilla.checked = chkTodos.checked;
     });
 });
+
+// ---------------------------------------------------------------------------
+// DeCA sin albaran: formulario con arrastre de datos del cargador por origen
+// ---------------------------------------------------------------------------
+
+// Origenes con detalle del cargador (se cachean para arrastrar los datos)
+let origenesDetalle = [];
+
+async function cargarOrigenesDetalle() {
+    try {
+        origenesDetalle = await pedirJson("/albaranes/origenes-detalle");
+    } catch (e) {
+        console.warn("No se pudieron cargar los origenes con detalle:", e.message);
+        origenesDetalle = [];
+        return;
+    }
+    selManOrigen.innerHTML = "<option value=\"\">Seleccione un origen...</option>";
+    origenesDetalle.forEach(function (o) {
+        const opt = document.createElement("option");
+        opt.value = o.origen;
+        opt.textContent = o.origen + " - " + (o.cargador_nombre || "");
+        selManOrigen.appendChild(opt);
+    });
+}
+
+function pintarCargadorManual() {
+    const elegido = origenesDetalle.find(function (o) {
+        return o.origen === selManOrigen.value;
+    });
+    if (!elegido) {
+        divManCargador.innerHTML = "";
+        return;
+    }
+    divManCargador.innerHTML =
+        "<p><strong>Cargador contractual arrastrado del origen:</strong></p>"
+        + "<p><strong>Nombre:</strong> " + esc(elegido.cargador_nombre || "-") + "</p>"
+        + "<p><strong>NIF:</strong> " + esc(elegido.cargador_nif || "-") + "</p>"
+        + "<p><strong>Domicilio:</strong> " + esc(elegido.cargador_domicilio || "-") + "</p>"
+        + "<p><strong>Naturaleza de la mercancia:</strong> "
+        + esc(elegido.naturaleza_mercancia || "-") + "</p>";
+}
+
+function abrirPanelManual() {
+    if (!origenesDetalle.length) {
+        cargarOrigenesDetalle();
+    }
+    if (!txtManFecha.value) {
+        txtManFecha.value = new Date().toISOString().slice(0, 10);
+    }
+    panelManual.style.display = "block";
+    selManOrigen.focus();
+}
+
+function cerrarPanelManual() {
+    panelManual.style.display = "none";
+}
+
+async function generarDecaManual() {
+    const origen = selManOrigen.value;
+    const matTractor = normalizar(txtManMatTractor.value);
+    const matRemolque = normalizar(txtManMatRemolque.value);
+    txtManMatTractor.value = matTractor;
+    txtManMatRemolque.value = matRemolque;
+
+    if (!origen) {
+        mostrarMensaje("Seleccione el origen del DeCA", true);
+        return;
+    }
+    if (!matTractor) {
+        txtManMatTractor.classList.add("invalido");
+        mostrarMensaje("Indique la matricula del vehiculo tractor", true);
+        return;
+    }
+    txtManMatTractor.classList.remove("invalido");
+    txtManMatRemolque.classList.remove("invalido");
+
+    const carga = {
+        origen: origen,
+        fecha_transporte: txtManFecha.value || null,
+        destino: txtManDestino.value.trim() || null,
+        transportista_nombre: txtManTransportista.value.trim() || null,
+        transportista_nif: txtManTransportistaNif.value.trim() || null,
+        matricula_tractor: matTractor,
+        matricula_remolque: matRemolque || null,
+        peso_kg: txtManPeso.value === "" ? null : parseFloat(txtManPeso.value),
+        num_pallets: txtManPalets.value === "" ? null : parseInt(txtManPalets.value, 10),
+        observaciones: txtManObservaciones.value.trim() || null
+    };
+
+    btnManGenerar.disabled = true;
+    btnManGenerar.textContent = "Generando...";
+    try {
+        const resultado = await pedirJson("/albaranes/deca-manual", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(carga)
+        });
+        txtManReferencia.value = resultado.numalbaran;
+        mostrarMensaje(resultado.mensaje + " -> " + resultado.url);
+        divManCargador.innerHTML +=
+            "<p><strong>Resultado:</strong> <a href=\"" + esc(resultado.url)
+            + "\" target=\"_blank\">Descargar DeCA " + esc(resultado.numalbaran) + "</a></p>";
+    } catch (e) {
+        mostrarMensaje("Error al generar el DeCA sin albaran: " + e.message, true);
+    } finally {
+        btnManGenerar.disabled = false;
+        btnManGenerar.textContent = "Generar DeCA";
+    }
+}
+
+document.getElementById("btn-manual").addEventListener("click", abrirPanelManual);
+document.getElementById("btn-manual-cancelar").addEventListener("click", cerrarPanelManual);
+document.getElementById("btn-manual-generar").addEventListener("click", generarDecaManual);
+selManOrigen.addEventListener("change", pintarCargadorManual);
 
 document.getElementById("btn-refrescar").addEventListener("click", async function () {
     await cargarOrigenes();

@@ -81,6 +81,8 @@ class Settings(BaseSettings):
 
     # --- Endpoint externo de subida del DeCA ---
     deca_upload_url: str = 'https://denox.eu/DECA/upload_deca.php'
+    # User-Agent enviado al endpoint de subida (algunos WAF lo exigen)
+    deca_user_agent: str = 'DeCA-Gestion/1.0 (+https://denox.eu)'
     # URL publica base de los PDF. Debe coincidir con la variable baseUrl del PHP
     deca_base_url: str = 'https://denox.eu/DECA/deca_storage/'
 

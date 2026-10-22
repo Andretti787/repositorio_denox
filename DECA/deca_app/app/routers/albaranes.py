@@ -1,5 +1,6 @@
 """Endpoints de la API REST de albaranes y generacion del DeCA."""
 import logging
+from datetime import date
 from pathlib import Path
 
 import pyodbc
@@ -8,7 +9,15 @@ from fastapi.responses import FileResponse
 
 from .. import database
 from ..config import directorio_pdf, settings, variables_ausentes
-from ..models import AlbaranOut, DecaMultiRequest, DecaResponse, EmailRequest, MatriculasUpdate
+from ..models import (
+    AlbaranOut,
+    DecaManualRequest,
+    DecaMultiRequest,
+    DecaResponse,
+    EmailRequest,
+    MatriculasUpdate,
+    OrigenDetalle,
+)
 from ..services import email_service, pdf_service, upload_service
 from ..services.pdf_service import formatear_destino
 
@@ -39,6 +48,29 @@ def _traducir_error_sql(exc: pyodbc.Error) -> tuple[int, str]:
             f"{settings.db_database or 'DB_DATABASE sin definir'}"
         )
         return 503, f"No se pudo conectar con SQL Server ({destino}): {detalle[:200]}"
+
+    # Columna inexistente: casi siempre falta ejecutar la migracion de LIVE.ZDECA
+    if sqlstate == "42S22" and any(
+        columna in detalle.upper()
+        for columna in (
+            "ZDESTINO_0",
+            "ZOBSERV_0",
+            "ZTRANSP_0",
+            "ZTRANSNIF_0",
+            "ZORIGEN_0",
+            "ZFECHA_0",
+            "ZPESO_0",
+            "ZPALETS_0",
+            "ZMATTRA_0",
+            "ZMATREM_0",
+            "ZDECAURL_0",
+        )
+    ):
+        return 500, (
+            f"Error de SQL Server ({sqlstate}): {detalle[:300]}. "
+            "Falta una columna en LIVE.ZDECA: ejecute el script sql/create_zdeca.sql "
+            "sobre la base de datos para crearla."
+        )
     return 500, f"Error de SQL Server ({sqlstate}): {detalle[:300]}"
 
 
@@ -75,6 +107,27 @@ def _apilar_destinos(albaranes: list[dict]) -> list[str]:
     return destinos
 
 
+def _apilar_observaciones(albaranes: list[dict]) -> str:
+    """Une las observaciones editadas de los albaranes consolidados.
+
+    El PDF imprime un unico campo de observaciones, por lo que se concatenan
+    (sin repetir) las de cada albaran seleccionado.
+    """
+    return _unir_distintos(albaranes, "observaciones", "; ")
+
+
+def _unir_distintos(albaranes: list[dict], campo: str, separador: str = "; ") -> str:
+    """Une los valores distintos de un campo (sin repetir) en un solo texto."""
+    partes: list[str] = []
+    vistos: set[str] = set()
+    for a in albaranes:
+        texto = str(a.get(campo) or "").strip()
+        if texto and texto not in vistos:
+            vistos.add(texto)
+            partes.append(texto)
+    return separador.join(partes)
+
+
 def _consolidar_albaranes(albaranes: list[dict]) -> dict:
     peso_total = sum(float(a.get("peso_kg") or 0) for a in albaranes)
     palets_totales = sum(int(float(a.get("num_pallets") or 0)) for a in albaranes)
@@ -86,18 +139,23 @@ def _consolidar_albaranes(albaranes: list[dict]) -> dict:
         "cargador_nombre": (p.get("cargador_nombre") or p.get("origen") or ""),
         "cargador_nif": p.get("cargador_nif") or "",
         "cargador_domicilio": p.get("cargador_domicilio") or "",
-        "transportista_nombre": p.get("transportista_nombre") or "",
-        "transportista_nif": p.get("transportista_nif") or "",
+        # Si los albaranes seleccionados son de transportistas distintos se listan todos
+        "transportista_nombre": _unir_distintos(albaranes, "transportista_nombre", " / "),
+        "transportista_nif": _unir_distintos(albaranes, "transportista_nif", " / "),
         "origen": p.get("origen") or "",
         "destino_ciudad": p.get("destino_ciudad") or "",
         "destino_cp": p.get("destino_cp") or "",
         "destino_pais": p.get("destino_pais") or "",
+        # Destino efectivo del primer albaran (manual o CP + ciudad)
+        "destino": p.get("destino") or "",
         "destino_apilado": "\n".join(destinos),
-        "naturaleza_mercancia": database.NATURALEZA_FIJA,
+        # La naturaleza depende del cargador; se listan todas si hay varias
+        "naturaleza_mercancia": _unir_distintos(albaranes, "naturaleza_mercancia", " / ")
+        or database.NATURALEZA_FIJA,
         "peso_kg": peso_total,
         "num_pallets": palets_totales,
         "autorizacion_especial": p.get("autorizacion_especial") or "",
-        "observaciones": "",
+        "observaciones": _apilar_observaciones(albaranes),
         "matricula_tractor": p.get("matricula_tractor"),
         "matricula_remolque": p.get("matricula_remolque"),
     }
@@ -140,6 +198,105 @@ def listar_origenes(solo_pendientes: bool = False):
         logger.error("Error SQL al listar origenes: %s", exc)
         codigo, mensaje = _traducir_error_sql(exc)
         raise HTTPException(status_code=codigo, detail=mensaje) from exc
+
+
+@router.get("/origenes-detalle", response_model=list[OrigenDetalle])
+def listar_origenes_detalle():
+    """Origenes con los datos del cargador contractual (para el DeCA sin albaran)."""
+    try:
+        return database.listar_origenes_detalle()
+    except pyodbc.Error as exc:
+        logger.error("Error SQL al listar origenes con detalle: %s", exc)
+        codigo, mensaje = _traducir_error_sql(exc)
+        raise HTTPException(status_code=codigo, detail=mensaje) from exc
+
+
+@router.post("/deca-manual", response_model=DecaResponse)
+def generar_deca_manual(datos: DecaManualRequest):
+    """Genera un DeCA sin albaran.
+
+    Se rellenan los campos editables en pantalla y los datos del cargador
+    contractual se arrastran del origen seleccionado (nombre, NIF, domicilio y
+    naturaleza de la mercancia). El documento se sube al endpoint y se registra
+    en LIVE.ZDECA con una referencia propia.
+    """
+    try:
+        cargador = database.obtener_cargador(origen=datos.origen)
+    except pyodbc.Error as exc:
+        logger.error("Error SQL al resolver el cargador del origen %s: %s", datos.origen, exc)
+        codigo, mensaje = _traducir_error_sql(exc)
+        raise HTTPException(status_code=codigo, detail=mensaje) from exc
+
+    if not cargador:
+        raise HTTPException(
+            status_code=404,
+            detail=f"No se encontro el cargador del origen '{datos.origen}'",
+        )
+
+    referencia = database.generar_referencia_manual()
+    albaran = {
+        "numalbaran": referencia,
+        "fecha_transporte": (datos.fecha_transporte or "").strip()
+        or date.today().isoformat(),
+        "cargador_nombre": cargador.get("cargador_nombre") or "",
+        "cargador_nif": cargador.get("cargador_nif") or "",
+        "cargador_domicilio": cargador.get("cargador_domicilio") or "",
+        "transportista_nombre": (datos.transportista_nombre or "").strip(),
+        "transportista_nif": (datos.transportista_nif or "").strip(),
+        "origen": cargador.get("origen") or datos.origen,
+        "destino": (datos.destino or "").strip(),
+        "destino_ciudad": "",
+        "destino_cp": "",
+        "destino_pais": "",
+        "naturaleza_mercancia": cargador.get("naturaleza_mercancia")
+        or database.NATURALEZA_FIJA,
+        "peso_kg": float(datos.peso_kg or 0),
+        "num_pallets": int(datos.num_pallets or 0),
+        "autorizacion_especial": "",
+        "observaciones": (datos.observaciones or "").strip(),
+        "matricula_tractor": datos.matricula_tractor,
+        "matricula_remolque": datos.matricula_remolque,
+    }
+
+    try:
+        pdf_bytes, nombre_fichero, url_prevista = pdf_service.generar_pdf_deca(albaran)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    except Exception as exc:
+        logger.exception("Error inesperado generando el PDF del DeCA sin albaran")
+        raise HTTPException(
+            status_code=500, detail=f"Error al generar el PDF: {exc}"
+        ) from exc
+
+    (_directorio_pdf() / nombre_fichero).write_bytes(pdf_bytes)
+
+    try:
+        url_final = upload_service.subir_pdf(pdf_bytes, nombre_fichero)
+    except upload_service.ErrorSubida as exc:
+        raise HTTPException(status_code=502, detail=str(exc)) from exc
+
+    if url_final != url_prevista:
+        logger.warning("La URL devuelta (%s) difiere de la del QR (%s)", url_final, url_prevista)
+
+    try:
+        database.guardar_deca_manual(referencia, albaran, url_final)
+    except pyodbc.Error as exc:
+        logger.critical(
+            "El DeCA sin albaran se subio (%s) pero no se pudo registrar: %s", url_final, exc
+        )
+        _, mensaje = _traducir_error_sql(exc)
+        raise HTTPException(
+            status_code=500,
+            detail=f"PDF subido correctamente ({url_final}) pero no se pudo registrar en la base de datos: {mensaje}",
+        ) from exc
+
+    logger.info("DeCA sin albaran %s generado: %s", referencia, url_final)
+    return DecaResponse(
+        numalbaran=referencia,
+        url=url_final,
+        estado=1,
+        mensaje=f"DeCA sin albaran generado y subido correctamente ({referencia})",
+    )
 
 
 @router.put("/{numalbaran}", response_model=AlbaranOut)

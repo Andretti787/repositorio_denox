@@ -7,7 +7,7 @@ Mapeo de campos (esquema real comprobado en la base de datos x3):
   - Cliente:            LIVE.BPCUSTOMER (solo para busqueda/filtro)
   - Cargador/empresa:   LIVE.FACILITY (FCYNAM_0, CRN_0) + LIVE.BPADDRESS (domicilio)
   - Transportista:      LIVE.BPARTNER (BPRNAM_0, CRN_0) + LIVE.BPCARRIER.BPTNAM_0
-  - Observaciones:      LIVE.BPDLVCUST.DLVTEX_0 -> LIVE.TEXCLOB.TEXTE_0
+  - Observaciones:      LIVE.ZDECA.ZOBSERV_0 (editables por albaran en la pantalla)
   - Campos editables:   LIVE.ZDECA (matriculas, URL y estado del DeCA)
 
 La naturaleza de la mercancia es un valor fijo ("MENAJE DE PLASTICO"): no se
@@ -29,6 +29,25 @@ logger = logging.getLogger("deca.db")
 pyodbc.pooling = True
 
 NATURALEZA_FIJA = "MENAJE DE PLÁSTICO"
+
+# Naturaleza de la mercancia en funcion del NIF del cargador contractual.
+# Ampliable: anada aqui los NIF de sus cargadores con el texto que deba figurar en el DeCA.
+NATURALEZAS_POR_CARGADOR = {
+    "A50040112": "MENAJE DE PLÁSTICO",
+    "B85851368": "Plásticos inyectados",
+}
+
+
+def normalizar_nif(valor) -> str:
+    """Normaliza un NIF: sin espacios, guiones ni puntos y en mayusculas."""
+    if valor is None:
+        return ""
+    return re.sub(r"[\s\-\.]", "", str(valor)).upper()
+
+
+def naturaleza_por_cargador(cargador_nif) -> str:
+    """Devuelve la naturaleza de la mercancia segun el NIF del cargador."""
+    return NATURALEZAS_POR_CARGADOR.get(normalizar_nif(cargador_nif), NATURALEZA_FIJA)
 
 
 def _cadena_conexion() -> str:
@@ -66,40 +85,54 @@ _SQL_ORIGEN = (
     "NULLIF(LTRIM(RTRIM(CAST(ADR.CTY_0 AS NVARCHAR(40)))), '')"
     "))), '')"
 )
+
+# Expresion SQL del domicilio del cargador (direccion del sitio de carga)
+_SQL_DOMICILIO_CARGADOR = (
+    "NULLIF(LTRIM(RTRIM(CONCAT("
+    "NULLIF(LTRIM(RTRIM(ADR.BPAADDLIG_0)), ''), N' ', "
+    "NULLIF(LTRIM(RTRIM(ADR.BPAADDLIG_1)), ''), N' ', "
+    "NULLIF(LTRIM(RTRIM(ADR.POSCOD_0)), ''), N' ', "
+    "NULLIF(LTRIM(RTRIM(ADR.CTY_0)), ''), N' ', "
+    "NULLIF(LTRIM(RTRIM(ADR.CRYNAM_0)), '')"
+    "))), '')"
+)
+
+# Expresion SQL del transportista efectivo: valor editado en ZDECA si existe;
+# si no, el nombre de BPARTNER/BPCARRIER y, en ultimo termino, el codigo.
+_SQL_TRANSPORTISTA = (
+    "COALESCE("
+    "NULLIF(LTRIM(RTRIM(Z.ZTRANSP_0)), ''), "
+    "NULLIF(LTRIM(RTRIM(TPT.BPRNAM_0)), ''), "
+    "NULLIF(LTRIM(RTRIM(CPT.BPTNAM_0)), ''), "
+    "DEL.BPTNUM_0)"
+)
+
+# Expresion SQL del NIF del transportista efectivo (editable en ZDECA)
+_SQL_TRANSPORTISTA_NIF = (
+    "COALESCE(NULLIF(LTRIM(RTRIM(Z.ZTRANSNIF_0)), ''), TPT.CRN_0)"
+)
 _SQL_BASE = """
 SELECT
     DEL.SDHNUM_0                       AS numalbaran,
     CONVERT(varchar, DEL.SHIDAT_0, 23) AS fecha_transporte,
     COALESCE(NULLIF(LTRIM(RTRIM(FCY.FCYNAM_0)), ''), DEL.STOFCY_0) AS cargador_nombre,
     NULLIF(LTRIM(RTRIM(CAST(FCY.CRN_0 AS NVARCHAR(40)))), '') AS cargador_nif,
-    NULLIF(LTRIM(RTRIM(
-        CONCAT(
-            NULLIF(LTRIM(RTRIM(ADR.BPAADDLIG_0)), ''), N' ',
-            NULLIF(LTRIM(RTRIM(ADR.BPAADDLIG_1)), ''), N' ',
-            NULLIF(LTRIM(RTRIM(ADR.POSCOD_0)), ''), N' ',
-            NULLIF(LTRIM(RTRIM(ADR.CTY_0)), ''), N' ',
-            NULLIF(LTRIM(RTRIM(ADR.CRYNAM_0)), '')
-        )
-    )), '')                            AS cargador_domicilio,
-    COALESCE(
-        NULLIF(LTRIM(RTRIM(TPT.BPRNAM_0)), ''),
-        NULLIF(LTRIM(RTRIM(CPT.BPTNAM_0)), ''),
-        DEL.BPTNUM_0
-    )                                  AS transportista_nombre,
+    {DOMICILIO_EXPR}                   AS cargador_domicilio,
+    {TRANSPORTISTA_EXPR}              AS transportista_nombre,
+    NULLIF(LTRIM(RTRIM(Z.ZTRANSP_0)), '') AS transportista_manual,
     DEL.BPTNUM_0                       AS transportista_codigo,
-    TPT.CRN_0                          AS transportista_nif,
+    {TRANSPORTISTA_NIF_EXPR}           AS transportista_nif,
+    NULLIF(LTRIM(RTRIM(Z.ZTRANSNIF_0)), '') AS transportista_nif_manual,
     {ORIGEN_EXPR} AS origen,
     DEL.BPDCTY_0                       AS destino_ciudad,
     DEL.BPDPOSCOD_0                    AS destino_cp,
     COALESCE(NULLIF(LTRIM(RTRIM(DEL.BPDCRYNAM_0)), ''), DEL.BPDCRY_0) AS destino_pais,
+    NULLIF(LTRIM(RTRIM(Z.ZDESTINO_0)), '') AS destino_manual,
     CAST('' AS NVARCHAR(240))          AS naturaleza_mercancia,
     COALESCE(Z.ZPESO_0, DEL.GROWEI_0)  AS peso_kg,
     CAST(COALESCE(Z.ZPALETS_0, DEL.PACNBR_0) AS FLOAT) AS num_pallets,
     CAST('' AS NVARCHAR(60))           AS autorizacion_especial,
-    CASE SUBSTRING(OBS.TEXTE_0, 1, 1)
-        WHEN '{' THEN ''
-        ELSE SUBSTRING(REPLACE(REPLACE(OBS.TEXTE_0, CHAR(13), ' '), CHAR(10), ' '), 1, 149)
-    END                                AS observaciones,
+    NULLIF(LTRIM(RTRIM(Z.ZOBSERV_0)), '') AS observaciones_manual,
     COALESCE(NULLIF(LTRIM(RTRIM(Z.ZMATTRA_0)), ''), MAT.ZMATTRA_0) AS matricula_tractor,
     COALESCE(NULLIF(LTRIM(RTRIM(Z.ZMATREM_0)), ''), MAT.ZMATREM_0) AS matricula_remolque,
     Z.ZDECAURL_0                       AS deca_url,
@@ -118,14 +151,11 @@ OUTER APPLY (
 ) ADR
 LEFT JOIN LIVE.ZDECA Z        ON Z.SDHNUM_0 = DEL.SDHNUM_0
 LEFT JOIN LIVE.ZDECA_MATRICULA MAT ON MAT.BPTNUM_0 = DEL.BPTNUM_0
-OUTER APPLY (
-    SELECT TOP 1 TEX.TEXTE_0
-    FROM LIVE.BPDLVCUST BPD
-    LEFT JOIN LIVE.TEXCLOB TEX ON TEX.CODE_0 = BPD.DLVTEX_0
-    WHERE BPD.BPCNUM_0 = DEL.BPCORD_0
-) OBS
 """
 _SQL_BASE = _SQL_BASE.replace("{ORIGEN_EXPR}", _SQL_ORIGEN)
+_SQL_BASE = _SQL_BASE.replace("{DOMICILIO_EXPR}", _SQL_DOMICILIO_CARGADOR)
+_SQL_BASE = _SQL_BASE.replace("{TRANSPORTISTA_EXPR}", _SQL_TRANSPORTISTA)
+_SQL_BASE = _SQL_BASE.replace("{TRANSPORTISTA_NIF_EXPR}", _SQL_TRANSPORTISTA_NIF)
 
 
 
@@ -153,6 +183,54 @@ def _limpiar_texto(valor) -> str:
     return re.sub(r"\s+", " ", str(valor)).strip()
 
 
+def componer_destino(datos: dict) -> str:
+    """Texto del lugar de destino.
+
+    Prioridad:
+      1. Valor manual editado por el usuario (LIVE.ZDECA.ZDESTINO_0).
+      2. Destino del albaran en Sage: CP + ciudad + (pais).
+    """
+    manual = _limpiar_texto(datos.get("destino_manual")) or _limpiar_texto(datos.get("destino"))
+    if manual:
+        return manual
+    cp = _limpiar_texto(datos.get("destino_cp"))
+    ciudad = _limpiar_texto(datos.get("destino_ciudad"))
+    pais = _limpiar_texto(datos.get("destino_pais"))
+    partes = []
+    if cp:
+        partes.append(cp)
+    if ciudad:
+        partes.append(ciudad)
+    if pais:
+        partes.append(f"({pais})")
+    return " ".join(partes).strip()
+
+
+def _normalizar_texto_libre(valor, maximo: int) -> str | None:
+    """Normaliza un texto editable: espacios simples, recorte y limite de longitud.
+
+    Devuelve None cuando el campo viene vacio (se guardara NULL en la base).
+    """
+    texto = _limpiar_texto(valor)
+    return texto[:maximo] if texto else None
+
+
+def _normalizar_destino(destino, destino_auto) -> str | None:
+    """Normaliza el destino editable antes de guardarlo en ZDESTINO_0.
+
+    Devuelve None cuando no hay modificacion manual: bien porque el campo esta
+    vacio (se usara el destino de SDELIVERY), bien porque el texto coincide con
+    el destino calculado que ya muestra la pantalla.
+    """
+    texto = _limpiar_texto(destino)
+    if not texto:
+        return None
+    automatico = _limpiar_texto(destino_auto)
+    if automatico and texto.upper() == automatico.upper():
+        return None
+    return texto[:160]
+
+
 def _fila_a_dict(cursor, fila) -> dict:
     """Convierte una fila pyodbc en diccionario con tipos serializables."""
     columnas = [col[0] for col in cursor.description]
@@ -173,7 +251,25 @@ def _fila_a_dict(cursor, fila) -> dict:
     datos["cargador_nombre"] = cargador_nombre
     datos["cargador_nif"] = cargador_nif
     datos["cargador_domicilio"] = cargador_domicilio
-    datos["naturaleza_mercancia"] = NATURALEZA_FIJA
+    # Naturaleza en funcion del NIF del cargador contractual
+    datos["naturaleza_mercancia"] = naturaleza_por_cargador(cargador_nif)
+    # Transportista efectivo: valor editado en ZDECA si existe
+    datos["transportista_manual"] = _limpiar_texto(datos.get("transportista_manual"))
+    datos["transportista_nombre"] = (
+        datos["transportista_manual"]
+        or _limpiar_texto(datos.get("transportista_nombre"))
+        or _limpiar_texto(datos.get("transportista_codigo"))
+    )
+    datos["transportista_nif_manual"] = _limpiar_texto(datos.get("transportista_nif_manual"))
+    datos["transportista_nif"] = (
+        datos["transportista_nif_manual"] or _limpiar_texto(datos.get("transportista_nif"))
+    )
+    # Destino: manual (ZDESTINO_0) si existe; si no, CP + ciudad + (pais)
+    datos["destino_manual"] = _limpiar_texto(datos.get("destino_manual"))
+    datos["destino"] = componer_destino(datos)
+    # Observaciones: texto editable guardado en ZOBSERV_0 (ya no viene de BPDLVCUST)
+    datos["observaciones_manual"] = _limpiar_texto(datos.get("observaciones_manual"))
+    datos["observaciones"] = datos["observaciones_manual"]
     # Normalizar palets a entero y peso a float
     try:
         datos["num_pallets"] = int(float(datos.get("num_pallets") or 0))
@@ -222,10 +318,7 @@ def listar_albaranes(
     columnas_orden = {
         "numalbaran": "DEL.SDHNUM_0",
         "fecha_transporte": "DEL.SHIDAT_0",
-        "transportista_nombre": (
-            "COALESCE(NULLIF(LTRIM(RTRIM(TPT.BPRNAM_0)), ''), "
-            "NULLIF(LTRIM(RTRIM(CPT.BPTNAM_0)), ''), DEL.BPTNUM_0)"
-        ),
+        "transportista_nombre": _SQL_TRANSPORTISTA,
         "origen": _SQL_ORIGEN,
         "destino_ciudad": "DEL.BPDCTY_0",
         "destino_cp": "DEL.BPDPOSCOD_0",
@@ -259,9 +352,8 @@ def listar_albaranes(
     if transportista:
         comodin_t = f"%{transportista}%"
         condiciones.append(
-            "(COALESCE(NULLIF(LTRIM(RTRIM(TPT.BPRNAM_0)), ''), "
-            "NULLIF(LTRIM(RTRIM(CPT.BPTNAM_0)), ''), DEL.BPTNUM_0) LIKE ? "
-            "OR DEL.BPTNUM_0 LIKE ? OR TPT.CRN_0 LIKE ?)"
+            "(" + _SQL_TRANSPORTISTA + " LIKE ? "
+            "OR DEL.BPTNUM_0 LIKE ? OR " + _SQL_TRANSPORTISTA_NIF + " LIKE ?)"
         )
         parametros.extend([comodin_t, comodin_t, comodin_t])
 
@@ -270,9 +362,9 @@ def listar_albaranes(
         comodin = f"%{filtro}%"
         condiciones.append(
             "(DEL.SDHNUM_0 LIKE ? OR CLI.BPCNAM_0 LIKE ? OR DEL.BPDCTY_0 LIKE ? OR "
-            + _SQL_ORIGEN + " LIKE ?)"
+            + _SQL_ORIGEN + " LIKE ? OR " + _SQL_TRANSPORTISTA + " LIKE ?)"
         )
-        parametros.extend([comodin, comodin, comodin, comodin])
+        parametros.extend([comodin, comodin, comodin, comodin, comodin])
 
     sql = _SQL_BASE
     if condiciones:
@@ -313,6 +405,131 @@ WHERE {_SQL_ORIGEN} IS NOT NULL
         cursor.execute("SET LOCK_TIMEOUT 10000")
         cursor.execute(sql)
         return [str(fila[0]).strip() for fila in cursor.fetchall() if fila and fila[0]]
+
+
+def listar_origenes_detalle() -> list[dict]:
+    """Origenes (CP + ciudad) junto con los datos del cargador contractual.
+
+    Para cada origen se toma el sitio de carga con mas albaranes, de modo que el
+    formulario de DeCA sin albaran pueda arrastrar nombre, NIF y domicilio.
+    """
+    sql = f"""
+WITH por_sitio AS (
+    SELECT
+        {_SQL_ORIGEN} AS origen,
+        DEL.STOFCY_0  AS sitio,
+        COUNT(*)      AS albaranes
+    FROM LIVE.SDELIVERY DEL
+    OUTER APPLY (
+        SELECT TOP 1 A.POSCOD_0, A.CTY_0
+        FROM LIVE.BPADDRESS A
+        WHERE A.BPANUM_0 = DEL.STOFCY_0
+          AND A.BPATYP_0 = 3
+    ) ADR
+    WHERE {_SQL_ORIGEN} IS NOT NULL
+    GROUP BY {_SQL_ORIGEN}, DEL.STOFCY_0
+),
+elegido AS (
+    SELECT origen, sitio, albaranes,
+           ROW_NUMBER() OVER (PARTITION BY origen ORDER BY albaranes DESC, sitio) AS posicion
+    FROM por_sitio
+)
+SELECT
+    E.origen,
+    E.sitio,
+    E.albaranes,
+    COALESCE(NULLIF(LTRIM(RTRIM(FCY.FCYNAM_0)), ''), E.sitio) AS cargador_nombre,
+    NULLIF(LTRIM(RTRIM(CAST(FCY.CRN_0 AS NVARCHAR(40)))), '')  AS cargador_nif,
+    {_SQL_DOMICILIO_CARGADOR}                                  AS cargador_domicilio
+FROM elegido E
+LEFT JOIN LIVE.FACILITY FCY ON FCY.FCY_0 = E.sitio
+OUTER APPLY (
+    SELECT TOP 1 A.BPAADDLIG_0, A.BPAADDLIG_1, A.POSCOD_0, A.CTY_0, A.CRYNAM_0
+    FROM LIVE.BPADDRESS A
+    WHERE A.BPANUM_0 = E.sitio
+      AND A.BPATYP_0 = 3
+) ADR
+WHERE E.posicion = 1
+ORDER BY E.albaranes DESC, E.origen
+"""
+    with get_connection() as conexion:
+        cursor = conexion.cursor()
+        cursor.execute("SET LOCK_TIMEOUT 10000")
+        cursor.execute(sql)
+        columnas = [c[0] for c in cursor.description]
+        filas = [
+            {col: _serializar(valor) for col, valor in zip(columnas, fila)}
+            for fila in cursor.fetchall()
+        ]
+
+    for fila in filas:
+        fila["origen"] = _limpiar_texto(fila.get("origen"))
+        fila["cargador_nombre"] = _limpiar_texto(fila.get("cargador_nombre"))
+        fila["cargador_nif"] = _limpiar_texto(fila.get("cargador_nif"))
+        fila["cargador_domicilio"] = _limpiar_texto(fila.get("cargador_domicilio"))
+        # Naturaleza derivada del NIF del cargador (la misma regla que en el listado)
+        fila["naturaleza_mercancia"] = naturaleza_por_cargador(fila["cargador_nif"])
+    return filas
+
+
+def obtener_cargador(origen: str = "", sitio: str = "") -> dict | None:
+    """Datos del cargador contractual para un origen o un sitio de carga.
+
+    Se usa en la generacion de un DeCA sin albaran: el usuario elige el origen y
+    la aplicacion arrastra nombre, NIF, domicilio y naturaleza de la mercancia.
+    """
+    condiciones = []
+    parametros: list = []
+    if (sitio or "").strip():
+        condiciones.append("FCY.FCY_0 = ?")
+        parametros.append(sitio.strip())
+    elif (origen or "").strip():
+        condiciones.append(f"{_SQL_ORIGEN} = ?")
+        parametros.append(origen.strip())
+    else:
+        return None
+
+    sql = f"""
+SELECT TOP 1
+    {_SQL_ORIGEN} AS origen,
+    FCY.FCY_0 AS sitio,
+    COALESCE(NULLIF(LTRIM(RTRIM(FCY.FCYNAM_0)), ''), FCY.FCY_0) AS cargador_nombre,
+    NULLIF(LTRIM(RTRIM(CAST(FCY.CRN_0 AS NVARCHAR(40)))), '') AS cargador_nif,
+    {_SQL_DOMICILIO_CARGADOR} AS cargador_domicilio,
+    ISNULL(USO.albaranes, 0) AS albaranes
+FROM LIVE.FACILITY FCY
+OUTER APPLY (
+    SELECT TOP 1 A.BPAADDLIG_0, A.BPAADDLIG_1, A.POSCOD_0, A.CTY_0, A.CRYNAM_0
+    FROM LIVE.BPADDRESS A
+    WHERE A.BPANUM_0 = FCY.FCY_0
+      AND A.BPATYP_0 = 3
+) ADR
+OUTER APPLY (
+    -- Varios sitios pueden compartir direccion: se prefiere el que mas albaranes tiene
+    SELECT COUNT(*) AS albaranes FROM LIVE.SDELIVERY D WHERE D.STOFCY_0 = FCY.FCY_0
+) USO
+WHERE {' AND '.join(condiciones)}
+ORDER BY ISNULL(USO.albaranes, 0) DESC, FCY.FCY_0
+"""
+    with get_connection() as conexion:
+        cursor = conexion.cursor()
+        cursor.execute("SET LOCK_TIMEOUT 10000")
+        cursor.execute(sql, parametros)
+        fila = cursor.fetchone()
+        if fila is None:
+            return None
+        columnas = [c[0] for c in cursor.description]
+        datos = {col: _serializar(valor) for col, valor in zip(columnas, fila)}
+
+    for clave in ("origen", "sitio", "cargador_nombre", "cargador_nif", "cargador_domicilio"):
+        datos[clave] = _limpiar_texto(datos.get(clave))
+    datos["naturaleza_mercancia"] = naturaleza_por_cargador(datos["cargador_nif"])
+    return datos
+
+
+def generar_referencia_manual() -> str:
+    """Referencia unica para un DeCA creado sin albaran (max. 20 caracteres)."""
+    return "MAN-" + datetime.now().strftime("%Y%m%d-%H%M%S")
 
 
 def obtener_albaran(numalbaran: str) -> dict | None:
@@ -360,26 +577,38 @@ def obtener_multiplos_albaranes(numalbaranes: list[str]) -> list[dict]:
 
 
 def guardar_matriculas(numalbaran: str, matriculas: dict) -> None:
-    """UPSERT en LIVE.ZDECA de matriculas, peso y palets editables.
+    """UPSERT en LIVE.ZDECA de los campos editables del DeCA.
 
+    Editable: matriculas, peso, palets, destino, observaciones, transportista y su NIF.
     Si el albaran tiene transportista, tambien actualiza LIVE.ZDECA_MATRICULA
     para que futuros albaranes del mismo transportista hereden las matriculas.
+
+    El destino se guarda en ZDESTINO_0. Si el texto recibido coincide con el
+    destino calculado (CP + ciudad + pais de SDELIVERY) se guarda NULL, para no
+    fijar una modificacion manual innecesaria.
     """
     sql = """
 MERGE LIVE.ZDECA AS destino
 USING (SELECT ? AS SDHNUM_0, ? AS ZMATTRA_0, ? AS ZMATREM_0,
-              ? AS ZPESO_0, ? AS ZPALETS_0) AS origen
+              ? AS ZPESO_0, ? AS ZPALETS_0, ? AS ZDESTINO_0,
+              ? AS ZOBSERV_0, ? AS ZTRANSP_0, ? AS ZTRANSNIF_0) AS origen
    ON destino.SDHNUM_0 = origen.SDHNUM_0
 WHEN MATCHED THEN
-    UPDATE SET ZMATTRA_0 = origen.ZMATTRA_0,
-               ZMATREM_0 = origen.ZMATREM_0,
-               ZPESO_0   = origen.ZPESO_0,
-               ZPALETS_0 = origen.ZPALETS_0,
-               UPDDAT_0  = GETDATE()
+    UPDATE SET ZMATTRA_0   = origen.ZMATTRA_0,
+               ZMATREM_0   = origen.ZMATREM_0,
+               ZPESO_0     = origen.ZPESO_0,
+               ZPALETS_0   = origen.ZPALETS_0,
+               ZDESTINO_0  = origen.ZDESTINO_0,
+               ZOBSERV_0   = origen.ZOBSERV_0,
+               ZTRANSP_0   = origen.ZTRANSP_0,
+               ZTRANSNIF_0 = origen.ZTRANSNIF_0,
+               UPDDAT_0    = GETDATE()
 WHEN NOT MATCHED THEN
-    INSERT (SDHNUM_0, ZMATTRA_0, ZMATREM_0, ZPESO_0, ZPALETS_0, ZDECAEST_0, CREDAT_0, UPDDAT_0)
-    VALUES (origen.SDHNUM_0, origen.ZMATTRA_0, origen.ZMATREM_0, origen.ZPESO_0, origen.ZPALETS_0,
-            0, GETDATE(), GETDATE());
+    INSERT (SDHNUM_0, ZMATTRA_0, ZMATREM_0, ZPESO_0, ZPALETS_0, ZDESTINO_0,
+            ZOBSERV_0, ZTRANSP_0, ZTRANSNIF_0, ZDECAEST_0, CREDAT_0, UPDDAT_0)
+    VALUES (origen.SDHNUM_0, origen.ZMATTRA_0, origen.ZMATREM_0, origen.ZPESO_0,
+            origen.ZPALETS_0, origen.ZDESTINO_0, origen.ZOBSERV_0,
+            origen.ZTRANSP_0, origen.ZTRANSNIF_0, 0, GETDATE(), GETDATE());
 """
     peso = matriculas.get("peso_kg")
     palets = matriculas.get("num_pallets")
@@ -392,6 +621,15 @@ WHEN NOT MATCHED THEN
     except (TypeError, ValueError):
         palets_val = None
 
+    # Destino editable: vacio -> NULL (se usa el de SDELIVERY).
+    # Si coincide con el destino calculado (destino_auto) tampoco se fija override.
+    destino_val = _normalizar_destino(matriculas.get("destino"), matriculas.get("destino_auto"))
+    # Observaciones editables por albaran (texto libre)
+    observaciones_val = _normalizar_texto_libre(matriculas.get("observaciones"), 320)
+    # Transportista y NIF editables
+    transportista_val = _normalizar_texto_libre(matriculas.get("transportista_nombre"), 80)
+    transportista_nif_val = _normalizar_texto_libre(matriculas.get("transportista_nif"), 20)
+
     with get_connection() as conexion:
         cursor = conexion.cursor()
         cursor.execute(
@@ -401,6 +639,10 @@ WHEN NOT MATCHED THEN
             matriculas.get("matricula_remolque"),
             peso_val,
             palets_val,
+            destino_val,
+            observaciones_val,
+            transportista_val,
+            transportista_nif_val,
         )
 
         # Relacion transportista -> matriculas (carga automatica futura)
@@ -454,3 +696,67 @@ WHEN NOT MATCHED THEN
         cursor.execute(sql, numalbaran, url)
         conexion.commit()
     logger.info("Albaran %s marcado como DeCA generado: %s", numalbaran, url)
+
+
+def guardar_deca_manual(referencia: str, datos: dict, url: str) -> None:
+    """Registra en LIVE.ZDECA un DeCA generado sin albaran.
+
+    Guarda origen, fecha del transporte y todos los campos editables, y deja el
+    registro marcado como generado (ZDECAEST_0 = 1) con la URL publica del PDF.
+    """
+    sql = """
+MERGE LIVE.ZDECA AS destino
+USING (SELECT ? AS SDHNUM_0, ? AS ZORIGEN_0, ? AS ZFECHA_0, ? AS ZMATTRA_0,
+              ? AS ZMATREM_0, ? AS ZDESTINO_0, ? AS ZOBSERV_0,
+              ? AS ZPESO_0, ? AS ZPALETS_0,
+              ? AS ZTRANSP_0, ? AS ZTRANSNIF_0, ? AS ZDECAURL_0) AS origen
+   ON destino.SDHNUM_0 = origen.SDHNUM_0
+WHEN MATCHED THEN
+    UPDATE SET ZORIGEN_0   = origen.ZORIGEN_0,
+               ZFECHA_0    = origen.ZFECHA_0,
+               ZMATTRA_0   = origen.ZMATTRA_0,
+               ZMATREM_0   = origen.ZMATREM_0,
+               ZDESTINO_0  = origen.ZDESTINO_0,
+               ZOBSERV_0   = origen.ZOBSERV_0,
+               ZPESO_0     = origen.ZPESO_0,
+               ZPALETS_0   = origen.ZPALETS_0,
+               ZTRANSP_0   = origen.ZTRANSP_0,
+               ZTRANSNIF_0 = origen.ZTRANSNIF_0,
+               ZDECAURL_0  = origen.ZDECAURL_0,
+               ZDECAEST_0  = 1,
+               UPDDAT_0    = GETDATE()
+WHEN NOT MATCHED THEN
+    INSERT (SDHNUM_0, ZORIGEN_0, ZFECHA_0, ZMATTRA_0, ZMATREM_0, ZDESTINO_0,
+            ZOBSERV_0, ZPESO_0, ZPALETS_0, ZTRANSP_0, ZTRANSNIF_0,
+            ZDECAURL_0, ZDECAEST_0, CREDAT_0, UPDDAT_0)
+    VALUES (origen.SDHNUM_0, origen.ZORIGEN_0, origen.ZFECHA_0, origen.ZMATTRA_0,
+            origen.ZMATREM_0, origen.ZDESTINO_0, origen.ZOBSERV_0, origen.ZPESO_0,
+            origen.ZPALETS_0, origen.ZTRANSP_0, origen.ZTRANSNIF_0,
+            origen.ZDECAURL_0, 1, GETDATE(), GETDATE());
+"""
+    fecha = (datos.get("fecha_transporte") or "").strip() or None
+    if fecha is not None:
+        try:
+            fecha = datetime.strptime(fecha[:10], "%Y-%m-%d").date().isoformat()
+        except ValueError:
+            fecha = None
+
+    with get_connection() as conexion:
+        cursor = conexion.cursor()
+        cursor.execute(
+            sql,
+            referencia,
+            _normalizar_texto_libre(datos.get("origen"), 120),
+            fecha,
+            datos.get("matricula_tractor"),
+            datos.get("matricula_remolque"),
+            _normalizar_texto_libre(datos.get("destino"), 320),
+            _normalizar_texto_libre(datos.get("observaciones"), 320),
+            datos.get("peso_kg"),
+            datos.get("num_pallets"),
+            _normalizar_texto_libre(datos.get("transportista_nombre"), 80),
+            _normalizar_texto_libre(datos.get("transportista_nif"), 20),
+            url,
+        )
+        conexion.commit()
+    logger.info("DeCA sin albaran %s registrado: %s", referencia, url)
