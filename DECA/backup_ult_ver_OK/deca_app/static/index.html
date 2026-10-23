@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DeCA - Documento electrónico de Control Administrativo</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+    <h1>Gestión DeCA</h1>
+    <p>Documento electrónico de Control Administrativo de los albaranes de transporte
+       (Resolución de 5 de junio de 2026 - DT 8a Ley de Movilidad Sostenible - Orden FOM/2861/2012)</p>
+</header>
+<main>
+    <div class="toolbar">
+        <label><input type="checkbox" id="chk-pendientes" checked> Solo pendientes</label>
+        <button id="btn-refrescar" type="button">Refrescar</button>
+        <button id="btn-generar-seleccion" type="button" class="primario">Generar DeCA de seleccionados</button>
+        <label>Mostrar <input type="number" id="num-limite" value="200" min="1" max="1000" class="num"></label>
+        <label>Origen
+            <select id="sel-origen" class="texto">
+                <option value="">Todos</option>
+            </select>
+        </label>
+        <label>Transportista
+            <input type="text" id="txt-transportista" class="texto" placeholder="Nombre o codigo">
+        </label>
+        <label>Buscar <input type="text" id="txt-filtro" class="texto" placeholder="N. albaran o destino"></label>
+        <button id="btn-manual" type="button" class="nuevo">DeCA sin albaran</button>
+        <span class="ayuda">Pulsa el encabezado de columna para ordenar.
+            Filas en verde = DeCA ya generado. Transportista, NIF, destino, observaciones,
+            peso y palets son editables y se imprimen en el DeCA.
+            La naturaleza de la mercancia depende del NIF del cargador.</span>
+    </div>
+
+    <!-- Formulario para generar un DeCA sin albaran -->
+    <div id="panel-manual" class="panel-manual" style="display:none">
+        <h3>DeCA sin albaran</h3>
+        <p class="nota">Al elegir el origen se arrastran los datos del cargador contractual
+           (nombre, NIF, domicilio y naturaleza de la mercancia). El resto de campos son editables.</p>
+        <div class="rejilla">
+            <label>Origen *
+                <select id="man-origen" class="texto"></select>
+            </label>
+            <label>Fecha del transporte
+                <input type="date" id="man-fecha" class="texto">
+            </label>
+            <label>N. de albaran / referencia
+                <input type="text" id="man-referencia" class="texto" readonly
+                       title="Se asigna automaticamente al generar">
+            </label>
+            <label>Transportista
+                <input type="text" id="man-transportista" class="texto" maxlength="80">
+            </label>
+            <label>NIF del transportista
+                <input type="text" id="man-transportista-nif" class="texto" maxlength="20">
+            </label>
+            <label>Matricula tractor *
+                <input type="text" id="man-mat-tractor" class="texto" maxlength="15" placeholder="1234BCD">
+            </label>
+            <label>Matricula remolque
+                <input type="text" id="man-mat-remolque" class="texto" maxlength="15" placeholder="R1234BCD">
+            </label>
+            <label>Peso (kg)
+                <input type="number" id="man-peso" class="texto" step="0.01" min="0">
+            </label>
+            <label>N. de palets
+                <input type="number" id="man-palets" class="texto" min="0">
+            </label>
+        </div>
+        <label class="ancha">Destino
+            <input type="text" id="man-destino" class="texto" maxlength="160">
+        </label>
+        <label class="ancha">Observaciones
+            <input type="text" id="man-observaciones" class="texto" maxlength="320">
+        </label>
+        <div id="man-cargador" class="cargador-info"></div>
+        <div class="acciones-manual">
+            <button id="btn-manual-cancelar" type="button">Cancelar</button>
+            <button id="btn-manual-generar" type="button" class="primario">Generar DeCA</button>
+        </div>
+    </div>
+    <div id="mensajes" class="mensaje"></div>
+    <div id="resumen-seleccion" class="resumen" style="display:none"></div>
+    <table>
+        <thead>
+        <tr>
+            <th><input type="checkbox" id="chk-todos" title="Seleccionar todos"></th>
+            <th class="ordenable" data-campo="numalbaran">Albaran</th>
+            <th class="ordenable" data-campo="fecha_transporte">Fecha</th>
+            <th class="ordenable" data-campo="transportista_nombre">Transportista *</th>
+            <th>NIF transportista *</th>
+            <th class="ordenable" data-campo="origen">Origen</th>
+            <th class="ordenable" data-campo="destino_ciudad">Destino</th>
+            <th class="ordenable" data-campo="peso_kg">Peso (kg)</th>
+            <th class="ordenable" data-campo="num_pallets">Palets</th>
+            <th>Observaciones</th>
+            <th class="ordenable" data-campo="matricula_tractor">Mat. tractor *</th>
+            <th class="ordenable" data-campo="matricula_remolque">Mat. remolque</th>
+            <th class="ordenable" data-campo="deca_estado">Estado</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
+        <tbody id="cuerpo-tabla"></tbody>
+    </table>
+</main>
+<script src="/app.js"></script>
+</body>
+</html>

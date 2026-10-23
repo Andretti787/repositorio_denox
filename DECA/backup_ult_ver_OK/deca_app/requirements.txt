@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+pyodbc
+pydantic
+pydantic-settings
+email-validator
+httpx
+reportlab
+qrcode[pil]
+python-dotenv
